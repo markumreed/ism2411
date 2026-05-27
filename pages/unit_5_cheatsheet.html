@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unit 5 Cheatsheet — Capstone — ISM2411</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --code-bg2:  #1a1a26;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --code-bg:  #1a1a26;
+  --code-bg2: #15151f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
+}
+h2 {
+  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  letter-spacing: -.01em;
+}
+h3 {
+  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
+  letter-spacing: -.005em;
+}
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede {
+  font-size: 17.5px; color: var(--muted); line-height: 1.6;
+  margin: 0 0 28px; max-width: 720px;
+}
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+
+/* code blocks */
+code {
+  font-family: var(--mono); font-size: .92em;
+  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+  color: #f0f0f5;
+}
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+
+/* callout boxes */
+.callout {
+  margin: 22px 0; padding: 16px 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+}
+.callout-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout.green { border-left-color: #34d399; }
+.callout.green .callout-title { color: #34d399; }
+.callout.blue { border-left-color: #60a5fa; }
+.callout.blue .callout-title { color: #60a5fa; }
+.callout.pink { border-left-color: #f472b6; }
+.callout.pink .callout-title { color: #f472b6; }
+.callout.purple { border-left-color: #c084fc; }
+.callout.purple .callout-title { color: #c084fc; }
+
+/* prev/next nav */
+.pn {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 60px;
+}
+.pn a {
+  display: block; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  transition: background .15s, transform .15s;
+}
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
+}
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
+}
+
+/* cheatsheet grid + cards */
+.cs-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin: 24px 0; }
+@media (min-width: 720px) { .cs-grid { grid-template-columns: 1fr 1fr; } }
+.cs-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 4px solid #f472b6; border-radius: 10px; padding: 18px 20px;
+}
+.cs-card h3 { margin: 0 0 10px; color: #f472b6; font-size: 14px; letter-spacing: .04em; }
+.cs-card pre { margin: 0; font-size: 12.5px; }
+.cs-note { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+
+/* rubric table */
+.rubric-table {
+  width: 100%; border-collapse: collapse; margin-top: 12px;
+  font-size: 13.5px;
+}
+.rubric-table th {
+  text-align: left; padding: 8px 12px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+  color: #f472b6; border-bottom: 1px solid rgba(244,114,182,.25);
+  text-transform: uppercase;
+}
+.rubric-table td {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  color: var(--muted); vertical-align: top;
+}
+.rubric-table tr:last-child td { border-bottom: 0; }
+.rubric-table td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; }
+.rubric-table td:nth-child(2) { font-family: var(--mono); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<main id="content"><div class="wrap">
+<div class="page-eyebrow">UNIT 5 CHEATSHEET · CAPSTONE REFERENCE</div>
+<h1>Unit 5 — Capstone</h1>
+<p class="lede">End-to-end retail analysis workflow. The full pipeline from raw CSV to GitHub-published notebook and presentation.</p>
+
+<div class="callout">
+<strong>How to use this:</strong> This cheatsheet covers the full capstone pipeline. Work through each day's tasks in order. Come back here when you forget exact syntax — everything you need for a complete submission is on this page.
+</div>
+
+<div class="cs-grid">
+
+<!-- Card 1: Capstone milestone checklist -->
+<div class="cs-card"><h3>Capstone milestone checklist</h3>
+<pre><code># Monday: Load &amp; Inspect
+df = pd.read_csv("data/sales.csv")
+df.head()
+df.info()
+df.shape
+df.describe()
+df.isnull().sum()
+
+# Tuesday: Clean &amp; Document
+df = df.dropna(subset=["price", "quantity"])
+df["price"] = df["price"].astype(float)
+df["date"] = pd.to_datetime(df["date"])
+df["revenue"] = df["price"] * df["quantity"]
+
+# Wednesday: Answer business questions
+# (see "Business questions" card)
+
+# Thursday: Charts + push to GitHub
+# 3+ charts with titles and axis labels
+# git add . &amp;&amp; git commit -m "final" &amp;&amp; git push</code></pre></div>
+
+<!-- Card 2: Business questions -->
+<div class="cs-card"><h3>Business questions — starter templates</h3>
+<pre><code># Q1: Which product has highest total revenue?
+top = df.groupby("product")["revenue"].sum()
+top.sort_values(ascending=False).head(10)
+
+# Q2: Which region has most orders?
+df["region"].value_counts()
+
+# Q3: What is the monthly revenue trend?
+df["month"] = df["date"].dt.to_period("M")
+df.groupby("month")["revenue"].sum()
+
+# Q4: What is the average order value per category?
+df.groupby("category")["revenue"].mean()
+
+# Q5: Are there seasonal patterns?
+df.groupby(df["date"].dt.month)["revenue"].sum()</code></pre></div>
+
+<!-- Card 3: Chart checklist -->
+<div class="cs-card"><h3>Chart checklist</h3>
+<pre><code># Every chart needs:
+plt.figure(figsize=(10, 6))
+# ... your plot code ...
+plt.title("Descriptive Title Here")
+plt.xlabel("X Axis Label")
+plt.ylabel("Y Axis Label")
+plt.tight_layout()
+plt.savefig("charts/chart1.png", dpi=150)
+plt.show()
+
+# Label rotations for long category names:
+plt.xticks(rotation=45, ha="right")</code></pre>
+<div class="cs-note">Every chart needs a title, x-label, and y-label. No exceptions.</div></div>
+
+<!-- Card 4: Full clean-and-analyze template -->
+<div class="cs-card"><h3>Full clean-and-analyze template</h3>
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 1. Load
+df = pd.read_csv("data/sales.csv")
+print(df.shape, df.dtypes)
+
+# 2. Clean
+df.columns = df.columns.str.lower().str.strip()
+df = df.dropna(subset=["price","quantity"])
+df["price"] = df["price"].astype(float)
+df["date"]  = pd.to_datetime(df["date"])
+df["revenue"] = df["price"] * df["quantity"]
+
+# 3. Explore
+print(df.describe())
+print(df.isnull().sum())
+
+# 4. Analyze
+by_region = df.groupby("region")["revenue"].sum().reset_index()
+
+# 5. Visualize
+sns.barplot(x="region", y="revenue", data=by_region)
+plt.title("Revenue by Region")
+plt.tight_layout()
+plt.savefig("charts/revenue_by_region.png", dpi=150)
+plt.show()</code></pre></div>
+
+<!-- Card 5: GitHub submission checklist -->
+<div class="cs-card"><h3>GitHub submission checklist</h3>
+<pre><code># Repo structure expected:
+your-capstone/
+├── data/
+│   └── sales.csv
+├── charts/
+│   ├── chart1.png
+│   ├── chart2.png
+│   └── chart3.png
+├── analysis.ipynb    ← main notebook
+└── README.md         ← project description
+
+# Push commands:
+git add .
+git commit -m "Final capstone submission"
+git push
+
+# Verify: open GitHub in browser,
+# check notebook renders correctly</code></pre></div>
+
+<!-- Card 6: README template -->
+<div class="cs-card"><h3>README template</h3>
+<pre><code># Capstone: [Your Dataset Title]
+ISM2411 · [Your Name] · [Semester]
+
+## Overview
+One paragraph describing the dataset and
+the business context you analyzed.
+
+## Business Questions Answered
+1. Which product category drives the most revenue?
+2. How does sales performance vary by region?
+3. What seasonal trends exist in the data?
+
+## Key Findings
+- Finding 1 (1 sentence with a number)
+- Finding 2
+- Finding 3
+
+## How to Run
+1. Clone this repo
+2. Open analysis.ipynb in Jupyter
+3. Run All Cells</code></pre>
+<div class="cs-note">Write the README last — after your analysis is done, the findings section almost writes itself.</div></div>
+
+<!-- Card 7: Presentation structure -->
+<div class="cs-card"><h3>Presentation structure (5–7 min)</h3>
+<pre><code>Minute 0–1: Context
+  "I analyzed [dataset]. The business
+   question I focused on was..."
+
+Minute 1–3: Show the data
+  - Open notebook in Jupyter
+  - Show df.head() and df.describe()
+  - "The data has X rows and Y columns"
+
+Minute 3–5: Walk through one insight
+  - Show the groupby and chart
+  - "This tells us that..."
+  - Explain why it matters to the business
+
+Minute 5–7: Second insight + conclusion
+  - Show second chart
+  - "If I had more time I would also..."
+  - "The most surprising finding was..."</code></pre></div>
+
+<!-- Card 8: Notebook hygiene -->
+<div class="cs-card"><h3>Notebook hygiene</h3>
+<pre><code># DO: clear outputs before submitting
+# Kernel → Restart &amp; Run All
+
+# DO: use markdown cells to explain
+# Insert → Cell Above → change to Markdown:
+# ## Section Title
+# Write your explanation here.
+
+# DO: meaningful variable names
+revenue_by_region = df.groupby("region")["revenue"].sum()
+
+# DON'T: magic numbers without explanation
+# x = df[df["col"] &gt; 137.5]  ← bad
+# threshold = 137.5
+# high_value = df[df["revenue"] &gt; threshold]  ← good
+
+# DO: comment non-obvious operations
+# Drop rows where price is 0 (data entry errors)
+df = df[df["price"] &gt; 0]</code></pre></div>
+
+<!-- Card 9: Descriptive stats quick reference -->
+<div class="cs-card"><h3>Descriptive stats quick reference</h3>
+<pre><code>df["revenue"].describe()
+# count, mean, std, min, 25%, 50%, 75%, max
+
+df["revenue"].mean()     # average
+df["revenue"].median()   # middle value (robust to outliers)
+df["revenue"].std()      # spread / variability
+df["revenue"].min()
+df["revenue"].max()
+df["revenue"].quantile(0.75)  # 75th percentile
+
+# value counts
+df["region"].value_counts()
+df["region"].value_counts(normalize=True)  # as percentages</code></pre></div>
+
+<!-- Card 10: Common capstone bugs -->
+<div class="cs-card"><h3>Common capstone bugs</h3>
+<pre><code># Bug: FileNotFoundError
+# Fix: use relative path from notebook location
+df = pd.read_csv("data/sales.csv")  # ✓
+df = pd.read_csv("C:/Users/.../sales.csv")  # ✗
+
+# Bug: chart doesn't appear
+# Fix: call plt.show() after each figure
+plt.show()
+
+# Bug: groupby result has weird index
+# Fix: reset_index()
+result = df.groupby("region")["revenue"].sum().reset_index()
+
+# Bug: date column won't group by month
+# Fix: convert to datetime first
+df["date"] = pd.to_datetime(df["date"])
+df["month"] = df["date"].dt.to_period("M")</code></pre></div>
+
+</div><!-- end .cs-grid -->
+
+<!-- Capstone Rubric Quick View callout -->
+<div class="callout pink">
+<div class="callout-title">Capstone Rubric Quick View — Module 16</div>
+<table class="rubric-table">
+  <thead>
+    <tr>
+      <th>Dimension</th>
+      <th>Points</th>
+      <th>What graders look for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Correctness</td>
+      <td>25 pts</td>
+      <td>Code runs top-to-bottom without errors after Kernel → Restart &amp; Run All. Calculations produce sensible output.</td>
+    </tr>
+    <tr>
+      <td>Code Quality</td>
+      <td>20 pts</td>
+      <td>Meaningful variable names, comments on non-obvious steps, no unused or duplicate cells, consistent style.</td>
+    </tr>
+    <tr>
+      <td>Analysis Depth</td>
+      <td>25 pts</td>
+      <td>At least 3 distinct business questions answered with groupby / aggregation. Findings are stated in plain English in markdown cells.</td>
+    </tr>
+    <tr>
+      <td>Visualization</td>
+      <td>15 pts</td>
+      <td>3+ charts, each with a title, x-label, and y-label. Chart type matches the data (bar for categories, line for time, scatter for correlation).</td>
+    </tr>
+    <tr>
+      <td>Presentation</td>
+      <td>15 pts</td>
+      <td>5–7 minutes, walks through the notebook live, explains at least one finding and its business implication clearly.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- prev/next nav -->
+<nav class="pn" aria-label="Unit navigation">
+  <a href="unit_4_cheatsheet.html">
+    <div class="label">← Previous</div>
+    <div class="title">Unit 4 — pandas &amp; charts</div>
+  </a>
+  <a href="../index.html" class="next">
+    <div class="label">Course Index</div>
+    <div class="title">ISM2411 Home →</div>
+  </a>
+</nav>
+
+<p style="margin-top:32px; font-family: var(--mono); font-size:13px;">
+  <a href="../index.html">← Back to Course Index</a>
+</p>
+
+</div></main>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>

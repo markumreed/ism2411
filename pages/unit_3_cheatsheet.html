@@ -244,6 +244,8 @@ footer {
 <div class="callout">
 <strong>How to use this:</strong> Print it. Annotate it. Bring it to lab. Cheatsheets are syntax-only — they don't teach concepts. Read the unit's weekly pages first, then come back here when you forget syntax mid-task.
 </div>
+
+<h2>Core Syntax</h2>
 <div class="cs-grid">
 <div class="cs-card"><h3>Lists</h3>
 <pre><code>prices = [12.99, 5.50, 8.75]
@@ -347,8 +349,100 @@ with open("out.csv", "w", newline="") as f:
     w.writeheader()
     w.writerows(rows)</code></pre></div>
 </div>
-<div class="callout warn">
+
+<h2>List Methods &amp; Built-ins</h2>
+<div class="cs-grid">
+<div class="cs-card"><h3>List methods reference</h3>
+<pre><code>items = [3, 1, 4, 1, 5, 9]
+items.append(2)       # add to end
+items.insert(0, 0)    # insert at index
+items.pop()           # remove &amp; return last
+items.pop(2)          # remove &amp; return index 2
+items.remove(1)       # remove first 1 found
+items.sort()          # sort in place (ascending)
+items.sort(reverse=True)
+items.reverse()       # reverse in place
+items.count(1)        # how many 1s
+items.index(5)        # first index of 5
+items.copy()          # shallow copy
+items.clear()         # remove all elements</code></pre></div>
+
+<div class="cs-card"><h3>Useful built-ins with lists</h3>
+<pre><code>nums = [3, 1, 4, 1, 5, 9]
+sum(nums)          # 23
+min(nums)          # 1
+max(nums)          # 9
+sorted(nums)       # new sorted list
+len(nums)          # 6
+list(range(5))     # [0,1,2,3,4]
+list(reversed(nums))       # reversed copy
+any(n &gt; 8 for n in nums)  # True
+all(n &gt; 0 for n in nums)  # True</code></pre></div>
+</div>
+
+<h2>Nested Data &amp; Dict Comprehensions</h2>
+<div class="cs-grid">
+<div class="cs-card"><h3>Nested data structures</h3>
+<pre><code># list of dicts (very common!)
+orders = [
+    {"id": 1, "item": "Widget", "qty": 3},
+    {"id": 2, "item": "Gadget", "qty": 1},
+]
+orders[0]["item"]       # "Widget"
+
+# dict of dicts
+catalog = {
+    "W001": {"name": "Widget", "price": 9.99},
+    "G001": {"name": "Gadget", "price": 24.99},
+}
+catalog["W001"]["price"]   # 9.99</code></pre></div>
+
+<div class="cs-card"><h3>Dict comprehensions</h3>
+<pre><code># from two lists
+keys = ["a", "b", "c"]
+vals = [1, 2, 3]
+d = {k: v for k, v in zip(keys, vals)}
+
+# transform values
+prices = {"Widget": 10, "Gadget": 25}
+discounted = {k: v*0.9 for k,v in prices.items()}
+
+# filter
+affordable = {k:v for k,v in prices.items() if v&lt;20}</code></pre></div>
+</div>
+
+<h2>File Handling</h2>
+<div class="cs-grid">
+<div class="cs-card"><h3>File modes reference</h3>
+<pre><code># mode = what you can do
+open(f, "r")    # read (default)
+open(f, "w")    # write (overwrites!)
+open(f, "a")    # append (adds to end)
+open(f, "r+")   # read + write
+open(f, "x")    # create new (error if exists)
+
+# encoding: always specify for text files
+open(f, "r", encoding="utf-8")</code></pre></div>
+</div>
+
+<div class="callout">
 <strong>Reminder:</strong> The midterm exam (Unit 1-2) and capstone-eligible quizzes (Unit 3-4) test understanding, not memorization. The cheatsheet won't be available on the midterm — but the patterns will be in your head if you've used it enough.
+</div>
+
+<div class="callout pink">
+<div class="callout-title">Common Errors — Unit 3</div>
+<ul style="margin: 0; padding-left: 20px;">
+  <li><strong>IndexError: list index out of range</strong> — check <code>len()</code> before accessing an index, or use a loop instead of hardcoded positions.</li>
+  <li><strong>KeyError: key not in dict</strong> — use <code>.get(key)</code> or <code>.get(key, default)</code> instead of <code>dict[key]</code> when the key might be missing.</li>
+  <li><strong>FileNotFoundError</strong> — check you're in the right directory (<code>pwd</code> in the terminal) and using relative paths correctly.</li>
+  <li><strong>Mutating a list while iterating over it</strong> — iterate over a copy instead: <code>for item in items[:]:</code></li>
+</ul>
+</div>
+
+<div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);">
+  <a href="../index.html" style="font-family: var(--mono); font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--border2); padding: 8px 16px; border-radius: 999px; display: inline-block; transition: color .12s, border-color .12s;">
+    ← Back to course index
+  </a>
 </div>
 </div></main>
 

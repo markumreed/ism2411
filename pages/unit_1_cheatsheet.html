@@ -331,10 +331,80 @@ python file.py    # run a script</code></pre></div>
 
 age_str = input("Age: ")
 age = int(age_str)    # convert if needed</code></pre></div>
+
+<div class="cs-card"><h3>String methods</h3>
+<pre><code>name = "hello world"
+name.upper()          # "HELLO WORLD"
+name.lower()          # "hello world"
+name.capitalize()     # "Hello world"
+name.strip()          # removes whitespace
+name.replace("o","0") # "hell0 w0rld"
+name.split(" ")       # ["hello", "world"]
+" ".join(["a","b"])   # "a b"
+name.startswith("h")  # True
+"world" in name       # True</code></pre></div>
+
+<div class="cs-card"><h3>Number formatting</h3>
+<pre><code>price = 1234.5678
+f"{price:.2f}"        # "1234.57"
+f"{price:,.2f}"       # "1,234.57"
+f"{price:.0f}"        # "1235"
+
+pct = 0.1537
+f"{pct:.1%}"          # "15.4%"
+
+n = 42
+f"{n:05d}"            # "00042"</code></pre></div>
+
+<div class="cs-card"><h3>Type checking</h3>
+<pre><code>type(42)          # &lt;class 'int'&gt;
+type("hi")        # &lt;class 'str'&gt;
+type(3.14)        # &lt;class 'float'&gt;
+type(True)        # &lt;class 'bool'&gt;
+
+isinstance(42, int)      # True
+isinstance("hi", str)    # True
+isinstance(3.14, (int, float))  # True</code></pre></div>
+
+<div class="cs-card"><h3>Truthy / falsy</h3>
+<pre><code># Falsy (treated as False):
+bool(0)      # False
+bool("")     # False
+bool(None)   # False
+bool([])     # False
+bool({})     # False
+
+# Truthy (everything else):
+bool(1)      # True
+bool("x")   # True
+bool([0])   # True</code></pre></div>
+
+<div class="cs-card"><h3>Common business formulas</h3>
+<pre><code>revenue = price * quantity
+margin  = (price - cost) / price
+markup  = (price - cost) / cost
+discount_price = price * (1 - rate)
+tax_total = subtotal * (1 + tax_rate)
+roi = (gain - cost) / cost</code></pre></div>
 </div>
-<div class="callout warn">
+
+<div class="callout">
 <strong>Reminder:</strong> The midterm exam (Unit 1-2) and capstone-eligible quizzes (Unit 3-4) test understanding, not memorization. The cheatsheet won't be available on the midterm — but the patterns will be in your head if you've used it enough.
 </div>
+
+<h2>Common Errors — Unit 1</h2>
+<div class="callout pink">
+  <div class="callout-title">Watch out for these</div>
+  <p><strong>SyntaxError</strong> — Missing colon after <code>if</code>, <code>for</code>, or <code>def</code>.<br>
+  Python expects a <code>:</code> at the end of every block header. <code>if x &gt; 0</code> is wrong; <code>if x &gt; 0:</code> is right.</p>
+  <p><strong>TypeError</strong> — Cannot do <code>"5" + 5</code>. You cannot add a string and an integer directly. Use <code>int("5") + 5</code> or <code>"5" + str(5)</code> depending on what you need.</p>
+  <p><strong>IndentationError</strong> — Inconsistent indentation inside an <code>if</code> block. Python is whitespace-sensitive. Stick to 4 spaces; never mix tabs and spaces.</p>
+  <p style="margin-bottom:0"><strong>NameError</strong> — Variable used before assignment. If Python says a name is not defined, check that you spelled it correctly and that you assigned it before the line where it's used.</p>
+</div>
+
+<p style="margin-top: 32px; font-size: 14px;">
+  <a href="../index.html">← Back to course index</a>
+</p>
 </div></main>
 
 <footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>

@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glossary — ISM2411 Python for Business</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --u1: #34d399; --u2: #60a5fa; --u3: #c084fc; --u4: #fbbf24; --u5: #f472b6;
+}
+[data-theme="light"] {
+  --bg: #fbfbf7; --bg2: #f5f5ee; --bg3: #ffffff;
+  --text: #1a1a26; --muted: #4a4a5a; --dim: #7a7a8c;
+  --border: rgba(0,0,0,.08); --border2: rgba(0,0,0,.14);
+  --code-bg: #1a1a26;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 20px; font-weight: 700; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+p { color: var(--text); font-size: 15.5px; }
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: #fcd34d; }
+code { font-family: var(--mono); font-size: .88em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; color: #f0f0f5; margin: 10px 0 0; }
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+
+/* alpha index */
+.alpha-index { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 40px; }
+.alpha-index a { font-family: var(--mono); font-size: 12px; padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 6px; color: var(--muted); transition: color .12s, border-color .12s; }
+.alpha-index a:hover { color: var(--accent); border-color: rgba(251,191,36,.4); }
+
+/* unit filter bar */
+.unit-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 32px; }
+.uf-btn { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 5px 14px; border: 1px solid var(--border2); border-radius: 999px; background: var(--bg2); color: var(--muted); cursor: pointer; transition: all .15s; }
+.uf-btn:hover, .uf-btn.active { color: var(--text); border-color: var(--border2); background: var(--bg3); }
+.uf-btn.u1.active { color: var(--u1); border-color: var(--u1); background: rgba(52,211,153,.08); }
+.uf-btn.u2.active { color: var(--u2); border-color: var(--u2); background: rgba(96,165,250,.08); }
+.uf-btn.u3.active { color: var(--u3); border-color: var(--u3); background: rgba(192,132,252,.08); }
+.uf-btn.u4.active { color: var(--u4); border-color: var(--u4); background: rgba(251,191,36,.08); }
+.uf-btn.u5.active { color: var(--u5); border-color: var(--u5); background: rgba(244,114,182,.08); }
+
+/* glossary entry */
+.gl-section { margin-bottom: 6px; }
+.gl-entry {
+  padding: 18px 20px 16px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 10px;
+  border-left: 3px solid var(--border2);
+  transition: border-color .15s;
+}
+.gl-entry:hover { border-color: var(--border2); }
+.gl-entry.u1 { border-left-color: var(--u1); }
+.gl-entry.u2 { border-left-color: var(--u2); }
+.gl-entry.u3 { border-left-color: var(--u3); }
+.gl-entry.u4 { border-left-color: var(--u4); }
+.gl-entry.u5 { border-left-color: var(--u5); }
+
+.gl-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.gl-term { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+.gl-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; padding: 2px 8px; border-radius: 999px; border: 1px solid; flex-shrink: 0; }
+.u1 .gl-badge { color: var(--u1); border-color: rgba(52,211,153,.35); background: rgba(52,211,153,.08); }
+.u2 .gl-badge { color: var(--u2); border-color: rgba(96,165,250,.35); background: rgba(96,165,250,.08); }
+.u3 .gl-badge { color: var(--u3); border-color: rgba(192,132,252,.35); background: rgba(192,132,252,.08); }
+.u4 .gl-badge { color: var(--u4); border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); }
+.u5 .gl-badge { color: var(--u5); border-color: rgba(244,114,182,.35); background: rgba(244,114,182,.08); }
+
+.gl-def { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 6px; }
+.gl-also { font-size: 12.5px; font-family: var(--mono); color: var(--dim); margin-top: 8px; }
+.gl-also a { color: var(--muted); }
+.gl-also a:hover { color: var(--accent); }
+
+/* section letter header */
+.letter-head { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--dim); margin: 40px 0 12px; letter-spacing: -.02em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="main">
+<div class="page-eyebrow">REFERENCE · ISM2411</div>
+<h1>Course Glossary</h1>
+<p class="lede">Every key term introduced across all 16 modules, organized alphabetically. Each entry shows which unit introduced the concept and includes a code example where applicable.</p>
+
+<!-- Alpha index -->
+<div class="alpha-index">
+<a href="#A">A</a><a href="#B">B</a><a href="#C">C</a><a href="#D">D</a>
+<a href="#E">E</a><a href="#F">F</a><a href="#G">G</a><a href="#H">H</a>
+<a href="#I">I</a><a href="#J">J</a><a href="#K">K</a><a href="#L">L</a>
+<a href="#M">M</a><a href="#N">N</a><a href="#O">O</a><a href="#P">P</a>
+<a href="#R">R</a><a href="#S">S</a><a href="#T">T</a><a href="#U">U</a>
+<a href="#V">V</a><a href="#W">W</a>
+</div>
+
+<!-- ═══ A ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="A">A</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Accumulator pattern</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A variable initialized before a loop that collects or builds up a result with each iteration. The most common accumulators are running totals (sum) and growing lists (append).</div>
+  <pre><code>total = 0
+for sale in [100, 250, 75]:
+    total += sale   # accumulates to 425</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Argument</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">The actual value passed to a function when it is called. Contrast with <em>parameter</em>, which is the placeholder name in the function definition.</div>
+  <pre><code>def greet(name):   # name is the parameter
+    return f"Hello, {name}"
+
+greet("Alice")     # "Alice" is the argument</code></pre>
+  <div class="gl-also">See also: <a href="#P">Parameter</a>, <a href="#R">Return value</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">Aggregation</span><span class="gl-badge">Module 15 · Grouping</span></div>
+  <div class="gl-def">A calculation that reduces many values to one summary value — sum, mean, count, min, max. In pandas, aggregations are applied to groups created by <code>groupby()</code>.</div>
+  <pre><code>df.groupby("region")["sales"].sum()
+df.groupby("region")["sales"].agg(["sum","mean","count"])</code></pre>
+  <div class="gl-also">See also: <a href="#G">groupby()</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Arithmetic operator</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">A symbol that performs a mathematical operation: <code>+</code> (add), <code>-</code> (subtract), <code>*</code> (multiply), <code>/</code> (divide), <code>//</code> (integer divide), <code>%</code> (modulo/remainder), <code>**</code> (exponent).</div>
+  <pre><code>7 / 2    # 3.5  — float division
+7 // 2   # 3    — integer division (floor)
+7 % 2    # 1    — remainder</code></pre>
+</div>
+
+<!-- ═══ B ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="B">B</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Boolean</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">A data type with exactly two values: <code>True</code> or <code>False</code>. The result of any comparison expression is a boolean. Named after mathematician George Boole.</div>
+  <pre><code>is_active = True
+price > 100       # True or False
+type(True)        # &lt;class 'bool'&gt;</code></pre>
+  <div class="gl-also">See also: <a href="#T">Truthy / Falsy</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">break</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A statement that immediately exits the nearest enclosing loop, skipping any remaining iterations. Use it when you've found what you were looking for and don't need to continue.</div>
+  <pre><code>for item in inventory:
+    if item["stock"] == 0:
+        print("Out of stock found!")
+        break   # stop checking once we find one</code></pre>
+  <div class="gl-also">See also: <a href="#C">continue</a></div>
+</div>
+
+<!-- ═══ C ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="C">C</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Command line (CLI)</span><span class="gl-badge">Module 02 · Terminal</span></div>
+  <div class="gl-def">A text-based interface for talking to your operating system by typing commands. Also called the terminal, shell, or command prompt. Python scripts are run from the command line with <code>python filename.py</code>.</div>
+  <pre><code>pwd        # print working directory
+ls         # list files (mac/linux)
+cd folder  # change into a folder
+python script.py  # run a Python file</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Comparison operator</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">An operator that compares two values and returns a boolean. The six comparison operators are: <code>==</code> (equal), <code>!=</code> (not equal), <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>.</div>
+  <pre><code>5 == 5    # True
+5 != 3    # True
+"a" < "b" # True  — strings compare alphabetically</code></pre>
+  <div class="gl-also">See also: <a href="#B">Boolean</a>, <a href="#L">Logical operator</a></div>
+</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">Capstone</span><span class="gl-badge">Module 16 · Capstone</span></div>
+  <div class="gl-def">The final project of the course. Students load a real retail dataset, clean it, answer three or more business questions with code, produce at least three charts, push the finished notebook to GitHub, and present their findings to the class in 5–7 minutes.</div>
+  <div class="gl-also">See also: <a href="capstone_rubric.html">Capstone Rubric</a>, <a href="week16_capstone.html">Capstone Guide</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">continue</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A statement that skips the rest of the current loop iteration and jumps to the next one. The loop does not exit — it continues with the next value.</div>
+  <pre><code>for n in range(10):
+    if n % 2 == 0:
+        continue    # skip even numbers
+    print(n)        # prints only 1,3,5,7,9</code></pre>
+  <div class="gl-also">See also: <a href="#B">break</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">CPU (Central Processing Unit)</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">The chip inside your computer that executes instructions one at a time, billions of times per second. When you run a Python script, the interpreter translates your code into instructions the CPU can execute.</div>
+  <div class="gl-also">See also: <a href="#R">RAM</a>, <a href="#S">Storage</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">csv module</span><span class="gl-badge">Module 12 · Files</span></div>
+  <div class="gl-def">Python's built-in module for reading and writing CSV (comma-separated values) files. <code>csv.reader()</code> iterates row by row; <code>csv.DictReader()</code> gives each row as a dictionary keyed by the header.</div>
+  <pre><code>import csv
+with open("sales.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row["product"], row["revenue"])</code></pre>
+  <div class="gl-also">See also: <a href="#D">DataFrame</a>, <a href="#F">File handle</a></div>
+</div>
+
+<!-- ═══ D ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="D">D</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">DataFrame</span><span class="gl-badge">Module 13 · pandas</span></div>
+  <div class="gl-def">The primary data structure in pandas. A two-dimensional table with labeled rows (index) and labeled columns — like a spreadsheet in Python. Created with <code>pd.read_csv()</code>, <code>pd.DataFrame()</code>, or other pandas constructors.</div>
+  <pre><code>import pandas as pd
+df = pd.read_csv("sales.csv")
+df.shape       # (5000, 6) — rows, columns
+df.columns     # Index(['date','product','sales'...])</code></pre>
+  <div class="gl-also">See also: <a href="#S">Series</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Data type</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">The category of a value that determines what operations are valid on it. Python's core built-in types are <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>, <code>NoneType</code>, <code>list</code>, <code>dict</code>, and <code>tuple</code>.</div>
+  <pre><code>type(42)       # &lt;class 'int'&gt;
+type(3.14)     # &lt;class 'float'&gt;
+type("hello")  # &lt;class 'str'&gt;
+type(True)     # &lt;class 'bool'&gt;</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">def</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">The keyword used to define a function in Python. Everything indented under the <code>def</code> line is the function body and runs whenever the function is called.</div>
+  <pre><code>def calculate_margin(price, cost):
+    return (price - cost) / price</code></pre>
+  <div class="gl-also">See also: <a href="#F">Function</a>, <a href="#R">Return value</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Dictionary</span><span class="gl-badge">Module 11 · Dictionaries</span></div>
+  <div class="gl-def">A collection of key-value pairs. Keys are unique identifiers (usually strings); values can be any type. Dictionaries give O(1) lookup — finding a value by key is instant regardless of size. Written with curly braces <code>{}</code>.</div>
+  <pre><code>customer = {"name": "Alice", "balance": 1500.0}
+customer["name"]                    # "Alice"
+customer.get("email", "unknown")    # safe access</code></pre>
+  <div class="gl-also">See also: <a href="#K">Key-value pair</a>, <a href="#L">List</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Directory</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">A container in the file system that holds files and other directories. Also called a folder. The arrangement of directories forms a tree structure, starting from the root (<code>/</code> on Mac/Linux, <code>C:\</code> on Windows).</div>
+  <div class="gl-also">See also: <a href="#P">Path</a>, <a href="#F">File</a></div>
+</div>
+
+<!-- ═══ E ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="E">E</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Expression</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">Any combination of values, variables, and operators that Python evaluates to produce a single result. Expressions can be as simple as <code>5</code> or as complex as <code>(price * qty) * (1 - discount)</code>.</div>
+  <pre><code>revenue = price * quantity     # price * quantity is an expression
+is_profitable = margin > 0.2   # comparison expression</code></pre>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">explain() / describe()</span><span class="gl-badge">Module 14 · Cleaning</span></div>
+  <div class="gl-def"><code>df.describe()</code> returns summary statistics for all numeric columns: count, mean, standard deviation, minimum, 25th percentile (Q1), median (50%), 75th percentile (Q3), and maximum. A fast first look at numeric data quality.</div>
+  <pre><code>df.describe()
+df.describe(include="object")   # for string columns
+df["price"].describe()</code></pre>
+</div>
+
+<!-- ═══ F ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="F">F</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">f-string</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">A string literal prefixed with <code>f</code> that allows embedding Python expressions directly inside <code>{}</code> placeholders. The cleanest way to build strings with variable values in Python 3.6+.</div>
+  <pre><code>name = "Alice"
+total = 1234.5
+print(f"Hello, {name}! Your balance is ${total:,.2f}")</code></pre>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">File</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">A named collection of data stored on disk. Files have a name, an extension (like <code>.py</code>, <code>.csv</code>, <code>.txt</code>) that indicates the format, and a location in the file system described by their path.</div>
+  <div class="gl-also">See also: <a href="#D">Directory</a>, <a href="#P">Path</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">File handle</span><span class="gl-badge">Module 12 · Files</span></div>
+  <div class="gl-def">An object returned by <code>open()</code> that represents an open connection to a file on disk. You read or write through the handle. Always close it when done — the <code>with</code> statement does this automatically.</div>
+  <pre><code>with open("report.txt", "r") as f:
+    content = f.read()
+# f is automatically closed after the with block</code></pre>
+  <div class="gl-also">See also: <a href="#W">with statement</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Float</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">Python's data type for decimal numbers (floating-point). Floats can represent very large and very small values but may have small rounding errors due to how binary computers store decimals.</div>
+  <pre><code>price = 19.99
+0.1 + 0.2   # 0.30000000000000004  ← rounding error
+round(0.1 + 0.2, 2)   # 0.3</code></pre>
+  <div class="gl-also">See also: <a href="#I">Integer</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">for loop</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A loop that iterates over each item in an iterable (list, string, range, dictionary, etc.) and executes the loop body once per item. The variable after <code>for</code> takes on each value in turn.</div>
+  <pre><code>for product in ["Widget", "Gadget", "Doohickey"]:
+    print(product.upper())
+
+for i in range(1, 6):   # 1, 2, 3, 4, 5
+    print(i)</code></pre>
+  <div class="gl-also">See also: <a href="#W">while loop</a>, <a href="#R">range()</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Function</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">A named, reusable block of code that performs a specific task. Defined with <code>def</code>, takes zero or more parameters, and optionally returns a value. Functions reduce repetition and make code easier to test and reason about.</div>
+  <pre><code>def calculate_tax(price, rate=0.07):
+    return price * rate
+
+tax = calculate_tax(100)     # 7.0
+tax = calculate_tax(100, 0.10)  # 10.0</code></pre>
+  <div class="gl-also">See also: <a href="#P">Parameter</a>, <a href="#R">Return value</a>, <a href="#S">Scope</a></div>
+</div>
+
+<!-- ═══ G ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="G">G</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Git</span><span class="gl-badge">Module 08 · Git</span></div>
+  <div class="gl-def">A distributed version control system that tracks changes to files over time. Git stores snapshots (commits) of your project so you can see what changed, when, and why — and revert to any previous state.</div>
+  <pre><code>git init              # start tracking
+git add analysis.py   # stage a file
+git commit -m "Add revenue calculation"  # save snapshot
+git log               # view history</code></pre>
+  <div class="gl-also">See also: <a href="#G">GitHub</a>, <a href="#C">Commit</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">GitHub</span><span class="gl-badge">Module 08 · Git</span></div>
+  <div class="gl-def">A web platform that hosts Git repositories in the cloud. Used in this course to submit all work from Module 8 onward. A public GitHub profile with real analysis projects is a portfolio asset for job applications.</div>
+  <pre><code>git remote add origin https://github.com/you/repo
+git push -u origin main   # first push
+git push                  # subsequent pushes</code></pre>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">groupby()</span><span class="gl-badge">Module 15 · Grouping</span></div>
+  <div class="gl-def">A pandas method that splits a DataFrame into groups based on the unique values of one or more columns, then applies an aggregation function to each group. Equivalent to SQL's <code>GROUP BY</code>.</div>
+  <pre><code># Total sales per region
+df.groupby("region")["sales"].sum()
+
+# Multiple aggregations
+df.groupby("region")["sales"].agg(["sum","mean","count"])</code></pre>
+  <div class="gl-also">See also: <a href="#A">Aggregation</a></div>
+</div>
+
+<!-- ═══ H ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="H">H</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">head() / tail()</span><span class="gl-badge">Module 13 · pandas</span></div>
+  <div class="gl-def"><code>df.head(n)</code> returns the first <em>n</em> rows of a DataFrame (default 5). <code>df.tail(n)</code> returns the last <em>n</em> rows. Essential for quickly inspecting a dataset after loading it.</div>
+  <pre><code>df.head()      # first 5 rows
+df.head(10)    # first 10 rows
+df.tail(3)     # last 3 rows</code></pre>
+</div>
+
+<!-- ═══ I ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="I">I</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">if / elif / else</span><span class="gl-badge">Module 05 · Conditionals</span></div>
+  <div class="gl-def">Python's conditional branching syntax. <code>if</code> tests the first condition; <code>elif</code> (else-if) tests additional conditions in order; <code>else</code> runs if none of the conditions above were true. Only one branch executes.</div>
+  <pre><code>if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+else:
+    grade = "F"</code></pre>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Immutable</span><span class="gl-badge">Module 10 · Lists &amp; Tuples</span></div>
+  <div class="gl-def">A value that cannot be changed after it is created. Strings, integers, floats, booleans, and tuples are immutable. Contrast with mutable types like lists and dictionaries.</div>
+  <pre><code>t = (1, 2, 3)
+t[0] = 99     # TypeError: tuple does not support item assignment
+# but the variable can be reassigned:
+t = (99, 2, 3)  # this creates a new tuple</code></pre>
+  <div class="gl-also">See also: <a href="#M">Mutable</a>, <a href="#T">Tuple</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Index (list)</span><span class="gl-badge">Module 10 · Lists &amp; Tuples</span></div>
+  <div class="gl-def">A number specifying the position of an element in a list or tuple. Python uses zero-based indexing: the first element is at index 0, the last at index -1. Accessing an index that doesn't exist raises <code>IndexError</code>.</div>
+  <pre><code>items = ["a", "b", "c", "d"]
+items[0]    # "a"  — first
+items[-1]   # "d"  — last
+items[1:3]  # ["b","c"]  — slice</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Integer</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">Python's data type for whole numbers (no decimal point). Integers can be arbitrarily large in Python — there's no overflow. Division of two integers with <code>/</code> always returns a float; use <code>//</code> for integer (floor) division.</div>
+  <pre><code>quantity = 42
+10 / 3    # 3.3333...  (float)
+10 // 3   # 3          (integer)</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Interpreter</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">A program that reads and executes source code line by line, translating it into machine instructions as it goes. Python is an interpreted language — you don't compile it before running it, which makes development faster and errors easier to see.</div>
+  <pre><code>python script.py   # interpreter reads and runs script.py</code></pre>
+  <div class="gl-also">See also: <a href="#P">Program</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Iterable</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">Any object that can be iterated over (looped through) one item at a time. Strings, lists, tuples, dictionaries, ranges, and file objects are all iterables. A <code>for</code> loop works on anything iterable.</div>
+  <pre><code>for char in "hello":    # string is iterable
+    print(char)
+
+for key in {"a":1,"b":2}:  # dict keys are iterable
+    print(key)</code></pre>
+</div>
+
+<!-- ═══ J ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="J">J</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Jupyter Notebook</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">An interactive computing environment where code, output, and prose live in the same document. Notebooks consist of cells — a code cell runs Python; a markdown cell renders formatted text. The standard format for data analysis work. Files end in <code>.ipynb</code>.</div>
+  <pre><code># In a code cell:
+import pandas as pd
+df = pd.read_csv("data.csv")
+df.head()   # output appears directly below</code></pre>
+</div>
+
+<!-- ═══ K ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="K">K</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Key-value pair</span><span class="gl-badge">Module 11 · Dictionaries</span></div>
+  <div class="gl-def">The fundamental unit of a dictionary. A <em>key</em> is an immutable identifier (usually a string) used to look up the associated <em>value</em>, which can be any Python object. Accessing a key that doesn't exist raises <code>KeyError</code> — use <code>.get()</code> to avoid this.</div>
+  <pre><code>d = {"product": "Widget", "price": 9.99}
+d["product"]            # "Widget"
+d.get("color", "N/A")  # "N/A" instead of KeyError</code></pre>
+  <div class="gl-also">See also: <a href="#D">Dictionary</a></div>
+</div>
+
+<!-- ═══ L ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="L">L</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">List</span><span class="gl-badge">Module 10 · Lists &amp; Tuples</span></div>
+  <div class="gl-def">An ordered, mutable collection of items. Items can be of mixed types. Lists are defined with square brackets <code>[]</code> and support indexing, slicing, appending, removing, and sorting. The most commonly used collection type in Python.</div>
+  <pre><code>prices = [9.99, 14.99, 4.50, 22.00]
+prices.append(7.99)  # add to end
+prices.sort()        # sort in place
+prices[0]            # 4.50 (after sort)</code></pre>
+  <div class="gl-also">See also: <a href="#T">Tuple</a>, <a href="#D">Dictionary</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Logical operator</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">An operator that combines boolean values: <code>and</code> (both must be True), <code>or</code> (at least one must be True), <code>not</code> (inverts True/False). Used to build compound conditions in <code>if</code> statements and pandas filters.</div>
+  <pre><code>if age >= 18 and has_id:
+    print("Can enter")
+
+# In pandas: use & and | (not and/or)
+df[(df["price"] > 10) & (df["region"] == "South")]</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Loop</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A control structure that repeats a block of code multiple times. Python has two loop types: <code>for</code> (iterates over a sequence) and <code>while</code> (repeats as long as a condition is True). Loops are how you apply an operation to every item in a dataset.</div>
+  <div class="gl-also">See also: <a href="#F">for loop</a>, <a href="#W">while loop</a></div>
+</div>
+
+<!-- ═══ M ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="M">M</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">Mean</span><span class="gl-badge">Module 14 · Cleaning</span></div>
+  <div class="gl-def">The average of a set of numbers: sum divided by count. Sensitive to outliers — a few very large or small values pull it away from the typical value. Compare to median for skewed data.</div>
+  <pre><code>df["sales"].mean()
+import statistics; statistics.mean([10, 20, 30])  # 20.0</code></pre>
+  <div class="gl-also">See also: <a href="#M">Median</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">Median</span><span class="gl-badge">Module 14 · Cleaning</span></div>
+  <div class="gl-def">The middle value when a dataset is sorted in order. Half the values fall above it, half below. More robust than the mean when the data has outliers — use median for income, house prices, or anything skewed.</div>
+  <pre><code>df["sales"].median()</code></pre>
+  <div class="gl-also">See also: <a href="#M">Mean</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">Missing value (NaN)</span><span class="gl-badge">Module 14 · Cleaning</span></div>
+  <div class="gl-def">A cell in a DataFrame with no value. Represented as <code>NaN</code> (Not a Number) in pandas, inherited from NumPy. Missing values propagate through calculations — adding NaN to anything gives NaN. Must be handled before analysis.</div>
+  <pre><code>df.isnull().sum()              # count per column
+df.dropna()                    # remove rows with any NaN
+df["price"].fillna(df["price"].mean())  # replace with mean</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Module (Python)</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">A Python file that contains functions, classes, and variables that can be imported into other scripts. The standard library has hundreds of built-in modules (<code>csv</code>, <code>math</code>, <code>os</code>); third-party modules like <code>pandas</code> and <code>matplotlib</code> are installed with pip.</div>
+  <pre><code>import csv
+import pandas as pd
+from math import sqrt, pi</code></pre>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Mutable</span><span class="gl-badge">Module 10 · Lists &amp; Tuples</span></div>
+  <div class="gl-def">A value that can be changed in place after it is created. Lists and dictionaries are mutable. Mutability matters when passing objects to functions — the function can modify the original list, which can cause bugs if unexpected.</div>
+  <pre><code>prices = [10, 20, 30]
+prices[0] = 99       # mutates in place
+prices.append(40)    # mutates in place
+print(prices)        # [99, 20, 30, 40]</code></pre>
+  <div class="gl-also">See also: <a href="#I">Immutable</a></div>
+</div>
+
+<!-- ═══ N ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="N">N</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">None / NoneType</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">Python's null value — the absence of a value. A function that doesn't have a <code>return</code> statement returns <code>None</code> automatically. Often used as a default for optional parameters. Check for it with <code>is None</code>, not <code>== None</code>.</div>
+  <pre><code>def greet(name):
+    print(f"Hello, {name}")   # no return!
+
+result = greet("Alice")   # prints, but...
+print(result)             # None</code></pre>
+</div>
+
+<!-- ═══ O ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="O">O</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Operator</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">A symbol that performs an operation on one or more values (operands). Python has arithmetic, comparison, logical, assignment, and membership operators. Operators have precedence (order of operations) — parentheses override.</div>
+  <div class="gl-also">See also: <a href="#A">Arithmetic operator</a>, <a href="#C">Comparison operator</a>, <a href="#L">Logical operator</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Order of operations</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">The rules determining which parts of an expression are evaluated first. Python follows PEMDAS: Parentheses → Exponents → Multiplication/Division → Addition/Subtraction. When in doubt, use parentheses to make intent explicit.</div>
+  <pre><code>2 + 3 * 4    # 14  (multiplication first)
+(2 + 3) * 4  # 20  (parentheses override)</code></pre>
+</div>
+
+<!-- ═══ P ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="P">P</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">pandas</span><span class="gl-badge">Module 13 · pandas</span></div>
+  <div class="gl-def">An open-source Python library for data manipulation and analysis. Provides the <code>DataFrame</code> and <code>Series</code> data structures, plus methods for loading, cleaning, transforming, grouping, and visualizing tabular data. The de facto standard tool for business analytics in Python.</div>
+  <pre><code>import pandas as pd
+df = pd.read_csv("sales.csv")
+df.groupby("region")["revenue"].sum()</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Parameter</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">A variable in a function definition that acts as a placeholder for values to be passed in when the function is called. Parameters have local scope — they only exist inside the function. Contrast with <em>argument</em>, which is the actual value passed.</div>
+  <pre><code>def discount(price, rate):   # price and rate are parameters
+    return price * (1 - rate)
+
+discount(100, 0.10)  # 100 and 0.10 are arguments</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Path</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">The address of a file or directory in the file system. An <em>absolute</em> path starts from the root and works from anywhere (<code>/home/user/data/sales.csv</code>). A <em>relative</em> path is relative to the current working directory (<code>data/sales.csv</code>). Use relative paths in code you share — absolute paths break on other machines.</div>
+  <pre><code>pd.read_csv("data/sales.csv")    # relative ✓
+pd.read_csv("/home/alex/data/sales.csv")  # absolute ✗</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">print()</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">A built-in function that displays values to standard output (the terminal or notebook). Accepts multiple arguments separated by commas. Indispensable for debugging — printing variables at each step is the simplest way to understand what your code is doing.</div>
+  <pre><code>print("Hello")
+print("Price:", price, "Total:", total)
+print(f"Debug: x={x!r}, type={type(x).__name__}")</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Program</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">A sequence of instructions written in a programming language that a computer can execute. A Python program is a <code>.py</code> file containing Python statements. When you run it, the interpreter reads each line and passes instructions to the CPU.</div>
+</div>
+
+<!-- ═══ R ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="R">R</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">RAM (Random Access Memory)</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">The computer's working memory — where active data and running programs live. RAM is fast but temporary: it is cleared when the power is off. A pandas DataFrame loaded from a CSV lives in RAM. If a dataset is too large to fit in RAM, you need streaming or chunking techniques.</div>
+  <div class="gl-also">See also: <a href="#C">CPU</a>, <a href="#S">Storage</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">range()</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A built-in function that generates a sequence of integers. <code>range(stop)</code> generates 0 to stop-1; <code>range(start, stop)</code> includes start, excludes stop; <code>range(start, stop, step)</code> increments by step. Commonly used with <code>for</code> loops.</div>
+  <pre><code>range(5)         # 0, 1, 2, 3, 4
+range(1, 6)      # 1, 2, 3, 4, 5
+range(0, 20, 5)  # 0, 5, 10, 15
+list(range(3))   # [0, 1, 2]</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Return value</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">The value a function sends back to its caller via the <code>return</code> statement. Once <code>return</code> is reached, the function exits immediately. A function without a <code>return</code> statement returns <code>None</code>.</div>
+  <pre><code>def square(n):
+    return n * n          # sends n*n back to caller
+
+result = square(5)        # result = 25
+print(square(5) + 1)      # 26 — return value used inline</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Repository (repo)</span><span class="gl-badge">Module 08 · Git</span></div>
+  <div class="gl-def">A directory tracked by Git, containing your project files and the complete history of all commits. A local repo lives on your machine; a remote repo (on GitHub) is the cloud copy. Pushing syncs local to remote.</div>
+  <pre><code>git init          # turn current directory into a repo
+git clone URL     # copy a remote repo to your machine</code></pre>
+</div>
+
+<!-- ═══ S ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="S">S</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Scope</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">The region of a program where a variable is accessible. Variables defined inside a function are <em>local</em> (only accessible inside that function). Variables defined outside any function are <em>global</em>. Avoid using <code>global</code> — prefer returning values instead.</div>
+  <pre><code>x = 10   # global
+
+def double():
+    x = 99   # local x — does NOT change the global x
+    return x
+
+print(double())  # 99
+print(x)         # 10  — global unchanged</code></pre>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">Series</span><span class="gl-badge">Module 13 · pandas</span></div>
+  <div class="gl-def">A one-dimensional labeled array in pandas — a single column of a DataFrame, or a standalone sequence with an index. Most DataFrame operations return or accept Series. Series support vectorized operations (applied to all values at once).</div>
+  <pre><code>s = df["price"]           # Series
+s.mean()                  # mean of the column
+s[s > 100]                # filter the Series
+df["total"] = df["price"] * df["qty"]  # Series * Series</code></pre>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Slice</span><span class="gl-badge">Module 10 · Lists &amp; Tuples</span></div>
+  <div class="gl-def">A subset of a list (or string) extracted using the <code>[start:stop:step]</code> syntax. Start is inclusive, stop is exclusive. Slicing never raises an error for out-of-bounds indices — it just returns as much as exists.</div>
+  <pre><code>items = [0, 1, 2, 3, 4, 5]
+items[1:4]    # [1, 2, 3]
+items[:3]     # [0, 1, 2]
+items[::2]    # [0, 2, 4] — every other
+items[::-1]   # [5, 4, 3, 2, 1, 0] — reversed</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Storage (disk)</span><span class="gl-badge">Module 01 · Computer</span></div>
+  <div class="gl-def">Persistent memory — hard drives and SSDs — where files live when the power is off. Reading from or writing to disk is much slower than RAM. Python's <code>open()</code> function, <code>pd.read_csv()</code>, and <code>df.to_csv()</code> are all disk I/O operations.</div>
+  <div class="gl-also">See also: <a href="#R">RAM</a>, <a href="#C">CPU</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">String</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">Python's data type for text. Defined with single quotes <code>'hello'</code>, double quotes <code>"hello"</code>, or triple quotes for multi-line strings. Strings are immutable — methods like <code>.upper()</code> return a new string, they don't modify the original.</div>
+  <pre><code>name = "Alice"
+name.upper()           # "ALICE"
+name[0]                # "A"
+len(name)              # 5
+f"Hi, {name}!"        # "Hi, Alice!"</code></pre>
+</div>
+
+<!-- ═══ T ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="T">T</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Traceback</span><span class="gl-badge">Module 07 · Functions</span></div>
+  <div class="gl-def">Python's error report when a program crashes. Shows the sequence of function calls that led to the error (the "call stack"), with the most recent call last, followed by the error type and message. Read it bottom-up: the error type is on the last line, the location is one line above it.</div>
+  <pre><code>Traceback (most recent call last):
+  File "main.py", line 14, in &lt;module&gt;
+    total = total + price
+TypeError: unsupported operand type(s) for +:
+           'int' and 'str'
+# → price is a string; wrap it: int(price)</code></pre>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Truthy / Falsy</span><span class="gl-badge">Module 05 · Conditionals</span></div>
+  <div class="gl-def">Python evaluates any value as True or False in a boolean context. Falsy values are: <code>0</code>, <code>0.0</code>, <code>""</code> (empty string), <code>[]</code> (empty list), <code>{}</code> (empty dict), <code>None</code>. Everything else is truthy. Used in conditions and <code>while</code> loops.</div>
+  <pre><code>if items:          # True if list is non-empty
+    process(items)
+
+if not balance:    # True if balance is 0 or None
+    print("No balance")</code></pre>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">Tuple</span><span class="gl-badge">Module 10 · Lists &amp; Tuples</span></div>
+  <div class="gl-def">An ordered, immutable sequence. Defined with parentheses <code>()</code> or just commas. Use tuples for data that should not change — coordinates, RGB colors, database records. Functions that return multiple values return them as a tuple.</div>
+  <pre><code>point = (40.71, -74.00)   # lat, lon — should not change
+x, y = point               # unpack into variables
+
+def min_max(data):
+    return min(data), max(data)   # returns a tuple
+
+lo, hi = min_max([3, 1, 4, 1, 5])  # lo=1, hi=5</code></pre>
+  <div class="gl-also">See also: <a href="#L">List</a>, <a href="#I">Immutable</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Type conversion</span><span class="gl-badge">Module 04 · Operators</span></div>
+  <div class="gl-def">Explicitly changing a value from one type to another using built-in functions: <code>int()</code>, <code>float()</code>, <code>str()</code>, <code>bool()</code>. Required whenever <code>input()</code> returns a string that you need to treat as a number. <code>int("hello")</code> raises <code>ValueError</code>.</div>
+  <pre><code>age = int(input("Enter age: "))   # input always returns str
+price = float("19.99")
+display = str(42)
+int("42")    # 42  ✓
+int("42.5")  # ValueError ✗ — use int(float("42.5"))</code></pre>
+</div>
+
+<!-- ═══ U ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="U">U</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">UTF-8</span><span class="gl-badge">Module 12 · Files</span></div>
+  <div class="gl-def">The most common text encoding standard, capable of representing every character in every human language. Always specify <code>encoding="utf-8"</code> when opening text files in Python to avoid encoding errors on files with accented characters, currency symbols, or emoji.</div>
+  <pre><code>with open("data.txt", "r", encoding="utf-8") as f:
+    text = f.read()</code></pre>
+</div>
+
+<!-- ═══ V ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="V">V</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">Variable</span><span class="gl-badge">Module 03 · Variables</span></div>
+  <div class="gl-def">A named reference to a value stored in memory. In Python, variables are created by assignment (<code>=</code>) and can hold any type. Python variables are dynamically typed — a variable's type is determined by the value assigned to it, and can change.</div>
+  <pre><code>product_name = "Widget A"   # str
+unit_price   = 9.99          # float
+quantity     = 100           # int
+is_active    = True          # bool</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">Version control</span><span class="gl-badge">Module 08 · Git</span></div>
+  <div class="gl-def">A system for tracking and managing changes to files over time. Git is the standard version control system. Benefits: revert to any previous state, see exactly what changed and when, collaborate without overwriting each other's work, and provide an audit trail for data analysis projects.</div>
+  <div class="gl-also">See also: <a href="#G">Git</a>, <a href="#G">GitHub</a></div>
+</div>
+
+<!-- ═══ W ═══════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="W">W</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">while loop</span><span class="gl-badge">Module 06 · Loops</span></div>
+  <div class="gl-def">A loop that continues executing as long as its condition evaluates to True. Unlike a <code>for</code> loop, the number of iterations is not known in advance. You must ensure the condition can eventually become False — otherwise you create an infinite loop.</div>
+  <pre><code>attempts = 0
+while attempts < 3:
+    password = input("Password: ")
+    if password == "secret":
+        break
+    attempts += 1   # MUST change the condition variable!</code></pre>
+  <div class="gl-also">See also: <a href="#F">for loop</a>, <a href="#B">break</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">with statement</span><span class="gl-badge">Module 12 · Files</span></div>
+  <div class="gl-def">A context manager that ensures cleanup code runs regardless of whether an error occurs. Most commonly used with <code>open()</code> to guarantee a file is closed when the block exits, even if an exception is raised inside it.</div>
+  <pre><code>with open("sales.csv", "r") as f:
+    data = f.read()
+# f.close() is called automatically here</code></pre>
+</div>
+
+<!-- ═══ BACK NAV ══════════════════════════════════════════════════════════ -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:60px;">
+  <a href="../index.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">← Home</div>
+    <div style="font-weight:600;font-size:14px;">Full Course Index</div>
+  </a>
+  <a href="course_guide.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);text-align:right;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">Also useful →</div>
+    <div style="font-weight:600;font-size:14px;">Course Assembly Guide</div>
+  </a>
+</div>
+
+</div>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>

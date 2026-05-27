@@ -240,10 +240,24 @@ footer {
 .cs-card h3 { margin: 0 0 10px; color: #fbbf24; font-size: 14px; letter-spacing: .04em; }
 .cs-card pre { margin: 0; font-size: 12.5px; }
 .cs-note { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+/* chart guide cards use a narrower 2-col grid */
+.chart-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 18px 0; }
+@media (min-width: 600px) { .chart-grid { grid-template-columns: 1fr 1fr; } }
+.chart-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid #fbbf24; border-radius: 8px; padding: 14px 16px;
+}
+.chart-card h4 {
+  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
+  color: #fbbf24; letter-spacing: .04em;
+}
+.chart-card p { margin: 0; font-size: 13px; color: var(--muted); }
 </style>
 <div class="callout">
 <strong>How to use this:</strong> Print it. Annotate it. Bring it to lab. Cheatsheets are syntax-only — they don't teach concepts. Read the unit's weekly pages first, then come back here when you forget syntax mid-task.
 </div>
+
+<h2>Loading &amp; Inspecting</h2>
 <div class="cs-grid">
 <div class="cs-card"><h3>Loading data</h3>
 <pre><code>import pandas as pd
@@ -266,7 +280,10 @@ df.describe(include="object")  # for strings
 df["region"].value_counts()  # category counts
 df["region"].unique()        # unique values
 df["region"].nunique()       # how many unique</code></pre></div>
+</div>
 
+<h2>Selecting, Filtering &amp; Sorting</h2>
+<div class="cs-grid">
 <div class="cs-card"><h3>Selecting columns</h3>
 <pre><code>df["price"]                    # 1 column → Series
 df[["price", "qty"]]           # multiple → DataFrame
@@ -291,6 +308,23 @@ df.sort_values("price", ascending=False)
 df.sort_values(["region", "price"])
 df.sort_values("price").head(10)   # top 10</code></pre></div>
 
+<div class="cs-card"><h3>Renaming and reindexing</h3>
+<pre><code># rename columns
+df = df.rename(columns={
+    "old_name": "new_name",
+    "Qty": "quantity"
+})
+
+# rename all columns at once
+df.columns = ["col1", "col2", "col3"]
+
+# reset index after groupby
+result = df.groupby("region")["sales"].sum()
+result = result.reset_index()</code></pre></div>
+</div>
+
+<h2>Cleaning &amp; Transforming</h2>
+<div class="cs-grid">
 <div class="cs-card"><h3>Missing data</h3>
 <pre><code>df.isna().sum()           # null count per col
 df.dropna()               # remove rows with ANY null
@@ -306,6 +340,44 @@ df["category"] = df["category"].astype("category")
 # strip whitespace from strings
 df["name"] = df["name"].str.strip()</code></pre></div>
 
+<div class="cs-card"><h3>String operations on columns</h3>
+<pre><code>df["name"].str.upper()
+df["name"].str.lower()
+df["name"].str.strip()
+df["name"].str.contains("Pro")
+df["name"].str.startswith("A")
+df["name"].str.replace("$","", regex=False)
+df["price_str"].str.replace(",","").astype(float)
+df["name"].str.split(" ").str[0]  # first word</code></pre></div>
+
+<div class="cs-card"><h3>Date/time handling</h3>
+<pre><code>df["date"] = pd.to_datetime(df["date"])
+
+df["year"]    = df["date"].dt.year
+df["month"]   = df["date"].dt.month
+df["day"]     = df["date"].dt.day
+df["weekday"] = df["date"].dt.day_name()
+
+# filter by date range
+mask = (df["date"] &gt;= "2024-01-01") &amp; \
+       (df["date"] &lt;= "2024-12-31")
+df[mask]</code></pre></div>
+
+<div class="cs-card"><h3>Apply a function</h3>
+<pre><code>def tier(price):
+    if price &gt; 100: return "high"
+    if price &gt; 50:  return "mid"
+    return "low"
+
+df["tier"] = df["price"].apply(tier)
+# or shorter:
+df["tier"] = df["price"].apply(
+    lambda p: "high" if p &gt; 100 else "low"
+)</code></pre></div>
+</div>
+
+<h2>Aggregating &amp; Reshaping</h2>
+<div class="cs-grid">
 <div class="cs-card"><h3>Group by</h3>
 <pre><code># total sales per region
 df.groupby("region")["sales"].sum()
@@ -325,16 +397,31 @@ df["price"].max()
 df["price"].std()
 df["region"].count()</code></pre></div>
 
-<div class="cs-card"><h3>Apply a function</h3>
-<pre><code>def tier(price):
-    if price &gt; 100: return "high"
-    if price &gt; 50:  return "mid"
-    return "low"
+<div class="cs-card"><h3>Merging DataFrames</h3>
+<pre><code># like SQL JOIN
+merged = pd.merge(df1, df2,
+                  on="customer_id",
+                  how="left")   # left, right, inner, outer
 
-df["tier"] = df["price"].apply(tier)
-# or shorter:
-df["tier"] = df["price"].apply(lambda p: "high" if p &gt; 100 else "low")</code></pre></div>
+# concat (stack rows)
+combined = pd.concat([df1, df2], ignore_index=True)
 
+# concat (side by side)
+wide = pd.concat([df1, df2], axis=1)</code></pre></div>
+
+<div class="cs-card"><h3>pivot_table</h3>
+<pre><code># rows=product, cols=region, values=sales
+pt = df.pivot_table(
+    values="sales",
+    index="product",
+    columns="region",
+    aggfunc="sum",
+    fill_value=0
+)</code></pre></div>
+</div>
+
+<h2>Plotting</h2>
+<div class="cs-grid">
 <div class="cs-card"><h3>Plotting (matplotlib)</h3>
 <pre><code>import matplotlib.pyplot as plt
 
@@ -348,6 +435,19 @@ plt.xlabel("Month")
 plt.ylabel("USD")
 plt.show()</code></pre></div>
 
+<div class="cs-card"><h3>Seaborn quick reference</h3>
+<pre><code>import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.histplot(df["price"])
+sns.boxplot(x="region", y="sales", data=df)
+sns.scatterplot(x="price", y="qty", data=df)
+sns.barplot(x="region", y="sales", data=df)
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+
+plt.tight_layout()
+plt.show()</code></pre></div>
+
 <div class="cs-card"><h3>Saving results</h3>
 <pre><code>df.to_csv("cleaned.csv", index=False)
 df.to_excel("out.xlsx", index=False)
@@ -355,8 +455,49 @@ df.to_excel("out.xlsx", index=False)
 # save a chart
 plt.savefig("chart.png", dpi=150)</code></pre></div>
 </div>
-<div class="callout warn">
+
+<h2>Chart Type Guide</h2>
+<div class="chart-grid">
+  <div class="chart-card">
+    <h4>Bar chart</h4>
+    <p>Compare quantities across categories — e.g. sales by region, revenue by product.</p>
+  </div>
+  <div class="chart-card">
+    <h4>Line chart</h4>
+    <p>Show trends over time — e.g. monthly revenue, weekly orders, stock price over a year.</p>
+  </div>
+  <div class="chart-card">
+    <h4>Histogram</h4>
+    <p>Show the distribution of a single numeric variable — e.g. price spread, order size.</p>
+  </div>
+  <div class="chart-card">
+    <h4>Scatter plot</h4>
+    <p>Show the relationship between two numeric variables — e.g. price vs quantity sold.</p>
+  </div>
+  <div class="chart-card">
+    <h4>Box plot</h4>
+    <p>Show distribution and outliers across groups — e.g. salary ranges by department.</p>
+  </div>
+</div>
+
+<div class="callout">
 <strong>Reminder:</strong> The midterm exam (Unit 1-2) and capstone-eligible quizzes (Unit 3-4) test understanding, not memorization. The cheatsheet won't be available on the midterm — but the patterns will be in your head if you've used it enough.
+</div>
+
+<div class="callout pink">
+<div class="callout-title">Common Errors — Unit 4</div>
+<ul style="margin: 0; padding-left: 20px;">
+  <li><strong>SettingWithCopyWarning</strong> — assign to <code>.loc[]</code> not directly to a filtered slice: <code>df.loc[mask, "col"] = value</code>.</li>
+  <li><strong>KeyError when selecting a column</strong> — check <code>df.columns</code> for exact spelling and case; column names are case-sensitive.</li>
+  <li><strong>Using <code>and</code>/<code>or</code> in boolean filters</strong> — use <code>&amp;</code> and <code>|</code> instead, and wrap each condition in parentheses: <code>(df["price"] &gt; 50) &amp; (df["region"] == "South")</code>.</li>
+  <li><strong>Forgetting <code>reset_index()</code> after groupby</strong> — the grouped column becomes the index; call <code>.reset_index()</code> to make it a regular column again.</li>
+</ul>
+</div>
+
+<div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);">
+  <a href="../index.html" style="font-family: var(--mono); font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--border2); padding: 8px 16px; border-radius: 999px; display: inline-block; transition: color .12s, border-color .12s;">
+    ← Back to course index
+  </a>
 </div>
 </div></main>
 
