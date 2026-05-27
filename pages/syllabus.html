@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Syllabus — ISM2411</title>
+<title>Syllabus — ISM2411 Python for Business</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -17,292 +17,391 @@
   --border2:   rgba(255,255,255,.14);
   --accent:    #fbbf24;
   --code-bg:   #0a0a12;
-  --code-bg2:  #1a1a26;
   --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
   --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --u1: #34d399; --u2: #60a5fa; --u3: #c084fc; --u4: #fbbf24; --u5: #f472b6;
 }
 [data-theme="light"] {
-  --bg:      #fbfbf7;
-  --bg2:     #f5f5ee;
-  --bg3:     #ffffff;
-  --text:    #1a1a26;
-  --muted:   #4a4a5a;
-  --dim:     #7a7a8c;
-  --border:  rgba(0,0,0,.08);
-  --border2: rgba(0,0,0,.14);
-  --code-bg:  #1a1a26;
-  --code-bg2: #15151f;
+  --bg: #fbfbf7; --bg2: #f5f5ee; --bg3: #ffffff;
+  --text: #1a1a26; --muted: #4a4a5a; --dim: #7a7a8c;
+  --border: rgba(0,0,0,.08); --border2: rgba(0,0,0,.14);
+  --code-bg: #1a1a26;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
 body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
 .wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
-.page-eyebrow {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
-}
-h1 {
-  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
-  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
-}
-h2 {
-  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-  letter-spacing: -.01em;
-}
-h3 {
-  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
-  letter-spacing: -.005em;
-}
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 48px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; letter-spacing: -.005em; }
 p, ul, ol { color: var(--text); font-size: 15.5px; }
 ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
-.lede {
-  font-size: 17.5px; color: var(--muted); line-height: 1.6;
-  margin: 0 0 28px; max-width: 720px;
-}
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
 
-/* code blocks */
-code {
-  font-family: var(--mono); font-size: .92em;
-  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
-  border: 1px solid var(--border);
-}
-pre {
-  background: var(--code-bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
-  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
-  color: #f0f0f5;
-}
-pre code { background: none; padding: 0; border: 0; color: inherit; }
-
 /* meta bar */
-.meta {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 8px 0 28px; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-}
-.meta .chip {
-  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
-  color: var(--muted);
-}
+.meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 32px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-family: var(--mono); font-size: 12px; }
+.meta .chip { padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px; color: var(--muted); }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
 
-/* week jump bar — quick switch between reading/lecture/lab */
-.weekjump {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  margin: 0 0 32px; padding: 10px 14px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-}
-.weekjump-label {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--dim); text-transform: uppercase; margin-right: 4px;
-}
-.weekjump-link {
-  padding: 5px 12px; border-radius: 999px; text-decoration: none;
-  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
-  transition: background .12s, color .12s, border-color .12s;
-}
-.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
-.weekjump-link.current {
-  background: rgba(251,191,36,.12); color: var(--accent);
-  border-color: rgba(251,191,36,.4);
-}
-
 /* callout boxes */
-.callout {
-  margin: 22px 0; padding: 16px 20px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: 8px;
-}
-.callout-title {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
-.callout p:last-child { margin-bottom: 0; }
-.callout.green { border-left-color: #34d399; }
-.callout.green .callout-title { color: #34d399; }
-.callout.blue { border-left-color: #60a5fa; }
-.callout.blue .callout-title { color: #60a5fa; }
-.callout.pink { border-left-color: #f472b6; }
-.callout.pink .callout-title { color: #f472b6; }
-.callout.purple { border-left-color: #c084fc; }
-.callout.purple .callout-title { color: #c084fc; }
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout.green  { border-left-color: #34d399; } .callout.green  .callout-title { color: #34d399; }
+.callout.blue   { border-left-color: #60a5fa; } .callout.blue   .callout-title { color: #60a5fa; }
+.callout.pink   { border-left-color: #f472b6; } .callout.pink   .callout-title { color: #f472b6; }
+.callout.purple { border-left-color: #c084fc; } .callout.purple .callout-title { color: #c084fc; }
+.callout.red    { border-left-color: #f87171; } .callout.red    .callout-title { color: #f87171; }
 
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
-}
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
-}
-.topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
-}
+/* tables */
+table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14.5px; }
+thead th { background: var(--bg2); color: var(--muted); font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border2); }
+tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: var(--bg2); }
+td strong { display: block; }
+.total-row td { border-top: 1px solid var(--border2); font-weight: 700; background: var(--bg2); }
 
-/* prev/next nav */
-.pn {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-top: 60px;
-}
-.pn a {
-  display: block; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; text-decoration: none; color: var(--text);
-  transition: background .15s, transform .15s;
-}
-.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
-.pn .label {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
-}
-.pn .title { font-weight: 600; font-size: 14px; }
-.pn .next { text-align: right; }
+/* grade bar */
+.grade-bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; margin: 14px 0 4px; gap: 2px; }
+.grade-seg { height: 100%; border-radius: 2px; }
 
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
+/* module schedule */
+.sched-unit { margin-bottom: 8px; }
+.sched-unit-head { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 8px 14px; border-radius: 6px 6px 0 0; font-weight: 700; }
+.sched-row { display: grid; grid-template-columns: 90px 1fr 1fr; padding: 9px 14px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+.sched-row:last-child { border-bottom: 0; border-radius: 0 0 6px 6px; }
+.sched-num { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+.sched-topic { font-weight: 600; }
+.sched-notes { color: var(--muted); font-size: 13px; }
+.sched-mid { background: rgba(248,113,113,.06); }
+.sched-mid .sched-num { color: #f87171; }
+.sched-cap { background: rgba(244,114,182,.06); }
+.sched-cap .sched-num { color: #f472b6; }
 
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+/* quick nav */
+.quicknav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 32px; }
+.quicknav a { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 5px 12px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 999px; text-decoration: none; color: var(--muted); transition: color .12s, border-color .12s; }
+.quicknav a:hover { color: var(--accent); border-color: rgba(251,191,36,.4); }
 
-footer {
-  border-top: 1px solid var(--border); padding: 28px;
-  text-align: center; font-family: var(--mono); font-size: 11px;
-  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
-}
+/* policy sections */
+.policy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+@media (max-width: 600px) { .policy-grid { grid-template-columns: 1fr; } }
+.policy-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.policy-card h4 { margin: 0 0 8px; font-size: 13px; font-family: var(--mono); color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+.policy-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
 </style>
 </head>
 <body>
 
-<main id="content"><div class="wrap">
+<div class="wrap" id="main">
 <div class="page-eyebrow">COURSE POLICIES · ISM2411</div>
 <h1>Syllabus</h1>
-<p class="lede">ISM2411 — Python for Business · USF Muma College of Business · 16-week course · No prerequisites. Full course policies, schedule, and grading breakdown.</p>
+<p class="lede">ISM2411 — Python for Business · USF Muma College of Business · No prerequisites · Modular design supports 6-, 9-, or 16-week formats.</p>
 
-<h2>Course description</h2>
-<p>ISM2411 introduces Python programming through a business analytics lens. Students learn the core mechanics of the language — variables, conditionals, loops, functions, data structures — and then apply them to real datasets using pandas. The course assumes <strong>no prior programming experience</strong>. By the end, students can read messy business data, clean it, summarize it, visualize it, and explain their findings.</p>
-
-<h2>Learning outcomes</h2>
-<p>By the end of this course, students will be able to:</p>
-<ol>
-<li>Write Python scripts that use variables, conditionals, loops, and functions to solve business problems</li>
-<li>Read, write, and manipulate structured data using lists, dictionaries, and the pandas library</li>
-<li>Load datasets from CSV files, clean them, and compute descriptive statistics</li>
-<li>Group, filter, and aggregate data to answer business questions</li>
-<li>Create basic visualizations (bar, line, scatter) and interpret what they show</li>
-<li>Use Git and GitHub to manage and submit code</li>
-<li>Use AI coding assistants responsibly — verify, debug, and disclose</li>
-</ol>
-
-<h2>Required texts (all free)</h2>
-<ul>
-<li><strong>Think Python, 3rd ed.</strong> by Allen Downey — <a href="https://allendowney.github.io/ThinkPython/" target="_blank" rel="noopener">allendowney.github.io/ThinkPython</a></li>
-<li><strong>Python Data Science Handbook</strong> by Jake VanderPlas — <a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">jakevdp.github.io/PythonDataScienceHandbook</a></li>
-<li><strong>Python for Data Analysis, 3rd ed.</strong> by Wes McKinney — <a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">wesmckinney.com/book</a></li>
-</ul>
-
-<h2>Required software</h2>
-<p>See the <a href="precourse.html">Pre-Course Setup</a> page. You need Python 3.10+ and VS Code installed before Week 1. Both are free.</p>
-
-<h2>DataCamp</h2>
-<p>USF provides free DataCamp for Classrooms access. Eight courses are required, two more are optional. See the <a href="datacamp.html">DataCamp tracker</a>.</p>
-
-<h2>Grading breakdown</h2>
-<div class="grade-table">
-<table>
-<thead><tr><th>Component</th><th>Weight</th><th>Notes</th></tr></thead>
-<tbody>
-<tr><td>Weekly labs and quizzes</td><td>35%</td><td>14 weekly labs (W1-8, W10-15) plus weekly quizzes</td></tr>
-<tr><td>DataCamp courses</td><td>15%</td><td>8 required (10% if all complete by W15) + 2 optional (5%)</td></tr>
-<tr><td>Midterm exam</td><td>20%</td><td>Week 9, covers Units 1-2 (W1-8)</td></tr>
-<tr><td>Capstone project</td><td>25%</td><td>Week 16, retail sales analysis</td></tr>
-<tr><td>Participation</td><td>5%</td><td>In-class activities, peer help</td></tr>
-<tr><td><strong>Total</strong></td><td><strong>100%</strong></td><td></td></tr>
-</tbody>
-</table>
+<div class="meta">
+  <span class="chip accent">ISM2411</span>
+  <span class="chip">3 credit hours</span>
+  <span class="chip">No prerequisites</span>
+  <span class="chip">Muma College of Business</span>
+  <span class="chip">Hybrid</span>
 </div>
 
-<h2>Grading scale</h2>
-<p>Standard USF undergraduate scale: A 93+, A− 90-92, B+ 87-89, B 83-86, B− 80-82, C+ 77-79, C 73-76, C− 70-72, D+ 67-69, D 63-66, D− 60-62, F &lt; 60.</p>
+<nav class="quicknav" aria-label="Jump to section">
+  <a href="#description">Description</a>
+  <a href="#outcomes">Outcomes</a>
+  <a href="#texts">Texts</a>
+  <a href="#software">Software</a>
+  <a href="#grading">Grading</a>
+  <a href="#schedule">Schedule</a>
+  <a href="#policies">Policies</a>
+  <a href="#integrity">Integrity</a>
+  <a href="#resources">Resources</a>
+</nav>
 
-<h2>Quizzes</h2>
-<p>Weekly quizzes appear at the end of each reading page. Quizzes marked <span class="pill pill-exam" style="display:inline-block">★ MIDTERM-ELIGIBLE</span> (W1-8) and <span class="pill pill-exam" style="display:inline-block">★ CAPSTONE-ELIGIBLE</span> (W10-15) contain questions that may appear <em>verbatim</em> on the midterm or capstone-related assessments. Study these.</p>
+<!-- ── COURSE DESCRIPTION ─────────────────────────────────────────────────── -->
+<h2 id="description">Course Description</h2>
+<p>ISM2411 introduces Python programming through a business analytics lens. Students start from first principles — what a computer is, how the command line works — and build toward loading, cleaning, analyzing, and visualizing real datasets with pandas. The course assumes <strong>no prior programming experience</strong> and no prior statistics background. Every concept is introduced through business scenarios: pricing formulas, sales transactions, customer records, and retail datasets.</p>
+<p>This course is deliberately practical. By the final module, students have a GitHub portfolio with 15 labs and a capstone analysis they can show a recruiter. They also leave knowing when Python is the right tool and when Excel is fine — a judgment most introductory programming courses never teach.</p>
 
-<h2>Late work</h2>
-<p>Labs are due Sunday at 11:59pm ET of the week assigned. Late submissions lose 10% per day for up to 3 days, then are not accepted. One free "no-questions-asked" 48-hour extension is available per semester — request it before the deadline.</p>
+<div class="callout green">
+<div class="callout-title">Who this course is for</div>
+<p>Business, finance, marketing, supply chain, and management students who work with data in spreadsheets and want to do more. Also appropriate for students who have used no-code tools (Tableau, Power BI) and want to understand what's happening under the hood. Not appropriate for students who already know Python — see ISM3232 or ISM4314 instead.</p>
+</div>
 
-<h2>Attendance</h2>
-<p>Attendance is not graded directly but participation (5%) is. Missing more than 3 classes without explanation will affect this score. If you must miss class, watch the lecture page for that week and complete the in-class activity on your own.</p>
+<!-- ── LEARNING OUTCOMES ───────────────────────────────────────────────────── -->
+<h2 id="outcomes">Learning Outcomes</h2>
+<p>By the end of this course, students will be able to:</p>
+<ol>
+<li>Explain how a computer stores and executes a program; navigate the file system from the command line</li>
+<li>Write Python scripts that use variables, conditionals, loops, and functions to automate repetitive business calculations</li>
+<li>Read, write, and manipulate structured data using lists, dictionaries, and the csv module</li>
+<li>Load datasets from CSV files using pandas, clean messy data, and compute descriptive statistics</li>
+<li>Group, filter, and aggregate data with pandas to answer specific business questions</li>
+<li>Create bar, line, and histogram charts with matplotlib and seaborn; choose the right chart type for the data</li>
+<li>Use Git and GitHub to version-control, organize, and submit code professionally</li>
+<li>Use AI coding assistants responsibly — verify outputs, debug errors independently, and disclose AI-generated code per course policy</li>
+</ol>
 
-<h2>AI and coding assistants</h2>
-<p>This course teaches you to <em>use</em> AI tools as a professional would: deliberately, with verification, and with disclosure. See the <a href="ai_policy.html">AI Use Policy</a> for the three approved modes (Explainer, Debugger, Generator) and disclosure requirements.</p>
+<!-- ── REQUIRED TEXTS ─────────────────────────────────────────────────────── -->
+<h2 id="texts">Required Texts</h2>
+<p>All three textbooks are free online — no purchase required.</p>
+<div class="policy-grid">
+  <div class="policy-card">
+    <h4>Think Python, 3rd ed.</h4>
+    <p>Allen Downey. The primary text for Modules 1–8. Clear, example-driven, beginner-friendly. Read the assigned chapters before each Tuesday session.<br><br><a href="https://allendowney.github.io/ThinkPython/" target="_blank" rel="noopener">allendowney.github.io/ThinkPython</a></p>
+  </div>
+  <div class="policy-card">
+    <h4>Python Data Science Handbook</h4>
+    <p>Jake VanderPlas. Used for Modules 13–15 (pandas and visualization). The NumPy chapters are optional; focus on Chapter 3 (pandas) and Chapter 4 (matplotlib).<br><br><a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">jakevdp.github.io/PythonDataScienceHandbook</a></p>
+  </div>
+  <div class="policy-card">
+    <h4>Python for Data Analysis, 3rd ed.</h4>
+    <p>Wes McKinney (creator of pandas). Reference-level detail on pandas. Use it to look up methods and understand edge cases — you don't need to read it cover-to-cover.<br><br><a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">wesmckinney.com/book</a></p>
+  </div>
+  <div class="policy-card">
+    <h4>DataCamp (8 required courses)</h4>
+    <p>USF provides free DataCamp for Classrooms access. Eight courses run parallel to the lecture content. See the <a href="datacamp.html">DataCamp tracker page</a> for the full list and deadlines.</p>
+  </div>
+</div>
 
-<h2>Academic integrity</h2>
-<p>You may discuss concepts with classmates. You may not share code for graded labs. You may use AI tools per the AI policy. Copying classmates' code or undisclosed AI generation on the midterm or capstone is academic dishonesty and will be reported to the Office of Student Conduct.</p>
+<!-- ── REQUIRED SOFTWARE ──────────────────────────────────────────────────── -->
+<h2 id="software">Required Software</h2>
+<p>All software is free. Install everything before the first class session — see the <a href="precourse.html">Pre-Course Setup page</a> for step-by-step instructions.</p>
+<ul>
+  <li><strong>Python 3.10 or later</strong> — the language itself. Verify with <code>python --version</code> in a terminal.</li>
+  <li><strong>VS Code</strong> — the code editor used in all lectures and labs. Install the Python extension inside VS Code.</li>
+  <li><strong>Git</strong> — version control. Used from Module 8 onward. Verify with <code>git --version</code>.</li>
+  <li><strong>GitHub account</strong> — free. Use your USF email to sign up. All lab submissions from Module 8 onward go through GitHub.</li>
+  <li><strong>Jupyter</strong> — installed automatically with <code>pip install notebook</code>. Used for labs and the capstone.</li>
+</ul>
+<div class="callout blue">
+<div class="callout-title">Laptop requirement</div>
+<p>You need a laptop you can bring to every class — Mac, Windows, or Linux all work. Chromebooks and tablets do not support the local Python environment used in this course. If you don't have a qualifying laptop, contact the instructor in Week 1 to explore lab computer options.</p>
+</div>
 
-<h2>Accessibility</h2>
-<p>Students requiring accommodations should register with USF Student Accessibility Services and provide documentation in the first two weeks. All course materials on this site work with screen readers and offer dark/light themes plus adjustable font sizes (top-right controls).</p>
+<!-- ── GRADING ─────────────────────────────────────────────────────────────── -->
+<h2 id="grading">Grading</h2>
 
-<h2>Office hours</h2>
-<p>To be announced in Week 1. Office hours are the single best resource in this course — use them.</p>
+<div class="grade-bar">
+  <div class="grade-seg" style="width:35%;background:#34d399;" title="Labs & Quizzes 35%"></div>
+  <div class="grade-seg" style="width:15%;background:#60a5fa;" title="DataCamp 15%"></div>
+  <div class="grade-seg" style="width:20%;background:#f87171;" title="Midterm 20%"></div>
+  <div class="grade-seg" style="width:25%;background:#f472b6;" title="Capstone 25%"></div>
+  <div class="grade-seg" style="width:5%;background:#fbbf24;" title="Participation 5%"></div>
+</div>
+<p style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:4px;">
+  <span style="color:#34d399;">■</span> Labs &amp; Quizzes 35% &nbsp;
+  <span style="color:#60a5fa;">■</span> DataCamp 15% &nbsp;
+  <span style="color:#f87171;">■</span> Midterm 20% &nbsp;
+  <span style="color:#f472b6;">■</span> Capstone 25% &nbsp;
+  <span style="color:#fbbf24;">■</span> Participation 5%
+</p>
 
-<h2>Course modifications</h2>
-<p>The instructor reserves the right to modify the schedule, assignments, or grading breakdown with reasonable notice. Any changes will be announced in class and posted to the course site.</p>
+<table>
+<thead>
+<tr><th>Component</th><th>Weight</th><th>Details</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Weekly Labs</strong><span style="font-size:13px;color:var(--muted);">Modules 1–8, 10–15</span></td>
+  <td>30%</td>
+  <td>14 labs total. Graded on correctness and completion. Code must run without errors; output must match the expected result. Submitted via GitHub (Modules 8+) or Canvas (Modules 1–7).</td>
+</tr>
+<tr>
+  <td><strong>Weekly Quizzes</strong><span style="font-size:13px;color:var(--muted);">Modules 1–8, 10–15</span></td>
+  <td>5%</td>
+  <td>14 quizzes on the reading pages. Completed in Canvas before Tuesday's session. Open-note, not timed. Quiz questions marked ★ repeat on the midterm or capstone verbatim or with minor variation.</td>
+</tr>
+<tr>
+  <td><strong>DataCamp Courses</strong><span style="font-size:13px;color:var(--muted);">8 required + 2 optional</span></td>
+  <td>15%</td>
+  <td>Graded on completion only — not on score or speed. 8 required courses = 10%. 2 optional extra-credit courses = up to 5% bonus. See the <a href="datacamp.html">DataCamp page</a> for deadlines.</td>
+</tr>
+<tr>
+  <td><strong>Midterm Exam</strong><span style="font-size:13px;color:var(--muted);">Module 9</span></td>
+  <td>20%</td>
+  <td>75-minute in-class exam. Covers Modules 1–8. Mix of multiple choice, short answer, and "what does this code print" / "fix this bug" problems. One double-sided handwritten or printed cheatsheet allowed. No laptops, no phones.</td>
+</tr>
+<tr>
+  <td><strong>Capstone Project</strong><span style="font-size:13px;color:var(--muted);">Module 16</span></td>
+  <td>25%</td>
+  <td>End-to-end retail sales analysis. Structured milestone workflow Monday–Thursday; 5–7 minute presentations Thursday–Friday. Full rubric at <a href="capstone_rubric.html">capstone_rubric.html</a>. Submitted as a GitHub repo with a Jupyter notebook.</td>
+</tr>
+<tr>
+  <td><strong>Participation</strong></td>
+  <td>5%</td>
+  <td>Assessed holistically at midterm and end of semester. Includes: completing in-class activities, contributing to discussions, helping peers, attending office hours, and demonstrating effort during labs.</td>
+</tr>
+<tr class="total-row">
+  <td><strong>Total</strong></td>
+  <td><strong>100%</strong></td>
+  <td>Plus up to 5% bonus from optional DataCamp courses.</td>
+</tr>
+</tbody>
+</table>
 
+<h3>Grading Scale</h3>
+<table>
+<thead><tr><th>Grade</th><th>Range</th><th>Grade</th><th>Range</th><th>Grade</th><th>Range</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>93–100</td><td>B</td><td>83–86</td><td>C</td><td>73–76</td></tr>
+<tr><td>A−</td><td>90–92</td><td>B−</td><td>80–82</td><td>C−</td><td>70–72</td></tr>
+<tr><td>B+</td><td>87–89</td><td>C+</td><td>77–79</td><td>D+</td><td>67–69</td></tr>
+<tr><td></td><td></td><td></td><td></td><td>D / D− / F</td><td>&lt; 67</td></tr>
+</tbody>
+</table>
 
-</div></main>
+<h3>Lab Grading Rubric</h3>
+<p>Each lab is scored out of 10 points:</p>
+<ul>
+  <li><strong>4 pts — Correctness:</strong> code produces the expected output for all exercises</li>
+  <li><strong>3 pts — Completion:</strong> all exercises attempted, including stretch challenges (partial credit for reasonable attempts)</li>
+  <li><strong>2 pts — Code quality:</strong> meaningful variable names, no unnecessary repetition, code is readable</li>
+  <li><strong>1 pt — Submission:</strong> submitted on time via the correct method (GitHub repo link or Canvas upload), notebook runs clean from top to bottom</li>
+</ul>
+
+<!-- ── MODULE SCHEDULE ────────────────────────────────────────────────────── -->
+<h2 id="schedule">Module Schedule</h2>
+<p>One module per week in the 16-week format. See the <a href="course_guide.html">Course Assembly Guide</a> for 6-week and 9-week configurations.</p>
+
+<div class="sched-unit">
+  <div class="sched-unit-head" style="background:rgba(52,211,153,.1);color:#34d399;">Unit 1 — Foundations · Modules 1–5</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:0;border-radius:0 0 8px 8px;">
+    <div class="sched-row"><span class="sched-num">Module 01</span><span class="sched-topic">What is a Computer?</span><span class="sched-notes">CPU, memory, storage, files, paths — no coding</span></div>
+    <div class="sched-row"><span class="sched-num">Module 02</span><span class="sched-topic">The Command Line</span><span class="sched-notes">Terminal, paths, Python install, first script</span></div>
+    <div class="sched-row"><span class="sched-num">Module 03</span><span class="sched-topic">Variables &amp; First Output</span><span class="sched-notes">Types, print(), input(), f-strings, Jupyter</span></div>
+    <div class="sched-row"><span class="sched-num">Module 04</span><span class="sched-topic">Operators &amp; Expressions</span><span class="sched-notes">Arithmetic, comparison, logical; revenue formulas</span></div>
+    <div class="sched-row"><span class="sched-num">Module 05</span><span class="sched-topic">Conditionals</span><span class="sched-notes">if / elif / else; decision logic; discount tiers</span></div>
+  </div>
+</div>
+
+<div class="sched-unit">
+  <div class="sched-unit-head" style="background:rgba(96,165,250,.1);color:#60a5fa;">Unit 2 — Control Flow &amp; Structure · Modules 6–9</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:0;border-radius:0 0 8px 8px;">
+    <div class="sched-row"><span class="sched-num">Module 06</span><span class="sched-topic">Loops</span><span class="sched-notes">for / while; break / continue; process transactions</span></div>
+    <div class="sched-row"><span class="sched-num">Module 07</span><span class="sched-topic">Functions, Debugging &amp; AI Literacy</span><span class="sched-notes">def / return; tracebacks; AI modes; disclosure policy</span></div>
+    <div class="sched-row"><span class="sched-num">Module 08</span><span class="sched-topic">Git &amp; GitHub</span><span class="sched-notes">Version control; push/pull; GitHub submission starts here</span></div>
+    <div class="sched-row sched-mid"><span class="sched-num">Module 09</span><span class="sched-topic">Midterm Exam</span><span class="sched-notes">Covers Modules 1–8 · open cheatsheet · 75 min · no new content</span></div>
+  </div>
+</div>
+
+<div class="sched-unit">
+  <div class="sched-unit-head" style="background:rgba(192,132,252,.1);color:#c084fc;">Unit 3 — Data Structures · Modules 10–12</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:0;border-radius:0 0 8px 8px;">
+    <div class="sched-row"><span class="sched-num">Module 10</span><span class="sched-topic">Lists &amp; Tuples</span><span class="sched-notes">Indexing, slicing, methods; product inventory</span></div>
+    <div class="sched-row"><span class="sched-num">Module 11</span><span class="sched-topic">Dictionaries</span><span class="sched-notes">Key-value pairs; nesting; customer records</span></div>
+    <div class="sched-row"><span class="sched-num">Module 12</span><span class="sched-topic">Working with Files</span><span class="sched-notes">txt / csv; open(); import data; export report</span></div>
+  </div>
+</div>
+
+<div class="sched-unit">
+  <div class="sched-unit-head" style="background:rgba(251,191,36,.1);color:#fbbf24;">Unit 4 — Data Analysis with pandas · Modules 13–15</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:0;border-radius:0 0 8px 8px;">
+    <div class="sched-row"><span class="sched-num">Module 13</span><span class="sched-topic">Intro to pandas</span><span class="sched-notes">DataFrames; read_csv; filter, sort; retail dataset</span></div>
+    <div class="sched-row"><span class="sched-num">Module 14</span><span class="sched-topic">Data Cleaning &amp; Descriptive Stats</span><span class="sched-notes">Missing values; dtypes; describe(), mean(), median()</span></div>
+    <div class="sched-row"><span class="sched-num">Module 15</span><span class="sched-topic">Grouping &amp; Visualization</span><span class="sched-notes">groupby(); matplotlib; seaborn; chart selection</span></div>
+  </div>
+</div>
+
+<div class="sched-unit">
+  <div class="sched-unit-head" style="background:rgba(244,114,182,.1);color:#f472b6;">Unit 5 — Capstone · Module 16</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:0;border-radius:0 0 8px 8px;">
+    <div class="sched-row sched-cap"><span class="sched-num">Module 16</span><span class="sched-topic">Capstone Project</span><span class="sched-notes">End-to-end retail analysis; GitHub repo; 5–7 min presentation</span></div>
+  </div>
+</div>
+
+<!-- ── POLICIES ────────────────────────────────────────────────────────────── -->
+<h2 id="policies">Course Policies</h2>
+
+<h3>Late Work</h3>
+<p>Labs are due <strong>Sunday at 11:59 pm ET</strong> of the module week they are assigned. Late submissions are penalized 10% per calendar day (not per class day) for up to three days. After three days, the lab is not accepted and receives a zero. The late penalty does not apply to the capstone — see the capstone guide for its milestone deadlines.</p>
+<div class="callout">
+<div class="callout-title">One free extension</div>
+<p>Each student has one 48-hour no-questions-asked extension per semester. To use it, email the instructor <strong>before the deadline</strong> with the subject line "ISM2411 Extension — Module NN." You cannot use the extension on the midterm or capstone.</p>
+</div>
+
+<h3>Attendance</h3>
+<p>Attendance is not taken and is not directly graded. However, participation (5% of your grade) is affected by engagement in class. In practice, students who miss more than three classes without notice struggle with labs — the material compounds quickly. If you must miss a session, review the lecture page for that module and complete the in-class activity on your own before the next session.</p>
+
+<h3>Quiz Policy</h3>
+<p>Quizzes are on Canvas, open before Tuesday's session, and due before Thursday's lab. They are open-note and untimed. The purpose is to ensure you've done the reading before lecture — not to test your ability to memorize under pressure. Questions marked ★ MIDTERM-ELIGIBLE or ★ CAPSTONE-ELIGIBLE reappear on formal assessments verbatim or with minor variation. Treat the quiz as your first study session for the exam.</p>
+
+<h3>Midterm Makeup</h3>
+<p>If you cannot attend the midterm due to illness or a documented emergency, email the instructor <strong>before the exam starts</strong>. Makeup exams are arranged through USF Student Accessibility Services or directly with the instructor for verified emergencies. Skipping the exam without contact results in a zero — there is no default makeup window.</p>
+
+<h3>Laptop and Technology</h3>
+<p>Bring your laptop to every session. During labs, you are expected to have VS Code and Python running. During lecture, use your laptop to follow along with code — but close social media and unrelated tabs. During the midterm, all devices are prohibited except a printed cheatsheet.</p>
+
+<!-- ── ACADEMIC INTEGRITY ───────────────────────────────────────────────────── -->
+<h2 id="integrity">Academic Integrity &amp; AI Policy</h2>
+
+<h3>Collaboration</h3>
+<p>You may discuss concepts, error messages, and general approaches with classmates. You may not share code for graded labs — each student's submission must be written independently. If you debug together, each of you must write your own solution from scratch afterward. The standard is: can you explain every line of your submission without help? If not, it's not yours.</p>
+
+<h3>AI Coding Assistants</h3>
+<p>This course teaches professional use of AI tools — not avoidance of them. There are three approved modes:</p>
+<ul>
+  <li><strong>Explainer mode:</strong> ask AI to explain a concept or a piece of code you don't understand. Always encouraged.</li>
+  <li><strong>Debugger mode:</strong> paste an error message and ask AI to explain what went wrong. Allowed, but try to read the traceback yourself first.</li>
+  <li><strong>Generator mode:</strong> ask AI to write code for you. Allowed <em>only if</em> you (a) understand every line it produces, (b) can explain it without the AI, and (c) disclose that AI generated it in your submission comment.</li>
+</ul>
+<div class="callout red">
+<div class="callout-title">Prohibited uses</div>
+<p>Using AI to complete the midterm exam in any form is academic dishonesty. Submitting AI-generated code without disclosure is academic dishonesty. Using AI to write code you cannot explain is a waste of this course — you'll pay for it on the midterm and the capstone interview portion.</p>
+</div>
+<p>See the full <a href="ai_policy.html">AI Use Policy page</a> for examples of each mode and the exact disclosure language to use in submissions.</p>
+
+<h3>USF Academic Honesty Policy</h3>
+<p>Violations are reported to the Office of Student Conduct per USF policy (FGCU 6C4-10.081). Confirmed violations result in a zero on the assignment and may result in a failing grade in the course. The policy applies regardless of whether the student knew the rules — read this syllabus.</p>
+
+<!-- ── RESOURCES ────────────────────────────────────────────────────────────── -->
+<h2 id="resources">Resources &amp; Support</h2>
+
+<div class="policy-grid">
+  <div class="policy-card">
+    <h4>Office Hours</h4>
+    <p>Announced in Module 1. Office hours are the highest-ROI activity in this course — bring a specific error or concept question. You will leave understanding something you didn't before.</p>
+  </div>
+  <div class="policy-card">
+    <h4>Student Accessibility Services</h4>
+    <p>Register with <a href="https://www.usf.edu/student-affairs/student-accessibility-services/" target="_blank" rel="noopener">USF SAS</a> and provide documentation in the first two weeks. Extended time, alternate testing locations, and other accommodations are arranged through SAS — not at the door on exam day.</p>
+  </div>
+  <div class="policy-card">
+    <h4>USF IT Help Desk</h4>
+    <p>For laptop, network, or software installation issues. Contact before the second class if you're having trouble getting Python or VS Code running. Don't wait until Lab 1 to discover a broken install.</p>
+  </div>
+  <div class="policy-card">
+    <h4>Writing Studio &amp; Tutoring</h4>
+    <p>The capstone requires written interpretation of results. USF's Writing Studio can help with clarity. Programming tutoring is available through the College of Engineering tutoring center (open to all students).</p>
+  </div>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Stuck on a bug?</div>
+<p>Before emailing: (1) read the full traceback — the answer is usually in the last two lines, (2) search the exact error message in quotes, (3) check the relevant module's Reading and Lecture pages for a Common Errors section. If you've done all three and are still stuck, bring the error to office hours or post it in the class discussion board with your code pasted as text (not a screenshot).</p>
+</div>
+
+<h3>Course Modifications</h3>
+<p>The instructor reserves the right to modify the schedule, assignments, and grading breakdown with reasonable advance notice. Any changes will be announced in class and reflected on this site. The core structure — labs, midterm, capstone — will not change after Module 2.</p>
+
+<div class="pn" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:60px;">
+  <a href="../index.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">← Home</div>
+    <div style="font-weight:600;font-size:14px;">Full Course Index</div>
+  </a>
+  <a href="precourse.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s;text-align:right;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">Next →</div>
+    <div style="font-weight:600;font-size:14px;">Pre-Course Setup</div>
+  </a>
+</div>
+</div>
 
 <footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
 <script id="ism-site-js" src="../assets/js/site.js"></script>
