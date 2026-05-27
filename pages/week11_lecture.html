@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 11 Lecture · Dictionaries — ISM2411</title>
+<title>Module 11 Lecture · Dictionaries — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,71 +227,177 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 11 · Lecture</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 11 · Lecture</div>
 <h1>Dictionaries</h1>
 <p class="lede">Dictionaries store related data together with labels. This is the bridge to working with structured business records — customers, products, orders — and a stepping stone to pandas DataFrames in Unit 4.</p>
 <div class="meta">
-<span class="chip accent">Week 11 · Lecture</span>
+<span class="chip accent">Module 11 · Lecture</span>
 <span class="chip">Unit 3</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week11_reading.html" class="weekjump-link">Reading</a>
 <a href="week11_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week11_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>Key-value pairs</h3>
-<p>A dictionary is a set of key: value pairs in curly braces. Keys are usually strings; values can be anything.</p>
+<p>A dictionary is a set of key-value pairs in curly braces. Keys are usually strings; values can be anything — strings, numbers, lists, even other dictionaries. You access a value by its key, not by a position number. This makes code dramatically more readable: <code>customer["tier"]</code> tells you exactly what you're looking up, while <code>customer[3]</code> tells you nothing.</p>
+<p>In a business context, think of a dictionary as one row in a database table, where each column name is a key. A CRM entry is a dictionary. A product record from an inventory system is a dictionary. A line item on an invoice is a dictionary. Once you see this pattern, you'll find dictionaries everywhere.</p>
+<p>Keys must be unique within a dictionary — you cannot have two entries with the key <code>"tier"</code>. If you assign to an existing key, it overwrites the old value. This is how updates work.</p>
 <pre><code>customer = {
-    &quot;name&quot;: &quot;Alice&quot;,
-    &quot;tier&quot;: &quot;gold&quot;,
-    &quot;ytd_spend&quot;: 12400,
+    "name": "Alice",
+    "tier": "gold",
+    "ytd_spend": 12400,
 }
 
-print(customer[&quot;name&quot;])         # Alice
-print(customer[&quot;ytd_spend&quot;])    # 12400</code></pre>
-<h3>Adding, updating, deleting</h3>
-<pre><code>customer[&quot;email&quot;] = &quot;a@x.com&quot;   # add
-customer[&quot;tier&quot;] = &quot;platinum&quot;     # update
-del customer[&quot;ytd_spend&quot;]         # delete</code></pre>
-<h3>.get() — the safer way to read</h3>
-<p>If you ask for a key that does not exist with [], Python throws a KeyError. .get() returns None instead (or a default you provide).</p>
-<pre><code>customer.get(&quot;email&quot;)                  # None if missing
-customer.get(&quot;email&quot;, &quot;no email&quot;)      # default value</code></pre>
-<h3>Iterating</h3>
-<p>A plain for loop over a dict iterates the keys. .items() gives you both.</p>
-<pre><code>product = {&quot;name&quot;: &quot;Laptop&quot;, &quot;price&quot;: 999, &quot;stock&quot;: 12}
+print(customer["name"])         # Alice
+print(customer["ytd_spend"])    # 12400</code></pre>
 
+<h3>Adding, updating, deleting</h3>
+<p>Adding a new key works the same way as updating an existing one — just assign to it. If the key exists, the value is overwritten. If it doesn't exist, a new entry is created. This simplicity is one of Python's strengths: no special method needed, just assignment.</p>
+<p>Deleting uses either the <code>del</code> statement (which raises a KeyError if the key is missing) or <code>.pop(key)</code> (which also returns the deleted value and can accept a default to avoid the error). Use <code>.pop()</code> when you want to retrieve the value as you delete it.</p>
+<pre><code>customer["email"] = "a@x.com"   # add new key
+customer["tier"] = "platinum"     # update existing key
+del customer["ytd_spend"]         # delete — raises KeyError if missing
+removed = customer.pop("email", None)  # delete and return; None if missing</code></pre>
+
+<h3>.get() — the safer way to read</h3>
+<p>If you ask for a key that does not exist using bracket notation, Python throws a <code>KeyError</code> and your program crashes. This is the single most common dictionary bug for beginners. The fix is <code>.get()</code>, which returns a default value instead of crashing.</p>
+<p>The two-argument form <code>customer.get("phone", "N/A")</code> is especially useful when processing records that may have optional fields — exactly the kind of thing you encounter with real-world CSV exports where some rows have data and some don't.</p>
+<pre><code>customer.get("email")                  # None if missing (no crash)
+customer.get("email", "no email")      # "no email" if missing
+customer.get("tier", "bronze")         # "bronze" if tier not set</code></pre>
+
+<h3>Iterating</h3>
+<p>A plain <code>for</code> loop over a dictionary iterates the keys only. This surprises beginners who expect both key and value. To get both, use <code>.items()</code> which yields <code>(key, value)</code> tuples. Use <code>.keys()</code> to be explicit about iterating keys, and <code>.values()</code> to iterate only values — useful when you want to sum or aggregate the values.</p>
+<p>The <code>.items()</code> pattern is the most useful and appears in virtually every real dictionary-processing script. Memorize this one.</p>
+<pre><code>product = {"name": "Laptop", "price": 999, "stock": 12}
+
+# Keys only (default)
 for key in product:
     print(key, product[key])
 
+# Keys and values together
 for key, val in product.items():
-    print(f&quot;{key}: {val}&quot;)</code></pre>
+    print(f"{key}: {val}")
+
+# Sum all numeric values
+total = sum(product.values())  # won't work here (mixed types) — just for illustration</code></pre>
+
 <h3>Lookup tables — a common business pattern</h3>
-<p>Dictionaries are perfect for code-to-name mappings.</p>
+<p>One of the most powerful and underused patterns with dictionaries is the lookup table: a dictionary that maps one value to another. Instead of a chain of <code>if/elif</code> statements that checks each possible tier, you define the mapping once in a dictionary and look up the result in one line. This is more readable, easier to maintain, and simpler to extend — adding a new tier is just one new line in the dictionary.</p>
+<p>This pattern replaces what you might have done with a VLOOKUP in Excel. The dictionary <em>is</em> the lookup table, and <code>.get(key, default)</code> is the lookup operation.</p>
 <pre><code>tier_discounts = {
-    &quot;bronze&quot;: 0.00,
-    &quot;silver&quot;: 0.05,
-    &quot;gold&quot;:   0.10,
-    &quot;platinum&quot;: 0.15,
+    "bronze": 0.00,
+    "silver": 0.05,
+    "gold":   0.10,
+    "platinum": 0.15,
 }
 
-d = tier_discounts.get(customer[&quot;tier&quot;], 0)</code></pre>
+# One-line lookup — no if/elif chain needed
+discount = tier_discounts.get(customer["tier"], 0)
+final_price = purchase * (1 - discount)
+print(f"Discount: {discount*100:.0f}%  Final: ${final_price:.2f}")</code></pre>
+
+<h2>Code Walkthrough</h2>
+
+<h3>Nested dictionary: a product catalog</h3>
+<p>Dictionaries can nest inside dictionaries to any depth. A product catalog is a natural example: the outer dictionary maps product names to records, and each record is itself a dictionary of attributes. Nested access uses multiple bracket calls in sequence.</p>
+<pre><code>catalog = {
+    "Widget A": {"price": 9.99,  "stock": 150, "category": "supplies"},
+    "Widget B": {"price": 14.99, "stock": 30,  "category": "supplies"},
+    "Gadget C": {"price": 49.99, "stock": 8,   "category": "electronics"},
+}
+
+# Access nested value
+print(catalog["Gadget C"]["price"])    # 49.99
+
+# Update stock after a sale
+catalog["Widget A"]["stock"] -= 5
+
+# List all products with low stock
+for name, details in catalog.items():
+    if details["stock"] < 20:
+        print(f"LOW STOCK: {name} — only {details['stock']} left")</code></pre>
+
+<h3>List of dictionaries: processing multiple records</h3>
+<p>A list of dictionaries is the Python equivalent of a spreadsheet table — each dictionary is a row, each key is a column name. This structure is extremely common when reading CSV files (Module 12) and when working with pandas DataFrames (Unit 4). Practice it now.</p>
+<pre><code>customers = [
+    {"name": "Alice",   "tier": "gold",     "ytd_spend": 12400},
+    {"name": "Bob",     "tier": "silver",   "ytd_spend": 3200},
+    {"name": "Carol",   "tier": "platinum", "ytd_spend": 28900},
+    {"name": "David",   "tier": "bronze",   "ytd_spend": 450},
+]
+
+# Find the highest spender
+top = max(customers, key=lambda c: c["ytd_spend"])
+print(f"Top customer: {top['name']} (${top['ytd_spend']:,})")
+
+# Total revenue from gold+ tiers
+premium = [c["ytd_spend"] for c in customers if c["tier"] in ("gold", "platinum")]
+print(f"Premium revenue: ${sum(premium):,}")</code></pre>
+
+<h2>Common Errors</h2>
+
+<h3>KeyError on bracket access</h3>
+<p>This is the most common dictionary error. Bracket access crashes if the key doesn't exist. Always ask: "Am I certain this key is in every record?" If there's any doubt, use <code>.get()</code>.</p>
+<pre><code># WRONG — crashes if "phone" key is missing
+phone = customer["phone"]
+
+# RIGHT — returns "N/A" instead of crashing
+phone = customer.get("phone", "N/A")</code></pre>
+
+<h3>Iterating keys when you want values</h3>
+<p>A plain for loop gives you keys, not key-value pairs. This surprises students who expect both. The fix is always <code>.items()</code>.</p>
+<pre><code># WRONG — prints keys, then crashes trying to print key as value
+for item in product:
+    print(item["price"])   # TypeError: string indices must be integers
+
+# RIGHT
+for name, details in catalog.items():
+    print(name, details["price"])</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>Your company's CRM system stores customer data in a spreadsheet with 20 columns. A junior analyst wrote a script that accesses data by column index (e.g., <code>row[7]</code> for the email address). Why is this fragile? How would you redesign it using dictionaries?</li>
+<li>A colleague proposes storing the product catalog as a list of tuples: <code>[("Widget A", 9.99, 150), ("Widget B", 14.99, 30)]</code>. What are the advantages and disadvantages of this approach compared to a list of dictionaries?</li>
+<li>When would you use a dictionary as a lookup table instead of a series of if/elif statements? Give a real business example where the dictionary approach would save significant code.</li>
+<li>Dictionaries are unordered by default (though Python 3.7+ preserves insertion order). Does order matter for a customer record? When might you want to sort the output of a dictionary, and how would you do it?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
-<li>Build a dictionary of one customer record and add 3 more fields to it.</li>
-<li>Use .get() to safely look up a missing key.</li>
-<li>Iterate over a dict of {product: price} and print each line.</li>
+<li>Build a dictionary of one customer record with at least 6 fields: name, email, tier, ytd_spend, phone, signup_date.</li>
+<li>Add a <code>preferred_contact</code> field. Update the tier. Delete the phone field with <code>del</code>. Print after each step.</li>
+<li>Use <code>.get()</code> to safely look up a field that you deleted — confirm it returns the default instead of crashing.</li>
+<li>Iterate over a dict of <code>{product_name: price}</code> and print each line formatted as <code>"Widget A: $9.99"</code>.</li>
+<li>Build a tier-to-discount lookup table and use it to compute the discount for each customer in a list of dictionaries.</li>
+<li>Build a nested catalog dictionary and find all products with stock below a threshold you choose.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>Dictionaries give you named access to data — <code>record["email"]</code> is clearer and safer than <code>record[6]</code>.</li>
+<li>Always use <code>.get(key, default)</code> when a key might be missing — never rely on bracket access for optional fields.</li>
+<li>Use <code>.items()</code> when iterating if you need both key and value simultaneously.</li>
+<li>A lookup-table dictionary replaces chains of if/elif and makes adding new cases trivial.</li>
+<li>A list of dictionaries is the Python equivalent of a spreadsheet table — master this pattern before Module 12.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week11_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation verbatim or with minor variation. See the <a href="week11_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
-<div class="callout green">
-<div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week11_lab.html">Week 11 Lab</a></p>
+
+<div class="pn">
+<a href="week11_reading.html"><div class="label">← Previous</div><div class="title">Module 11 · Reading</div></a>
+<a class="next" href="week11_lab.html"><div class="label">Next →</div><div class="title">Module 11 · Lab</div></a>
 </div>
 </div>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 10 Lecture · Lists &amp; Tuples — ISM2411</title>
+<title>Module 10 Lecture · Lists &amp; Tuples — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,62 +227,174 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 10 · Lecture</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 10 · Lecture</div>
 <h1>Lists &amp; Tuples</h1>
-<p class="lede">Lists are the first collection. Anything that comes in groups — products, customers, sales, dates — lives in a list. After today, you will use lists every single week.</p>
+<p class="lede">Lists are the first collection. Anything that comes in groups — products, customers, sales, dates — lives in a list. After today, you will use lists every single module.</p>
 <div class="meta">
-<span class="chip accent">Week 10 · Lecture</span>
+<span class="chip accent">Module 10 · Lecture</span>
 <span class="chip">Unit 3</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week10_reading.html" class="weekjump-link">Reading</a>
 <a href="week10_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week10_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>Creating and indexing</h3>
-<p>A list is items in square brackets, separated by commas. Index from 0.</p>
-<pre><code>inventory = [&quot;pen&quot;, &quot;notebook&quot;, &quot;stapler&quot;, &quot;tape&quot;]
+<p>A list is items in square brackets, separated by commas. Python creates the list and stores each item in a numbered slot called an index. The critical thing to remember: <strong>index counting starts at zero</strong>. If you have five products, their indices are 0, 1, 2, 3, 4 — not 1, 2, 3, 4, 5.</p>
+<p>Negative indices count backwards from the end. <code>inventory[-1]</code> is always the last item regardless of how long the list is. This is extremely useful when you don't know the length in advance — for example, the most recently added item to a sales log.</p>
+<p>You can also check membership with the <code>in</code> operator: <code>"pen" in inventory</code> returns <code>True</code> if "pen" is anywhere in the list. This is much cleaner than writing a loop to search manually.</p>
+<pre><code>inventory = ["pen", "notebook", "stapler", "tape"]
 
 print(inventory[0])    # pen
 print(inventory[2])    # stapler
-print(inventory[-1])   # tape  (negative counts from the end)</code></pre>
+print(inventory[-1])   # tape  (negative counts from the end)
+
+# Membership test
+print("pen" in inventory)   # True
+print("ruler" in inventory) # False</code></pre>
+
 <h3>Slicing</h3>
-<p>Get a sub-list with [start:stop]. start is included, stop is not.</p>
+<p>Get a sub-list with <code>[start:stop]</code>. The start index is included; the stop index is excluded. This "half-open interval" convention is consistent throughout Python — once you internalize it, slicing becomes second nature.</p>
+<p>Omitting <code>start</code> means "from the beginning." Omitting <code>stop</code> means "to the end." You can combine these with negative indices. Slicing never modifies the original list — it always returns a brand new list.</p>
 <pre><code>nums = [10, 20, 30, 40, 50]
 print(nums[1:4])   # [20, 30, 40]
 print(nums[:3])    # [10, 20, 30]
-print(nums[-2:])   # [40, 50]</code></pre>
-<h3>Common list methods</h3>
-<pre><code>items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+print(nums[-2:])   # [40, 50]
+print(nums[:])     # [10, 20, 30, 40, 50]  — a copy of the whole list</code></pre>
 
-items.append(&quot;d&quot;)     # [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;]
-items.remove(&quot;b&quot;)     # [&quot;a&quot;, &quot;c&quot;, &quot;d&quot;]
-items.sort()          # sorts in place
-len(items)            # 3</code></pre>
+<h3>Common list methods</h3>
+<p>List methods modify the list in place and (mostly) return <code>None</code>. This catches many beginners: if you write <code>sorted_items = items.sort()</code>, you'll find <code>sorted_items</code> is <code>None</code> — because <code>.sort()</code> sorted the original and returned nothing. To get a sorted copy without changing the original, use the built-in <code>sorted(items)</code> function instead.</p>
+<p><code>.pop()</code> is particularly useful in business logic — it removes and returns the last item, so you can both retrieve and delete in one step. <code>.remove()</code> deletes the first occurrence of a value by matching the value itself (not an index). <code>del items[i]</code> deletes by index.</p>
+<pre><code>items = ["a", "b", "c"]
+
+items.append("d")     # ["a", "b", "c", "d"]
+items.remove("b")     # ["a", "c", "d"]
+items.sort()          # sorts in place; returns None
+last = items.pop()    # removes and returns "d"; items is now ["a", "c"]
+items.reverse()       # reverses in place
+print(len(items))     # 2</code></pre>
+
 <h3>Tuples — when immutability matters</h3>
-<p>A tuple looks like a list with parentheses instead of brackets — but it cannot be changed after creation. Use tuples for fixed records like coordinates, RGB colors, or database rows.</p>
+<p>A tuple looks like a list with parentheses instead of brackets — but it cannot be changed after creation. Use tuples for fixed records like GPS coordinates, RGB colors, or database rows. The immutability is a feature, not a limitation: it signals to anyone reading your code that this data should not change, and Python will raise a <code>TypeError</code> if you try.</p>
+<p>Tuples are also slightly faster than lists for reading because Python doesn't have to allocate extra memory for potential growth. For large numbers of fixed records — like millions of coordinate pairs — this matters.</p>
+<p>You can unpack tuple values directly into variables, which is a clean way to work with fixed records:</p>
 <pre><code>coords = (40.7128, -74.0060)   # NYC lat/lon
 color = (255, 128, 0)           # RGB orange
 
-# this would error:
-# coords[0] = 99</code></pre>
+# Unpacking
+lat, lon = coords
+print(f"Latitude: {lat}, Longitude: {lon}")
+
+# This would raise TypeError:
+# coords[0] = 99   # TypeError: 'tuple' object does not support item assignment</code></pre>
+
 <h3>When to use which</h3>
-<p>List: a collection that changes over time (an inventory, a shopping cart, a daily sales log). Tuple: a fixed record that should not change (a row from a database, GPS coordinates).</p>
+<p><strong>Use a list</strong> when the collection will change over time: an inventory you add to and remove from, a shopping cart, a daily sales log where you accumulate results with <code>.append()</code>.</p>
+<p><strong>Use a tuple</strong> when the data is a fixed record that should not change: a GPS coordinate pair, an RGB color value, a database row you're reading, a function returning multiple values. The tuple communicates intent — this is a fixed unit of data, not a bag you keep stuffing things into.</p>
+
+<h2>Code Walkthrough</h2>
+
+<h3>Accumulating results with a list</h3>
+<p>A very common pattern in business scripts is to start with an empty list and <code>.append()</code> to it as you process data. This is the Python equivalent of building a spreadsheet column row by row.</p>
+<pre><code># Calculate revenue for each product and collect results
+products = [("Widget A", 9.99, 50), ("Widget B", 14.99, 30), ("Gadget C", 24.99, 20)]
+revenues = []
+
+for name, price, qty in products:
+    revenue = price * qty
+    revenues.append(revenue)
+    print(f"{name}: ${revenue:.2f}")
+
+print(f"\nTotal revenue: ${sum(revenues):.2f}")
+print(f"Average revenue: ${sum(revenues)/len(revenues):.2f}")
+
+# Widget A: $499.50
+# Widget B: $449.70
+# Gadget C: $499.80
+# Total revenue: $1449.00
+# Average revenue: $483.00</code></pre>
+
+<h3>Sorting a list of business data</h3>
+<p>You can sort a list of numbers or strings with <code>.sort()</code>. For descending order, pass <code>reverse=True</code>. The <code>sorted()</code> function does the same but returns a new list, leaving the original unchanged.</p>
+<pre><code>daily_sales = [340, 127, 589, 204, 467, 88, 731]
+
+# Sort ascending (cheapest to most expensive day)
+daily_sales.sort()
+print(daily_sales)  # [88, 127, 204, 340, 467, 589, 731]
+
+# Best day's sales
+print("Best day:", daily_sales[-1])   # 731
+
+# Worst day's sales
+print("Worst day:", daily_sales[0])   # 88</code></pre>
+
+<h2>Common Errors</h2>
+
+<h3>IndexError: list index out of range</h3>
+<p>This happens when you try to access an index that doesn't exist. A list of 5 items has valid indices 0–4. Asking for index 5 causes an IndexError. This commonly appears when students try to access "the last item" by using the length as an index.</p>
+<pre><code># WRONG — causes IndexError
+items = ["a", "b", "c"]
+print(items[3])   # IndexError: list index out of range
+
+# RIGHT — use -1 for last item, or len(items)-1
+print(items[-1])       # c
+print(items[len(items)-1])  # c  (equivalent, but -1 is cleaner)</code></pre>
+
+<h3>Modifying a list while iterating over it</h3>
+<p>Never add to or remove from a list inside a <code>for</code> loop that's iterating over that same list. Python's behavior in this case is unpredictable — items get skipped or processed twice. Instead, build a new list or collect the items to remove and process them after the loop.</p>
+<pre><code># WRONG — unpredictable behavior
+prices = [10, 20, 30, 40, 50]
+for p in prices:
+    if p < 25:
+        prices.remove(p)  # modifying while iterating!
+
+# RIGHT — filter to a new list
+prices = [10, 20, 30, 40, 50]
+prices = [p for p in prices if p >= 25]
+print(prices)  # [30, 40, 50]</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>Your manager asks you to track the last 10 daily sales figures and always drop the oldest when you add a new one. How would you use <code>.append()</code> and slicing together to maintain a "rolling window" of 10 items?</li>
+<li>A colleague argues that tuples are pointless — "just use a list and don't change it." What's wrong with this reasoning? What does immutability actually protect against?</li>
+<li>You have a list of 1,000 product names and need to check whether a specific SKU is in stock. Is <code>in</code> on a list the best tool, or would a different data structure work better? What would you switch to and why?</li>
+<li>What is the difference between <code>my_list.sort()</code> and <code>sorted(my_list)</code>? Give a business scenario where you'd specifically want one over the other.</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
-<li>Build an inventory list of 5 products, add one, remove one, sort it.</li>
-<li>Compute the average of a list of sales without using sum().</li>
+<li>Build an inventory list of 5 products, add one, remove one, sort it, and print the result after each step.</li>
+<li>Compute the average of a list of sales figures using <code>sum()</code> and <code>len()</code>.</li>
+<li>Slice the first half and second half of a list and print them separately.</li>
+<li>Create a tuple of GPS coordinates for Tampa, FL and try (deliberately) to change one value — read and explain the error message.</li>
+<li>Use a for loop to build a new list of revenues by multiplying price × quantity for each product in a list of tuples.</li>
+<li>Find the maximum and minimum value in a list of sales without using the <code>max()</code> or <code>min()</code> built-ins — use sorting instead.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>Lists are zero-indexed — <code>items[0]</code> is the first item, <code>items[-1]</code> is the last.</li>
+<li><code>.sort()</code> modifies in place and returns <code>None</code>; use <code>sorted()</code> for a new sorted list.</li>
+<li>Use <code>.append()</code> to accumulate results in a loop — this is one of the most common Python patterns.</li>
+<li>Tuples are immutable — use them for fixed records where accidental mutation would be a bug.</li>
+<li>Never modify a list while iterating over it; build a new list instead.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week10_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation verbatim or with minor variation. See the <a href="week10_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
-<div class="callout green">
-<div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week10_lab.html">Week 10 Lab</a></p>
+
+<div class="pn">
+<a href="week10_reading.html"><div class="label">← Previous</div><div class="title">Module 10 · Reading</div></a>
+<a class="next" href="week10_lab.html"><div class="label">Next →</div><div class="title">Module 10 · Lab</div></a>
 </div>
 </div>
 

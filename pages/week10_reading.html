@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 10 Reading · Lists &amp; Tuples — ISM2411</title>
+<title>Module 10 Reading · Lists &amp; Tuples — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,50 +227,131 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 10 · Reading</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 10 · Reading</div>
 <h1>Lists &amp; Tuples</h1>
-<p class="lede">A product inventory: [&#x27;pen&#x27;, &#x27;notebook&#x27;, &#x27;stapler&#x27;].</p>
+<p class="lede">A product inventory: [&#x27;pen&#x27;, &#x27;notebook&#x27;, &#x27;stapler&#x27;]. Lists are the workhorse collection in Python — ordered, flexible, and present in virtually every real-world script you'll write in this course.</p>
 <div class="meta">
-<span class="chip accent">Week 10</span>
+<span class="chip accent">Module 10</span>
 <span class="chip">Unit 3</span>
 <span class="chip">Reading · Think Python (TP) Ch. 9 — Lists; Ch. 11 — Tuples</span>
 <span class="chip" style="color:#f472b6;border-color:#f472b655;">★ Capstone-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week10_reading.html" class="weekjump-link current">Reading</a>
 <a href="week10_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week10_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Up until now your scripts have handled one product at a time. Real businesses have thousands of products. Lists hold many things in order. Tuples hold a fixed record. Together they cover most of what you used to do with cells in Excel.</p>
-<h2>What you will learn this week</h2>
+<p>Up until now your scripts have handled one product at a time. Real businesses have thousands of products, hundreds of customer orders, and daily sales figures that span months. Writing individual variables for each one is hopeless — <code>product1</code>, <code>product2</code>, <code>product3</code>... you'd need thousands of variable names. Lists solve this: a single variable holds as many items as you need, in order, and you can loop through all of them with a single <code>for</code> loop.</p>
+<p>Think about what a spreadsheet column is. When a buyer at a retail chain downloads the product catalog from the ERP system, they get a column of SKUs, a column of prices, a column of quantities on hand. In Python, each of those columns is a list. The tools you learn this module — indexing, slicing, append, remove, sort — are the Python equivalents of the spreadsheet operations you've been doing manually for years. The difference is that you can now automate them across thousands of rows in milliseconds.</p>
+<p>Tuples extend the idea further: they hold a fixed, ordered record that should never be changed. A GPS coordinate pair, an RGB color triplet, a database row — these are things you want to read and use, but never accidentally modify. Python enforces that guarantee with tuples. Together, lists and tuples cover the majority of what you previously did with cells and rows in Excel, but now in code that runs automatically.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
 <li>Creating, indexing, slicing, and modifying lists</li>
-<li>Common list methods: append, remove, sort, len</li>
+<li>Common list methods: append, remove, sort, reverse, pop, len</li>
 <li>When to use tuples vs. lists</li>
-<li>Business context: a product inventory list</li>
+<li>Business context: a product inventory list and daily sales accumulator</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
-<p>A product inventory: [&#x27;pen&#x27;, &#x27;notebook&#x27;, &#x27;stapler&#x27;].</p>
+<p>A product inventory: [&#x27;pen&#x27;, &#x27;notebook&#x27;, &#x27;stapler&#x27;]. Add new SKUs with <code>.append()</code>, retire discontinued ones with <code>.remove()</code>, and sort for a report with <code>.sort()</code> — all in a few lines of Python.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>List</h4>
+<p>An ordered, mutable collection in square brackets: <code>products = ["Widget A", "Widget B", "Gadget C"]</code>. Ordered means items have a fixed position. Mutable means you can add, remove, or change items after creation.</p>
+</div>
+<div class="concept-card">
+<h4>Index</h4>
+<p>The position of an item, starting at 0. <code>products[0]</code> is <code>"Widget A"</code>. Negative indices count from the end: <code>products[-1]</code> is the last item. This trips up beginners — remember: zero-based, not one-based.</p>
+</div>
+<div class="concept-card">
+<h4>Slice</h4>
+<p><code>products[1:3]</code> returns a new list with items at index 1 and 2 (stop index is excluded). <code>products[:2]</code> is "first two items." <code>products[-2:]</code> is "last two items."</p>
+</div>
+<div class="concept-card">
+<h4>List Methods</h4>
+<p><code>.append(item)</code> adds to the end. <code>.remove(item)</code> deletes the first match. <code>.sort()</code> sorts in place. <code>.reverse()</code> reverses in place. <code>.pop()</code> removes and returns the last item. <code>len(list)</code> returns the count.</p>
+</div>
+<div class="concept-card">
+<h4>Tuple</h4>
+<p>An ordered, <em>immutable</em> collection in parentheses: <code>coordinates = (40.71, -74.00)</code>. Once created, you cannot change it. Use tuples for data that must stay fixed — GPS coords, RGB values, database records.</p>
+</div>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 9 — Lists; Ch. 11 — Tuples</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap09.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap09.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Intermediate Python (#2) — in progress</p>
 </div>
+
+<h2>Business Scenario</h2>
+<p>Imagine you're a buyer at a regional office supply chain. Each morning you receive a list of products that need restocking. You need to add new arrivals, remove items that are permanently discontinued, sort the list alphabetically for the warehouse team, and compute how many SKUs are currently active. Here is how that looks in Python:</p>
+<pre><code># Morning inventory workflow
+inventory = ["stapler", "notebook", "pen", "tape", "marker"]
+
+# New shipment arrived — add to inventory
+inventory.append("envelope")
+
+# Discontinued product — remove it
+inventory.remove("tape")
+
+# Sort for the warehouse report
+inventory.sort()
+
+# How many active SKUs?
+print(f"Active SKUs: {len(inventory)}")
+print(inventory)
+
+# Output:
+# Active SKUs: 5
+# ['envelope', 'marker', 'notebook', 'pen', 'stapler']</code></pre>
+<p>Notice that the list is modified in place by <code>.sort()</code> and the other methods. There is no need to assign the result back to a variable — the original list changes directly.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>List</strong> — an ordered, mutable sequence of items enclosed in square brackets</li>
+<li><strong>Tuple</strong> — an ordered, immutable sequence enclosed in parentheses; cannot be changed after creation</li>
+<li><strong>Index</strong> — the integer position of an element in a sequence, starting at 0</li>
+<li><strong>Slice</strong> — a sub-sequence extracted using <code>[start:stop]</code> notation; stop index is excluded</li>
+<li><strong>Mutable</strong> — an object whose contents can be changed after creation (lists are mutable)</li>
+<li><strong>Immutable</strong> — an object whose contents cannot be changed after creation (tuples and strings are immutable)</li>
+<li><strong>Append</strong> — the <code>.append(item)</code> method that adds a single item to the end of a list</li>
+<li><strong>In-place operation</strong> — a method that modifies the original object rather than returning a new one; <code>.sort()</code> and <code>.reverse()</code> are in-place</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>Off-by-one indexing:</strong> Lists are zero-indexed. <code>products[1]</code> is the <em>second</em> item, not the first. On exam questions that ask "what does <code>items[1]</code> return," remember to count from zero.</p>
+<p><strong>Sort returns None:</strong> <code>sorted_list = my_list.sort()</code> assigns <code>None</code> to <code>sorted_list</code> because <code>.sort()</code> modifies the list in place and returns nothing. Use <code>sorted(my_list)</code> if you need a new sorted list without changing the original.</p>
+<p><strong>Tuples vs. lists syntax:</strong> Lists use <code>[]</code>; tuples use <code>()</code>. A one-item tuple requires a trailing comma: <code>single = (42,)</code> — without the comma, Python treats <code>(42)</code> as just the integer 42 in parentheses.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead — Module 11</div>
+<p>Next module you'll meet <strong>dictionaries</strong> — the next step up in data organization. Where a list says "here are five products in order," a dictionary says "here is one product and here is everything I know about it: its name, price, SKU, and stock level." Dictionaries pair naturally with lists: a list of dictionaries is the Python equivalent of a spreadsheet where each row is a record and each column is a field.</p>
+</div>
+
 <h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Capstone-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
-<pre><code>items = [&#x27;pen&#x27;, &#x27;notebook&#x27;, &#x27;stapler&#x27;]
+<pre><code>items = ['pen', 'notebook', 'stapler']
 print(items[1])</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">notebook <span style="color:var(--muted);">— Lists are zero-indexed</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">notebook <span style="color:var(--muted);">— Lists are zero-indexed; index 1 is the second item</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -278,6 +359,7 @@ print(items[1])</code></pre>
 print(nums[-1])</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">40 <span style="color:var(--muted);">— Index -1 returns the last element</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
 <div class="quiz-question">What does append() do to a list?</div>
@@ -287,17 +369,19 @@ print(nums[-1])</code></pre>
 <li>c) Sorts the list</li>
 <li>d) Returns the length</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Adds an item to the end</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) Adds an item to the end</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
 <div class="quiz-question">What is the value of inventory?</div>
-<pre><code>inventory = [&#x27;apples&#x27;, &#x27;bananas&#x27;]
-inventory.append(&#x27;oranges&#x27;)
-inventory.remove(&#x27;bananas&#x27;)
+<pre><code>inventory = ['apples', 'bananas']
+inventory.append('oranges')
+inventory.remove('bananas')
 print(inventory)</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">[&#x27;apples&#x27;, &#x27;oranges&#x27;]</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">['apples', 'oranges']</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
 <div class="quiz-question">What is the key difference between a list and a tuple?</div>
@@ -307,8 +391,9 @@ print(inventory)</code></pre>
 <li>c) Tuples are immutable; lists are mutable</li>
 <li>d) Lists hold only strings</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Tuples are immutable; lists are mutable</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) Tuples are immutable; lists are mutable</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -316,9 +401,39 @@ print(inventory)</code></pre>
 print(len(coords))</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">2</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">What does this print?</div>
+<pre><code>sales = [100, 250, 75, 480, 200]
+print(sales[1:4])</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">[250, 75, 480] <span style="color:var(--muted);">— Slice includes index 1, 2, 3; excludes index 4</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">What happens when you call <code>my_list.sort()</code>?</div>
+<ul class="quiz-options">
+<li>a) Returns a new sorted list; original unchanged</li>
+<li>b) Sorts the list in place; returns None</li>
+<li>c) Returns the sorted list</li>
+<li>d) Raises a TypeError</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) Sorts the list in place; returns None</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Bug Fix</div>
+<div class="quiz-question">This code has a bug. What is wrong and how do you fix it?</div>
+<pre><code>products = ["Widget A", "Widget B", "Gadget C"]
+first = products[1]
+print("First product:", first)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The bug is using index <code>1</code> instead of <code>0</code>. Index 1 returns <code>"Widget B"</code>, not <code>"Widget A"</code>. Fix: <code>first = products[0]</code>.</div></details>
+</div>
+
 <div class="pn">
-<a href="week09_midterm.html"><div class="label">← Previous</div><div class="title">Week 09 · Midterm</div></a>
-<a class="next" href="week11_reading.html"><div class="label">Next →</div><div class="title">Week 11 · Dictionaries</div></a>
+<a href="week09_midterm.html"><div class="label">← Previous</div><div class="title">Module 09 · Midterm</div></a>
+<a class="next" href="week11_reading.html"><div class="label">Next →</div><div class="title">Module 11 · Dictionaries</div></a>
 </div>
 </div>
 

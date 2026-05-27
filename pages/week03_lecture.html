@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 3 Lecture · Variables, Data Types &amp; First Output — ISM2411</title>
+<title>Module 3 Lecture · Variables, Data Types &amp; First Output — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,58 +227,186 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 03 · Lecture</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 03 · Lecture</div>
 <h1>Variables, Data Types &amp; First Output</h1>
 <p class="lede">Now we actually write code. Three things today: variables, the four basic types, and how to print them out using f-strings.</p>
 <div class="meta">
-<span class="chip accent">Week 03 · Lecture</span>
+<span class="chip accent">Module 03 · Lecture</span>
 <span class="chip">Unit 1</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week03_reading.html" class="weekjump-link">Reading</a>
 <a href="week03_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week03_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>Variables are labeled containers</h3>
-<p>A variable is a name attached to a value. You assign with = (single equals). The name is on the left, the value is on the right.</p>
-<pre><code>product = &quot;Notebook&quot;
+<p>A variable is a name attached to a value. You assign with = (single equals). The name is on the left, the value is on the right. This is the single most important concept in all of programming: naming a piece of data so you can refer to it again. Without variables, every time you wanted to use a value, you would have to recompute it from scratch.</p>
+<p>Variable names should be descriptive. <code>p</code> is technically valid but tells you nothing. <code>unit_price</code> tells you exactly what the variable contains. Python convention uses snake_case for variable names — all lowercase, words separated by underscores. Good names are the difference between code that is self-documenting and code that requires a comment every other line.</p>
+<p>Variables can be reassigned. <code>x = 5</code> followed by <code>x = x + 1</code> gives <code>x</code> the value <code>6</code>. The old value is gone. This is how you accumulate totals, update running counts, and build up results step by step in a program.</p>
+<pre><code>product = "Notebook"
 price = 4.99
 quantity = 12</code></pre>
+
 <h3>The four types you will use most</h3>
-<p>Python has many types. These four cover almost everything you will do in this course.</p>
-<pre><code>name = &quot;Alice&quot;      # str  — text in quotes
+<p>Python has many types. These four cover almost everything you will do in this course. Every database column, every spreadsheet cell, every API response field maps onto one of these four types. When you read a CSV, every value arrives as a string; you must convert to int or float to do math with it. Knowing your types prevents an entire class of bugs before they happen.</p>
+<p>Use <code>type()</code> to check what type a value has. This is invaluable when debugging. If your math is producing wrong results, print <code>type(my_variable)</code> and you will frequently discover it is a string when you expected a number. This is so common it has become reflex for experienced programmers: when something is wrong, check the types first.</p>
+<pre><code>name = "Alice"      # str  — text in quotes
 age = 30             # int  — whole number
 price = 19.99        # float — decimal number
-in_stock = True      # bool — True or False (no quotes)</code></pre>
+in_stock = True      # bool — True or False (no quotes)
+
+print(type(name))    # &lt;class 'str'&gt;
+print(type(age))     # &lt;class 'int'&gt;
+print(type(price))   # &lt;class 'float'&gt;
+print(type(in_stock))# &lt;class 'bool'&gt;</code></pre>
+
 <h3>print() and f-strings</h3>
-<p>print() writes to your terminal. An f-string is a string with an f in front — variables in curly braces get substituted in.</p>
-<pre><code>product = &quot;Notebook&quot;
+<p>print() writes to your terminal. An f-string is a string with an f in front — variables in curly braces get substituted in. F-strings were introduced in Python 3.6 and are now the standard way to format output in Python. They are more readable and faster than the older <code>.format()</code> method or string concatenation with <code>+</code>.</p>
+<p>The format specification inside the curly braces gives you control over number formatting. <code>{price:.2f}</code> rounds to 2 decimal places. <code>{revenue:,.0f}</code> adds a thousands separator and rounds to a whole number. <code>{margin:.1%}</code> multiplies by 100 and adds a percent sign. These format specs come from Python's mini-language for formatting numbers — learning the basic ones pays off every time you print a report.</p>
+<pre><code>product = "Notebook"
 price = 4.99
 quantity = 12
 total = price * quantity
-print(f&quot;{quantity} x {product} = ${total}&quot;)
-# 12 x Notebook = $59.88</code></pre>
+print(f"{quantity} x {product} = ${total:.2f}")
+# 12 x Notebook = $59.88
+
+revenue = 150000
+print(f"Revenue: ${revenue:,.0f}")
+# Revenue: $150,000
+
+margin = 0.342
+print(f"Margin: {margin:.1%}")
+# Margin: 34.2%</code></pre>
+
 <h3>input() for user input</h3>
-<p>input() pauses the program and waits for the user to type something and press Enter. It always returns a string — convert with int() or float() if you need a number.</p>
-<pre><code>name = input(&quot;Your name: &quot;)
-print(f&quot;Hello, {name}!&quot;)</code></pre>
+<p>input() pauses the program and waits for the user to type something and press Enter. It always returns a string — convert with int() or float() if you need a number. This is a critical point: typing "42" into a terminal prompt does not give you the integer 42, it gives you the string "42". Attempting math with a string will raise a TypeError or produce unexpected results like string repetition.</p>
+<p>The pattern <code>int(input("How many? "))</code> combines the input() call with an immediate conversion. The inner function runs first (reads a string from the user), and the outer function runs second (converts that string to an integer). This nested-function pattern is very common in Python and worth getting comfortable with.</p>
+<pre><code>name = input("Your name: ")
+print(f"Hello, {name}!")
+
+# Convert input to a number:
+quantity = int(input("How many units? "))
+price = float(input("Unit price: $"))
+total = quantity * price
+print(f"Total: ${total:.2f}")</code></pre>
+
 <h3>Jupyter vs. VS Code</h3>
-<p>A .py file in VS Code is one big script that runs top to bottom. A Jupyter notebook is a series of cells you can run one at a time, with output (including charts) right next to the code. We use VS Code for scripts and Jupyter for exploration — you will see both this semester.</p>
+<p>A .py file in VS Code is one big script that runs top to bottom. A Jupyter notebook is a series of cells you can run one at a time, with output (including charts) right next to the code. We use VS Code for scripts and Jupyter for exploration — you will see both this semester. Jupyter is especially useful for data analysis because you can run a cell, inspect the result, and decide what to do next without re-running the entire script from the top.</p>
+<p>Jupyter's cell-based model also means variables persist across cells within the same notebook session. If you run a cell that assigns <code>x = 10</code>, then run a different cell that prints <code>x</code>, you will see <code>10</code>. This is powerful for exploration but can cause confusion: if you re-run an earlier cell, it may overwrite a variable set by a later cell. The rule of thumb is: when your notebook's results seem wrong, restart the kernel and run all cells in order to get a clean state.</p>
+
+<h2>Detailed Code Walkthrough</h2>
+
+<h3>A complete product summary script</h3>
+<p>This script brings together variables, types, f-strings, and simple arithmetic into a useful tool. Read each line and make sure you can predict the output before running it.</p>
+<pre><code># product_summary.py
+# Stores product data in variables and prints a formatted summary
+
+product_name = "Bamboo Desk Organizer"   # str
+unit_cost    = 8.50                       # float — what we paid the supplier
+retail_price = 24.99                      # float — what we charge the customer
+quantity     = 200                        # int   — units in inventory
+in_stock     = True                       # bool
+
+# Compute derived values
+revenue      = retail_price * quantity    # 200 units sold at retail
+margin       = (retail_price - unit_cost) / retail_price
+
+# Print the report
+print(f"Product:   {product_name}")
+print(f"Price:     ${retail_price:.2f}")
+print(f"Quantity:  {quantity:,}")         # :, adds thousands separator
+print(f"Revenue:   ${revenue:,.2f}")
+print(f"Margin:    {margin:.1%}")
+print(f"In Stock:  {in_stock}")</code></pre>
+
+<h3>The interactive version with input()</h3>
+<p>The same logic but now the user supplies the data at runtime. Notice the conversions on lines 3–5.</p>
+<pre><code># pricer_interactive.py
+product_name = input("Product name: ")
+retail_price = float(input("Retail price: $"))
+unit_cost    = float(input("Unit cost:    $"))
+quantity     = int(input("Quantity:     "))
+
+revenue = retail_price * quantity
+margin  = (retail_price - unit_cost) / retail_price
+
+print()  # blank line for readability
+print(f"--- {product_name} Summary ---")
+print(f"Revenue: ${revenue:,.2f}   Margin: {margin:.1%}")</code></pre>
+
+<h2>Common Errors</h2>
+
+<h3>Forgetting to convert input() to a number</h3>
+<pre><code># WRONG — user types "10" but we get the string "10"
+quantity = input("Quantity: ")
+total = quantity * 4.99   # TypeError: can't multiply str by float
+
+# CORRECT — convert before doing math
+quantity = int(input("Quantity: "))
+total = quantity * 4.99   # works: 49.9</code></pre>
+
+<h3>Confusing = (assignment) and == (comparison)</h3>
+<pre><code># WRONG — this assigns 10 to x and always evaluates True
+if x = 10:   # SyntaxError in Python — Python is strict about this
+
+# CORRECT — use == to compare
+if x == 10:
+    print("x is ten")</code></pre>
+
+<h3>Printing a variable name instead of its value</h3>
+<pre><code># WRONG — prints the literal text "price", not the value
+print("price")    # output: price
+
+# CORRECT — no quotes around a variable name, or use f-string
+print(price)               # output: 19.99
+print(f"Price: {price}")   # output: Price: 19.99</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>Why does Python have separate types for int and float, instead of just using one "number" type? When would this distinction matter in a business calculation?</li>
+<li>A colleague's script produces "333333333" when they expected "333.33". What likely went wrong, and how would you fix it?</li>
+<li>In a Jupyter notebook, you run cell 3 which prints a variable set in cell 1. Then you edit cell 1 and run it again. Now cell 3 still shows the old value. Why? What should you do to get the correct result?</li>
+<li>Why is it better to name a variable <code>annual_revenue</code> instead of <code>ar</code> or <code>x</code>? Give a business example where a bad variable name could cause a real mistake.</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
-<li>Write a script that asks for product name, price, and quantity, then prints &quot;X units of Y at $Z each = $TOTAL&quot;.</li>
-<li>What is the type of &quot;12&quot; vs. 12? Try it in the terminal: type(&quot;12&quot;) and type(12).</li>
+<li>Write a script that asks for product name, price, and quantity, then prints "X units of Y at $Z each = $TOTAL".</li>
+<li>What is the type of "12" vs. 12? Try it in the terminal: type("12") and type(12).</li>
+<li>Fix this broken script: <code>price = input("Price: "); tax = price * 0.07; print(f"Tax: ${tax}")</code></li>
+<li>Write an f-string that formats a margin of 0.3456 as "34.6%" (one decimal place, percent sign).</li>
+<li>Predict the output of <code>print(f"{3 + 4}")</code> before running. Then run it. Were you right?</li>
+<li>Open Jupyter notebook (or VS Code notebook). Split the product summary script across three cells. Run them in order, then run cell 2 before cell 1 and observe what happens.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>A variable is a name bound to a value in memory; use <code>=</code> to assign.</li>
+<li>The four core types are <code>str</code>, <code>int</code>, <code>float</code>, and <code>bool</code>; use <code>type()</code> to inspect.</li>
+<li>F-strings (<code>f"..."</code>) let you embed variables and expressions directly in output strings.</li>
+<li><code>input()</code> always returns a string — convert with <code>int()</code> or <code>float()</code> before doing math.</li>
+<li>Use VS Code for scripts that run top to bottom; use Jupyter for exploratory, cell-by-cell analysis.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week03_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week03_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week03_lab.html">Week 3 Lab</a></p>
+<p>Hands-on lab: <a href="week03_lab.html">Module 03 Lab</a></p>
+</div>
+
+<div class="pn">
+<a href="week02_lecture.html"><div class="label">← Previous</div><div class="title">Module 02 · The Command Line &amp; Your Environment</div></a>
+<a class="next" href="week04_lecture.html"><div class="label">Next →</div><div class="title">Module 04 · Operators &amp; Expressions</div></a>
 </div>
 </div>
 

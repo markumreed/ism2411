@@ -22,206 +22,31 @@
   --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 [data-theme="light"] {
-  --bg:      #fbfbf7;
-  --bg2:     #f5f5ee;
-  --bg3:     #ffffff;
-  --text:    #1a1a26;
-  --muted:   #4a4a5a;
-  --dim:     #7a7a8c;
-  --border:  rgba(0,0,0,.08);
-  --border2: rgba(0,0,0,.14);
-  --code-bg:  #1a1a26;
-  --code-bg2: #15151f;
+  --bg:      #fbfbf7; --bg2:     #f5f5ee; --bg3:     #ffffff; --text:    #1a1a26;
+  --muted:   #4a4a5a; --dim:     #7a7a8c; --border:  rgba(0,0,0,.08); --border2: rgba(0,0,0,.14);
+  --code-bg:  #1a1a26; --code-bg2: #15151f;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
 body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
 .wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
-.page-eyebrow {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
-}
-h1 {
-  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
-  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
-}
-h2 {
-  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-  letter-spacing: -.01em;
-}
-h3 {
-  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
-  letter-spacing: -.005em;
-}
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; letter-spacing: -.005em; }
 p, ul, ol { color: var(--text); font-size: 15.5px; }
 ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
-.lede {
-  font-size: 17.5px; color: var(--muted); line-height: 1.6;
-  margin: 0 0 28px; max-width: 720px;
-}
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
-
-/* code blocks */
-code {
-  font-family: var(--mono); font-size: .92em;
-  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
-  border: 1px solid var(--border);
-}
-pre {
-  background: var(--code-bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
-  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
-  color: #f0f0f5;
-}
-pre code { background: none; padding: 0; border: 0; color: inherit; }
-
-/* meta bar */
-.meta {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 8px 0 28px; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-}
-.meta .chip {
-  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
-  color: var(--muted);
-}
-.meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
-
-/* week jump bar — quick switch between reading/lecture/lab */
-.weekjump {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  margin: 0 0 32px; padding: 10px 14px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-}
-.weekjump-label {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--dim); text-transform: uppercase; margin-right: 4px;
-}
-.weekjump-link {
-  padding: 5px 12px; border-radius: 999px; text-decoration: none;
-  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
-  transition: background .12s, color .12s, border-color .12s;
-}
-.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
-.weekjump-link.current {
-  background: rgba(251,191,36,.12); color: var(--accent);
-  border-color: rgba(251,191,36,.4);
-}
-
-/* callout boxes */
-.callout {
-  margin: 22px 0; padding: 16px 20px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: 8px;
-}
-.callout-title {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
 .callout p:last-child { margin-bottom: 0; }
 .callout.green { border-left-color: #34d399; }
 .callout.green .callout-title { color: #34d399; }
-.callout.blue { border-left-color: #60a5fa; }
-.callout.blue .callout-title { color: #60a5fa; }
-.callout.pink { border-left-color: #f472b6; }
-.callout.pink .callout-title { color: #f472b6; }
-.callout.purple { border-left-color: #c084fc; }
-.callout.purple .callout-title { color: #c084fc; }
-
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
-}
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
-}
-.topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
-}
-
-/* prev/next nav */
-.pn {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-top: 60px;
-}
-.pn a {
-  display: block; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; text-decoration: none; color: var(--text);
-  transition: background .15s, transform .15s;
-}
-.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
-.pn .label {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
-}
-.pn .title { font-weight: 600; font-size: 14px; }
-.pn .next { text-align: right; }
-
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
-footer {
-  border-top: 1px solid var(--border); padding: 28px;
-  text-align: center; font-family: var(--mono); font-size: 11px;
-  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
-}
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
 </style>
 </head>
 <body>
@@ -229,7 +54,7 @@ footer {
 <main id="content"><div class="wrap">
 <div class="page-eyebrow">UNIT 1 OVERVIEW · FOUNDATIONS</div>
 <h1>Unit 1 — Foundations</h1>
-<p class="lede">Weeks 1–5 · 5 weeks</p>
+<p class="lede">Modules 1–5 · 5 modules</p>
 
 <style>
 .unit-banner { height: 6px; background: #34d399; border-radius: 3px; margin-bottom: 28px; }
@@ -252,35 +77,48 @@ footer {
 </div>
 
 <h2>What you'll learn</h2>
-<p>The Foundations unit teaches you what a computer actually is, how to talk to it through the command line, and the basic vocabulary of Python — variables, data types, operators, and conditionals. By the end of Unit 1 you can write small scripts that take input, make decisions, and print results. The skills here are the alphabet of programming. Everything that follows is built on them.</p>
+<p>The Foundations unit teaches you what a computer actually is, how to communicate with it through the command line, and the fundamental vocabulary of Python — variables, data types, operators, and conditionals. By the end of Unit 1 you can write small scripts that accept input, make decisions, and print results. These skills are the alphabet of programming: every concept in every subsequent unit is built on what you learn here, so it is worth taking the time to understand not just what the commands do but why they work the way they do. Students who invest in Module 1 foundations consistently outperform those who skip ahead.</p>
 
-<h2>Weeks in this unit</h2>
+<h2>Unit Outcomes</h2>
+<p>After completing Unit 1, you will be able to:</p>
+<ul>
+<li>Explain what a CPU, file system, and path are in plain English — without jargon</li>
+<li>Navigate a file system using the command line (cd, ls/dir, mkdir, pwd)</li>
+<li>Write Python scripts that use variables, data types (str, int, float, bool), and print()/input()</li>
+<li>Apply arithmetic, comparison, and logical operators to compute business formulas</li>
+<li>Write conditional logic with if/elif/else to automate simple business decisions</li>
+</ul>
+
+<h2>Module Connections</h2>
+<p>Unit 1 is the entry point to the entire course — there is no prerequisite. It connects forward to Unit 2, where the variables and conditionals you learn here become the building blocks for loops and functions. Every concept in Units 2–5 assumes fluency with the core data types and control structures covered in Modules 3–5. Students who return to the Unit 1 cheatsheet during later units find that most "new" syntax is just a combination of things they already know from these first five modules.</p>
+
+<h2>Modules in this unit</h2>
 <div class="wk-grid">
 
 <a class="wk-card unit-u1" href="week01_reading.html">
-  <div class="wk-num">W1</div>
+  <div class="wk-num">MODULE 1</div>
   <div class="wk-title">What is a Computer?</div>
-  <div class="wk-topics">How computers work: CPU, memory, storage — in plain English, What files are, what a file system is, what a path means, Directories: how folders nest and why this matters</div>
+  <div class="wk-topics">How computers work: CPU, memory, storage — in plain English, What files are, what a file system is, what a path means, Directories: how folders nest and why this matters for running Python scripts</div>
 </a>
 <a class="wk-card unit-u1" href="week02_reading.html">
-  <div class="wk-num">W2</div>
+  <div class="wk-num">MODULE 2</div>
   <div class="wk-title">The Command Line &amp; Your Environment</div>
-  <div class="wk-topics">Terminal basics: cd, ls / dir, mkdir, pwd, clear, Relative vs. absolute file paths, Installing Python and VS Code</div>
+  <div class="wk-topics">Terminal basics: cd, ls / dir, mkdir, pwd, clear, Relative vs. absolute file paths, Installing Python and VS Code, Running your first Python file from the terminal</div>
 </a>
 <a class="wk-card unit-u1" href="week03_reading.html">
-  <div class="wk-num">W3</div>
+  <div class="wk-num">MODULE 3</div>
   <div class="wk-title">Variables, Data Types &amp; First Output</div>
-  <div class="wk-topics">Variables as labeled containers, Strings, integers, floats, booleans, print() and input()</div>
+  <div class="wk-topics">Variables as labeled containers, Strings, integers, floats, booleans, print() and input(), Type conversion: int(), float(), str()</div>
 </a>
 <a class="wk-card unit-u1" href="week04_reading.html">
-  <div class="wk-num">W4</div>
+  <div class="wk-num">MODULE 4</div>
   <div class="wk-title">Operators &amp; Expressions</div>
   <div class="wk-topics">Arithmetic, comparison, and logical operators, Order of operations, Business formulas: revenue = price × quantity, margin = (price − cost) / price</div>
 </a>
 <a class="wk-card unit-u1" href="week05_reading.html">
-  <div class="wk-num">W5</div>
+  <div class="wk-num">MODULE 5</div>
   <div class="wk-title">Conditionals</div>
-  <div class="wk-topics">if, elif, else, Writing decision logic, Nested conditionals — and when to avoid them</div>
+  <div class="wk-topics">if, elif, else, Writing decision logic for business scenarios, Nested conditionals — and when to avoid them</div>
 </a>
 </div>
 

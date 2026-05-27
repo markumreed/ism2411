@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 4 Reading · Operators &amp; Expressions — ISM2411</title>
+<title>Module 4 Reading · Operators &amp; Expressions — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,43 +227,108 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 04 · Reading</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 04 · Reading</div>
 <h1>Operators &amp; Expressions</h1>
-<p class="lede">Calculating revenue, profit margin, and discounted price.</p>
+<p class="lede">Calculating revenue, profit margin, and discounted price using Python's operator toolkit.</p>
 <div class="meta">
-<span class="chip accent">Week 04</span>
+<span class="chip accent">Module 04</span>
 <span class="chip">Unit 1</span>
 <span class="chip">Reading · Think Python (TP) Ch. 2 — continued</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week04_reading.html" class="weekjump-link current">Reading</a>
 <a href="week04_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week04_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Operators are the verbs of Python. You already know the math ones; the new ideas are comparison (returns True/False) and logical (combines comparisons). Business formulas are nothing more than operators applied to variables.</p>
-<h2>What you will learn this week</h2>
+<p>Operators are the verbs of Python. You already know the math ones; the new ideas are comparison (returns True/False) and logical (combines comparisons). Business formulas are nothing more than operators applied to variables. Revenue is price multiplied by quantity. Margin is the difference between price and cost divided by price. Every KPI dashboard, every financial model, and every sales report you will ever build ultimately reduces to a set of operator expressions applied to stored data.</p>
+<p>The less obvious operators — <code>//</code> (floor division), <code>%</code> (modulo), and <code>**</code> (exponentiation) — show up more often than beginners expect. Floor division is useful when you need a whole-number result: how many full boxes of 24 fit in an order of 100 units? Modulo tells you the remainder: what is left over after filling those boxes? These two operators together can handle any packing, batching, or scheduling problem that involves discrete units.</p>
+<p>Order of operations matters as much in Python as it did in algebra. The rule is PEMDAS: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction. Forgetting this causes silent bugs — your formula runs without error but produces the wrong number. Adding explicit parentheses even when not strictly required is a professional habit that makes code easier to read and audit.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
 <li>Arithmetic, comparison, and logical operators</li>
 <li>Order of operations</li>
 <li>Business formulas: revenue = price × quantity, margin = (price − cost) / price</li>
 <li>Common mistakes: integer division, type mismatches</li>
 </ul>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>Arithmetic Operators</h4>
+<p><code>+</code> <code>-</code> <code>*</code> <code>/</code> work as expected. <code>//</code> is floor division (result is an int). <code>%</code> is modulo (the remainder). <code>**</code> is exponentiation: <code>2**10</code> is 1024.</p>
+</div>
+<div class="concept-card">
+<h4>Comparison Operators</h4>
+<p><code>==</code> (equal), <code>!=</code> (not equal), <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>. Every comparison returns a boolean (<code>True</code> or <code>False</code>). Comparison is how programs make decisions.</p>
+</div>
+<div class="concept-card">
+<h4>Logical Operators</h4>
+<p><code>and</code> requires both sides to be True. <code>or</code> requires at least one side to be True. <code>not</code> flips the boolean. Use them to combine conditions: <code>price &gt; 100 and in_stock</code>.</p>
+</div>
+<div class="concept-card">
+<h4>Order of Operations</h4>
+<p>Python follows PEMDAS. <code>2 + 3 * 4</code> is <code>14</code>, not <code>20</code>, because <code>*</code> runs before <code>+</code>. Use parentheses to be explicit: <code>(2 + 3) * 4</code> is <code>20</code>. When in doubt, add parentheses.</p>
+</div>
+<div class="concept-card">
+<h4>Type Mismatch</h4>
+<p><code>"5" + 5</code> raises a <code>TypeError</code> because you cannot add a string to an integer. Convert first: <code>int("5") + 5</code> gives <code>10</code>. This is a classic source of errors when processing user input.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>A pricing analyst at an e-commerce company needs to evaluate a promotional strategy. The company is considering a 15% discount on products with margin above 40%, and a 7% sales tax will be applied after the discount. She has three products with different prices and costs and needs to compute net revenue after discount and tax for each.</p>
+<p>For a product priced at $80 with a cost of $45: <code>margin = (80 - 45) / 80</code> gives 0.4375 (43.75%). Since <code>margin &gt; 0.40</code> is <code>True</code>, the discount applies: <code>discounted_price = 80 * (1 - 0.15)</code> gives $68. After 7% tax: <code>final_price = 68 * (1 + 0.07)</code> gives $72.76. The script computes all of this in a few lines — and can be updated instantly when the discount rate changes. That is the power of encoding business logic as operators and expressions.</p>
+<p>Notice how the parentheses in <code>(1 - 0.15)</code> and <code>(1 + 0.07)</code> are crucial. Without them, order of operations would yield a different, incorrect result. This is exactly where business Python bugs are born: silent arithmetic errors caused by wrong precedence assumptions.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Operator</strong> — a symbol that performs an operation on one or more values (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>==</code>, etc.)</li>
+<li><strong>Operand</strong> — a value on which an operator acts; in <code>3 * 4</code>, the operands are 3 and 4</li>
+<li><strong>Expression</strong> — a combination of values and operators that evaluates to a single value</li>
+<li><strong>Floor division (<code>//</code>)</strong> — divides and rounds down to the nearest integer: <code>17 // 5</code> is <code>3</code></li>
+<li><strong>Modulo (<code>%</code>)</strong> — returns the remainder after division: <code>17 % 5</code> is <code>2</code></li>
+<li><strong>Exponentiation (<code>**</code>)</strong> — raises to a power: <code>2 ** 8</code> is <code>256</code></li>
+<li><strong>Comparison operator</strong> — returns True or False: <code>==</code> <code>!=</code> <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code></li>
+<li><strong>Logical operator</strong> — combines boolean values: <code>and</code>, <code>or</code>, <code>not</code></li>
+<li><strong>TypeError</strong> — raised when an operation is applied to incompatible types (e.g., <code>"5" + 5</code>)</li>
+<li><strong>PEMDAS</strong> — mnemonic for Python's order of operations: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<ul style="margin:0;padding-left:18px;">
+<li><strong>"/ and // do the same thing."</strong> They do not. <code>10 / 3</code> returns <code>3.3333...</code> (a float). <code>10 // 3</code> returns <code>3</code> (an integer, the floor). Use <code>//</code> only when you specifically need a whole number result.</li>
+<li><strong>"You can add a string and a number."</strong> Python raises a <code>TypeError</code>: <code>"5" + 5</code> fails. You must convert explicitly: <code>int("5") + 5</code>. This trips up beginners who combine <code>input()</code> values with numeric variables.</li>
+<li><strong>"and and or return True or False."</strong> Actually they return one of their operands. <code>5 and 10</code> returns <code>10</code>; <code>0 or 7</code> returns <code>7</code>. In boolean contexts this is fine, but it can surprise you when you print the result.</li>
+</ul>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>Module 05 introduces conditionals — <code>if</code>, <code>elif</code>, <code>else</code>. The comparison and logical operators from this module are the exact tools used inside <code>if</code> statements. The business formulas you write this module will feed directly into conditional logic next module.</p>
+</div>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>Calculating revenue, profit margin, and discounted price.</p>
 </div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 2 — continued</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap02.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap02.html</a></p>
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Python Data Fundamentals (#1) — in progress</p>
 </div>
-<h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
+
+<h2 id="quiz">Module Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -273,6 +338,7 @@ revenue = price * quantity
 print(revenue)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">150</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
 <div class="quiz-question">What is the result of 17 // 5?</div>
@@ -284,6 +350,7 @@ print(revenue)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">3 <span style="color:var(--muted);">— // is integer (floor) division</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
 <div class="quiz-question">What is the result of 17 % 5?</div>
@@ -295,6 +362,7 @@ print(revenue)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">2 <span style="color:var(--muted);">— % returns the remainder</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -304,6 +372,7 @@ margin = (price - cost) / price
 print(margin)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">0.3333333333333333 <span style="color:var(--muted);">— (60-40)/60 = 20/60</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
 <div class="quiz-question">Which operator checks if two values are equal?</div>
@@ -315,6 +384,7 @@ print(margin)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">==</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -323,9 +393,31 @@ y = 3
 print(x &gt; y, x == y, x != y)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True False True</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">What error does this raise, and why?</div>
+<pre><code>quantity = input("Enter quantity: ")
+total = quantity * 5
+print(total)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If the user types a number like "3", the result is NOT 15 — it is "33333" (string repetition). <code>input()</code> returns a str, so <code>"3" * 5</code> repeats the string 5 times. Fix: <code>int(input("Enter quantity: ")) * 5</code>.</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">What is the value of the expression: <code>2 + 3 * 4 - 1</code>?</div>
+<ul class="quiz-options">
+<li>a) 19</li>
+<li>b) 13</li>
+<li>c) 12</li>
+<li>d) 21</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">13 <span style="color:var(--muted);">— multiplication runs first: 3*4=12, then 2+12-1=13</span></div></details>
+</div>
+
 <div class="pn">
-<a href="week03_reading.html"><div class="label">← Previous</div><div class="title">Week 03 · Variables, Data Types &amp; First Output</div></a>
-<a class="next" href="week05_reading.html"><div class="label">Next →</div><div class="title">Week 05 · Conditionals</div></a>
+<a href="week03_reading.html"><div class="label">← Previous</div><div class="title">Module 03 · Variables, Data Types &amp; First Output</div></a>
+<a class="next" href="week05_reading.html"><div class="label">Next →</div><div class="title">Module 05 · Conditionals</div></a>
 </div>
 </div>
 

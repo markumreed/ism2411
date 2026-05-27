@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 6 Reading · Loops — ISM2411</title>
+<title>Module 6 Reading · Loops — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -64,7 +64,6 @@ li { margin: 6px 0; }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
 
-/* code blocks */
 code {
   font-family: var(--mono); font-size: .92em;
   background: var(--bg2); padding: 1px 6px; border-radius: 4px;
@@ -78,7 +77,6 @@ pre {
 }
 pre code { background: none; padding: 0; border: 0; color: inherit; }
 
-/* meta bar */
 .meta {
   display: flex; flex-wrap: wrap; gap: 10px;
   margin: 8px 0 28px; padding: 14px 18px;
@@ -91,7 +89,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
 
-/* week jump bar — quick switch between reading/lecture/lab */
 .weekjump {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   margin: 0 0 32px; padding: 10px 14px;
@@ -112,7 +109,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
   border-color: rgba(251,191,36,.4);
 }
 
-/* callout boxes */
 .callout {
   margin: 22px 0; padding: 16px 20px;
   background: var(--bg2); border: 1px solid var(--border);
@@ -132,7 +128,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .callout.purple { border-left-color: #c084fc; }
 .callout.purple .callout-title { color: #c084fc; }
 
-/* topic list */
 .topic-list {
   list-style: none; padding: 0; margin: 16px 0;
 }
@@ -146,7 +141,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
   font-size: 12px; top: 10px;
 }
 
-/* prev/next nav */
 .pn {
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 12px; margin-top: 60px;
@@ -165,7 +159,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 
-/* quiz */
 .quiz-item {
   background: var(--bg2); border: 1px solid var(--border);
   border-radius: 10px; padding: 16px 20px; margin: 14px 0;
@@ -174,12 +167,8 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
   font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
   color: var(--accent); margin-bottom: 8px;
 }
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
+.quiz-question { font-weight: 600; margin-bottom: 10px; }
+.quiz-question pre { margin: 8px 0 0; font-size: 12.5px; }
 .quiz-options {
   list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
 }
@@ -191,18 +180,13 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
   color: #34d399;
 }
 .quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
+  cursor: pointer; user-select: none; font-weight: 600; list-style: none;
 }
 .quiz-answer summary::-webkit-details-marker { display: none; }
 .quiz-answer summary::before { content: '▸ '; }
 .quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
+.quiz-answer pre { margin: 8px 0 0; background: var(--code-bg); font-size: 12px; color: #f0f0f5; }
 
-/* concept cards */
 .concept-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
   gap: 12px; margin: 18px 0;
@@ -227,43 +211,125 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow & Structure · Week 06 · Reading</div>
+<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow &amp; Structure · Module 06 · Reading</div>
 <h1>Loops</h1>
 <p class="lede">Summing a list of sales totals, finding the largest order in a batch.</p>
 <div class="meta">
-<span class="chip accent">Week 06</span>
+<span class="chip accent">Module 06</span>
 <span class="chip">Unit 2</span>
 <span class="chip">Reading · Think Python (TP) Ch. 7 — Iteration and Search</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week06_reading.html" class="weekjump-link current">Reading</a>
 <a href="week06_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week06_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Loops are where Python finally beats Excel. Excel can do a formula on one row, then you drag down. Python writes one loop and runs it on a million rows in a second. The pattern is always the same: initialize, loop, update.</p>
-<h2>What you will learn this week</h2>
+<p>Loops are where Python finally beats Excel. Excel can do a formula on one row, then you drag down. Python writes one loop and runs it on a million rows in a second. The pattern is always the same: initialize, loop, update. Once you internalize that pattern, you can process any collection of data — transactions, employees, products, log entries — with the same three-step mental model.</p>
+<p>Consider what a financial analyst actually does every day: calculate the total revenue across all product lines, find the top-performing sales rep, flag any transactions over a threshold, compute a running average. Every one of those tasks is a loop. Before this module, you would need a spreadsheet or a pivot table to do it. After this module, you can do it in code — which means you can automate it, schedule it, and apply it to fresh data without touching it again.</p>
+<p>There is also a conceptual shift that happens when you learn loops: you start thinking in terms of collections rather than individual values. A list of 10,000 sales is not 10,000 separate problems — it is one problem that runs 10,000 times. That shift in perspective is fundamental to writing real software, and it is what separates someone who "knows a bit of Python" from someone who can actually use it on the job.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
-<li>for loops and while loops</li>
-<li>Iterating over ranges and lists</li>
+<li>for loops — iterating over lists, strings, and ranges</li>
+<li>range(start, stop, step) — generating numeric sequences</li>
+<li>while loops — repeating until a condition is False</li>
 <li>Loop control: break and continue</li>
+<li>The accumulator pattern: initialize, loop, update</li>
 <li>Business context: processing a list of sales transactions</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>Summing a list of sales totals, finding the largest order in a batch.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>for loop</h4>
+<p>Iterates over every item in a sequence — a list, a string, or a range. Python pulls each item out one at a time, assigns it to your loop variable, and runs the body. Think of it as: "do this once for every item in the collection."</p>
+</div>
+<div class="concept-card">
+<h4>range()</h4>
+<p>Generates a sequence of integers. <code>range(5)</code> gives 0–4; <code>range(2, 6)</code> gives 2–5; <code>range(0, 10, 2)</code> gives 0, 2, 4, 6, 8. The stop value is always excluded — like a half-open interval in math.</p>
+</div>
+<div class="concept-card">
+<h4>while loop</h4>
+<p>Repeats as long as a condition is True. Use it when you do not know in advance how many iterations you need. The danger: if the condition never becomes False, the loop runs forever — an infinite loop that crashes your program.</p>
+</div>
+<div class="concept-card">
+<h4>break / continue</h4>
+<p><code>break</code> exits the loop immediately — even if there are more items to process. <code>continue</code> skips the rest of the current iteration and moves to the next item. Both are used sparingly; overuse makes loops hard to follow.</p>
+</div>
+<div class="concept-card">
+<h4>Accumulator pattern</h4>
+<p>The most common loop pattern in data work: (1) initialize a variable before the loop (<code>total = 0</code>), (2) loop over the data, (3) update the variable each iteration (<code>total += sale</code>). Used for sums, counts, maximums, string building, and more.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>Your manager gives you a spreadsheet with 500 rows of daily sales transactions and asks three questions: What was the total revenue this week? What was the average transaction size? Which transaction was the largest? In Excel you could use SUM, AVERAGE, and MAX — but the boss also wants these numbers broken down by product category, and the next dataset will have 50,000 rows.</p>
+<p>With Python, you write the logic once and it handles any size dataset. The code below demonstrates all three calculations using the accumulator pattern. Notice that we track three separate accumulators — total, count, and current_max — all updated inside the same loop in a single pass through the data.</p>
+<pre><code>sales = [120, 80, 250, 175, 90, 410, 60, 215]
+
+total = 0           # accumulator 1: sum
+count = 0           # accumulator 2: number of transactions
+current_max = 0     # accumulator 3: largest sale
+
+for sale in sales:
+    total += sale
+    count += 1
+    if sale &gt; current_max:
+        current_max = sale
+
+average = total / count
+
+print(f"Total revenue:   ${total}")
+print(f"Transaction count: {count}")
+print(f"Average sale:    ${average:.2f}")
+print(f"Largest sale:    ${current_max}")</code></pre>
+<p>Output: <code>Total revenue: $1400 | Transaction count: 8 | Average sale: $175.00 | Largest sale: $410</code></p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Iteration</strong> — the process of repeating a block of code for each item in a sequence</li>
+<li><strong>Iterable</strong> — any object you can iterate over: lists, strings, ranges, tuples, files, and more</li>
+<li><strong>Loop variable</strong> — the temporary variable (e.g., <code>sale</code> in <code>for sale in sales:</code>) that holds the current item</li>
+<li><strong>Accumulator</strong> — a variable initialized before the loop and updated inside it, collecting a result</li>
+<li><strong>Infinite loop</strong> — a while loop whose condition never becomes False; usually a bug caused by forgetting to update the loop variable</li>
+<li><strong>break</strong> — exits the loop immediately, skipping remaining iterations</li>
+<li><strong>continue</strong> — skips the rest of the current iteration and moves to the next one</li>
+<li><strong>range()</strong> — a built-in function that generates a sequence of integers; stop value is excluded</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>1. "range(5) gives me 1 through 5."</strong> No — <code>range(5)</code> gives 0, 1, 2, 3, 4. The stop value is excluded. If you want 1 through 5, use <code>range(1, 6)</code>.</p>
+<p><strong>2. "I should use a while loop when I'm not sure how many times to loop."</strong> Only partly true. If you are iterating over a collection (list, file, database results), use a for loop — even if you don't know the length. While loops are for situations where the stopping condition depends on something that changes during execution, not on exhausting a collection.</p>
+<p><strong>3. "break and continue are the same thing."</strong> Very different. <code>break</code> ends the entire loop. <code>continue</code> just skips to the next iteration — the loop keeps going.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>In Module 07 you will wrap loops inside functions — creating reusable tools like <code>calculate_total(sales_list)</code> that can be called from anywhere in your script. You will also learn how to read Python error messages (tracebacks), which becomes critical when your loops produce unexpected results.</p>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 7 — Iteration and Search</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap07.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap07.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Intermediate Python (#2) — begins</p>
 </div>
+
 <h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Code Trace</div>
 <div class="quiz-question">What does this print?</div>
@@ -273,6 +339,7 @@ footer {
 1
 2</code></pre> <span style="color:var(--muted);">— range(3) produces 0, 1, 2</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
 <div class="quiz-question">What is the output of: print(list(range(2, 6)))?</div>
@@ -284,6 +351,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">[2,3,4,5]</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
 <div class="quiz-question">What is the value of total?</div>
@@ -294,6 +362,7 @@ for s in sales:
 print(total)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">450</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
 <div class="quiz-question">Which statement immediately exits a loop?</div>
@@ -305,15 +374,17 @@ print(total)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">break</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Code Trace</div>
-<div class="quiz-question">How many times does &#x27;hello&#x27; print?</div>
+<div class="quiz-question">How many times does 'hello' print?</div>
 <pre><code>count = 0
 while count &lt; 4:
     print(&#x27;hello&#x27;)
     count += 1</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">4 times</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
 <div class="quiz-question">What does continue do inside a loop?</div>
@@ -325,9 +396,47 @@ while count &lt; 4:
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Skips the rest of the current iteration</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>numbers = [5, 12, 3, 8, 20, 1]
+count = 0
+for n in numbers:
+    if n &gt; 10:
+        count += 1
+print(count)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">2 <span style="color:var(--muted);">— 12 and 20 are greater than 10</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">What is the output of <code>list(range(0, 10, 3))</code>?</div>
+<ul class="quiz-options">
+<li>a) [0, 3, 6, 9]</li>
+<li>b) [0, 3, 6, 9, 12]</li>
+<li>c) [3, 6, 9]</li>
+<li>d) [0, 3, 6, 10]</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">[0, 3, 6, 9] <span style="color:var(--muted);">— step 3, stop at 10 (excluded)</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Code Trace</div>
+<div class="quiz-question">What is printed? Trace carefully — there is a break.</div>
+<pre><code>sales = [50, 120, 300, 80, 600]
+total = 0
+for s in sales:
+    if s &gt; 200:
+        break
+    total += s
+print(total)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">170 <span style="color:var(--muted);">— 50 + 120 = 170; loop breaks when it hits 300 (&gt; 200)</span></div></details>
+</div>
+
 <div class="pn">
-<a href="week05_reading.html"><div class="label">← Previous</div><div class="title">Week 05 · Conditionals</div></a>
-<a class="next" href="week07_reading.html"><div class="label">Next →</div><div class="title">Week 07 · Functions, Debugging &amp; AI Literacy</div></a>
+<a href="week05_reading.html"><div class="label">← Previous</div><div class="title">Module 05 · Conditionals</div></a>
+<a class="next" href="week07_reading.html"><div class="label">Next →</div><div class="title">Module 07 · Functions, Debugging &amp; AI Literacy</div></a>
 </div>
 </div>
 

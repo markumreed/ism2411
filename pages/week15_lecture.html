@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 15 Lecture · Aggregation, Grouping &amp; Visualization — ISM2411</title>
+<title>Module 15 Lecture · Aggregation, Grouping &amp; Visualization — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -22,273 +22,266 @@
   --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 [data-theme="light"] {
-  --bg:      #fbfbf7;
-  --bg2:     #f5f5ee;
-  --bg3:     #ffffff;
-  --text:    #1a1a26;
-  --muted:   #4a4a5a;
-  --dim:     #7a7a8c;
-  --border:  rgba(0,0,0,.08);
-  --border2: rgba(0,0,0,.14);
-  --code-bg:  #1a1a26;
-  --code-bg2: #15151f;
+  --bg:      #fbfbf7; --bg2:     #f5f5ee; --bg3:     #ffffff; --text:    #1a1a26;
+  --muted:   #4a4a5a; --dim:     #7a7a8c; --border:  rgba(0,0,0,.08); --border2: rgba(0,0,0,.14);
+  --code-bg:  #1a1a26; --code-bg2: #15151f;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
 body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
 .wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
-.page-eyebrow {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
-}
-h1 {
-  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
-  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
-}
-h2 {
-  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-  letter-spacing: -.01em;
-}
-h3 {
-  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
-  letter-spacing: -.005em;
-}
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; letter-spacing: -.005em; }
 p, ul, ol { color: var(--text); font-size: 15.5px; }
 ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
-.lede {
-  font-size: 17.5px; color: var(--muted); line-height: 1.6;
-  margin: 0 0 28px; max-width: 720px;
-}
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
-
-/* code blocks */
-code {
-  font-family: var(--mono); font-size: .92em;
-  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
-  border: 1px solid var(--border);
-}
-pre {
-  background: var(--code-bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
-  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
-  color: #f0f0f5;
-}
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.55; color: #f0f0f5; }
 pre code { background: none; padding: 0; border: 0; color: inherit; }
-
-/* meta bar */
-.meta {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 8px 0 28px; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-}
-.meta .chip {
-  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
-  color: var(--muted);
-}
+.meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 28px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-family: var(--mono); font-size: 12px; }
+.meta .chip { padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px; color: var(--muted); }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
-
-/* week jump bar — quick switch between reading/lecture/lab */
-.weekjump {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  margin: 0 0 32px; padding: 10px 14px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-}
-.weekjump-label {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--dim); text-transform: uppercase; margin-right: 4px;
-}
-.weekjump-link {
-  padding: 5px 12px; border-radius: 999px; text-decoration: none;
-  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
-  transition: background .12s, color .12s, border-color .12s;
-}
+.weekjump { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 32px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+.weekjump-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--dim); text-transform: uppercase; margin-right: 4px; }
+.weekjump-link { padding: 5px 12px; border-radius: 999px; text-decoration: none; font-size: 13px; color: var(--muted); border: 1px solid var(--border2); transition: background .12s, color .12s, border-color .12s; }
 .weekjump-link:hover { color: var(--text); border-color: var(--accent); }
-.weekjump-link.current {
-  background: rgba(251,191,36,.12); color: var(--accent);
-  border-color: rgba(251,191,36,.4);
-}
-
-/* callout boxes */
-.callout {
-  margin: 22px 0; padding: 16px 20px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: 8px;
-}
-.callout-title {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
-.callout p:last-child { margin-bottom: 0; }
+.weekjump-link.current { background: rgba(251,191,36,.12); color: var(--accent); border-color: rgba(251,191,36,.4); }
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
 .callout.green { border-left-color: #34d399; }
 .callout.green .callout-title { color: #34d399; }
 .callout.blue { border-left-color: #60a5fa; }
 .callout.blue .callout-title { color: #60a5fa; }
 .callout.pink { border-left-color: #f472b6; }
 .callout.pink .callout-title { color: #f472b6; }
-.callout.purple { border-left-color: #c084fc; }
-.callout.purple .callout-title { color: #c084fc; }
-
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
-}
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
-}
+.topic-list { list-style: none; padding: 0; margin: 16px 0; }
+.topic-list li { position: relative; padding: 8px 0 8px 28px; border-bottom: 1px dashed var(--border); }
 .topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
-}
-
-/* prev/next nav */
-.pn {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-top: 60px;
-}
-.pn a {
-  display: block; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; text-decoration: none; color: var(--text);
-  transition: background .15s, transform .15s;
-}
+.topic-list li::before { content: '▸'; position: absolute; left: 6px; color: var(--accent); font-size: 12px; top: 10px; }
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 60px; }
+.pn a { display: block; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: background .15s, transform .15s; }
 .pn a:hover { background: var(--bg3); transform: translateY(-1px); }
-.pn .label {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
-}
+.pn .label { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
-
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
-footer {
-  border-top: 1px solid var(--border); padding: 28px;
-  text-align: center; font-family: var(--mono); font-size: 11px;
-  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
-}
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
 </style>
 </head>
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Week 15 · Lecture</div>
+<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Module 15 · Lecture</div>
 <h1>Aggregation, Grouping &amp; Visualization</h1>
-<p class="lede">The capstone is one week away. Today we learn how to ask aggregate questions (&#x27;what is the total revenue per region?&#x27;) and how to turn the answers into charts your manager would actually read.</p>
+<p class="lede">The capstone is one module away. Today we learn how to ask aggregate questions ("what is the total revenue per region?") and turn the answers into charts your manager would actually read.</p>
 <div class="meta">
-<span class="chip accent">Week 15 · Lecture</span>
+<span class="chip accent">Module 15 · Lecture</span>
 <span class="chip">Unit 4</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week15_reading.html" class="weekjump-link">Reading</a>
 <a href="week15_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week15_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
-<h3>groupby</h3>
-<p>Split-apply-combine. Split the data by a category, apply a function, combine the results.</p>
-<pre><code>df.groupby(&quot;region&quot;)[&quot;revenue&quot;].sum()
-df.groupby(&quot;region&quot;)[&quot;revenue&quot;].mean()
-df.groupby([&quot;region&quot;,&quot;category&quot;])[&quot;revenue&quot;].sum()</code></pre>
+
+<h3>groupby — split, apply, combine</h3>
+<p>The <code>groupby()</code> method implements the "split-apply-combine" pattern: pandas splits the DataFrame into groups based on a column's unique values, applies an aggregation function (sum, mean, count, etc.) to each group independently, then combines the results into a single Series or DataFrame. This mirrors the behavior of a SQL <code>GROUP BY</code> clause or an Excel PivotTable — but it is faster, reproducible, and composable.</p>
+<p>The most common pattern is <code>df.groupby("column")["value_col"].function()</code>. The result is a Series indexed by the group labels. Call <code>.reset_index()</code> to convert it into a two-column DataFrame that you can pass directly to a plotting function.</p>
+<pre><code>df.groupby("region")["revenue"].sum()
+df.groupby("region")["revenue"].mean()
+df.groupby(["region","category"])["revenue"].sum()
+
+# Multiple aggregations in one call:
+df.groupby("region").agg({"revenue": "sum", "order_id": "count"}).reset_index()</code></pre>
+
 <h3>Calculated columns</h3>
-<pre><code>df[&quot;profit&quot;] = df[&quot;revenue&quot;] - df[&quot;cost&quot;]
-df[&quot;margin&quot;] = df[&quot;profit&quot;] / df[&quot;revenue&quot;]
-df[&quot;month&quot;] = df[&quot;order_date&quot;].dt.month</code></pre>
+<p>Create new columns before grouping to enable richer aggregations. The most important derived columns for business analytics are profit (revenue minus cost), margin (profit divided by revenue), and date parts (month, year, quarter, day of week). Date parts are extracted from a datetime column using the <code>.dt</code> accessor.</p>
+<pre><code>df["profit"] = df["revenue"] - df["cost"]
+df["margin"] = df["profit"] / df["revenue"]
+df["month"] = df["order_date"].dt.month
+df["year"]  = df["order_date"].dt.year
+df["quarter"] = df["order_date"].dt.quarter</code></pre>
+
 <h3>A bar chart with matplotlib</h3>
+<p>matplotlib is Python's foundational plotting library. It gives you complete control over every visual element. The standard workflow is: create a figure, call the chart function, add labels, and either save or show. Always set <code>figsize</code> so the chart is not too small when saved. Always add a title and axis labels — a chart without labels is uninterpretable to anyone who hasn't seen your data.</p>
 <pre><code>import matplotlib.pyplot as plt
 
-region_revenue = df.groupby(&quot;region&quot;)[&quot;revenue&quot;].sum()
-region_revenue.plot(kind=&quot;bar&quot;)
-plt.title(&quot;Revenue by Region&quot;)
-plt.ylabel(&quot;Revenue ($)&quot;)
+region_revenue = df.groupby("region")["revenue"].sum().reset_index()
+plt.figure(figsize=(10, 5))
+plt.bar(region_revenue["region"], region_revenue["revenue"], color="#fbbf24")
+plt.title("Revenue by Region", fontsize=14, fontweight="bold")
+plt.ylabel("Revenue ($)")
+plt.xlabel("Region")
+plt.tight_layout()
+plt.savefig("charts/revenue_by_region.png", dpi=150)
 plt.show()</code></pre>
+
 <h3>A line chart for trends over time</h3>
-<pre><code>monthly = df.groupby(&quot;month&quot;)[&quot;revenue&quot;].sum()
-monthly.plot(kind=&quot;line&quot;, marker=&quot;o&quot;)
-plt.title(&quot;Monthly Revenue&quot;)
+<p>Line charts communicate that time is on the x-axis and magnitude is on the y-axis, and that consecutive points are connected. Use them for monthly revenue, weekly signups, or quarterly growth — anything where the relationship between adjacent periods is meaningful. Add markers to make individual data points visible, especially when there are fewer than 20 data points.</p>
+<pre><code>monthly = df.groupby("month")["revenue"].sum().reset_index()
+plt.figure(figsize=(10, 5))
+plt.plot(monthly["month"], monthly["revenue"], marker="o", color="#60a5fa", linewidth=2)
+plt.title("Monthly Revenue Trend")
+plt.xlabel("Month")
+plt.ylabel("Revenue ($)")
+plt.xticks(range(1, 13))
+plt.savefig("charts/monthly_trend.png", dpi=150)
 plt.show()</code></pre>
+
 <h3>A histogram for distributions</h3>
-<pre><code>df[&quot;revenue&quot;].plot(kind=&quot;hist&quot;, bins=20)
-plt.title(&quot;Order Size Distribution&quot;)
-plt.xlabel(&quot;Revenue ($)&quot;)
+<p>Histograms divide a continuous variable's range into equal-width "bins" and show how many observations fall into each bin. They answer questions like: "Are most orders small with a few giant ones?" (right-skewed) or "Do orders cluster around a typical size?" (bell-shaped). The number of bins is a judgment call — too few loses detail, too many shows noise. Start with 20 and adjust.</p>
+<pre><code>plt.figure(figsize=(8, 5))
+plt.hist(df["revenue"], bins=20, color="#34d399", edgecolor="black", alpha=0.8)
+plt.title("Order Size Distribution")
+plt.xlabel("Revenue ($)")
+plt.ylabel("Number of Orders")
+plt.savefig("charts/order_distribution.png", dpi=150)
 plt.show()</code></pre>
+
 <h3>Seaborn for quick stats charts</h3>
-<p>Seaborn sits on top of matplotlib and gives you cleaner defaults and stats-aware plots.</p>
+<p>Seaborn sits on top of matplotlib and gives you cleaner default styles, automatic aggregation, and stats-aware additions like confidence intervals and regression lines. Its API is DataFrame-native: you pass the entire DataFrame and specify column names as strings. For the capstone, Seaborn is an excellent choice for category-level charts and distribution plots — it takes fewer lines and looks more professional out of the box.</p>
 <pre><code>import seaborn as sns
-sns.barplot(data=df, x=&quot;region&quot;, y=&quot;revenue&quot;)
-sns.boxplot(data=df, x=&quot;region&quot;, y=&quot;revenue&quot;)</code></pre>
+sns.set_theme(style="darkgrid")
+
+# Bar chart with confidence intervals (automatic)
+sns.barplot(data=df, x="region", y="revenue", ci=95)
+
+# Box plot: shows median, quartiles, and outliers per group
+sns.boxplot(data=df, x="region", y="revenue")
+
+# Histogram (Seaborn version)
+sns.histplot(df["revenue"], bins=20, kde=True)</code></pre>
+
 <h3>Choosing the right chart</h3>
-<p>Bar = compare categories. Line = trend over time. Histogram = distribution of one variable. Scatter = two variables. Never use a pie chart for more than 4 slices.</p>
+<p>Chart type selection is a communication decision, not a cosmetic one. Bar = compare discrete categories. Line = trend over time (sequential order matters). Histogram = distribution of one continuous variable. Scatter = relationship between two continuous variables. Box plot = distribution across groups with outlier visibility. Heatmap = magnitude across two categorical axes. Never use a pie chart for more than 4 slices — use a bar chart instead, always.</p>
+
+<h2>Live Coding Walkthrough</h2>
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("data/clean_sales.csv")
+df["order_date"] = pd.to_datetime(df["order_date"])
+df["month"] = df["order_date"].dt.month
+df["revenue"] = df["unit_price"] * df["quantity_sold"]
+
+# ── Q1: Which region drives the most revenue? ─────────────────
+by_region = df.groupby("region")["revenue"].sum().reset_index()
+by_region = by_region.sort_values("revenue", ascending=False)
+
+plt.figure(figsize=(8,5))
+plt.bar(by_region["region"], by_region["revenue"], color="#fbbf24")
+plt.title("Total Revenue by Region")
+plt.ylabel("Revenue ($)")
+plt.tight_layout()
+plt.savefig("charts/q1_region.png", dpi=150)
+plt.show()
+print("Top region:", by_region.iloc[0]["region"],
+      f"${by_region.iloc[0]['revenue']:,.0f}")
+
+# ── Q2: How does revenue trend by month? ──────────────────────
+monthly = df.groupby("month")["revenue"].sum().reset_index()
+
+plt.figure(figsize=(10,5))
+plt.plot(monthly["month"], monthly["revenue"], marker="o", linewidth=2, color="#60a5fa")
+plt.title("Monthly Revenue Trend")
+plt.xlabel("Month"); plt.ylabel("Revenue ($)")
+plt.xticks(range(1,13))
+plt.tight_layout()
+plt.savefig("charts/q2_monthly.png", dpi=150)
+plt.show()
+
+# ── Q3: What does the order size distribution look like? ──────
+plt.figure(figsize=(8,5))
+sns.histplot(df["revenue"], bins=30, kde=True, color="#34d399")
+plt.title("Order Size Distribution")
+plt.xlabel("Revenue ($)"); plt.ylabel("Count")
+plt.tight_layout()
+plt.savefig("charts/q3_distribution.png", dpi=150)
+plt.show()
+
+print(f"Median order: ${df['revenue'].median():,.2f}")
+print(f"Mean order:   ${df['revenue'].mean():,.2f}")</code></pre>
+
+<h2>Common Errors</h2>
+<h3>Error 1: savefig after show saves blank file</h3>
+<pre><code># WRONG
+plt.hist(df["revenue"])
+plt.show()         # clears the figure
+plt.savefig("x.png")  # saves blank!
+
+# RIGHT
+plt.hist(df["revenue"])
+plt.savefig("x.png")  # save BEFORE show
+plt.show()</code></pre>
+
+<h3>Error 2: groupby returns a Series, bar() needs two arrays</h3>
+<pre><code># WRONG — result is a Series, not two separate arrays
+result = df.groupby("region")["revenue"].sum()
+plt.bar(result)  # TypeError
+
+# RIGHT — use reset_index() then index into both columns
+result = df.groupby("region")["revenue"].sum().reset_index()
+plt.bar(result["region"], result["revenue"])</code></pre>
+
+<h3>Error 3: Forgetting plt.tight_layout() causes cut-off labels</h3>
+<pre><code># Long category names get cut off without tight_layout
+plt.bar(categories, values)
+plt.xticks(rotation=30, ha="right")
+plt.tight_layout()  # prevents label clipping
+plt.savefig("chart.png", bbox_inches="tight")  # extra safety margin</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>You find that the South region has the highest total revenue but the lowest average order value. What follow-up analysis would you do, and what business explanation could account for this pattern?</li>
+<li>A colleague suggests using a pie chart to show revenue share by region (4 regions). What chart would you use instead, and why is a bar chart more effective for this data?</li>
+<li>Revenue peaks in November and December. Is this a finding worth reporting, or is it obvious and expected? How do you decide whether a pattern is worth including in a presentation?</li>
+<li>You notice the revenue histogram is heavily right-skewed (long tail of very high orders). How would this affect your choice to report the mean vs. the median as the "typical" order size?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
-<li>Compute revenue per region with groupby and chart it as a bar.</li>
-<li>Plot the monthly trend.</li>
-<li>Pick the right chart for: &quot;are weekend orders different from weekday orders?&quot;</li>
+<li>Compute revenue per region with <code>groupby()</code> and chart it as a bar. Add title, axis labels, and save as a PNG.</li>
+<li>Add a <code>month</code> column using <code>.dt.month</code>, group by month, and plot the monthly trend as a line chart with markers.</li>
+<li>Plot a histogram of revenue. Choose a bin count, run it, then adjust the bin count up or down and observe the difference in readability.</li>
+<li>Replace one matplotlib chart with a Seaborn equivalent. Compare the visual quality and the amount of code required.</li>
+<li>Pick a business question you find interesting and choose the most appropriate chart type. Justify your choice in a one-sentence comment.</li>
+<li>Write a one-sentence interpretation below each chart that states the finding in plain English with a specific number.</li>
 </ul>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week15_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week15_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li><code>groupby()</code> is the primary tool for aggregate business questions — split by category, apply a function, combine results.</li>
+<li>Always call <code>.reset_index()</code> after groupby when you need a plain DataFrame for plotting or further analysis.</li>
+<li>Chart labeling is non-negotiable: title, x-axis label, y-axis label — every chart, every time.</li>
+<li>Call <code>plt.savefig()</code> before <code>plt.show()</code> — show() clears the figure.</li>
+<li>Chart type choice communicates your analytical judgment: bar for categories, line for time, histogram for distributions.</li>
+</ul>
+</div>
+
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week15_lab.html">Week 15 Lab</a></p>
+<p>Hands-on lab: <a href="week15_lab.html">Module 15 Lab</a> — the capstone dress rehearsal</p>
+</div>
+
+<div class="pn">
+<a href="week14_lecture.html"><div class="label">← Previous</div><div class="title">Module 14 · Data Cleaning</div></a>
+<a class="next" href="week16_capstone.html"><div class="label">Next →</div><div class="title">Module 16 · Capstone</div></a>
 </div>
 </div>
 

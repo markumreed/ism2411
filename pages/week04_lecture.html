@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 4 Lecture · Operators &amp; Expressions — ISM2411</title>
+<title>Module 4 Lecture · Operators &amp; Expressions — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,23 +227,26 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 04 · Lecture</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 04 · Lecture</div>
 <h1>Operators &amp; Expressions</h1>
 <p class="lede">Operators are how variables interact. Add, subtract, compare, combine. We connect them to a business formula every student will recognize: revenue and profit margin.</p>
 <div class="meta">
-<span class="chip accent">Week 04 · Lecture</span>
+<span class="chip accent">Module 04 · Lecture</span>
 <span class="chip">Unit 1</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week04_reading.html" class="weekjump-link">Reading</a>
 <a href="week04_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week04_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>Arithmetic operators</h3>
-<p>These work just like a calculator — with two tricky cases: // (integer division) and % (modulo / remainder).</p>
+<p>These work just like a calculator — with two tricky cases: // (integer division) and % (modulo / remainder). Standard division in Python 3 always produces a float: <code>10 / 4</code> gives <code>2.5</code>, not <code>2</code>. This is a change from Python 2 and from the behavior of division in many other languages like C or Java. If you need integer division — whole-number quotient with no decimal — use <code>//</code>.</p>
+<p>Modulo is the remainder after division. <code>17 % 5</code> is <code>2</code> because 5 goes into 17 three times (15) with 2 left over. Modulo is more useful than it first appears: checking if a number is even (<code>x % 2 == 0</code>), finding the units left over after filling full cartons, rotating through days of the week, and many other cyclic-counting problems all use modulo. Get comfortable with it — it will show up in every domain from e-commerce to finance to scheduling.</p>
 <pre><code>10 + 3  # 13
 10 - 3  # 7
 10 * 3  # 30
@@ -251,8 +254,10 @@ footer {
 10 // 3 # 3 (integer division, drops decimals)
 10 % 3  # 1 (remainder)
 10 ** 3 # 1000 (exponent)</code></pre>
+
 <h3>Order of operations</h3>
-<p>Python follows standard math rules: parentheses first, then exponents, then * /, then + -. When in doubt, add parentheses — they make code clearer too.</p>
+<p>Python follows standard math rules: parentheses first, then exponents, then * /, then + -. When in doubt, add parentheses — they make code clearer too. A common business formula mistake is writing <code>price - cost / price</code> when you mean <code>(price - cost) / price</code>. Without parentheses, the division happens first: cost/price, then price minus that. The result is completely wrong, and Python will not warn you because it is syntactically valid.</p>
+<p>The professional habit is to always use parentheses in multi-step business formulas, even when the default precedence gives the right answer. This makes the code self-documenting — anyone reading it can see the intended calculation without having to memorize operator precedence rules. Code clarity is more important than brevity when formulas have real monetary consequences.</p>
 <pre><code>price = 50
 discount = 0.1
 tax = 0.07
@@ -262,35 +267,142 @@ total_wrong = price - price * discount + price * tax
 
 # with parens — clear and correct
 total_right = (price * (1 - discount)) * (1 + tax)</code></pre>
+
 <h3>Comparison operators</h3>
-<p>These return True or False — the booleans from Week 3.</p>
+<p>These return True or False — the booleans from Module 03. Every comparison you write this semester — "is this product's margin above the threshold?", "is this customer's balance over 90 days?", "is this order quantity above the minimum?" — is a comparison expression. The result is always a boolean, and that boolean will be used by an <code>if</code> statement to decide what to do next (Module 05).</p>
+<p>The critical mistake to avoid: confusing <code>=</code> (assignment) with <code>==</code> (equality test). In Python, using <code>=</code> inside a condition is a SyntaxError, which is helpful — but in some other languages it is valid and causes silent bugs. Make it muscle memory: single equals assigns, double equals compares.</p>
 <pre><code>price == 50  # equal       (note: == NOT =)
 price != 50  # not equal
 price &gt;  50  # greater than
 price &lt;= 50  # less than or equal</code></pre>
+
 <h3>Logical operators</h3>
-<p>Combine comparisons with and, or, not.</p>
+<p>Combine comparisons with and, or, not. These let you express compound business rules: "flag a transaction if the amount is over $10,000 AND the customer account is less than 30 days old." The <code>and</code> operator requires both conditions to be True; <code>or</code> requires at least one to be True; <code>not</code> flips whatever follows it. These operators are evaluated after all comparisons, so <code>x &gt; 5 and y &lt; 10</code> checks both comparisons first, then applies <code>and</code>.</p>
 <pre><code>price &gt; 100 and quantity &gt; 5      # both must be true
 price &gt; 100 or quantity &gt; 5       # either is enough
 not in_stock                       # flips True/False</code></pre>
+
 <h3>Business formulas you will write all semester</h3>
-<p>These two come up in every dataset we touch.</p>
-<pre><code>revenue = price * quantity
-margin = (price - cost) / price
-profit = revenue - total_cost</code></pre>
+<p>These formulas come up in every dataset we touch. Memorize the Python equivalents. Notice that gross margin is expressed as a decimal (0.333...) unless you format it with <code>:.1%</code> to get the percentage string. The formula for discounted price applies discount to the original price, then multiplies: <code>price * (1 - discount_rate)</code>. Applying tax after a discount: <code>discounted_price * (1 + tax_rate)</code>. These patterns repeat throughout the course.</p>
+<pre><code>revenue      = price * quantity
+gross_margin = (price - cost) / price
+profit       = revenue - (cost * quantity)
+discount_amt = price * 0.10
+after_disc   = price * (1 - 0.10)
+after_tax    = after_disc * (1 + 0.07)
+
+print(f"Revenue:  ${revenue:,.2f}")
+print(f"Margin:   {gross_margin:.1%}")
+print(f"Profit:   ${profit:,.2f}")
+print(f"Final:    ${after_tax:.2f}")</code></pre>
+
+<h2>Detailed Code Walkthrough</h2>
+
+<h3>A complete pricing calculator</h3>
+<p>This script asks for all inputs, computes a full set of business metrics, and prints a formatted report. Study how the formulas chain together — each output variable is the input to the next formula.</p>
+<pre><code># pricing_calculator.py
+product  = input("Product name: ")
+price    = float(input("Retail price: $"))
+cost     = float(input("Unit cost:    $"))
+qty      = int(input("Units sold:   "))
+disc_pct = float(input("Discount (%): ")) / 100   # convert 10 → 0.10
+tax_pct  = 0.07  # fixed tax rate
+
+revenue      = price * qty
+gross_margin = (price - cost) / price
+discount_amt = price * disc_pct
+final_price  = (price - discount_amt) * (1 + tax_pct)
+net_revenue  = final_price * qty
+profit       = net_revenue - (cost * qty)
+
+print(f"\n=== {product} Report ===")
+print(f"Gross revenue:    ${revenue:>10,.2f}")
+print(f"Gross margin:     {gross_margin:>10.1%}")
+print(f"Discount ({disc_pct:.0%}):    ${discount_amt:>10.2f}")
+print(f"Final price:      ${final_price:>10.2f}")
+print(f"Net revenue:      ${net_revenue:>10,.2f}")
+print(f"Net profit:       ${profit:>10,.2f}")</code></pre>
+
+<h3>Using modulo for packaging logic</h3>
+<p>Floor division and modulo together solve the "how many full boxes" problem that comes up in inventory and logistics.</p>
+<pre><code># packaging.py
+units_ordered = int(input("Units ordered: "))
+units_per_box = 12
+
+full_boxes    = units_ordered // units_per_box   # how many complete boxes
+leftover      = units_ordered % units_per_box    # how many units remain
+
+print(f"Full boxes of {units_per_box}: {full_boxes}")
+print(f"Loose units:               {leftover}")
+# e.g. 100 units → 8 full boxes, 4 loose</code></pre>
+
+<h2>Common Errors</h2>
+
+<h3>Wrong order of operations in a business formula</h3>
+<pre><code># WRONG — division happens before subtraction due to precedence
+margin_wrong = price - cost / price   # this is price - (cost/price), not (price-cost)/price
+
+# CORRECT — parentheses enforce the intended formula
+margin_right = (price - cost) / price</code></pre>
+
+<h3>Type mismatch: string + number</h3>
+<pre><code># WRONG — user typed "5" from input(), which is a str
+units = input("Units: ")     # units = "5" (str)
+total = units * 49.99        # "5" * 49.99 → TypeError
+
+# CORRECT — convert to int before multiplication
+units = int(input("Units: "))
+total = units * 49.99</code></pre>
+
+<h3>Integer division surprise</h3>
+<pre><code># WRONG — expecting a percentage but getting 0 (int division behavior in Python 2 style thinking)
+# In Python 3 this is NOT a problem for /, but students often expect // to round
+margin = 20 // 60    # gives 0, not 0.33
+
+# CORRECT — use / for true division
+margin = 20 / 60     # gives 0.3333...</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>A script computes <code>margin = price - cost / price</code>. For price=100 and cost=60, what does this formula return, and what should it return? Write the corrected version.</li>
+<li>An e-commerce company applies a 15% discount and then adds 7% tax. Write the Python expression for the final price. Does the order of operations (discount first vs. tax first) matter mathematically? Verify with numbers.</li>
+<li>A warehouse manager needs to know how many full pallets of 48 boxes can be shipped from an order of 500 boxes, and how many boxes are left over. Write the expressions using // and %.</li>
+<li>What is the difference between <code>price &gt; 100 and in_stock</code> vs. <code>price &gt; 100 or in_stock</code>? In what business situation would each version be appropriate?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
 <li>Compute the margin on a $60 product that cost $40 to produce.</li>
 <li>Compute the tax-inclusive total of a $200 cart with 7% tax and a 15% discount applied first.</li>
 <li>Trace this: what is the value of x % 2 when x is even? When x is odd?</li>
+<li>Write a comparison expression that is True only if margin is above 30% AND price is above $50.</li>
+<li>A fulfillment center packs items in boxes of 24. How many full boxes can be made from 237 items, and how many loose items remain?</li>
+<li>Predict the output of <code>print(10 / 4, 10 // 4, 10 % 4)</code> before running it.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>Python has seven arithmetic operators: <code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>//</code> <code>%</code> <code>**</code> — know them all.</li>
+<li>Order of operations is PEMDAS; use parentheses to make your intent explicit in business formulas.</li>
+<li>Comparison operators (<code>==</code> <code>!=</code> <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code>) return <code>True</code> or <code>False</code>.</li>
+<li>Logical operators (<code>and</code>, <code>or</code>, <code>not</code>) combine boolean values to express compound business rules.</li>
+<li>Type mismatches (<code>"5" + 5</code>) cause TypeErrors — always convert input before arithmetic.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week04_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week04_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week04_lab.html">Week 4 Lab</a></p>
+<p>Hands-on lab: <a href="week04_lab.html">Module 04 Lab</a></p>
+</div>
+
+<div class="pn">
+<a href="week03_lecture.html"><div class="label">← Previous</div><div class="title">Module 03 · Variables, Data Types &amp; First Output</div></a>
+<a class="next" href="week05_lecture.html"><div class="label">Next →</div><div class="title">Module 05 · Conditionals</div></a>
 </div>
 </div>
 

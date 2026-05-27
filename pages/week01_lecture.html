@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 1 Lecture · What is a Computer? — ISM2411</title>
+<title>Module 1 Lecture · What is a Computer? — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,45 +227,93 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 01 · Lecture</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 01 · Lecture</div>
 <h1>What is a Computer?</h1>
 <p class="lede">Today we lay the ground floor — no coding, no Python, just the mental model. Programming makes a lot more sense once you understand what the machine actually is.</p>
 <div class="meta">
-<span class="chip accent">Week 01 · Lecture</span>
+<span class="chip accent">Module 01 · Lecture</span>
 <span class="chip">Unit 1</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week01_reading.html" class="weekjump-link">Reading</a>
 <a href="week01_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week01_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>What is a computer, really?</h3>
-<p>A computer is three things working together: a CPU that follows instructions one at a time, RAM that holds what it is currently working on, and storage where files live when the power is off. When you open a file, the OS copies it from storage into RAM and the CPU can act on it.</p>
+<p>A computer is three things working together: a CPU that follows instructions one at a time, RAM that holds what it is currently working on, and storage where files live when the power is off. When you open a file, the OS copies it from storage into RAM and the CPU can act on it. Understanding these three layers is the foundation of everything you will do in this course — every Python script you write will execute in this same pipeline.</p>
+<p>Think of the CPU as the chef, RAM as the kitchen counter, and storage as the pantry. The chef can only work with what is on the counter. To use an ingredient from the pantry (storage), you first carry it to the counter (RAM), then the chef (CPU) works with it. When the chef is done and the kitchen closes (power off), everything on the counter disappears — but the pantry is still stocked. This analogy explains why "save your work" is not just good advice; it is the difference between data in volatile RAM and data on permanent storage.</p>
+<p>Modern computers complicate this picture with CPU caches, virtual memory, and SSDs that blur the line between RAM and storage. But for programming purposes, the three-layer model is accurate enough to reason about almost every bug and performance issue you will ever encounter. When a program crashes, something went wrong in RAM. When a file is corrupt, something went wrong in storage. When a program is slow, you are probably waiting on storage I/O.</p>
+
 <h3>Files, paths, directories</h3>
-<p>A file is a named blob of bytes. A directory (also called a folder) is a labeled container that holds files and other directories. Every file has a path — the address that tells the system how to get to it. Like a street address, it works because it is unambiguous.</p>
-<pre><code>C:\Users\you\Documents\report.xlsx
-/home/you/Documents/report.xlsx
-./data/sales.csv</code></pre>
+<p>A file is a named blob of bytes. A directory (also called a folder) is a labeled container that holds files and other directories. Every file has a path — the address that tells the system how to get to it. Like a street address, it works because it is unambiguous. The path <code>/home/alice/reports/q1.csv</code> describes exactly one location in the entire file system, no matter where you are standing.</p>
+<p>Paths work hierarchically. On macOS and Linux, the hierarchy starts at <code>/</code> (the root). On Windows, it starts at a drive letter like <code>C:\</code>. Everything else — every folder and file on the system — is nested inside that root. A relative path describes a location starting from wherever you currently are, not from the root. This distinction matters when you write Python scripts that open files: use relative paths so your code works on any machine, not just yours.</p>
+<pre><code>C:\Users\you\Documents\report.xlsx       # Windows absolute
+/home/you/Documents/report.xlsx          # Mac/Linux absolute
+./data/sales.csv                         # relative (from current folder)
+../reports/summary.xlsx                  # relative (up one level, then in)</code></pre>
+
 <h3>What is a program?</h3>
-<p>A program is a sequence of instructions written in a language the computer can run. Python is one such language. When you run a Python program, an interpreter reads each line and tells the CPU what to do.</p>
+<p>A program is a sequence of instructions written in a language the computer can run. Python is one such language. When you run a Python program, an interpreter reads each line and tells the CPU what to do. The interpreter is itself a program — written in C — that translates Python instructions into the machine code the CPU understands. This is why Python is called an "interpreted language."</p>
+<p>The alternative is a "compiled language" like C++ or Java, where a compiler translates the entire source file into machine code before any of it runs. Compiled programs start faster but take longer to build. Interpreted programs start immediately (the interpreter is already running) but execute more slowly. For business data tasks — analyzing thousands of rows, generating reports, calling APIs — Python's execution speed is more than adequate, and its development speed is far superior.</p>
+<p>A .py file is just a text file. Open any Python script in Notepad and it is perfectly readable. The .py extension is a convention that signals to the OS and your editor: "this is Python code." When you run <code>python3 script.py</code>, you are asking the Python interpreter program to read and execute that text file, line by line.</p>
+
 <h3>Why businesses use programming</h3>
-<p>Excel works fine for hundreds of rows. It breaks down at millions of rows, across dozens of files, when work needs to be repeated weekly, or when it needs to be checked by someone else. Code is reusable, auditable, and version-controlled. That is the value.</p>
+<p>Excel works fine for hundreds of rows. It breaks down at millions of rows, across dozens of files, when work needs to be repeated weekly, or when it needs to be checked by someone else. Code is reusable, auditable, and version-controlled. That is the value. A Python script that runs every Monday morning and emails a summary requires no human interaction after it is written. An Excel process requires someone to open a file, run a macro, copy a number, paste it somewhere else, and hope they did not accidentally edit a formula.</p>
+<p>Version control is another advantage that non-programmers underestimate. With Git (which you will encounter later this semester), every change to a script is tracked. If a bug is introduced, you can see exactly what changed and when. An Excel file with "v3_FINAL_revised_USE_THIS_ONE.xlsx" in the name is version "control" by comparison. Programming forces you to be explicit about what the code does — and that explicitness is auditable, which matters enormously in regulated industries like finance and healthcare.</p>
+
+<h2>Common Errors</h2>
+<h3>Confusing RAM and storage</h3>
+<p>Students often ask: "I saved my file, so why did my changes disappear?" Saving writes from RAM to storage. If you closed a file without saving — or the program crashed before writing — the RAM contents were lost. The solution is always: save early, save often, and understand that "open" means "in RAM."</p>
+
+<h3>Confusing absolute and relative paths</h3>
+<p>A script that opens <code>/home/alice/data/sales.csv</code> (absolute) only works on Alice's machine. The same script using <code>data/sales.csv</code> (relative) works on anyone's machine — as long as they are in the right directory when they run it. This is a day-one mistake that wastes hours later. Get in the habit of using relative paths in code.</p>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>Think about a repetitive task in your current job or internship that involves copying and pasting between files. Describe the pipeline of CPU, RAM, and storage operations happening while you do that task.</li>
+<li>What is the difference between an interpreted language and a compiled language? Why might a business analyst prefer Python over a compiled language for data work?</li>
+<li>If a hard drive fails, you lose your files. If RAM fails, you lose your currently open work. Which type of failure is more catastrophic for a business, and what practices mitigate each?</li>
+<li>Why is version control important in a business setting? Give an example of a problem version control would prevent that is common with shared Excel files.</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
 <li>Open Finder / File Explorer and trace one file from your Downloads to its full path.</li>
-<li>Open the terminal (or PowerShell) and just look at it. We do not type yet — Week 2.</li>
+<li>Open the terminal (or PowerShell) and just look at it. We do not type yet — Module 02.</li>
 <li>Group discussion: name three repetitive Excel tasks in your major or job that a program could automate.</li>
+<li>Draw the CPU–RAM–Storage pipeline on paper. Annotate what happens at each step when you open, edit, and save an Excel file.</li>
+<li>Find a .py file on your machine (or download one from the reading page examples). Open it in Notepad or TextEdit. Confirm it is plain text.</li>
+<li>In pairs: one person describes a file path out loud (<code>/Users/bob/Desktop/homework.docx</code>), the other draws the directory tree that path implies.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>A computer is CPU + RAM + Storage working together. Each layer has a distinct role.</li>
+<li>RAM is fast and temporary; storage is slower and permanent. Save = write from RAM to storage.</li>
+<li>A file is bytes + a name. A path is the full address of that file in the directory hierarchy.</li>
+<li>A program is a sequence of instructions; an interpreter executes Python programs line by line.</li>
+<li>Businesses use programming because code is reusable, auditable, and scales beyond what manual processes can handle.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week01_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week01_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week01_lab.html">Week 1 Lab</a></p>
+<p>Hands-on lab: <a href="week01_lab.html">Module 01 Lab</a></p>
+</div>
+
+<div class="pn">
+<div></div>
+<a class="next" href="week02_lecture.html"><div class="label">Next →</div><div class="title">Module 02 · The Command Line &amp; Your Environment</div></a>
 </div>
 </div>
 

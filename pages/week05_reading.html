@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 5 Reading · Conditionals — ISM2411</title>
+<title>Module 5 Reading · Conditionals — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,44 +227,128 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 05 · Reading</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 05 · Reading</div>
 <h1>Conditionals</h1>
 <p class="lede">Tiered discount logic: 0% under $50, 10% under $200, 15% otherwise.</p>
 <div class="meta">
-<span class="chip accent">Week 05</span>
+<span class="chip accent">Module 05</span>
 <span class="chip">Unit 1</span>
 <span class="chip">Reading · Think Python (TP) Ch. 5 — Conditionals and Recursion (skip recursion)</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">DataCamp due</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week05_reading.html" class="weekjump-link current">Reading</a>
 <a href="week05_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week05_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Until this week, your scripts ran straight through, top to bottom. Conditionals are the first time your code branches — does one thing if a condition is true, another if it isn't. Every spreadsheet IF formula you have ever written maps directly onto this.</p>
-<h2>What you will learn this week</h2>
+<p>Until this module, your scripts ran straight through, top to bottom. Conditionals are the first time your code branches — does one thing if a condition is true, another if it isn't. Every spreadsheet IF formula you have ever written maps directly onto this. If you have typed <code>=IF(A2&gt;100,"High","Low")</code> in Excel, you already understand the concept; Python just gives you more power and precision.</p>
+<p>In business, almost every decision is conditional. A bank approves or denies a loan based on a credit score threshold. A retailer applies a discount based on cart size. A fraud detection system flags a transaction based on whether the amount exceeds a statistical threshold. These are all if/elif/else structures at their core — and learning to write them cleanly is one of the most transferable skills in this course.</p>
+<p>Beyond the immediate Python syntax, this module teaches you to think in terms of mutually exclusive cases. When you write an if/elif/else chain, Python evaluates each condition top to bottom and executes only the first branch that is true. This means the order of your conditions matters — a lesson that trips up many beginners and has real consequences in production code that handles pricing, compliance, or access control.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
-<li>if, elif, else</li>
-<li>Writing decision logic</li>
+<li>if, elif, else — structure and syntax</li>
+<li>Writing decision logic that handles multiple tiers</li>
+<li>Truthy and falsy values — what Python considers True or False</li>
+<li>Boolean operators: and, or, not</li>
 <li>Nested conditionals — and when to avoid them</li>
 <li>Business context: discount tiers, approval thresholds, flagging anomalies</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>Tiered discount logic: 0% under $50, 10% under $200, 15% otherwise.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>if / elif / else</h4>
+<p>The three keywords that control branching. Python evaluates conditions top to bottom and executes only the first matching branch. Think of it like a series of gates — once one opens, the rest stay closed.</p>
+</div>
+<div class="concept-card">
+<h4>Boolean expressions</h4>
+<p>Any expression that evaluates to <code>True</code> or <code>False</code>. Comparison operators (<code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>) all produce booleans. They are the "questions" your conditionals ask.</p>
+</div>
+<div class="concept-card">
+<h4>Truthy / Falsy</h4>
+<p>Python treats certain non-boolean values as false: <code>0</code>, <code>""</code>, <code>None</code>, <code>[]</code>, <code>{}</code>. Everything else is truthy. This lets you write <code>if balance:</code> instead of <code>if balance != 0:</code>.</p>
+</div>
+<div class="concept-card">
+<h4>Boolean operators</h4>
+<p><code>and</code> requires both sides to be true. <code>or</code> requires at least one side to be true. <code>not</code> inverts the result. They let you combine multiple conditions into a single clean check.</p>
+</div>
+<div class="concept-card">
+<h4>= vs. ==</h4>
+<p>A single <code>=</code> is assignment — it sets a variable. A double <code>==</code> is comparison — it asks a question. Mixing them up is the single most common beginner error in Python conditions.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>Imagine you are building pricing logic for an online office-supply retailer. Management has decided on a three-tier discount policy: orders under $100 get no discount, orders between $100 and $499 get 10% off, and orders of $500 or more get 15% off. Additionally, any order that ends up above $1,000 after discounting requires manager approval before it can ship — a compliance rule driven by the company's expense policy.</p>
+<p>Before you had conditionals, you would have to handle this in a spreadsheet with nested IF formulas that are nearly impossible to audit. With Python, the logic is explicit, readable, and can be applied to every row in a database of thousands of orders in one pass.</p>
+<p>Here is what the core logic looks like in Python:</p>
+<pre><code>total = 450
+
+# Determine discount tier
+if total >= 500:
+    discount = 0.15
+elif total >= 100:
+    discount = 0.10
+else:
+    discount = 0
+
+final = total * (1 - discount)
+
+# Compliance check
+if final > 1000:
+    status = "manager_approval_required"
+else:
+    status = "auto_approved"
+
+print(f"Original: ${total} | Discount: {discount*100:.0f}% | Final: ${final:.2f} | Status: {status}")</code></pre>
+<p>Running this with <code>total = 450</code> would print: <code>Original: $450 | Discount: 10% | Final: $405.00 | Status: auto_approved</code>.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Conditional statement</strong> — a block of code that only executes when a specified condition is true</li>
+<li><strong>Boolean</strong> — a data type with only two values: <code>True</code> or <code>False</code></li>
+<li><strong>Comparison operator</strong> — a symbol that compares two values and returns a boolean (<code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>)</li>
+<li><strong>Truthy</strong> — a non-boolean value that Python treats as True in a boolean context</li>
+<li><strong>Falsy</strong> — a non-boolean value that Python treats as False (0, "", None, [], {})</li>
+<li><strong>elif</strong> — short for "else if"; introduces an alternative condition to check if the previous conditions were false</li>
+<li><strong>Nested conditional</strong> — an if statement placed inside another if block; readable up to about 2 levels deep</li>
+<li><strong>Short-circuit evaluation</strong> — with <code>and</code>, Python stops checking as soon as it finds a False; with <code>or</code>, it stops as soon as it finds a True</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>1. "I can use = to check equality."</strong> No — <code>if x = 5:</code> is a SyntaxError in Python. Always use <code>==</code> for comparison and <code>=</code> only for assignment.</p>
+<p><strong>2. "All branches of an if/elif/else can run."</strong> Only one branch runs per execution. Python evaluates conditions in order and stops at the first True one. The else block only runs if every condition above it was False.</p>
+<p><strong>3. "Nesting ifs is the same as using elif."</strong> They are not equivalent. Nested ifs check independent conditions; an elif chain is mutually exclusive. Deeply nested ifs are also much harder to read and maintain.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>In Module 06 you will combine conditionals with loops — using if inside a for loop to selectively process items in a list. That combination (loop + conditional filter) is the backbone of nearly every data processing script you will write this semester.</p>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 5 — Conditionals and Recursion (skip recursion)</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap05.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap05.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
-<p>Python Data Fundamentals (#1) — due end of week</p>
+<div class="callout-title">DataCamp this module</div>
+<p>Python Data Fundamentals (#1) — due end of module</p>
 </div>
+
 <h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Code Trace</div>
 <div class="quiz-question">What is printed?</div>
@@ -277,6 +361,7 @@ else:
     print(&#x27;C&#x27;)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">B</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
 <div class="quiz-question">Which keyword introduces an alternative condition after if?</div>
@@ -288,6 +373,7 @@ else:
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">elif</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -298,6 +384,7 @@ if total &gt; 100:
 print(discount)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">10</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
 <div class="quiz-question">What is the output of: x = 5; print(x &gt; 3 and x &lt; 10)?</div>
@@ -309,6 +396,7 @@ print(discount)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Code Trace</div>
 <div class="quiz-question">What does this print?</div>
@@ -319,6 +407,7 @@ if amount &gt; 1000:
 print(approved)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— 500 is not &gt; 1000</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
 <div class="quiz-question">Which correctly flags a value as &quot;high&quot; when it exceeds 100?</div>
@@ -330,9 +419,50 @@ print(approved)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">if value &gt; 100: flag = &quot;high&quot; <span style="color:var(--muted);">— Use ==, not =, for comparison</span></div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">What is the value of <code>tier</code> when <code>total = 350</code>?</div>
+<pre><code>total = 350
+if total &gt;= 500:
+    tier = "platinum"
+elif total &gt;= 200:
+    tier = "gold"
+elif total &gt;= 100:
+    tier = "silver"
+else:
+    tier = "none"
+print(tier)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">gold <span style="color:var(--muted);">— 350 &gt;= 200 is true; that branch executes and the rest are skipped</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">Which values are falsy in Python? (Select all that apply)</div>
+<ul class="quiz-options">
+<li>a) 0</li>
+<li>b) ""</li>
+<li>c) None</li>
+<li>d) []</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">All of them — a, b, c, and d are all falsy in Python</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Code Trace</div>
+<div class="quiz-question">What prints when region = "South" and total = 150?</div>
+<pre><code>region = "South"
+total = 150
+if region == "South" and total &gt; 100:
+    print("regional bonus")
+else:
+    print("standard")</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">regional bonus <span style="color:var(--muted);">— both conditions are true, so the and expression is True</span></div></details>
+</div>
+
 <div class="pn">
-<a href="week04_reading.html"><div class="label">← Previous</div><div class="title">Week 04 · Operators &amp; Expressions</div></a>
-<a class="next" href="week06_reading.html"><div class="label">Next →</div><div class="title">Week 06 · Loops</div></a>
+<a href="week04_reading.html"><div class="label">← Previous</div><div class="title">Module 04 · Operators &amp; Expressions</div></a>
+<a class="next" href="week06_reading.html"><div class="label">Next →</div><div class="title">Module 06 · Loops</div></a>
 </div>
 </div>
 

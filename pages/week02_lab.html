@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 2 Lab · First Terminal Session &amp; First Python Script — ISM2411</title>
+<title>Module 2 Lab · First Terminal Session &amp; First Python Script — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,48 +227,104 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 02 · Lab</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 02 · Lab</div>
 <h1>First Terminal Session &amp; First Python Script</h1>
 <p class="lede">Run your first commands in the terminal, install Python and VS Code, and execute hello.py.</p>
 <div class="meta">
-<span class="chip accent">Week 02 · Lab</span>
+<span class="chip accent">Module 02 · Lab</span>
 <span class="chip">Unit 1</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week02_reading.html" class="weekjump-link">Reading</a>
 <a href="week02_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week02_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Terminal warm-up</div>
 <div style="color:var(--muted);font-size:15px;">Open your terminal. Run: pwd, ls, then mkdir ism2411 and cd into it. Run pwd again — confirm you are inside the new folder.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: second pwd output shows the full path ending in <code>/ism2411</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Verify Python</div>
-<div style="color:var(--muted);font-size:15px;">Run python3 --version. You should see a version 3.10 or higher. If not, see the precourse setup page.</div>
+<div style="color:var(--muted);font-size:15px;">Run python3 --version. You should see a version 3.10 or higher. If not, see the precourse setup page. Also run pip3 --version to confirm pip is installed.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: output like <code>Python 3.11.4</code> and <code>pip 23.x.x</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Write hello.py</div>
-<div style="color:var(--muted);font-size:15px;">In VS Code, create a file called hello.py with the line: print(&quot;Hello, ISM2411!&quot;). Save it. From the terminal, in the same folder, run: python3 hello.py</div>
+<div style="color:var(--muted);font-size:15px;">In VS Code, create a file called hello.py with the line: print("Hello, ISM2411!"). Save it. From the terminal, in the same folder, run: python3 hello.py</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: <code>Hello, ISM2411!</code> printed in the terminal</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Path practice</div>
-<div style="color:var(--muted);font-size:15px;">From your ism2411 folder, navigate one level up (cd ..), then back in (cd ism2411). Practice cd-ing between folders without using the GUI.</div>
+<div style="color:var(--muted);font-size:15px;">From your ism2411 folder, navigate one level up (cd ..), then back in (cd ism2411). Practice cd-ing between folders without using the GUI. Run pwd after each cd to confirm your location.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: pwd alternates between parent and ism2411 paths as you navigate</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 5</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 5 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Make a sub-project</div>
-<div style="color:var(--muted);font-size:15px;">Inside ism2411, run: mkdir week02, cd week02, then create a second hello.py that prints your name and major. Run it.</div>
+<div style="color:var(--muted);font-size:15px;">Inside ism2411, run: mkdir module02, cd module02, then create a second hello.py that prints your name and major. Run it.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: output like <code>Alex Chen — Finance major</code></div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 6 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Deliberate error experiment</div>
+<div style="color:var(--muted);font-size:15px;">Introduce a typo in your hello.py — for example, change <code>print</code> to <code>primt</code> or remove a closing parenthesis. Run the script and read the error message carefully. Write down: (a) the line number reported, (b) the type of error, (c) what the message tells you about the problem. Then fix it.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: a NameError or SyntaxError with a line number; written analysis of the error message structure</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 7 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Run from the wrong directory</div>
+<div style="color:var(--muted);font-size:15px;">Navigate one level up from module02. Try to run your hello.py with: <code>python3 hello.py</code>. What error do you get? Now run it with the correct relative path: <code>python3 module02/hello.py</code>. Note the difference in behavior and explain why.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: first attempt fails with "No such file or directory"; second attempt succeeds</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH A <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Multi-print script</div>
+<div style="color:var(--muted);font-size:15px;">Write a script called <code>intro.py</code> that prints at least five lines including: your name, your major, your hometown, one hobby, and why you are taking this course. Format each line with a label, like: <code>Name: Alex Chen</code>. Run it from the terminal.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH B <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Install and test a package</div>
+<div style="color:var(--muted);font-size:15px;">Run <code>pip3 install requests</code> in your terminal. Then create a file called <code>test_requests.py</code> with the line <code>import requests; print("requests version:", requests.__version__)</code>. Run it. If it prints the version number, requests is installed correctly — you will use this package later in the semester.</div>
+</div>
+
+<h2>Reflection</h2>
+
+<div class="callout blue">
+<div class="callout-title">Self-Assessment Questions</div>
+<ol style="margin:0;padding-left:18px;">
+<li>Before today, how did you think about navigating your computer? Has using only the terminal (no GUI) changed your mental model of where files live?</li>
+<li>When you encountered your first error in Exercise 6, what was your instinct? Did you read the error message carefully, or were you tempted to just start changing things randomly? What does this tell you about debugging habits?</li>
+<li>What would you need to do differently to run a Python script reliably on a collaborator's machine — someone with a different username and a different folder structure?</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Take a screenshot of your terminal showing both hello.py outputs. Submit to Canvas.</p>
+<p>Take a screenshot of your terminal showing both hello.py outputs (Exercises 3 and 5). Submit to Canvas. Include the output of <code>python3 --version</code> in the same screenshot or a separate one.</p>
+</div>
+
+<div class="pn">
+<a href="week01_lab.html"><div class="label">← Previous</div><div class="title">Module 01 · Computer Vocabulary &amp; File System Tour</div></a>
+<a class="next" href="week03_lab.html"><div class="label">Next →</div><div class="title">Module 03 · Product Pricer with f-strings</div></a>
 </div>
 </div>
 

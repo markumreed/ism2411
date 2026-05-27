@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 3 Reading · Variables, Data Types &amp; First Output — ISM2411</title>
+<title>Module 3 Reading · Variables, Data Types &amp; First Output — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,24 +227,28 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 03 · Reading</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 03 · Reading</div>
 <h1>Variables, Data Types &amp; First Output</h1>
-<p class="lede">Storing product name, price, and quantity in variables.</p>
+<p class="lede">Storing product name, price, and quantity in variables and printing formatted business output.</p>
 <div class="meta">
-<span class="chip accent">Week 03</span>
+<span class="chip accent">Module 03</span>
 <span class="chip">Unit 1</span>
 <span class="chip">Reading · Think Python (TP) Ch. 2 — Variables and Statements</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week03_reading.html" class="weekjump-link current">Reading</a>
 <a href="week03_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week03_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>A variable is a container with a label on it. That is it. Once you have variables, types, and a way to print them, you have a tiny calculator that remembers what you told it.</p>
-<h2>What you will learn this week</h2>
+<p>A variable is a container with a label on it. That is it. Once you have variables, types, and a way to print them, you have a tiny calculator that remembers what you told it. Every useful program ever written — from a simple report to a machine-learning pipeline — starts with variables that hold data. Understanding them is the foundation of all Python that follows.</p>
+<p>The four data types introduced this module — <code>str</code>, <code>int</code>, <code>float</code>, and <code>bool</code> — map directly onto the kinds of information businesses track every day. A product name is a string. A price is a float. A quantity on hand is an integer. Whether a product is in stock is a boolean. When you look at a database table or a spreadsheet, every column is one of these types. Python's type system lets you express and manipulate that data with precision.</p>
+<p>F-strings, introduced alongside <code>print()</code> this module, are how Python programs speak to humans. A script that computes revenue means nothing if it cannot display the result in a readable format. The ability to embed variables directly inside output strings — <code>f"Revenue: ${revenue:.2f}"</code> — is something you will use in every program you write this semester. Get comfortable with f-strings now and they will feel like second nature by midterm.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
 <li>Variables as labeled containers</li>
 <li>Strings, integers, floats, booleans</li>
@@ -252,43 +256,110 @@ footer {
 <li>String formatting with f-strings — introduced here alongside print()</li>
 <li>Brief Jupyter notebook orientation: notebook vs. VS Code</li>
 </ul>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>Variable</h4>
+<p>A named reference to a value stored in memory. You create one with a single <code>=</code>: <code>product_name = "Widget A"</code>. The name is on the left, the value on the right. The variable holds the value until you reassign it.</p>
+</div>
+<div class="concept-card">
+<h4>str (String)</h4>
+<p>Text enclosed in quotes. <code>"Widget A"</code>, <code>'hello'</code>, <code>"Tampa, FL"</code> are all strings. Strings can be concatenated, sliced, and formatted. Use them for names, labels, descriptions, and any non-numeric data.</p>
+</div>
+<div class="concept-card">
+<h4>int (Integer)</h4>
+<p>A whole number with no decimal point: <code>42</code>, <code>-7</code>, <code>1000</code>. Use integers for counts, quantities, years, and anything you would never divide to get a fraction (except when you do, yielding a float).</p>
+</div>
+<div class="concept-card">
+<h4>float (Floating-point)</h4>
+<p>A number with a decimal point: <code>9.99</code>, <code>0.07</code>, <code>-3.14</code>. Use floats for prices, rates, percentages, and measurements. Be aware that floating-point arithmetic can introduce tiny rounding errors.</p>
+</div>
+<div class="concept-card">
+<h4>bool (Boolean)</h4>
+<p>Either <code>True</code> or <code>False</code> — no quotes, capitalized. Booleans are the result of comparison expressions and control flow decisions. <code>in_stock = True</code> is a natural business variable.</p>
+</div>
+<div class="concept-card">
+<h4>f-string</h4>
+<p>A string prefixed with <code>f</code> where expressions in <code>{}</code> are evaluated and inserted: <code>f"Price: ${unit_price:.2f}"</code>. The <code>:.2f</code> format spec rounds to 2 decimal places. F-strings are the cleanest way to build output in Python.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>A merchandise planner at a retail chain needs a quick script to evaluate new product proposals. For each candidate product, she has a name, a unit cost from the supplier, a planned retail price, and an estimated quantity for the first order. She wants to print a one-line summary for each product showing the revenue potential and gross margin. Before this module she would set up an Excel template and type values into cells. After this module she writes a five-line Python script.</p>
+<p>The script stores <code>product_name = "Bamboo Water Bottle"</code>, <code>unit_cost = 4.80</code>, <code>retail_price = 14.99</code>, and <code>quantity = 500</code>. It computes <code>revenue = retail_price * quantity</code> and <code>margin = (retail_price - unit_cost) / retail_price</code>, then prints <code>f"{product_name}: Revenue ${revenue:,.2f} | Margin {margin:.1%}"</code>. The output reads: <code>Bamboo Water Bottle: Revenue $7,495.00 | Margin 67.9%</code>. Clear, precise, reusable.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Variable</strong> — a named location in memory that holds a value; assigned with <code>=</code></li>
+<li><strong>Assignment</strong> — the act of binding a value to a variable name: <code>x = 10</code></li>
+<li><strong>str</strong> — the Python type for text data; values are enclosed in single or double quotes</li>
+<li><strong>int</strong> — the Python type for whole numbers (no decimal)</li>
+<li><strong>float</strong> — the Python type for decimal numbers</li>
+<li><strong>bool</strong> — the Python type for <code>True</code> or <code>False</code> values</li>
+<li><strong>print()</strong> — a built-in function that writes output to the terminal</li>
+<li><strong>input()</strong> — a built-in function that pauses the program and reads a string the user types</li>
+<li><strong>f-string</strong> — a formatted string literal: <code>f"Hello, {name}!"</code>; variables in <code>{}</code> are substituted</li>
+<li><strong>type()</strong> — a built-in function that returns the data type of any value: <code>type(3.14)</code> returns <code>&lt;class 'float'&gt;</code></li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<ul style="margin:0;padding-left:18px;">
+<li><strong>"<code>True</code> and <code>'True'</code> are the same."</strong> They are not. <code>True</code> (no quotes) is a boolean. <code>'True'</code> (with quotes) is a string containing the letters T-r-u-e. They behave completely differently in comparisons and conditions.</li>
+<li><strong>"= and == mean the same thing."</strong> Single <code>=</code> assigns a value to a variable. Double <code>==</code> compares two values and returns a boolean. Confusing them is one of the most common beginner bugs.</li>
+<li><strong>"input() returns a number if I type a number."</strong> <code>input()</code> always returns a string, regardless of what the user types. To use the input as a number, you must convert it: <code>int(input("Qty: "))</code> or <code>float(input("Price: "))</code>.</li>
+</ul>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>Module 04 introduces operators — the arithmetic, comparison, and logical tools that let your variables interact. You will use the variables and types from this module as the raw material for business formulas like revenue, margin, and discount calculations.</p>
+</div>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>Storing product name, price, and quantity in variables.</p>
 </div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 2 — Variables and Statements</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap02.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap02.html</a></p>
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Python Data Fundamentals (#1) — in progress</p>
 </div>
-<h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
+
+<h2 id="quiz">Module Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Code Trace</div>
 <div class="quiz-question">What is the output of: print(type(3.14))?</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">&lt;class &#x27;float&#x27;&gt;</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">&lt;class 'float'&gt;</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
-<pre><code>name = &quot;Taylor&quot;
+<pre><code>name = "Taylor"
 price = 9.99
-print(f&quot;{name} costs ${price}&quot;)</code></pre>
+print(f"{name} costs ${price}")</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Taylor costs $9.99</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
 <div class="quiz-question">Which of the following is a boolean value in Python?</div>
 <ul class="quiz-options">
-<li>a) &#x27;True&#x27;</li>
+<li>a) 'True'</li>
 <li>b) True</li>
 <li>c) 1.0</li>
-<li>d) &quot;false&quot;</li>
+<li>d) "false"</li>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Booleans are not strings — no quotes</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
 <div class="quiz-question">What is the value of x after this runs?</div>
@@ -297,6 +368,7 @@ x = x + 3
 print(x)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">8</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
 <div class="quiz-question">What does input() do?</div>
@@ -308,17 +380,41 @@ print(x)</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Reads a value typed by the user</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
-<pre><code>city = &quot;Tampa&quot;
+<pre><code>city = "Tampa"
 temp = 88
-print(f&quot;It is {temp} degrees in {city}.&quot;)</code></pre>
+print(f"It is {temp} degrees in {city}.")</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">It is 88 degrees in Tampa.</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Multiple Choice</div>
+<div class="quiz-question">A user types "25" when prompted by input(). What type does Python give that value?</div>
+<ul class="quiz-options">
+<li>a) int</li>
+<li>b) float</li>
+<li>c) str</li>
+<li>d) bool</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">str <span style="color:var(--muted);">— input() always returns a string. Use int() or float() to convert.</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Code Trace</div>
+<div class="quiz-question">What is the output?</div>
+<pre><code>product = "Widget A"
+unit_price = 4.99
+quantity = 12
+print(f"{quantity} units of {product} = ${unit_price * quantity:.2f}")</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">12 units of Widget A = $59.88 <span style="color:var(--muted);">— the :.2f format rounds to two decimal places</span></div></details>
+</div>
+
 <div class="pn">
-<a href="week02_reading.html"><div class="label">← Previous</div><div class="title">Week 02 · The Command Line &amp; Your Environment</div></a>
-<a class="next" href="week04_reading.html"><div class="label">Next →</div><div class="title">Week 04 · Operators &amp; Expressions</div></a>
+<a href="week02_reading.html"><div class="label">← Previous</div><div class="title">Module 02 · The Command Line &amp; Your Environment</div></a>
+<a class="next" href="week04_reading.html"><div class="label">Next →</div><div class="title">Module 04 · Operators &amp; Expressions</div></a>
 </div>
 </div>
 

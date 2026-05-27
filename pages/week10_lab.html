@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 10 Lab · Inventory List Manager — ISM2411</title>
+<title>Module 10 Lab · Inventory List Manager — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,54 +227,100 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 10 · Lab</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 10 · Lab</div>
 <h1>Inventory List Manager</h1>
-<p class="lede">Build a small inventory tool using lists, indexing, slicing, and list methods.</p>
+<p class="lede">Build a small inventory tool using lists, indexing, slicing, and list methods. By the end, you will have a working script that manages a product inventory like a real operations tool.</p>
 <div class="meta">
-<span class="chip accent">Week 10 · Lab</span>
+<span class="chip accent">Module 10 · Lab</span>
 <span class="chip">Unit 3</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">GitHub submission</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week10_reading.html" class="weekjump-link">Reading</a>
 <a href="week10_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week10_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Build the list</div>
-<div style="color:var(--muted);font-size:15px;">Create inventory = [&quot;pen&quot;, &quot;notebook&quot;, &quot;stapler&quot;, &quot;tape&quot;, &quot;marker&quot;].</div>
+<div style="color:var(--muted);font-size:15px;">Create <code>inventory = ["pen", "notebook", "stapler", "tape", "marker"]</code>. Print it. Then print the total number of items using <code>len()</code>.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: <code>['pen', 'notebook', 'stapler', 'tape', 'marker']</code> &nbsp;|&nbsp; <code>5</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 2 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Index practice</div>
-<div style="color:var(--muted);font-size:15px;">Print the first, last, and middle item using positive and negative indices.</div>
+<div style="color:var(--muted);font-size:15px;">Print the first item, the last item, and the middle item using positive and negative indices. Do not hard-code the position of the middle item — compute it from <code>len(inventory)</code>.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: <code>pen</code> &nbsp;|&nbsp; <code>marker</code> &nbsp;|&nbsp; <code>stapler</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 3 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Slicing</div>
-<div style="color:var(--muted);font-size:15px;">Print the first three items and the last two items using slices.</div>
+<div style="color:var(--muted);font-size:15px;">Print the first three items using a slice. Then print the last two items using a negative slice. Then print every other item using a step slice <code>[::2]</code>.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: <code>['pen', 'notebook', 'stapler']</code> &nbsp;|&nbsp; <code>['tape', 'marker']</code> &nbsp;|&nbsp; <code>['pen', 'stapler', 'marker']</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 4 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">Modify</div>
-<div style="color:var(--muted);font-size:15px;">Append &quot;envelope&quot;. Remove &quot;tape&quot;. Sort alphabetically. Print after each.</div>
+<div style="color:var(--muted);font-size:15px;">Append <code>"envelope"</code>. Remove <code>"tape"</code>. Sort alphabetically. Print after each operation so you can see the list change step by step.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Final expected output: <code>['envelope', 'marker', 'notebook', 'pen', 'stapler']</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 5</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 5 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">Tuple comparison</div>
-<div style="color:var(--muted);font-size:15px;">Create coords = (40.7128, -74.0060) for NYC. Try to change coords[0] = 99 — observe the TypeError. Discuss in a comment why tuples are useful here.</div>
+<div style="color:var(--muted);font-size:15px;">Create <code>coords = (40.7128, -74.0060)</code> for NYC. Try to change <code>coords[0] = 99</code> — observe the TypeError. Catch the error in a try/except block, print a message explaining why tuples are useful for coordinates, and then print the original <code>coords</code> unchanged.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: TypeError caught, explanation printed, <code>(40.7128, -74.006)</code> printed</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 6</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 6 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">Average of a list of sales</div>
-<div style="color:var(--muted);font-size:15px;">Given sales = [100, 250, 75, 480, 200], compute and print the average using sum() and len() this time (loops were last unit).</div>
+<div style="color:var(--muted);font-size:15px;">Given <code>sales = [100, 250, 75, 480, 200]</code>, compute and print: the total using <code>sum()</code>, the count using <code>len()</code>, and the average. Also print the best and worst day using <code>max()</code> and <code>min()</code>.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: Total: 1105 &nbsp;|&nbsp; Average: 221.0 &nbsp;|&nbsp; Best: 480 &nbsp;|&nbsp; Worst: 75</div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 7 · Intermediate</div>
+<div style="font-weight:700;margin-bottom:6px;">Accumulator pattern</div>
+<div style="color:var(--muted);font-size:15px;">Given <code>prices = [9.99, 14.99, 4.99, 24.99, 1.99]</code>, write a loop that builds a new list called <code>discounted</code> where every price is reduced by 10%. Use <code>.append()</code> inside the loop. Print both the original and discounted lists.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: <code>[8.99, 13.49, 4.49, 22.49, 1.79]</code> (rounded to 2 decimal places)</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 8 · Advanced</div>
+<div style="font-weight:700;margin-bottom:6px;">Filter above threshold</div>
+<div style="color:var(--muted);font-size:15px;">Given <code>sales = [340, 127, 589, 204, 467, 88, 731, 315, 62, 490]</code>, build a new list <code>high_sales</code> containing only days where sales exceeded 300. Print <code>high_sales</code>, its length, and the average of the high-sales days.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: <code>[340, 589, 467, 731, 315, 490]</code> &nbsp;|&nbsp; Count: 6 &nbsp;|&nbsp; Avg: ~488.67</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+<p>Write a function <code>inventory_report(items)</code> that accepts a list of product names and prints a formatted report: the count of items, the alphabetically first and last products, and a sorted list. Call it with your <code>inventory</code> list. Then call it with a list of your own choosing to verify it works on any list.</p>
+
+<h2>Reflection</h2>
+<div class="callout blue">
+<div class="callout-title">Before you submit</div>
+<p>In a Python comment at the top of your file, answer these two questions in 2-3 sentences each:</p>
+<ol>
+<li>What is the most surprising thing about how lists work in Python compared to what you expected coming in?</li>
+<li>Describe one real business situation — from a job you've had, an internship, or a class — where a Python list would have saved you time compared to doing it manually in Excel.</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Submit inventory.py via GitHub (week10/ folder), then submit the repo URL to Canvas.</p>
+<p>Submit <code>inventory.py</code> via GitHub (week10/ folder), then submit the repo URL to Canvas.</p>
+</div>
+
+<div class="pn">
+<a href="week10_lecture.html"><div class="label">← Previous</div><div class="title">Module 10 · Lecture</div></a>
+<a class="next" href="week11_reading.html"><div class="label">Next →</div><div class="title">Module 11 · Dictionaries</div></a>
 </div>
 </div>
 

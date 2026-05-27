@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 12 Lab · Read a Sales CSV, Write a Cleaned Report — ISM2411</title>
+<title>Module 12 Lab · Read a Sales CSV, Write a Cleaned Report — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,54 +227,101 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 12 · Lab</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 12 · Lab</div>
 <h1>Read a Sales CSV, Write a Cleaned Report</h1>
-<p class="lede">Open a CSV file with the csv module, process the rows, and write a cleaned output.</p>
+<p class="lede">Open a CSV file with the csv module, process the rows, filter for high-value orders, and write a cleaned output file. This is your first complete ETL (Extract, Transform, Load) pipeline.</p>
 <div class="meta">
-<span class="chip accent">Week 12 · Lab</span>
+<span class="chip accent">Module 12 · Lab</span>
 <span class="chip">Unit 3</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">GitHub submission</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week12_reading.html" class="weekjump-link">Reading</a>
 <a href="week12_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week12_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1 · Setup</div>
 <div style="font-weight:700;margin-bottom:6px;">Get the file</div>
-<div style="color:var(--muted);font-size:15px;">Download sales.csv (provided on Canvas). Place it in week12/data/sales.csv.</div>
+<div style="color:var(--muted);font-size:15px;">Download sales.csv (provided on Canvas). Place it in <code>week12/data/sales.csv</code>. Confirm the file structure: it should have a header row with columns <code>product</code>, <code>price</code>, <code>quantity</code> and at least 10 data rows. If you don't have it yet, create a <code>sales.csv</code> yourself with 10 rows of sample data.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: file exists at the relative path; opening it with Python produces no error</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 2</div>
-<div style="font-weight:700;margin-bottom:6px;">Read it</div>
-<div style="color:var(--muted);font-size:15px;">Use csv.reader with a with block to open and iterate. Print the first 5 rows.</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 2 · Beginner</div>
+<div style="font-weight:700;margin-bottom:6px;">Read and print raw rows</div>
+<div style="color:var(--muted);font-size:15px;">Use <code>csv.reader</code> with a <code>with</code> block to open and iterate. Print every row including the header. Observe that all values are strings.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: each row prints as a list, e.g. <code>['Widget A', '9.99', '50']</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 3 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Skip the header</div>
-<div style="color:var(--muted);font-size:15px;">Use next(reader) to skip the header row.</div>
+<div style="color:var(--muted);font-size:15px;">Use <code>next(reader)</code> to skip the header row. Store the header in a variable and print it separately before the data rows. Confirm your loop now starts at the first data row.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: header printed once, then data rows printed without the header</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 4 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">Compute totals</div>
-<div style="color:var(--muted);font-size:15px;">For each row, compute price * quantity and print product, qty, total.</div>
+<div style="color:var(--muted);font-size:15px;">For each row, compute <code>price * quantity</code> (remembering to convert types), and print each line formatted as <code>"Widget A: 50 units × $9.99 = $499.50"</code>. After the loop, print the overall total revenue across all rows.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: one formatted line per product, then total revenue at the bottom</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 5</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 5 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">Filter and write</div>
-<div style="color:var(--muted);font-size:15px;">Write a new CSV called week12/data/cleaned.csv containing only orders with total &gt; $100. Include a header row.</div>
+<div style="color:var(--muted);font-size:15px;">Write a new CSV called <code>week12/data/cleaned.csv</code> containing only orders with total &gt; $100. Include a header row with columns: Product, Price, Qty, Total. Use <code>newline=""</code> in the <code>open()</code> call. Print how many rows were written vs. how many were in the original.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: cleaned.csv created; count of qualifying rows printed</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 6</div>
-<div style="font-weight:700;margin-bottom:6px;">csv.DictReader bonus</div>
-<div style="color:var(--muted);font-size:15px;">Re-read the same file using csv.DictReader. Compare to csv.reader — which is clearer? Add a 2-line comment with your opinion.</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 6 · Intermediate</div>
+<div style="font-weight:700;margin-bottom:6px;">csv.DictReader</div>
+<div style="color:var(--muted);font-size:15px;">Re-read the same sales.csv file using <code>csv.DictReader</code>. Access <code>row["product"]</code>, <code>row["price"]</code>, <code>row["quantity"]</code> by name instead of by index. Confirm you get the same totals as Exercise 4. Add a 2-line comment comparing the two approaches — when would you prefer each one?</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: same totals as Exercise 4; comment in the code comparing reader vs DictReader</div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 7 · Intermediate</div>
+<div style="font-weight:700;margin-bottom:6px;">Sales summary by product</div>
+<div style="color:var(--muted);font-size:15px;">Read the CSV and build a summary dictionary <code>{product_name: total_revenue}</code>. If a product appears in multiple rows, accumulate the totals. Print the summary sorted by product name. This combines what you learned about dictionaries (Module 11) with file I/O (this module).</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: one line per unique product showing accumulated revenue</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 8 · Advanced</div>
+<div style="font-weight:700;margin-bottom:6px;">Append mode log</div>
+<div style="color:var(--muted);font-size:15px;">Create a text file <code>week12/data/run_log.txt</code>. Each time your script runs, append one line to this file with the current date/time and the total revenue computed from the CSV. Run your script three times and open the log file — it should have three entries, not one. Use <code>from datetime import datetime</code> to get the current timestamp.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: run_log.txt has one new line per script execution, accumulating over runs</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+<p>Extend Exercise 7 to write the product summary as a new CSV file called <code>summary.csv</code> with columns <code>Product</code> and <code>TotalRevenue</code>, sorted by revenue descending (highest revenue first). Then open <code>summary.csv</code> in Excel or a text editor to verify the output is correct.</p>
+<p>Bonus: use <code>csv.DictWriter</code> instead of <code>csv.writer</code> for the output — it makes the column-to-value mapping explicit and is safer for files with many columns.</p>
+
+<h2>Reflection</h2>
+<div class="callout blue">
+<div class="callout-title">Before you submit</div>
+<p>In a Python comment at the top of your file, answer these two questions in 2-3 sentences each:</p>
+<ol>
+<li>You've now completed a full ETL pipeline: read a CSV, transform the data, write a new CSV. How does this compare to doing the same task in Excel? What can Python do that Excel can't do easily, and vice versa?</li>
+<li>Exercise 8 showed you append mode. Think of a real business process that would benefit from an append-mode log file — describe it and explain why append mode is the right tool.</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Submit csv_practice.py + the cleaned CSV via GitHub (week12/), URL to Canvas.</p>
+<p>Submit <code>csv_practice.py</code> + the cleaned CSV and any other output files via GitHub (week12/ folder), then submit the repo URL to Canvas.</p>
+</div>
+
+<div class="pn">
+<a href="week12_lecture.html"><div class="label">← Previous</div><div class="title">Module 12 · Lecture</div></a>
+<a class="next" href="week13_reading.html"><div class="label">Next →</div><div class="title">Module 13 · Intro to pandas</div></a>
 </div>
 </div>
 

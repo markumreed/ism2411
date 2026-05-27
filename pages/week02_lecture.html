@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 2 Lecture · The Command Line &amp; Your Environment — ISM2411</title>
+<title>Module 2 Lecture · The Command Line &amp; Your Environment — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,57 +227,147 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 02 · Lecture</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 02 · Lecture</div>
 <h1>The Command Line &amp; Your Environment</h1>
 <p class="lede">Today we open the terminal for the first time. Five commands gets you 90% of what you need this semester. Memorize them.</p>
 <div class="meta">
-<span class="chip accent">Week 02 · Lecture</span>
+<span class="chip accent">Module 02 · Lecture</span>
 <span class="chip">Unit 1</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week02_reading.html" class="weekjump-link">Reading</a>
 <a href="week02_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week02_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
-<h3>The five commands you will use every week</h3>
-<p>These commands move you through the file system and create new folders. They are the same on macOS, Linux, and the Windows terminal (PowerShell uses the same names too).</p>
-<pre><code>pwd          # print working directory — &quot;where am I?&quot;
+
+<h3>The five commands you will use every module</h3>
+<p>These commands move you through the file system and create new folders. They are the same on macOS, Linux, and the Windows terminal (PowerShell uses the same names too). Memorizing five commands gives you complete navigation ability across any system you will ever use — from your laptop to a cloud server running a data pipeline.</p>
+<p>The terminal feels foreign at first because there is no visual feedback — no icons, no drag-and-drop, just text. But this is also its power: everything you can do with a GUI you can do with commands, and everything you do with commands can be automated. When you type <code>pwd</code>, you are running a tiny program. When you type <code>mkdir reports</code>, the OS creates a directory entry in its file allocation table. You are talking directly to the operating system, with no translation layer between you and the machine.</p>
+<pre><code>pwd          # print working directory — "where am I?"
 ls           # list files in the current directory
-cd folder/   # change directory into &quot;folder&quot;
+cd folder/   # change directory into "folder"
 cd ..        # go up one level
-mkdir name   # make a new directory called &quot;name&quot;</code></pre>
+mkdir name   # make a new directory called "name"</code></pre>
+
 <h3>Relative vs. absolute paths</h3>
-<p>An absolute path starts from the root of the file system (&quot;/&quot; on Mac/Linux, &quot;C:\&quot; on Windows). A relative path starts from where you currently are. Inside a project, always use relative paths so the code works on anyone&#x27;s machine.</p>
+<p>An absolute path starts from the root of the file system ("/&nbsp;" on Mac/Linux, "C:\" on Windows). A relative path starts from where you currently are. Inside a project, always use relative paths so the code works on anyone's machine. This is not just a convention — it is the difference between a script that runs correctly and one that only works on the developer's laptop.</p>
+<p>The special notation <code>.</code> (single dot) means "the current directory." So <code>./data/sales.csv</code> is identical to <code>data/sales.csv</code> — both refer to a file inside a <code>data</code> subdirectory of wherever you are now. The notation <code>..</code> (two dots) means "the parent directory." So <code>../reports/</code> means "go up one level, then into reports." You can chain these: <code>../../config/settings.json</code> goes up two levels then into config.</p>
 <pre><code># absolute (machine-specific):
 /Users/alice/projects/sales/data.csv
 
 # relative (portable):
-data/sales.csv</code></pre>
+data/sales.csv
+
+# relative with parent traversal:
+../data/sales.csv</code></pre>
+
 <h3>Running a Python script</h3>
-<p>Once Python and VS Code are installed, you write a .py file, save it, then run it from the terminal in the same folder.</p>
-<pre><code>$ cd ~/ism2411/week02
+<p>Once Python and VS Code are installed, you write a .py file, save it, then run it from the terminal in the same folder. The key habit to build here is always running scripts from the directory that contains them — this ensures relative paths in your code resolve correctly. If your script opens <code>data/sales.csv</code>, that path is interpreted relative to the directory you ran the script from, not the directory the script is stored in.</p>
+<p>You can confirm Python is installed with <code>python3 --version</code>. If the command is not found, follow the setup guide in the course resources. You should see something like <code>Python 3.11.4</code>. The <code>3</code> matters — Python 2 is no longer supported and behaves differently in important ways.</p>
+<pre><code>$ cd ~/ism2411/module02
 $ ls
 hello.py
 $ python3 hello.py
 Hello, ISM2411!</code></pre>
+
 <h3>What .py files are</h3>
-<p>A .py file is just a text file with Python code in it. The .py extension tells your editor to highlight Python syntax and tells the interpreter what to do with it. The file itself is plain text — you could open it in Notepad.</p>
+<p>A .py file is just a text file with Python code in it. The .py extension tells your editor to highlight Python syntax and tells the interpreter what to do with it. The file itself is plain text — you could open it in Notepad. This matters because it means Python scripts are easy to share (just send the file), easy to version control (Git tracks text changes line by line), and easy to read on any machine without special software.</p>
+<p>The Python interpreter reads your .py file from top to bottom, executing each statement in order. If it encounters a syntax error — a typo, a missing colon, an unclosed parenthesis — it stops and prints an error message with the line number. Reading error messages is a skill. The last line of a Python traceback tells you what went wrong; the lines above show you where in the call stack the error occurred.</p>
+
+<h2>Detailed Code Walkthrough</h2>
+
+<h3>Creating and running your first script</h3>
+<p>Open VS Code, create a new file, save it as <code>hello.py</code>. Type the following. Then open a terminal, navigate to the folder, and run it.</p>
+<pre><code># hello.py — your first Python script
+# The '#' character starts a comment. Python ignores everything after it.
+
+print("Hello, ISM2411!")     # sends text to the terminal
+print("This is Module 02")   # you can call print() as many times as you like</code></pre>
+
+<h3>A script that builds a folder structure</h3>
+<p>This is closer to real automation. The <code>os</code> module gives you access to file system operations from inside Python — the same operations you were doing manually with <code>mkdir</code> and <code>cd</code>.</p>
+<pre><code># setup_project.py
+# Creates a standard project folder structure
+import os
+
+folders = ["data", "reports", "scripts", "notes"]
+base = "ism2411_project"
+
+os.makedirs(base, exist_ok=True)   # create the base folder
+for folder in folders:
+    path = os.path.join(base, folder)
+    os.makedirs(path, exist_ok=True)
+    print(f"Created: {path}")
+
+print("Project structure ready.")</code></pre>
+
+<h2>Common Errors</h2>
+
+<h3>Error: "No such file or directory"</h3>
+<p>This almost always means you are in the wrong directory when you run your script, or the relative path in your script is wrong. Check with <code>pwd</code> and <code>ls</code> before running.</p>
+<pre><code># WRONG — running from the wrong directory
+$ pwd
+/home/alice
+$ python3 module02/hello.py
+# If hello.py tries to open "data/sales.csv", Python looks for
+# /home/alice/data/sales.csv — not /home/alice/module02/data/sales.csv
+
+# CORRECT — navigate to the script's directory first
+$ cd module02
+$ python3 hello.py</code></pre>
+
+<h3>Error: "command not found: python3"</h3>
+<p>Python is not installed, or it is installed but not on your system PATH. Try <code>python --version</code> (no 3). If that works, use <code>python</code> instead of <code>python3</code>. If neither works, install Python from python.org and restart your terminal.</p>
+<pre><code># Check which python commands are available:
+$ python3 --version
+$ python --version
+$ which python3    # shows the install path on Mac/Linux</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>Why do experienced developers prefer to use the terminal rather than a GUI file manager for navigating their project files? What specific advantages does the terminal offer?</li>
+<li>A team of three analysts is sharing a Python script. Person A runs it fine; Person B gets "No such file or directory." What is the most likely cause, and how would you fix it using relative paths?</li>
+<li>What would happen if you ran <code>python3 reports/weekly.py</code> from your home directory, and the script contains <code>open("data/sales.csv")</code>? Where would Python look for that file?</li>
+<li>Why might a business analyst need to install a Python package with <code>pip</code>? Give a real example of a package that would be useful for business data work.</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
 <li>Open the terminal. Type pwd, ls, mkdir ism2411, cd ism2411, pwd again.</li>
 <li>Create your first hello.py in VS Code and run it from the terminal.</li>
 <li>Discussion: what happens if you type cd into a folder that does not exist?</li>
+<li>Navigate to your Downloads folder using only cd and ls — no file manager. Use pwd to confirm your location.</li>
+<li>Create a project structure: ism2411 → module01, module02, module03. Use mkdir and cd to build it from the terminal only.</li>
+<li>Run <code>python3 --version</code> and <code>pip3 --version</code>. Confirm you have Python 3.10 or higher installed.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li><code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>mkdir</code> — five commands that give you complete file system navigation.</li>
+<li>Absolute paths start from root and work from anywhere; relative paths start from your current location and are more portable.</li>
+<li>Always <code>cd</code> into your project folder before running a script to ensure relative paths resolve correctly.</li>
+<li>A .py file is plain text — readable and shareable without special software.</li>
+<li>The terminal is the universal interface for all programming environments — it looks the same on every machine and never changes.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week02_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week02_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week02_lab.html">Week 2 Lab</a></p>
+<p>Hands-on lab: <a href="week02_lab.html">Module 02 Lab</a></p>
+</div>
+
+<div class="pn">
+<a href="week01_lecture.html"><div class="label">← Previous</div><div class="title">Module 01 · What is a Computer?</div></a>
+<a class="next" href="week03_lecture.html"><div class="label">Next →</div><div class="title">Module 03 · Variables, Data Types &amp; First Output</div></a>
 </div>
 </div>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 13 Lecture · Intro to pandas — ISM2411</title>
+<title>Module 13 Lecture · Intro to pandas — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -91,7 +91,7 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
 
-/* week jump bar — quick switch between reading/lecture/lab */
+/* week jump bar */
 .weekjump {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   margin: 0 0 32px; padding: 10px 14px;
@@ -165,43 +165,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
 /* concept cards */
 .concept-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
@@ -227,63 +190,177 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Week 13 · Lecture</div>
+<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Module 13 · Lecture</div>
 <h1>Intro to pandas</h1>
-<p class="lede">Today we leave the standard library and pick up pandas — the most-used data tool in business analytics. Everything we built in Unit 3 is still true; pandas just gives us a faster, cleaner way to do it.</p>
+<p class="lede">Today we leave the standard library and pick up pandas — the most-used data tool in business analytics. Everything we built in Units 1–3 is still true; pandas just gives us a faster, cleaner way to work with tabular data.</p>
 <div class="meta">
-<span class="chip accent">Week 13 · Lecture</span>
+<span class="chip accent">Module 13 · Lecture</span>
 <span class="chip">Unit 4</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week13_reading.html" class="weekjump-link">Reading</a>
 <a href="week13_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week13_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>Why pandas instead of csv + lists</h3>
-<p>pandas does in one line what would take 30 lines of csv + list code: load a CSV, drop bad rows, group, summarize, plot. It is also far faster.</p>
+<p>In Unit 3, you used the <code>csv</code> module to read files row by row into lists of strings. That works — but consider what it takes to find the top 10 rows by revenue: you'd write a loop, convert the revenue column from string to float, sort a list of dictionaries, and slice the result. That's 15–20 lines of code, and every step is a potential bug.</p>
+<p>pandas does the same thing in one chained expression: <code>df.sort_values("revenue", ascending=False).head(10)</code>. Beyond brevity, pandas is dramatically faster because its core operations run in compiled C code under the hood. On a 500,000-row file, a pandas sort completes in milliseconds. A Python list sort on the same data can take seconds.</p>
+<p>pandas also has a decisive advantage over Excel for business work: it handles datasets of any size that fits in memory, it produces identical results every run (no hidden formulas, no accidentally overwritten cells), and every step is recorded in code that can be reviewed, version-controlled, and reused. A pandas script is a permanent, auditable record of your analysis.</p>
+
 <h3>Loading a CSV</h3>
 <pre><code>import pandas as pd
 
-df = pd.read_csv(&quot;sales.csv&quot;)
+df = pd.read_csv("sales.csv")
 df.head()        # first 5 rows
+df.tail(10)      # last 10 rows
 df.shape         # (rows, columns)
 df.columns       # column names
-df.dtypes        # data types per column</code></pre>
+df.dtypes        # data types per column
+df.info()        # full summary: types + non-null counts</code></pre>
+
 <h3>A DataFrame is a table</h3>
-<p>Each column is a Series. The whole table is a DataFrame.</p>
+<p>Each column is a Series — a labeled array of uniform data. The whole table is a DataFrame. You can think of it as a dictionary where each key is a column name and each value is a list (but with a shared index tying all columns together). This mental model explains almost every pandas behavior you'll encounter.</p>
+<p>Creating a small DataFrame by hand is a great way to test ideas before running them on real data. The constructor accepts a dictionary of lists, which maps directly onto the dictionary mental model.</p>
 <pre><code>df = pd.DataFrame({
-    &quot;item&quot;:  [&quot;pen&quot;, &quot;book&quot;, &quot;tape&quot;],
-    &quot;price&quot;: [1.50, 12.00, 3.25],
-    &quot;stock&quot;: [120, 8, 47],
+    "item":  ["pen", "book", "tape"],
+    "price": [1.50, 12.00, 3.25],
+    "stock": [120, 8, 47],
 })
 
 print(df)
-print(df[&quot;price&quot;])           # a single column (Series)
-print(df[&quot;price&quot;].mean())    # 5.583...</code></pre>
+print(df["price"])           # a single column (Series)
+print(df["price"].mean())    # 5.583...
+print(df[["item","price"]])  # two columns (DataFrame)</code></pre>
+
 <h3>Filtering rows</h3>
-<p>Pass a boolean condition in brackets.</p>
-<pre><code>south = df[df[&quot;region&quot;] == &quot;South&quot;]
-big = df[df[&quot;revenue&quot;] &gt; 1000]
-combo = df[(df[&quot;region&quot;] == &quot;South&quot;) &amp; (df[&quot;revenue&quot;] &gt; 1000)]
-# note: &amp; not and, and parens around each condition</code></pre>
+<p>Filtering in pandas uses "boolean indexing." You create a condition that evaluates to True or False for each row, then pass that condition inside brackets. pandas returns only the rows where the condition is True. This mirrors the logic of an Excel AutoFilter but is reusable, composable, and works on any dataset size.</p>
+<p>The critical syntax rule: use <code>&amp;</code> for AND and <code>|</code> for OR. Wrap each condition in its own parentheses when combining. Python's <code>and</code>/<code>or</code> keywords do not work with pandas boolean arrays and will raise a ValueError.</p>
+<pre><code>south = df[df["region"] == "South"]
+big = df[df["revenue"] > 1000]
+combo = df[(df["region"] == "South") &amp; (df["revenue"] > 1000)]
+# note: &amp; not and, and parens around each condition
+
+# Negate a condition with ~
+not_south = df[~(df["region"] == "South")]</code></pre>
+
 <h3>Sorting</h3>
-<pre><code>df.sort_values(&quot;revenue&quot;, ascending=False).head(10)</code></pre>
+<p>Sorting by a column and taking the top or bottom N rows is a pattern you will use constantly — for leaderboards, exception reports, and identifying outliers. The result of <code>sort_values()</code> is always a new DataFrame unless you pass <code>inplace=True</code>.</p>
+<pre><code>df.sort_values("revenue", ascending=False).head(10)
+
+# Sort by multiple columns (region, then revenue within region)
+df.sort_values(["region", "revenue"], ascending=[True, False])</code></pre>
+
+<h2>Live Coding Walkthrough</h2>
+<p>This is the complete script we build together during class. Run it cell by cell in Jupyter or as a single Python file.</p>
+<pre><code>import pandas as pd
+
+# ── Step 1: Load ──────────────────────────────────────────────
+df = pd.read_csv("data/retail_sales.csv")
+print("Shape:", df.shape)
+print(df.head())
+print(df.dtypes)
+
+# ── Step 2: Explore ───────────────────────────────────────────
+print("\nColumns:", df.columns.tolist())
+print("\nRegions:", df["region"].unique())
+print("\nMissing values:")
+print(df.isnull().sum())
+
+# ── Step 3: Filter ────────────────────────────────────────────
+south = df[df["region"] == "South"]
+print(f"\nSouth region: {len(south)} rows")
+
+big_south = df[(df["region"] == "South") &amp; (df["revenue"] > 1000)]
+print(f"Big South orders (&gt;$1000): {len(big_south)} rows")
+
+# ── Step 4: Top 10 by revenue ─────────────────────────────────
+top10 = df.sort_values("revenue", ascending=False).head(10)
+print("\nTop 10 orders by revenue:")
+print(top10[["region", "product", "revenue"]])
+
+# ── Step 5: Add a calculated column ──────────────────────────
+df["per_unit"] = df["revenue"] / df["quantity"]
+print("\nWith per_unit column:")
+print(df.head())
+
+# ── Step 6: Save ──────────────────────────────────────────────
+df.to_csv("data/explored.csv", index=False)
+print("\nSaved to data/explored.csv")</code></pre>
+
+<h2>Common Errors</h2>
+<h3>Error 1: Using <code>and</code> in a filter</h3>
+<pre><code># WRONG — raises ValueError
+df[df["region"] == "South" and df["revenue"] > 1000]
+
+# RIGHT — use & with parentheses
+df[(df["region"] == "South") &amp; (df["revenue"] > 1000)]</code></pre>
+
+<h3>Error 2: FileNotFoundError when loading CSV</h3>
+<pre><code># Error: FileNotFoundError: [Errno 2] No such file or directory: 'retail_sales.csv'
+df = pd.read_csv("retail_sales.csv")
+
+# Fix: use the correct relative path from your script's location
+df = pd.read_csv("data/retail_sales.csv")
+# Or use an absolute path for debugging:
+import os
+print(os.getcwd())  # see where Python thinks you are</code></pre>
+
+<h3>Error 3: AttributeError after sorting</h3>
+<pre><code># WRONG — sort_values returns a new DataFrame; you can't chain without assigning
+df.sort_values("revenue", ascending=False)
+print(df.head())  # df is still unsorted!
+
+# RIGHT — assign the result
+df_sorted = df.sort_values("revenue", ascending=False)
+print(df_sorted.head())</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>A colleague says "I can do everything you just did in Excel in five minutes." How would you respond? What are the specific advantages of pandas for datasets that grow over time?</li>
+<li>When would you choose <code>df.dropna()</code> over <code>df.fillna(0)</code>? What business context would change your decision?</li>
+<li>You receive a 2-million-row CSV from a vendor. What is the first thing you do — and why does the order matter?</li>
+<li>If a DataFrame has 50 columns, what is a fast way to see which columns have missing values before deciding what to keep?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
-<li>Load the retail sales CSV and print .head(), .shape, and .dtypes.</li>
-<li>Filter to one region and one product category.</li>
+<li>Load the retail sales CSV and print <code>.head()</code>, <code>.shape</code>, and <code>.dtypes</code>. Identify any columns that look wrong.</li>
+<li>Filter to one region of your choice and print the row count.</li>
 <li>Find the top 5 orders by revenue.</li>
+<li>Combine two conditions with <code>&amp;</code>: filter to the South region AND revenue above 1000.</li>
+<li>Add a new column <code>per_unit</code> = revenue / quantity. Print <code>.head()</code> to confirm it appears.</li>
+<li>Save your result to a new CSV file with <code>to_csv(..., index=False)</code>.</li>
 </ul>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week13_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week13_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>pandas replaces csv + list code with fast, readable, composable operations on DataFrames.</li>
+<li>A DataFrame is a table; each column is a Series; use <code>&amp;</code> and <code>|</code> (never <code>and</code>/<code>or</code>) for multi-condition filters.</li>
+<li>Most pandas methods return new objects — assign the result or use <code>inplace=True</code>.</li>
+<li>The workflow — load, inspect, filter, sort, add columns, save — is the same skeleton you will reuse in every lab and the capstone.</li>
+<li>pandas scales to millions of rows; it is reproducible, version-controllable, and audit-friendly in ways Excel is not.</li>
+</ul>
+</div>
+
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week13_lab.html">Week 13 Lab</a></p>
+<p>Hands-on lab: <a href="week13_lab.html">Module 13 Lab</a></p>
+</div>
+
+<div class="pn">
+<a href="week12_lecture.html"><div class="label">← Previous</div><div class="title">Module 12 · Working with Files</div></a>
+<a class="next" href="week14_lecture.html"><div class="label">Next →</div><div class="title">Module 14 · Data Cleaning &amp; Descriptive Stats</div></a>
 </div>
 </div>
 

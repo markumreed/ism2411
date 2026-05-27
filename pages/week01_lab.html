@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 1 Lab · Computer Vocabulary &amp; File System Tour — ISM2411</title>
+<title>Module 1 Lab · Computer Vocabulary &amp; File System Tour — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,43 +227,103 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 01 · Lab</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 01 · Lab</div>
 <h1>Computer Vocabulary &amp; File System Tour</h1>
 <p class="lede">Get fluent with the vocabulary of files, paths, and directories — no coding yet.</p>
 <div class="meta">
-<span class="chip accent">Week 01 · Lab</span>
+<span class="chip accent">Module 01 · Lab</span>
 <span class="chip">Unit 1</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week01_reading.html" class="weekjump-link">Reading</a>
 <a href="week01_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week01_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Trace a real file path</div>
 <div style="color:var(--muted);font-size:15px;">Open Finder (Mac) or File Explorer (Windows). Pick any file in your Downloads folder. Right-click → Properties / Get Info and copy the full path. Write it down. Identify (a) the root, (b) the directory chain, (c) the filename, (d) the extension.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: a written-out path like <code>/Users/yourname/Downloads/syllabus.pdf</code> with each component labeled</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Map your project folder</div>
 <div style="color:var(--muted);font-size:15px;">On your machine, create a folder called ism2411 wherever you keep school work. Inside it, create one subfolder per unit (unit1, unit2, ...). We will fill these up over the semester.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: folder structure visible in Finder/Explorer — ism2411/unit1/, ism2411/unit2/, etc.</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Vocabulary check</div>
 <div style="color:var(--muted);font-size:15px;">Without looking, define in one sentence each: CPU, RAM, storage, file, directory, path, extension, program, interpreter.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: 9 one-sentence definitions written in your own words — not copied from the reading</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Discussion (in pairs or async forum)</div>
 <div style="color:var(--muted);font-size:15px;">Name three things you currently do in Excel that take more than 10 minutes. Which of those could be automated by a program that runs in a few seconds?</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: 3 tasks described with brief explanation of why each could or could not be automated</div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 5 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Draw the directory tree</div>
+<div style="color:var(--muted);font-size:15px;">Given the following three file paths, draw the directory tree they imply. Show which folders exist and how they nest. Then write one relative path from one file to another.<br><br>
+<code>/home/alice/projects/q1_report/data/sales.csv</code><br>
+<code>/home/alice/projects/q1_report/scripts/summary.py</code><br>
+<code>/home/alice/projects/q2_report/data/sales.csv</code></div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: a hand-drawn or text-format tree; a relative path like <code>../../q2_report/data/sales.csv</code> from the scripts folder</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 6 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">RAM vs. Storage scenarios</div>
+<div style="color:var(--muted);font-size:15px;">For each scenario below, identify whether the problem is in RAM, storage, or something else, and explain your reasoning:<br><br>
+(a) You edited a spreadsheet for an hour and your laptop died. When you restart, your changes are gone.<br>
+(b) You try to open a CSV file and get an error saying the file cannot be found.<br>
+(c) Your Python script is running slowly when processing a 2 GB file.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: (a) RAM — changes not saved to storage; (b) storage — file path wrong or file missing; (c) storage I/O or RAM capacity</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH A <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Find a .py file and explain it</div>
+<div style="color:var(--muted);font-size:15px;">Search your machine or the internet for any short Python script (5–15 lines). Open it in a text editor. Read it line by line. Write one sentence explaining what each line does — even if you are guessing. This is practice for reading unfamiliar code, which you will do constantly in your career.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH B <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Research: how much RAM do real workloads need?</div>
+<div style="color:var(--muted);font-size:15px;">Look up: how much RAM does Python typically use to hold a pandas DataFrame with 1 million rows and 10 columns of floats? Why does this matter for analysts working with large data sets? Write a 3–4 sentence explanation.</div>
+</div>
+
+<h2>Reflection</h2>
+
+<div class="callout blue">
+<div class="callout-title">Self-Assessment Questions</div>
+<ol style="margin:0;padding-left:18px;">
+<li>Before this module, how would you have explained what happens when you open an Excel file? How has your answer changed?</li>
+<li>Which of the nine vocabulary terms from Exercise 3 are you least confident about? What would help you solidify that concept?</li>
+<li>The business discussion (Exercise 4) asked about tasks you could automate. What would you need to learn — beyond this module — to actually build that automation?</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>No code submission this week. Bring your vocabulary answers and your folder structure to class.</p>
+<p>No code submission this module. Bring your vocabulary answers and your folder structure to class. Post your Exercise 4 automation examples to the course discussion forum before lab.</p>
+</div>
+
+<div class="pn">
+<div></div>
+<a class="next" href="week02_lab.html"><div class="label">Next →</div><div class="title">Module 02 · First Terminal Session &amp; First Python Script</div></a>
 </div>
 </div>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 12 Reading · Working with Files — ISM2411</title>
+<title>Module 12 Reading · Working with Files — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,44 +227,133 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 12 · Reading</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 12 · Reading</div>
 <h1>Working with Files</h1>
-<p class="lede">Load sales.csv with the csv module; write a cleaned report to output.csv.</p>
+<p class="lede">Load sales.csv with the csv module; process each row; write a cleaned report to output.csv. This is how every real business data workflow begins.</p>
 <div class="meta">
-<span class="chip accent">Week 12</span>
+<span class="chip accent">Module 12</span>
 <span class="chip">Unit 3</span>
 <span class="chip">Reading · Think Python (TP) Ch. 13 — Files and Databases</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">DataCamp due</span>
 <span class="chip" style="color:#f472b6;border-color:#f472b655;">★ Capstone-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week12_reading.html" class="weekjump-link current">Reading</a>
 <a href="week12_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week12_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Real business data does not live inside your script. It lives in CSV files on disk, in shared drives, in exported reports. Today you learn to open those files and process them — and your code becomes a real analysis tool rather than a calculator.</p>
-<h2>What you will learn this week</h2>
+<p>Real business data does not live inside your script. It lives in CSV files on shared drives, in reports exported from accounting software, in data dumps from e-commerce platforms and point-of-sale systems. Every week, analysts at thousands of companies manually open these files in Excel, clean them, and paste results into other spreadsheets. Learning to do this in Python means you can automate the entire pipeline — and run it again tomorrow with zero additional effort.</p>
+<p>Consider a retail operations analyst who receives a daily sales export from the POS system: 500 rows, each with a product name, quantity, and unit price. In Excel, she spends 20 minutes adding a "Total" column, filtering for high-value orders, and copying the results to a summary sheet. In Python, that same workflow takes 15 lines of code and runs in under a second. Next Monday she runs the same script on the new file. The week after that she does the same thing. She just got back 17 hours a month — and the analysis is reproducible and auditable.</p>
+<p>File I/O is also the gateway to the rest of the data stack. pandas, the library you'll use in Unit 4, reads CSV files with a single function call. But understanding what happens underneath — how files are opened, how rows are parsed, why the <code>with</code> statement matters — makes you a far better pandas user than someone who skipped straight to <code>pd.read_csv()</code> without knowing what it's actually doing. This module builds the foundation.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
-<li>Reading and writing .txt and .csv files</li>
-<li>The csv module</li>
+<li>Reading and writing .txt and .csv files with the built-in <code>open()</code> function</li>
+<li>The <code>with</code> statement and why it matters for file safety</li>
+<li>The csv module: <code>csv.reader</code>, <code>csv.writer</code>, and <code>csv.DictReader</code></li>
 <li>File paths revisited: relative paths in a project repo</li>
-<li>Business context: importing sales data, exporting a cleaned report</li>
+<li>Business context: importing sales data, filtering records, exporting a cleaned report</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
-<p>Load sales.csv with the csv module; write a cleaned report to output.csv.</p>
+<p>Load sales.csv with the csv module; skip the header; compute price × quantity for each row; write a cleaned report to output.csv containing only high-value orders. This is a complete ETL (Extract, Transform, Load) pipeline in 20 lines of Python.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>open() and modes</h4>
+<p><code>open(filename, mode)</code> — modes: <code>"r"</code> (read), <code>"w"</code> (write, overwrites everything), <code>"a"</code> (append to end), <code>"r+"</code> (read and write). Always specify the mode explicitly.</p>
+</div>
+<div class="concept-card">
+<h4>with statement</h4>
+<p><code>with open("file.txt", "r") as f:</code> automatically closes the file when the block ends — even if an error occurs inside. This is the safest and most Pythonic way to work with files.</p>
+</div>
+<div class="concept-card">
+<h4>csv.reader</h4>
+<p>Reads a CSV file row by row, returning each row as a list of strings. Handles commas inside quoted fields correctly. Use <code>next(reader)</code> to skip the header row.</p>
+</div>
+<div class="concept-card">
+<h4>csv.writer</h4>
+<p>Writes rows to a CSV. <code>writer.writerow([...])</code> for one row; <code>writer.writerows([...])</code> for multiple. Always pass <code>newline=""</code> to <code>open()</code> on Windows to avoid extra blank lines.</p>
+</div>
+<div class="concept-card">
+<h4>Relative paths</h4>
+<p><code>"data/sales.csv"</code> means the <code>data/</code> folder inside wherever your script runs. Relative paths work on any machine. Absolute paths like <code>/Users/alice/...</code> break when anyone else clones your repo.</p>
+</div>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 13 — Files and Databases</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap13.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap13.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
-<p>Intermediate Python (#2) — due end of week</p>
+<div class="callout-title">DataCamp this module</div>
+<p>Intermediate Python (#2) — due end of module</p>
 </div>
+
+<h2>Business Scenario</h2>
+<p>Your manager sends you <code>sales.csv</code> — a weekly export from the point-of-sale system. Each row has a product name, unit price, and quantity sold. You need to compute the revenue for each row, filter to orders over $100, and write the results to <code>cleaned.csv</code> for the finance team. Here is the full Python workflow:</p>
+<pre><code>import csv
+
+# --- Step 1: Read and process ---
+processed = []
+
+with open("data/sales.csv", "r") as f:
+    reader = csv.reader(f)
+    header = next(reader)   # skip the header row
+
+    for row in reader:
+        product, price_str, qty_str = row
+        price = float(price_str)
+        qty   = int(qty_str)
+        total = price * qty
+        processed.append({"product": product, "price": price,
+                           "qty": qty, "total": total})
+
+# --- Step 2: Filter high-value orders ---
+high_value = [r for r in processed if r["total"] > 100]
+
+# --- Step 3: Write cleaned output ---
+with open("data/cleaned.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Product", "Price", "Qty", "Total"])
+    for r in high_value:
+        writer.writerow([r["product"], r["price"], r["qty"], f"{r['total']:.2f}"])
+
+print(f"Wrote {len(high_value)} high-value orders to cleaned.csv")</code></pre>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>File mode</strong> — the string passed as the second argument to <code>open()</code>: <code>"r"</code> read, <code>"w"</code> write (overwrites), <code>"a"</code> append, <code>"r+"</code> read and write</li>
+<li><strong>with statement</strong> — a context manager that automatically closes the file when the indented block exits, even if an exception occurs</li>
+<li><strong>csv module</strong> — Python's built-in module for reading and writing CSV files; handles quoted fields, escaped commas, and platform line endings</li>
+<li><strong>csv.reader</strong> — returns an iterator over the rows of a CSV file; each row is a list of strings</li>
+<li><strong>csv.DictReader</strong> — like csv.reader, but returns each row as a dictionary using the first row as keys; more readable for files with many columns</li>
+<li><strong>next(reader)</strong> — advances the iterator by one row; used to skip the header row before the loop</li>
+<li><strong>Relative path</strong> — a file path specified relative to the current working directory; portable across machines</li>
+<li><strong>Absolute path</strong> — a file path from the root of the filesystem; breaks when the project moves to a different machine</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>Forgetting to close files:</strong> If you open a file without the <code>with</code> statement and forget to call <code>f.close()</code>, the file may not be fully written to disk, and on some systems the data will be lost. Always use <code>with open(...) as f:</code>.</p>
+<p><strong>Hardcoded absolute paths:</strong> <code>open("/Users/alice/Documents/ism2411/data/sales.csv")</code> works on your machine and nowhere else. Anyone who clones your repo gets a FileNotFoundError. Always use relative paths: <code>open("data/sales.csv")</code>.</p>
+<p><strong>"w" mode silently deletes data:</strong> Opening a file with mode <code>"w"</code> immediately truncates (empties) the file, even before you write anything. If you meant to append, use <code>"a"</code>. Forgetting this has cost analysts hours of work.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead — Module 13</div>
+<p>Next module you'll meet <strong>pandas</strong> — Python's premier data analysis library. The <code>pd.read_csv()</code> function does everything you just did manually in 5 lines: open the file, parse columns, infer types, and load into a DataFrame. Now that you know what happens underneath, you'll understand why pandas is so powerful — and you'll know how to fall back to raw file I/O when pandas isn't appropriate (very large files, unusual formats, streaming data).</p>
+</div>
+
 <h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Capstone-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
 <div class="quiz-question">Which Python module reads and writes CSV files?</div>
@@ -274,29 +363,32 @@ footer {
 <li>c) pandas</li>
 <li>d) io</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">csv</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) csv</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
 <div class="quiz-question">What does this code do?</div>
 <pre><code>import csv
-with open(&quot;sales.csv&quot;, &quot;r&quot;) as f:
+with open("sales.csv", "r") as f:
     reader = csv.reader(f)
     for row in reader:
         print(row)</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Opens sales.csv and prints each row as a list</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Opens sales.csv and prints each row as a list of strings (including the header row)</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
-<div class="quiz-question">What does open(&#x27;file.csv&#x27;, &#x27;w&#x27;) do differently from open(&#x27;file.csv&#x27;, &#x27;r&#x27;)?</div>
+<div class="quiz-question">What does <code>open('file.csv', 'w')</code> do differently from <code>open('file.csv', 'r')</code>?</div>
 <ul class="quiz-options">
-<li>a) &#x27;w&#x27; reads; &#x27;r&#x27; writes</li>
-<li>b) &#x27;w&#x27; opens for writing and clears existing content; &#x27;r&#x27; opens for reading</li>
+<li>a) 'w' reads; 'r' writes</li>
+<li>b) 'w' opens for writing and clears existing content; 'r' opens for reading</li>
 <li>c) No difference</li>
-<li>d) &#x27;w&#x27; appends; &#x27;r&#x27; creates</li>
+<li>d) 'w' appends; 'r' creates</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">&#x27;w&#x27; opens for writing and clears existing content; &#x27;r&#x27; opens for reading</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) 'w' opens for writing and clears existing content; 'r' opens for reading</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
 <div class="quiz-question">Why use relative file paths in a project repo?</div>
@@ -306,21 +398,66 @@ with open(&quot;sales.csv&quot;, &quot;r&quot;) as f:
 <li>c) Run faster</li>
 <li>d) Required by the csv module</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Work on any machine regardless of where the project is stored</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) Work on any machine regardless of where the project is stored</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Code Trace</div>
 <div class="quiz-question">What is written to output.csv?</div>
 <pre><code>import csv
-with open(&quot;output.csv&quot;,&quot;w&quot;,newline=&quot;&quot;) as f:
+with open("output.csv","w",newline="") as f:
     writer = csv.writer(f)
-    writer.writerow([&quot;Name&quot;,&quot;Score&quot;])
-    writer.writerow([&quot;Alice&quot;, 95])</code></pre>
+    writer.writerow(["Name","Score"])
+    writer.writerow(["Alice", 95])</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Two rows: header (Name, Score) and data row (Alice, 95)</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What is the main advantage of using the <code>with</code> statement when opening a file?</div>
+<ul class="quiz-options">
+<li>a) It makes the file read faster</li>
+<li>b) It automatically closes the file when the block exits, even if an error occurs</li>
+<li>c) It prevents other programs from opening the file simultaneously</li>
+<li>d) It only works with CSV files</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) It automatically closes the file when the block exits, even if an error occurs</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">What does <code>next(reader)</code> do when called before the <code>for row in reader</code> loop?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">It advances the reader by one row and returns that row (usually the header). The subsequent <code>for</code> loop then starts from the second row, skipping the header.</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">What is the difference between <code>csv.reader</code> and <code>csv.DictReader</code>?</div>
+<ul class="quiz-options">
+<li>a) DictReader is slower</li>
+<li>b) reader returns each row as a list; DictReader returns each row as a dictionary with the header as keys</li>
+<li>c) DictReader can only read files with fewer than 10 columns</li>
+<li>d) There is no difference</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) reader returns each row as a list; DictReader returns each row as a dictionary using the header row as keys — making column access by name possible: <code>row["price"]</code> instead of <code>row[1]</code></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Bug Fix</div>
+<div class="quiz-question">This code is supposed to compute revenue from each row. What is the bug?</div>
+<pre><code>import csv
+with open("sales.csv", "r") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        product, price, qty = row
+        revenue = price * qty
+        print(product, revenue)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">csv.reader returns all values as strings. Multiplying two strings produces string repetition, not arithmetic. Fix: convert types before computing: <code>revenue = float(price) * int(qty)</code>.</div></details>
+</div>
+
 <div class="pn">
-<a href="week11_reading.html"><div class="label">← Previous</div><div class="title">Week 11 · Dictionaries</div></a>
-<a class="next" href="week13_reading.html"><div class="label">Next →</div><div class="title">Week 13 · Intro to pandas</div></a>
+<a href="week11_reading.html"><div class="label">← Previous</div><div class="title">Module 11 · Dictionaries</div></a>
+<a class="next" href="week13_reading.html"><div class="label">Next →</div><div class="title">Module 13 · Intro to pandas</div></a>
 </div>
 </div>
 

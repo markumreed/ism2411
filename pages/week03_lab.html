@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 3 Lab · Product Pricer with f-strings — ISM2411</title>
+<title>Module 3 Lab · Product Pricer with f-strings — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,43 +227,103 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 03 · Lab</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 03 · Lab</div>
 <h1>Product Pricer with f-strings</h1>
 <p class="lede">Write a small program that combines variables, types, and f-strings into a useful tiny tool.</p>
 <div class="meta">
-<span class="chip accent">Week 03 · Lab</span>
+<span class="chip accent">Module 03 · Lab</span>
 <span class="chip">Unit 1</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week03_reading.html" class="weekjump-link">Reading</a>
 <a href="week03_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week03_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Variables and types</div>
 <div style="color:var(--muted);font-size:15px;">Create variables for product (str), unit_price (float), quantity (int), in_stock (bool). Print each one with print(type(...)) to confirm types.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: four lines like <code>&lt;class 'str'&gt;</code>, <code>&lt;class 'float'&gt;</code>, <code>&lt;class 'int'&gt;</code>, <code>&lt;class 'bool'&gt;</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">f-string practice</div>
-<div style="color:var(--muted);font-size:15px;">Print a one-line summary like: &quot;12 units of Notebook at $4.99 each = $59.88&quot;. Compute the total inside the f-string with {unit_price * quantity}.</div>
+<div style="color:var(--muted);font-size:15px;">Print a one-line summary like: "12 units of Notebook at $4.99 each = $59.88". Compute the total inside the f-string with {unit_price * quantity}. Use the <code>:.2f</code> format spec on the total.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: <code>12 units of Notebook at $4.99 each = $59.88</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Input version</div>
-<div style="color:var(--muted);font-size:15px;">Modify the script to ask the user for product, price, and quantity via input(). Convert price to float and quantity to int.</div>
+<div style="color:var(--muted);font-size:15px;">Modify the script to ask the user for product, price, and quantity via input(). Convert price to float and quantity to int. Print the same formatted summary line.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: program prompts for three values, then prints the formatted summary using the user-supplied data</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4</div>
-<div style="font-weight:700;margin-bottom:6px;">Stretch — Jupyter</div>
-<div style="color:var(--muted);font-size:15px;">Open a Jupyter notebook (jupyter notebook in the terminal, or use VS Code&#x27;s built-in notebook support). Recreate the same code in cells. Notice how each cell holds state.</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Multi-variable product card</div>
+<div style="color:var(--muted);font-size:15px;">Add a <code>unit_cost</code> variable. Compute and print a five-line product card:<br>
+<code>Product:  Notebook</code><br>
+<code>Price:    $4.99</code><br>
+<code>Qty:      12</code><br>
+<code>Revenue:  $59.88</code><br>
+<code>Margin:   34.1%</code><br>
+Use f-strings with format specs for all numeric output.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: five-line formatted card as shown above (with your own product values)</div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 5 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Type investigation</div>
+<div style="color:var(--muted);font-size:15px;">Open the Python interactive interpreter (type <code>python3</code> in terminal, no filename). Try: <code>type("12")</code>, <code>type(12)</code>, <code>type(12.0)</code>, <code>type(True)</code>. Then try: <code>"5" + "3"</code> vs. <code>5 + 3</code>. Write down what you observe about how Python handles these differently.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: written observations — <code>"5" + "3"</code> produces <code>"53"</code> (concatenation); <code>5 + 3</code> produces <code>8</code> (addition)</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 6 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Stretch — Jupyter</div>
+<div style="color:var(--muted);font-size:15px;">Open a Jupyter notebook (jupyter notebook in the terminal, or use VS Code's built-in notebook support). Recreate the product card script across four cells: Cell 1 — assign variables; Cell 2 — compute derived values; Cell 3 — print summary; Cell 4 — a markdown cell explaining what the script does. Run them in order, then try running Cell 3 before Cell 1 and observe what happens.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: cells 1-3 produce the product card; running Cell 3 first raises NameError because variables are not yet defined</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH A <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Three-product comparison</div>
+<div style="color:var(--muted);font-size:15px;">Extend your script to handle three products. Use distinct variable names for each (e.g., <code>product1</code>, <code>price1</code>, <code>cost1</code>, etc.). Print a formatted product card for each and a final line showing which product has the highest margin. Use comparison operators to determine the winner.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH B <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Format spec exploration</div>
+<div style="color:var(--muted);font-size:15px;">In the Python interactive interpreter, try each of these format specs and note what they do: <code>f"{1234567:.2f}"</code>, <code>f"{1234567:,.0f}"</code>, <code>f"{0.3456:.1%}"</code>, <code>f"{42:05d}"</code>, <code>f"{'hello':>20}"</code>. Write a one-sentence description of each. This is the Python format mini-language — useful for professional-quality output.</div>
+</div>
+
+<h2>Reflection</h2>
+
+<div class="callout blue">
+<div class="callout-title">Self-Assessment Questions</div>
+<ol style="margin:0;padding-left:18px;">
+<li>What happened when you ran Exercise 3 and forgot to convert the price from string to float? Describe the exact error message and explain in your own words why it occurred.</li>
+<li>In Exercise 5, <code>"5" + "3"</code> returned <code>"53"</code> instead of <code>8</code>. Why does Python do this, and how does this explain why input() must always be converted before doing math?</li>
+<li>How would you use variables, types, and f-strings to build a real tool for a task in your future career? Describe a specific scenario in 2–3 sentences.</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Submit pricer.py to Canvas. Filename matters — exactly pricer.py.</p>
+<p>Submit pricer.py to Canvas. Filename matters — exactly pricer.py. Your file should include exercises 1–4 as a single runnable script with comments separating each exercise.</p>
+</div>
+
+<div class="pn">
+<a href="week02_lab.html"><div class="label">← Previous</div><div class="title">Module 02 · First Terminal Session &amp; First Python Script</div></a>
+<a class="next" href="week04_lab.html"><div class="label">Next →</div><div class="title">Module 04 · Revenue, Margin &amp; Discount Calculator</div></a>
 </div>
 </div>
 

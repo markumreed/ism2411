@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 5 Lecture · Conditionals — ISM2411</title>
+<title>Module 5 Lecture · Conditionals — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -165,43 +165,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
 /* concept cards */
 .concept-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
@@ -227,35 +190,42 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 05 · Lecture</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 05 · Lecture</div>
 <h1>Conditionals</h1>
 <p class="lede">Conditionals let your code make decisions. This unlocks the difference between a calculator and an actual program — code that does something different depending on the data.</p>
 <div class="meta">
-<span class="chip accent">Week 05 · Lecture</span>
+<span class="chip accent">Module 05 · Lecture</span>
 <span class="chip">Unit 1</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week05_reading.html" class="weekjump-link">Reading</a>
 <a href="week05_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week05_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>The basic if / elif / else</h3>
-<p>Python uses indentation (4 spaces) to show which lines belong to the if. The colon at the end of the if line is required.</p>
+<p>Python uses indentation (4 spaces) to show which lines belong to the if. The colon at the end of the if line is required — omitting it is a SyntaxError. Unlike some languages, Python does not use braces or parentheses to delimit blocks; the indentation is the block.</p>
+<p>The if/elif/else chain evaluates conditions in order. As soon as one condition is True, Python executes that block and jumps past all the remaining branches. This means if you order your conditions incorrectly, you can get logic bugs that are hard to spot — for example, putting a broader condition before a narrower one.</p>
+<p>The else clause is optional and acts as a catch-all. If none of the if or elif conditions are true, the else block runs. If there is no else and no conditions match, Python simply moves on — no error, just silence.</p>
 <pre><code>score = 85
 if score &gt;= 90:
-    grade = &quot;A&quot;
+    grade = "A"
 elif score &gt;= 80:
-    grade = &quot;B&quot;
+    grade = "B"
 elif score &gt;= 70:
-    grade = &quot;C&quot;
+    grade = "C"
 else:
-    grade = &quot;F&quot;
+    grade = "F"
 print(grade)  # B</code></pre>
+
 <h3>A discount-tier example</h3>
-<p>A classic business pattern: the discount depends on the total.</p>
+<p>A classic business pattern: the discount depends on the total. Notice that the conditions are ordered from highest to lowest. If you wrote <code>if total &gt;= 100:</code> first, every order over $100 would get a 5% discount and never reach the higher tiers — a costly logic bug.</p>
+<p>This is a pattern you will see in pricing engines, payroll calculators (tax brackets work exactly this way), and loyalty tier assignments. The structure is always the same: establish ranges from largest to smallest, return the first match.</p>
+<p>After applying the discount, we use an f-string to format the output with two decimal places — a small detail that matters a lot when you are displaying monetary values to customers or finance teams.</p>
 <pre><code>total = 250
 
 if total &gt;= 500:
@@ -268,38 +238,161 @@ else:
     discount = 0
 
 final = total * (1 - discount)
-print(f&quot;Total ${total} → discount {discount*100}% → pay ${final}&quot;)</code></pre>
+print(f"Total ${total} → discount {discount*100:.0f}% → pay ${final:.2f}")</code></pre>
+
 <h3>Nested conditionals (and when to avoid them)</h3>
-<p>You can put an if inside another if. It works — but readability suffers fast. If you nest more than 2 deep, combine conditions with and/or instead.</p>
+<p>You can put an if inside another if. It works — but readability suffers fast. Beyond two levels of nesting, most experienced developers will find the code hard to follow. Deeply nested conditionals are also harder to test, because each level doubles the number of paths through the code.</p>
+<p>The preferred approach is to flatten nested conditions using <code>and</code> or <code>or</code>. This keeps all the decision logic on a single level and makes it immediately clear what combination of conditions leads to each outcome.</p>
+<p>There are cases where nesting is genuinely necessary — for example, when the inner condition is only meaningful after the outer condition has been confirmed. But as a rule, if you find yourself writing three or more levels deep, pause and ask whether you can restructure.</p>
 <pre><code># nested — gets ugly fast
-if region == &quot;South&quot;:
+if region == "South":
     if total &gt; 100:
         discount = 0.1
 
 # flat — much easier to read
-if region == &quot;South&quot; and total &gt; 100:
+if region == "South" and total &gt; 100:
     discount = 0.1</code></pre>
+
 <h3>Common mistake: = vs. ==</h3>
-<p>A single = is assignment (&quot;set this variable&quot;). A double == is comparison (&quot;are these equal?&quot;). Mixing them up is the #1 beginner bug.</p>
+<p>A single <code>=</code> is assignment ("set this variable to this value"). A double <code>==</code> is comparison ("are these two values equal?"). In Python, using <code>=</code> inside an if condition is a SyntaxError, which is actually helpful — in some older languages it was a silent bug. Still, confusing them is the #1 beginner mistake, so it is worth drilling until it is automatic.</p>
+<p>Related: use <code>!=</code> for "not equal to", not <code>&lt;&gt;</code> (which is invalid in Python 3). And remember that <code>&gt;=</code> means "greater than or equal to" — it includes the boundary value, which matters for discount tiers where $500 exactly should qualify for the top tier.</p>
 <pre><code># WRONG — this assigns, does not compare
 if x = 5:
-    print(&quot;five&quot;)
+    print("five")
 
-# right
+# RIGHT
 if x == 5:
-    print(&quot;five&quot;)</code></pre>
+    print("five")</code></pre>
+
+<h2>Detailed Code Walkthrough</h2>
+
+<h3>Walkthrough 1: Approval workflow</h3>
+<p>This example shows a two-stage decision: first determine the discount, then check whether approval is required. Each stage is an independent if/elif/else block. Notice how readable it is compared to a nested version would be.</p>
+<pre><code># Stage 1: determine discount
+order_total = 750
+
+if order_total &gt;= 500:      # Line 3: is total at or above $500?
+    discount_pct = 0.15     # Line 4: yes — 15% discount
+elif order_total &gt;= 200:    # Line 5: otherwise, at or above $200?
+    discount_pct = 0.10     # Line 6: yes — 10% discount
+else:                       # Line 7: none of the above
+    discount_pct = 0        # Line 8: no discount
+
+# Stage 2: compute final and check approval threshold
+discounted = order_total * (1 - discount_pct)   # $637.50
+
+if discounted &gt; 1000:                           # approval threshold
+    approval = "manager_required"
+else:
+    approval = "auto_approved"
+
+print(f"Discounted total: ${discounted:.2f}")
+print(f"Approval status: {approval}")</code></pre>
+
+<h3>Walkthrough 2: Truthy and falsy in practice</h3>
+<p>This pattern is very common — checking whether a list or string is empty before processing it. Using truthiness keeps the code concise and Pythonic.</p>
+<pre><code>cart_items = []          # empty list — falsy
+
+if cart_items:           # evaluates to False because list is empty
+    print("Processing order...")
+else:
+    print("Cart is empty — nothing to do.")
+
+# Compare: verbose version that does the same thing
+if len(cart_items) != 0:
+    print("Processing order...")
+else:
+    print("Cart is empty — nothing to do.")
+
+# The first version is preferred Python style</code></pre>
+
+<h2>Common Errors</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 1 — Missing colon</div>
+<div style="font-weight:700;margin-bottom:6px;">SyntaxError: expected ':'</div>
+<pre><code># WRONG
+if score &gt;= 90
+    print("A")
+
+# RIGHT — colon is required after every condition
+if score &gt;= 90:
+    print("A")</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 2 — Wrong condition order</div>
+<div style="font-weight:700;margin-bottom:6px;">Logic bug: broader condition catches everything first</div>
+<pre><code># WRONG — every order &gt;= 100 gets 5%, never reaches higher tiers
+if total &gt;= 100:
+    discount = 0.05
+elif total &gt;= 200:
+    discount = 0.10
+elif total &gt;= 500:
+    discount = 0.15
+
+# RIGHT — order from most specific (highest) to least specific
+if total &gt;= 500:
+    discount = 0.15
+elif total &gt;= 200:
+    discount = 0.10
+elif total &gt;= 100:
+    discount = 0.05</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 3 — Indentation error</div>
+<div style="font-weight:700;margin-bottom:6px;">IndentationError: expected an indented block</div>
+<pre><code># WRONG — body of if must be indented
+if score &gt;= 90:
+print("A")
+
+# RIGHT — 4 spaces of indentation
+if score &gt;= 90:
+    print("A")</code></pre>
+</div>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>In what business scenario might the order of conditions in an elif chain lead to a financially significant bug? Describe a realistic example and explain how you would test for it.</li>
+<li>Python allows conditions like <code>if 0 &lt; total &lt; 500:</code> (chained comparisons). How does this compare in readability to <code>if total &gt; 0 and total &lt; 500:</code>? When would you prefer each style?</li>
+<li>Suppose you are writing a loan approval system with five criteria (credit score, income, debt ratio, loan amount, employment status). Should you use deeply nested ifs, or a flat approach with <code>and</code>? What are the trade-offs?</li>
+<li>How do conditionals in Python differ from Excel's IF function? What can Python do that Excel cannot, and vice versa?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
 <li>Write a shipping calculator: free over $75, $5 between $25 and $75, $10 under $25.</li>
 <li>Refactor a 3-deep nested if into a flat one using and.</li>
+<li>Predict the output of 3 code-trace problems before running them — then verify.</li>
+<li>Write a credit-tier classifier: Excellent (750+), Good (700–749), Fair (650–699), Poor (below 650).</li>
+<li>Write a payroll overtime calculator: time and a half for hours over 40, double time for hours over 60.</li>
+<li>Pair exercise: swap your discount-tier code with a partner; find and explain any bugs you spot.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul>
+<li>Python evaluates if/elif/else conditions top to bottom and executes only the first matching branch.</li>
+<li>Order your conditions from most specific (highest threshold) to least specific (lowest threshold).</li>
+<li>Use <code>==</code> for comparison, <code>=</code> for assignment — never mix them up in a condition.</li>
+<li>Truthy/falsy rules let you write concise checks like <code>if items:</code> instead of <code>if len(items) &gt; 0:</code>.</li>
+<li>Flatten nested ifs with <code>and</code>/<code>or</code> whenever possible — your future self will thank you.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week05_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week05_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week05_lab.html">Week 5 Lab</a></p>
+<p>Hands-on lab: <a href="week05_lab.html">Module 5 Lab</a></p>
+</div>
+
+<div class="pn">
+<a href="week04_lecture.html"><div class="label">← Previous</div><div class="title">Module 04 · Operators &amp; Expressions</div></a>
+<a class="next" href="week06_lecture.html"><div class="label">Next →</div><div class="title">Module 06 · Loops</div></a>
 </div>
 </div>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 11 Reading · Dictionaries — ISM2411</title>
+<title>Module 11 Reading · Dictionaries — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,89 +227,188 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 11 · Reading</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 11 · Reading</div>
 <h1>Dictionaries</h1>
-<p class="lede">A customer record: {&quot;name&quot;: &quot;Alice&quot;, &quot;tier&quot;: &quot;gold&quot;, &quot;ytd_spend&quot;: 12400}.</p>
+<p class="lede">A customer record: {&quot;name&quot;: &quot;Alice&quot;, &quot;tier&quot;: &quot;gold&quot;, &quot;ytd_spend&quot;: 12400}. Dictionaries are how Python represents structured real-world data.</p>
 <div class="meta">
-<span class="chip accent">Week 11</span>
+<span class="chip accent">Module 11</span>
 <span class="chip">Unit 3</span>
 <span class="chip">Reading · Think Python (TP) Ch. 10 — Dictionaries</span>
 <span class="chip" style="color:#f472b6;border-color:#f472b655;">★ Capstone-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week11_reading.html" class="weekjump-link current">Reading</a>
 <a href="week11_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week11_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>A list says 'here are five products in order'. A dictionary says 'here is one product, and here is everything I know about it'. Dictionaries are the bridge to working with structured records — and a stepping stone to pandas DataFrames in Unit 4.</p>
-<h2>What you will learn this week</h2>
+<p>A list says "here are five products in order." A dictionary says "here is one product, and here is everything I know about it." That is a fundamentally different kind of data structure — one that mirrors how businesses actually think about records. A customer is not just a position in a list; a customer has a name, an email, a loyalty tier, a year-to-date spend. A dictionary keeps all of that information together under one variable, accessible by readable labels instead of cryptic index numbers.</p>
+<p>Consider what happens in a CRM system when you look up a customer. The system doesn't go to "row 3472, column 7" — it goes to the record for customer ID 3472 and asks for the "email" field. That is dictionary thinking. In Python, <code>customer["email"]</code> is far more readable and less error-prone than <code>customer[6]</code>, which could silently break the moment anyone reorders the columns. Dictionaries give you named access, which is both clearer and safer.</p>
+<p>Dictionaries are also the bridge to pandas DataFrames, which you'll encounter in Unit 4. A DataFrame is essentially a table where each column is a dictionary under the hood. Once you understand how to create, access, update, and iterate over a Python dictionary, you will find the pandas API intuitive because it follows the same logic. The skills you build in this module unlock everything that comes after it.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
-<li>Key-value pairs</li>
+<li>Key-value pairs: creating and accessing dictionaries</li>
 <li>Nesting, adding, updating, and deleting entries</li>
-<li>Iterating over dictionaries</li>
+<li>Safe access with <code>.get()</code> to avoid KeyErrors</li>
+<li>Iterating over dictionaries with <code>.items()</code>, <code>.keys()</code>, <code>.values()</code></li>
 <li>Business context: customer records and lookup tables</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
-<p>A customer record: {&quot;name&quot;: &quot;Alice&quot;, &quot;tier&quot;: &quot;gold&quot;, &quot;ytd_spend&quot;: 12400}.</p>
+<p>A customer record: <code>{"name": "Alice", "tier": "gold", "ytd_spend": 12400}</code>. Use a dictionary to store a complete customer profile. Use a lookup-table dictionary to apply tier-based discounts in a single line.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>Dictionary</h4>
+<p>An unordered collection of key-value pairs in curly braces. Keys are usually strings; values can be anything. <code>customer = {"name": "Alice", "balance": 1500.00}</code>.</p>
+</div>
+<div class="concept-card">
+<h4>Key Access</h4>
+<p><code>customer["name"]</code> returns <code>"Alice"</code>. If the key does not exist, Python raises a <strong>KeyError</strong>. Always use <code>.get()</code> when you're not sure a key exists.</p>
+</div>
+<div class="concept-card">
+<h4>.get() method</h4>
+<p><code>customer.get("email", "N/A")</code> returns the value if the key exists, or the default <code>"N/A"</code> if it doesn't — no KeyError. This is the safe way to read optional fields.</p>
+</div>
+<div class="concept-card">
+<h4>Add / Update / Delete</h4>
+<p>Add: <code>customer["email"] = "alice@co.com"</code>. Update: <code>customer["balance"] = 2000</code>. Delete: <code>del customer["email"]</code> or <code>customer.pop("email")</code>.</p>
+</div>
+<div class="concept-card">
+<h4>Iterating</h4>
+<p><code>for key, value in customer.items()</code> gives you both. <code>for key in customer</code> gives just keys. <code>for value in customer.values()</code> gives just values.</p>
+</div>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 10 — Dictionaries</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap10.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap10.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Intermediate Python (#2) — in progress</p>
 </div>
+
+<h2>Business Scenario</h2>
+<p>You work in the loyalty department of a retail chain. The system stores each customer as a dictionary. Your job is to calculate the correct discount based on the customer's tier, apply it to their purchase, and update their year-to-date spend. Here is the full workflow in Python:</p>
+<pre><code># Customer record
+customer = {
+    "name": "Alice",
+    "email": "alice@example.com",
+    "tier": "gold",
+    "ytd_spend": 12400.00
+}
+
+# Discount lookup table — maps tier to discount rate
+tier_discounts = {
+    "bronze":   0.00,
+    "silver":   0.05,
+    "gold":     0.10,
+    "platinum": 0.15
+}
+
+# This purchase
+purchase_amount = 250.00
+
+# Look up discount safely (default 0 if tier unknown)
+discount_rate = tier_discounts.get(customer["tier"], 0)
+discount = purchase_amount * discount_rate
+final_price = purchase_amount - discount
+
+# Update year-to-date spend
+customer["ytd_spend"] += final_price
+
+# Report
+print(f"Customer: {customer['name']} ({customer['tier']})")
+print(f"Purchase: ${purchase_amount:.2f}")
+print(f"Discount ({discount_rate*100:.0f}%): -${discount:.2f}")
+print(f"Final price: ${final_price:.2f}")
+print(f"New YTD spend: ${customer['ytd_spend']:.2f}")</code></pre>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Dictionary</strong> — a collection of key-value pairs enclosed in curly braces; keys must be unique and immutable</li>
+<li><strong>Key</strong> — the identifier used to look up a value in a dictionary; typically a string</li>
+<li><strong>Value</strong> — the data associated with a key; can be any Python object, including another dictionary</li>
+<li><strong>KeyError</strong> — the exception raised when you try to access a key that doesn't exist in a dictionary using bracket notation</li>
+<li><strong>.get()</strong> — a dictionary method that returns a value for a key, or a default if the key is missing, without raising an error</li>
+<li><strong>.items()</strong> — returns key-value pairs as tuples, used for iterating over both key and value simultaneously</li>
+<li><strong>Nested dictionary</strong> — a dictionary whose values are themselves dictionaries; used to represent hierarchical data like a product catalog</li>
+<li><strong>Lookup table</strong> — a dictionary used to map one value to another, replacing a chain of if/elif statements</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>KeyError on access:</strong> <code>customer["phone"]</code> raises a KeyError if <code>"phone"</code> is not in the dictionary — even if the variable exists. Always use <code>.get()</code> for optional fields. The pattern <code>customer.get("phone", "No phone on file")</code> is your friend.</p>
+<p><strong>Dictionaries don't have order — or do they?</strong> As of Python 3.7, dictionaries maintain insertion order. But you should not rely on order for logic; dictionaries are designed for key-based lookup, not positional access. If you need a specific order, sort the keys explicitly.</p>
+<p><strong>Mutable default arguments:</strong> If you try to use a list or dictionary as a default parameter value in a function definition, you'll get surprising behavior — the same object is reused across all calls. Use <code>None</code> as the default and create the list/dict inside the function.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead — Module 12</div>
+<p>Next module you'll learn to read data from CSV files. The most powerful pattern combines what you've learned so far: you'll read a CSV of sales records, turn each row into a dictionary, and process them with loops. This is exactly how pandas DataFrames work under the hood — each row is a record, each column name is a key. Understanding dictionaries now makes everything in Unit 4 click into place.</p>
+</div>
+
 <h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Capstone-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
-<pre><code>customer = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30}
-print(customer[&quot;name&quot;])</code></pre>
+<pre><code>customer = {"name": "Alice", "age": 30}
+print(customer["name"])</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Alice</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
 <div class="quiz-question">How do you add a key-value pair to a dictionary?</div>
 <ul class="quiz-options">
-<li>a) dict.add(&quot;key&quot;, val)</li>
-<li>b) dict[&quot;key&quot;] = val</li>
-<li>c) dict.insert(&quot;key&quot;, val)</li>
-<li>d) dict.append(&quot;key&quot;, val)</li>
+<li>a) dict.add("key", val)</li>
+<li>b) dict["key"] = val</li>
+<li>c) dict.insert("key", val)</li>
+<li>d) dict.append("key", val)</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">dict[&quot;key&quot;] = val</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) dict["key"] = val</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
-<pre><code>product = {&quot;name&quot;: &quot;Laptop&quot;, &quot;price&quot;: 999}
-product[&quot;price&quot;] = 849
-print(product[&quot;price&quot;])</code></pre>
+<pre><code>product = {"name": "Laptop", "price": 999}
+product["price"] = 849
+print(product["price"])</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">849</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
-<div class="quiz-question">What does customer.get(&#x27;email&#x27;, &#x27;Not found&#x27;) return if &#x27;email&#x27; is not in the dict?</div>
+<div class="quiz-question">What does <code>customer.get('email', 'Not found')</code> return if 'email' is not in the dict?</div>
 <ul class="quiz-options">
 <li>a) None</li>
 <li>b) An error</li>
-<li>c) &#x27;Not found&#x27;</li>
-<li>d) &#x27;email&#x27;</li>
+<li>c) 'Not found'</li>
+<li>d) 'email'</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">&#x27;Not found&#x27;</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) 'Not found'</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Code Trace</div>
 <div class="quiz-question">What does this print?</div>
-<pre><code>inventory = {&quot;apples&quot;: 10, &quot;bananas&quot;: 5}
+<pre><code>inventory = {"apples": 10, "bananas": 5}
 for item in inventory:
     print(item)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;"><pre><code>apples
-bananas</code></pre> <span style="color:var(--muted);">— Iterating a dict returns its keys</span></div></details>
+bananas</code></pre> <span style="color:var(--muted);">— Iterating a dict returns its keys, not values</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
 <div class="quiz-question">Which method returns all key-value pairs as tuples?</div>
@@ -319,11 +418,40 @@ bananas</code></pre> <span style="color:var(--muted);">— Iterating a dict retu
 <li>c) .items()</li>
 <li>d) .pairs()</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">.items()</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) .items()</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">What does this code print?</div>
+<pre><code>catalog = {"Widget A": {"price": 9.99, "stock": 150}}
+print(catalog["Widget A"]["stock"])</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">150 <span style="color:var(--muted);">— Access the outer dict by key "Widget A", then the inner dict by key "stock"</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Bug Fix</div>
+<div class="quiz-question">This code crashes. Why, and how do you fix it?</div>
+<pre><code>customer = {"name": "Bob", "tier": "silver"}
+print(customer["email"])</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">KeyError — "email" is not in the dictionary. Fix: use <code>customer.get("email", "No email")</code> instead of bracket notation.</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Multiple Choice</div>
+<div class="quiz-question">What is the main advantage of using a dictionary as a lookup table instead of a chain of if/elif statements?</div>
+<ul class="quiz-options">
+<li>a) Dictionaries are faster to type</li>
+<li>b) Dictionaries are easier to extend — add a new entry without changing logic</li>
+<li>c) if/elif doesn't work with strings</li>
+<li>d) Dictionaries automatically sort the keys</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) Dictionaries are easier to extend — to add a new tier or code, you add one line to the dict rather than another elif branch throughout your code</div></details>
+</div>
+
 <div class="pn">
-<a href="week10_reading.html"><div class="label">← Previous</div><div class="title">Week 10 · Lists &amp; Tuples</div></a>
-<a class="next" href="week12_reading.html"><div class="label">Next →</div><div class="title">Week 12 · Working with Files</div></a>
+<a href="week10_reading.html"><div class="label">← Previous</div><div class="title">Module 10 · Lists &amp; Tuples</div></a>
+<a class="next" href="week12_reading.html"><div class="label">Next →</div><div class="title">Module 12 · Working with Files</div></a>
 </div>
 </div>
 

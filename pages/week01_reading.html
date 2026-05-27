@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 1 Reading · What is a Computer? — ISM2411</title>
+<title>Module 1 Reading · What is a Computer? — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,44 +227,109 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 01 · Reading</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 01 · Reading</div>
 <h1>What is a Computer?</h1>
 <p class="lede">Understanding what your computer actually does when you double-click an Excel file.</p>
 <div class="meta">
-<span class="chip accent">Week 01</span>
+<span class="chip accent">Module 01</span>
 <span class="chip">Unit 1</span>
 <span class="chip">Reading · Think Python (TP) Ch. 1 — Programming as a Way of Thinking</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week01_reading.html" class="weekjump-link current">Reading</a>
 <a href="week01_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week01_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Most people who write code never learned what a computer actually does. They learn syntax, and then bugs feel like magic. This week we get the mental model in place — CPU, memory, storage, files, paths — so that every Python concept we meet afterward has something concrete to attach to.</p>
-<h2>What you will learn this week</h2>
+<p>Most people who write code never learned what a computer actually does. They learn syntax, and then bugs feel like magic. This module we get the mental model in place — CPU, memory, storage, files, paths — so that every Python concept we meet afterward has something concrete to attach to. Without this foundation, every error message is a mystery. With it, you can read an error, reason about what the machine was trying to do, and fix it systematically.</p>
+<p>Think about the last time you opened an Excel spreadsheet. The file was sitting on your hard drive, dormant. The moment you double-clicked it, Windows or macOS executed a cascade of events: the operating system read bytes off storage, copied them into RAM, launched the Excel process, and handed control to the CPU. All of that happened in under a second — silently, invisibly. Every Python script you write this semester triggers exactly the same cascade.</p>
+<p>Business analysts who understand hardware think differently. They know why a script that processes 50,000 rows runs fast but one that processes 5 million rows needs optimization. They know why saving a file is different from having a file open. They understand that "the program crashed" means something went wrong in RAM, while "the file is corrupt" means something went wrong in storage. These distinctions matter the moment your code hits production data.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
 <li>How computers work: CPU, memory, storage — in plain English</li>
 <li>What files are, what a file system is, what a path means</li>
 <li>Directories: how folders nest and why this matters</li>
 <li>What programming is and why businesses use it</li>
-<li>No coding this week — conceptual foundation only</li>
+<li>No coding this module — conceptual foundation only</li>
 </ul>
+
+<h2>Core Concepts</h2>
+<p>These five terms appear in every conversation about computers. Nail them now and they will serve you for your entire career.</p>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>CPU</h4>
+<p>The Central Processing Unit is the brain of the computer. It executes instructions one at a time, billions of times per second. Think of it as a chef who can only hold one recipe card at a time but flips through them impossibly fast.</p>
+</div>
+<div class="concept-card">
+<h4>RAM</h4>
+<p>Random Access Memory holds whatever the computer is currently working on. It is fast but temporary — when you lose power, RAM is wiped. Opening a file copies it from storage into RAM so the CPU can touch it.</p>
+</div>
+<div class="concept-card">
+<h4>Storage</h4>
+<p>Your hard drive or SSD holds files permanently, even when power is off. It is slower than RAM but survives reboots. Think of RAM as your desk and storage as your filing cabinet.</p>
+</div>
+<div class="concept-card">
+<h4>File</h4>
+<p>A file is a named, ordered sequence of bytes stored on disk. The bytes can represent text, images, spreadsheet data, or compiled code. The file extension (.xlsx, .py, .csv) hints at the encoding.</p>
+</div>
+<div class="concept-card">
+<h4>Path</h4>
+<p>A path is the complete address of a file in the file system, like a street address for data. <code>/home/alice/reports/q1.csv</code> unambiguously locates one file across an entire drive with billions of files.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>Imagine you are a financial analyst at a regional retailer. Every Monday morning, someone emails you a CSV export from the point-of-sale system. You open it in Excel, do some cleanup, paste numbers into a PowerPoint slide, and send it to your manager. The whole process takes about 90 minutes. Your colleague in the IT department runs a Python script instead — it reads the CSV, computes the same numbers, generates the slide, and emails it automatically. The script runs in under 10 seconds.</p>
+<p>The difference is not intelligence — it is knowing how the machine works. The Python script navigates to the file using its path, reads bytes from storage into RAM, manipulates them with CPU instructions, and writes a new file back to storage. Every step in that pipeline maps directly to concepts in this module. Once you can see the pipeline, you can build it.</p>
+<p>By the end of this course you will be able to write that script. This module is the first building block: understanding what is actually happening under the hood when any program runs.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>CPU (Central Processing Unit)</strong> — the chip that executes instructions; the "brain" of the computer</li>
+<li><strong>RAM (Random Access Memory)</strong> — fast, temporary memory where active programs and open files live</li>
+<li><strong>Storage</strong> — persistent memory (HDD or SSD) where files survive power-off</li>
+<li><strong>File</strong> — a named, ordered collection of bytes saved to storage</li>
+<li><strong>Directory (Folder)</strong> — a container that organizes files and other directories in a hierarchy</li>
+<li><strong>File path</strong> — the full address of a file, from root to filename (e.g., <code>/Users/alice/data/sales.csv</code>)</li>
+<li><strong>Extension</strong> — the suffix after the last dot in a filename that signals the file's format (<code>.py</code>, <code>.csv</code>, <code>.xlsx</code>)</li>
+<li><strong>Interpreter</strong> — a program that reads source code (like Python) line-by-line and tells the CPU what to do</li>
+<li><strong>Operating System (OS)</strong> — software (Windows, macOS, Linux) that manages hardware resources and runs your programs</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<ul style="margin:0;padding-left:18px;">
+<li><strong>"RAM and storage are the same thing."</strong> They are not. RAM is fast and temporary; storage is slow and permanent. A 16 GB laptop can open a 2 GB file because it copies it into RAM — but if you have 10 files open simultaneously, you may run out of RAM.</li>
+<li><strong>"Saving a file writes it to RAM."</strong> The opposite: pressing Ctrl+S moves data FROM RAM TO storage. Until you save, your edits exist only in RAM and will be lost if power is cut.</li>
+<li><strong>"A .py file is a special kind of file."</strong> It is plain text. You can open any .py file in Notepad and read it. The extension is a convention that tells the Python interpreter what to do with it.</li>
+</ul>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>Module 02 puts this knowledge to work immediately: you will open the terminal, navigate the file system using paths you learned about here, install Python, and run your first script. The mental model you build this module is the map you will use all semester.</p>
+</div>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>Understanding what your computer actually does when you double-click an Excel file.</p>
 </div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 1 — Programming as a Way of Thinking</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap01.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap01.html</a></p>
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Introduction to Shell (#10) — begins</p>
 </div>
-<h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
+
+<h2 id="quiz">Module Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
 <div class="quiz-question">Which component of a computer executes program instructions?</div>
@@ -276,6 +341,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">CPU <span style="color:var(--muted);">— CPU = Central Processing Unit</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
 <div class="quiz-question">What is a file path?</div>
@@ -287,6 +353,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The location of a file in the file system</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
 <div class="quiz-question">Which file extension is used for Python programs?</div>
@@ -298,6 +365,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">.py</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
 <div class="quiz-question">What does a directory contain?</div>
@@ -309,6 +377,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Files and/or other directories</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
 <div class="quiz-question">Which best describes what a program is?</div>
@@ -320,9 +389,34 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A sequence of instructions that tells a computer what to do</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">When you open an Excel file, where is the file's data loaded so the CPU can work with it?</div>
+<ul class="quiz-options">
+<li>a) The hard drive</li>
+<li>b) The CPU cache</li>
+<li>c) RAM</li>
+<li>d) The monitor</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">RAM <span style="color:var(--muted);">— the OS copies data from storage into RAM so the CPU can access it quickly</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">A .py file is a special binary format that only the Python interpreter can read.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False — a .py file is plain text. Any text editor can open it. The .py extension is a convention that tells the interpreter how to process it.</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Short Answer</div>
+<div class="quiz-question">What is the key difference between RAM and storage (hard drive / SSD)?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">RAM is fast and temporary (contents lost when power is off). Storage is slower but persistent (contents survive power-off). Files live on storage; active programs run in RAM.</div></details>
+</div>
+
 <div class="pn">
 <div></div>
-<a class="next" href="week02_reading.html"><div class="label">Next →</div><div class="title">Week 02 · The Command Line &amp; Your Environment</div></a>
+<a class="next" href="week02_reading.html"><div class="label">Next →</div><div class="title">Module 02 · The Command Line &amp; Your Environment</div></a>
 </div>
 </div>
 

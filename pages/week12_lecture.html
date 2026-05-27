@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 12 Lecture · Working with Files — ISM2411</title>
+<title>Module 12 Lecture · Working with Files — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,70 +227,195 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 12 · Lecture</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 12 · Lecture</div>
 <h1>Working with Files</h1>
 <p class="lede">Until now we have made up data inside our scripts. Today we read it from disk — the way every real business workflow does. CSVs are the lingua franca of business data.</p>
 <div class="meta">
-<span class="chip accent">Week 12 · Lecture</span>
+<span class="chip accent">Module 12 · Lecture</span>
 <span class="chip">Unit 3</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week12_reading.html" class="weekjump-link">Reading</a>
 <a href="week12_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week12_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>Opening a file with with</h3>
-<p>The with block opens the file, runs your code, and closes the file automatically — even if an error happens.</p>
-<pre><code>with open(&quot;data.txt&quot;, &quot;r&quot;) as f:
-    contents = f.read()
-print(contents)</code></pre>
+<p>The <code>with</code> block opens the file, runs your code, and closes the file automatically — even if an error occurs inside the block. This is critical: an unclosed file can leave data unwritten, lock the file on some operating systems, or exhaust the system's file handle limit in a long-running script.</p>
+<p>Before the <code>with</code> statement was common practice, you had to call <code>f.close()</code> manually and wrap everything in a try/finally block to ensure cleanup. The <code>with</code> statement does all of that for you in one clean syntax.</p>
+<p>The variable after <code>as</code> (conventionally named <code>f</code>) is the file object. You call methods on it — <code>f.read()</code>, <code>f.readlines()</code>, <code>f.write()</code> — inside the indented block. Once the block exits, the file is closed automatically.</p>
+<pre><code>with open("data.txt", "r") as f:
+    contents = f.read()       # read entire file as one string
+print(contents)               # file is already closed here
+
+# Reading line by line (better for large files)
+with open("data.txt", "r") as f:
+    for line in f:
+        print(line.strip())   # .strip() removes the newline character</code></pre>
+
 <h3>Reading mode vs. writing mode</h3>
-<p>&quot;r&quot; reads. &quot;w&quot; writes (overwrites the file completely). &quot;a&quot; appends to the end.</p>
-<pre><code>open(&quot;file.csv&quot;, &quot;r&quot;)   # read
-open(&quot;file.csv&quot;, &quot;w&quot;)   # write — clears existing!
-open(&quot;file.csv&quot;, &quot;a&quot;)   # append</code></pre>
+<p><code>"r"</code> reads. <code>"w"</code> writes — and <strong>immediately empties the file</strong> when opened, before you've written anything. This surprises many students and has caused real data loss. If you want to add to an existing file without clearing it, use <code>"a"</code> (append mode). If you need to read and write the same file, use <code>"r+"</code>.</p>
+<p>The mode string can also specify encoding: <code>open("file.txt", "r", encoding="utf-8")</code>. On Windows, the default encoding may not be UTF-8, which can cause strange characters when reading files that contain accented letters or special symbols. Always specify <code>encoding="utf-8"</code> for files you'll share across platforms.</p>
+<pre><code>open("file.csv", "r")                        # read only
+open("file.csv", "w")                        # write — clears existing!
+open("file.csv", "a")                        # append to end
+open("file.csv", "r", encoding="utf-8")      # read with explicit encoding</code></pre>
+
 <h3>Reading a CSV with the csv module</h3>
-<p>Don&#x27;t parse commas by hand — the csv module handles quoted strings, escaped commas, and all the edge cases.</p>
+<p>Don't parse commas by hand — the csv module handles quoted strings, escaped commas, and all the edge cases. A cell that contains a comma (like an address: "123 Main St, Suite 4") would break a naive <code>line.split(",")</code> approach. The csv module reads the file format correctly per the CSV specification.</p>
+<p><code>csv.reader(f)</code> returns an iterator — each iteration gives you one row as a list of strings. All values are strings regardless of what they look like; you must convert to <code>int</code> or <code>float</code> yourself when doing arithmetic. This is the most common csv bug: multiplying two strings gives string repetition, not a number.</p>
 <pre><code>import csv
 
-with open(&quot;sales.csv&quot;, &quot;r&quot;) as f:
+with open("sales.csv", "r") as f:
     reader = csv.reader(f)
     next(reader)  # skip the header row
     for row in reader:
         product, price, qty = row
-        print(product, float(price) * int(qty))</code></pre>
+        # Convert types — csv.reader returns everything as strings
+        revenue = float(price) * int(qty)
+        print(f"{product}: ${revenue:.2f}")</code></pre>
+
 <h3>Writing a CSV</h3>
+<p>Always pass <code>newline=""</code> as the third argument to <code>open()</code> when writing CSVs. Without it, on Windows, Python adds an extra <code>\r</code> to each line ending, producing blank rows between every data row in Excel. This is a platform-specific quirk that the Python docs explicitly document — use <code>newline=""</code> and let the csv module control line endings.</p>
+<p><code>writer.writerow([...])</code> writes one row. <code>writer.writerows([[...], [...]])</code> writes multiple rows at once. Always write the header row first.</p>
 <pre><code>import csv
 
-rows = [[&quot;Alice&quot;, 95], [&quot;Bob&quot;, 87], [&quot;Carol&quot;, 92]]
+rows = [["Alice", 95], ["Bob", 87], ["Carol", 92]]
 
-with open(&quot;scores.csv&quot;, &quot;w&quot;, newline=&quot;&quot;) as f:
+with open("scores.csv", "w", newline="") as f:
     writer = csv.writer(f)
-    writer.writerow([&quot;Name&quot;, &quot;Score&quot;])
-    writer.writerows(rows)</code></pre>
+    writer.writerow(["Name", "Score"])   # header
+    writer.writerows(rows)               # all data rows at once</code></pre>
+
 <h3>Relative paths in a repo</h3>
-<p>Hard-coding /Users/yourname/... breaks the moment you share your code. Always use paths relative to your project root.</p>
+<p>Hard-coding <code>/Users/yourname/...</code> breaks the moment you share your code, run it on a server, or submit to GitHub. Always use paths relative to your project root. The convention in this course is to put data files in a <code>data/</code> subfolder within the module folder.</p>
+<p>If you need to find the directory your script lives in (for truly portable path construction), use <code>os.path.dirname(__file__)</code> from the <code>os</code> module. But for this course, a simple relative string like <code>"data/sales.csv"</code> is sufficient as long as you run your script from the project root.</p>
 <pre><code># BAD — only works on your machine
-open(&quot;/Users/alice/projects/ism2411/data.csv&quot;)
+open("/Users/alice/projects/ism2411/data.csv")
 
 # GOOD — works for anyone who clones the repo
-open(&quot;data/sales.csv&quot;)</code></pre>
+open("data/sales.csv")
+
+# BEST for production — dynamically finds the script's directory
+import os
+script_dir = os.path.dirname(__file__)
+data_path = os.path.join(script_dir, "data", "sales.csv")
+open(data_path)</code></pre>
+
+<h2>Code Walkthrough</h2>
+
+<h3>csv.DictReader — the more readable approach</h3>
+<p><code>csv.DictReader</code> reads each row as a dictionary using the first row as column names. This is much cleaner for files with many columns — you access fields by name (<code>row["price"]</code>) instead of by index (<code>row[2]</code>). It also automatically skips the header row, so you don't need <code>next(reader)</code>.</p>
+<pre><code>import csv
+
+totals = []
+
+with open("data/sales.csv", "r") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        # Access by column name — much more readable
+        product = row["product"]
+        price   = float(row["price"])
+        qty     = int(row["quantity"])
+        total   = price * qty
+
+        totals.append(total)
+        print(f"{product}: {qty} units × ${price:.2f} = ${total:.2f}")
+
+print(f"\nTotal revenue: ${sum(totals):,.2f}")
+print(f"Average order: ${sum(totals)/len(totals):,.2f}")</code></pre>
+
+<h3>Complete ETL pipeline: read, transform, write</h3>
+<p>ETL — Extract, Transform, Load — is the standard term for "read data, do something to it, write the result." Every data pipeline in business follows this pattern. Here is a complete example that reads a sales file, computes totals, filters for high-value orders, and writes a cleaned output.</p>
+<pre><code>import csv
+
+# --- EXTRACT ---
+with open("data/sales.csv", "r") as f:
+    reader = csv.DictReader(f)
+    orders = list(reader)   # load all rows into memory
+
+# --- TRANSFORM ---
+for order in orders:
+    order["total"] = float(order["price"]) * int(order["quantity"])
+
+high_value = [o for o in orders if o["total"] > 100]
+
+# --- LOAD ---
+with open("data/cleaned.csv", "w", newline="") as f:
+    fieldnames = ["product", "price", "quantity", "total"]
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(high_value)
+
+print(f"Wrote {len(high_value)} / {len(orders)} orders to cleaned.csv")</code></pre>
+
+<h2>Common Errors</h2>
+
+<h3>TypeError when computing from CSV values</h3>
+<p>Every value from <code>csv.reader</code> is a string. Multiplying strings does not do arithmetic — it repeats them. Convert before computing.</p>
+<pre><code># WRONG — "9.99" * "50" raises TypeError
+revenue = row[1] * row[2]
+
+# RIGHT — convert first
+revenue = float(row[1]) * int(row[2])</code></pre>
+
+<h3>FileNotFoundError from wrong path</h3>
+<p>Python looks for the file relative to the <em>current working directory</em> — where you ran the script from, not where the script lives. If you run <code>python week12/solution.py</code> from the project root, then <code>"data/sales.csv"</code> means <code>project_root/data/sales.csv</code>. If you <code>cd week12</code> first and then run <code>python solution.py</code>, then <code>"data/sales.csv"</code> means <code>week12/data/sales.csv</code>. Be consistent about your working directory.</p>
+<pre><code># Debug: print your current directory so you know where Python is looking
+import os
+print(os.getcwd())</code></pre>
+
+<h3>Extra blank rows in Excel from Windows line endings</h3>
+<p>When writing CSV files, always use <code>newline=""</code> in the <code>open()</code> call. Without it, Python adds <code>\r\n</code> on Windows, and the csv module also adds its own, resulting in double line endings that appear as blank rows.</p>
+<pre><code># WRONG on Windows — blank rows in Excel
+with open("output.csv", "w") as f:
+    writer = csv.writer(f)
+
+# RIGHT — correct on all platforms
+with open("output.csv", "w", newline="") as f:
+    writer = csv.writer(f)</code></pre>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>You receive a CSV from the accounting team every Monday morning. The column names sometimes change — they've added columns, renamed others. Your script currently accesses columns by index (<code>row[3]</code>). What would you change to make the script robust against column reordering, and what would you still need to handle manually?</li>
+<li>The <code>"w"</code> mode clears the file immediately on open, even before writing anything. Describe a scenario where this causes silent data loss, and explain two defensive strategies to protect against it.</li>
+<li>When would you choose <code>csv.reader</code> over <code>csv.DictReader</code>? Are there situations where the list-based approach is actually preferable to the dictionary approach?</li>
+<li>Your company's data team stores files using absolute paths in all their scripts (<code>/srv/data/sales.csv</code>). They say "this is fine because the server never moves." What are the risks of this approach, and how would you argue for relative paths?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
-<li>Read a 100-row sales CSV and sum the total revenue.</li>
-<li>Write a cleaned version of the CSV with a new &quot;total&quot; column.</li>
-<li>Compare csv.reader vs. csv.DictReader — when is each clearer?</li>
+<li>Read a 100-row sales CSV and sum the total revenue using <code>csv.reader</code>.</li>
+<li>Re-read the same file using <code>csv.DictReader</code> — discuss which is clearer and when you'd use each.</li>
+<li>Write a cleaned version of the CSV with a new "total" column computed from price × quantity.</li>
+<li>Filter the CSV to only rows where total exceeds a threshold; write results to a new file.</li>
+<li>Deliberately open a file with <code>"w"</code> mode and observe that it empties even if you write nothing — discuss why this matters.</li>
+<li>Add <code>encoding="utf-8"</code> and observe the difference when the file contains special characters.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul style="margin:0;padding-left:18px;">
+<li>Always use <code>with open(...) as f:</code> — it closes the file automatically and is safer than manual close.</li>
+<li><code>"w"</code> mode clears the file immediately; use <code>"a"</code> to append, not <code>"w"</code>.</li>
+<li>CSV values are always strings — convert with <code>float()</code> and <code>int()</code> before arithmetic.</li>
+<li>Use <code>csv.DictReader</code> for readable column access by name; use <code>csv.reader</code> for simple sequential access.</li>
+<li>Use relative paths — <code>"data/sales.csv"</code> not <code>"/Users/yourname/..."</code> — so your code runs on any machine.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation context verbatim or with minor variation. See the <a href="week12_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Capstone-Eligible</strong>. Questions repeat on the capstone evaluation verbatim or with minor variation. See the <a href="week12_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
-<div class="callout green">
-<div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week12_lab.html">Week 12 Lab</a></p>
+
+<div class="pn">
+<a href="week12_reading.html"><div class="label">← Previous</div><div class="title">Module 12 · Reading</div></a>
+<a class="next" href="week12_lab.html"><div class="label">Next →</div><div class="title">Module 12 · Lab</div></a>
 </div>
 </div>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 7 Reading · Functions, Debugging &amp; AI Literacy — ISM2411</title>
+<title>Module 7 Reading · Functions, Debugging &amp; AI Literacy — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -37,91 +37,29 @@
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
 body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
 .wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
-.page-eyebrow {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
-}
-h1 {
-  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
-  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
-}
-h2 {
-  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-  letter-spacing: -.01em;
-}
-h3 {
-  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
-  letter-spacing: -.005em;
-}
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; letter-spacing: -.005em; }
 p, ul, ol { color: var(--text); font-size: 15.5px; }
 ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
-.lede {
-  font-size: 17.5px; color: var(--muted); line-height: 1.6;
-  margin: 0 0 28px; max-width: 720px;
-}
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
-
-/* code blocks */
-code {
-  font-family: var(--mono); font-size: .92em;
-  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
-  border: 1px solid var(--border);
-}
-pre {
-  background: var(--code-bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
-  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
-  color: #f0f0f5;
-}
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.55; color: #f0f0f5; }
 pre code { background: none; padding: 0; border: 0; color: inherit; }
-
-/* meta bar */
-.meta {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 8px 0 28px; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-}
-.meta .chip {
-  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
-  color: var(--muted);
-}
+.meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 28px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-family: var(--mono); font-size: 12px; }
+.meta .chip { padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px; color: var(--muted); }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
-
-/* week jump bar — quick switch between reading/lecture/lab */
-.weekjump {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  margin: 0 0 32px; padding: 10px 14px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-}
-.weekjump-label {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--dim); text-transform: uppercase; margin-right: 4px;
-}
-.weekjump-link {
-  padding: 5px 12px; border-radius: 999px; text-decoration: none;
-  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
-  transition: background .12s, color .12s, border-color .12s;
-}
+.weekjump { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 32px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+.weekjump-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--dim); text-transform: uppercase; margin-right: 4px; }
+.weekjump-link { padding: 5px 12px; border-radius: 999px; text-decoration: none; font-size: 13px; color: var(--muted); border: 1px solid var(--border2); transition: background .12s, color .12s, border-color .12s; }
 .weekjump-link:hover { color: var(--text); border-color: var(--accent); }
-.weekjump-link.current {
-  background: rgba(251,191,36,.12); color: var(--accent);
-  border-color: rgba(251,191,36,.4);
-}
-
-/* callout boxes */
-.callout {
-  margin: 22px 0; padding: 16px 20px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: 8px;
-}
-.callout-title {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
+.weekjump-link.current { background: rgba(251,191,36,.12); color: var(--accent); border-color: rgba(251,191,36,.4); }
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
 .callout p:last-child { margin-bottom: 0; }
 .callout.green { border-left-color: #34d399; }
 .callout.green .callout-title { color: #34d399; }
@@ -131,142 +69,167 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .callout.pink .callout-title { color: #f472b6; }
 .callout.purple { border-left-color: #c084fc; }
 .callout.purple .callout-title { color: #c084fc; }
-
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
-}
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
-}
+.topic-list { list-style: none; padding: 0; margin: 16px 0; }
+.topic-list li { position: relative; padding: 8px 0 8px 28px; border-bottom: 1px dashed var(--border); }
 .topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
-}
-
-/* prev/next nav */
-.pn {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-top: 60px;
-}
-.pn a {
-  display: block; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; text-decoration: none; color: var(--text);
-  transition: background .15s, transform .15s;
-}
+.topic-list li::before { content: '▸'; position: absolute; left: 6px; color: var(--accent); font-size: 12px; top: 10px; }
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 60px; }
+.pn a { display: block; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: background .15s, transform .15s; }
 .pn a:hover { background: var(--bg3); transform: translateY(-1px); }
-.pn .label {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
-}
+.pn .label { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
-
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
+.quiz-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin: 14px 0; }
+.quiz-q { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--accent); margin-bottom: 8px; }
+.quiz-question { font-weight: 600; margin-bottom: 10px; }
+.quiz-question pre { margin: 8px 0 0; font-size: 12.5px; }
+.quiz-options { list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px; }
 .quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
+.quiz-answer { margin-top: 10px; padding: 8px 12px; background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25); border-radius: 6px; font-family: var(--mono); font-size: 12.5px; color: #34d399; }
+.quiz-answer summary { cursor: pointer; user-select: none; font-weight: 600; list-style: none; }
 .quiz-answer summary::-webkit-details-marker { display: none; }
 .quiz-answer summary::before { content: '▸ '; }
 .quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
+.quiz-answer pre { margin: 8px 0 0; background: var(--code-bg); font-size: 12px; color: #f0f0f5; }
+.concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 12px; margin: 18px 0; }
+.concept-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.concept-card h4 { margin: 0 0 6px; font-size: 13px; font-family: var(--mono); color: var(--accent); letter-spacing: .04em; }
 .concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
-footer {
-  border-top: 1px solid var(--border); padding: 28px;
-  text-align: center; font-family: var(--mono); font-size: 11px;
-  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
-}
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
 </style>
 </head>
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow & Structure · Week 07 · Reading</div>
+<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow &amp; Structure · Module 07 · Reading</div>
 <h1>Functions, Debugging &amp; AI Literacy</h1>
 <p class="lede">A reusable calculate_tax(price, rate) function used across a sales script.</p>
 <div class="meta">
-<span class="chip accent">Week 07</span>
+<span class="chip accent">Module 07</span>
 <span class="chip">Unit 2</span>
 <span class="chip">Reading · Think Python (TP) Ch. 3 — Functions; Ch. 6 — Return Values</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week07_reading.html" class="weekjump-link current">Reading</a>
 <a href="week07_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week07_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>Functions let you name a chunk of logic and reuse it. The same calculate_tax that took 4 lines to write can be called 10,000 times. This week we also have the AI conversation: when AI tools speed up your learning vs. when they replace it.</p>
-<h2>What you will learn this week</h2>
+<p>Functions let you name a chunk of logic and reuse it. The same <code>calculate_tax</code> that took 4 lines to write can be called 10,000 times. Without functions, every time you need to compute the tax on a price, you would copy and paste those 4 lines — and when the tax rate changes, you would have to find every copy and update each one. Functions make that problem disappear: change the function once, and every call to it is automatically updated.</p>
+<p>This module also covers debugging — the skill of reading Python error messages (tracebacks) and using <code>print()</code> to trace what your code is actually doing. Debugging is not a sign that you are bad at programming. It is a core professional skill. Senior developers spend a significant portion of their day debugging, and the difference between a junior and senior developer is often how efficiently they can find and fix bugs. Learning to read a traceback is like learning to read a map: it tells you exactly where things went wrong.</p>
+<p>Finally, we have an explicit conversation about AI tools — specifically ChatGPT, Claude, and GitHub Copilot. These tools are powerful and they are not going away. The question is not whether to use them, but how to use them in a way that builds your skills rather than bypassing them. The three modes of AI use we discuss in this module — Explainer, Debugger, Generator — give you a framework for making that judgment call in any situation.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
-<li>Defining and calling functions</li>
-<li>Parameters, arguments, return values</li>
-<li>Reading tracebacks in plain English</li>
-<li>Tracing logic with print() statements</li>
+<li>Defining and calling functions with def</li>
+<li>Parameters, arguments, and return values</li>
+<li>Scope — why variables inside a function are not visible outside it</li>
+<li>Reading Python tracebacks bottom-up</li>
+<li>Tracing logic with print() statements (print-debugging)</li>
 <li>In-class AI literacy exercise: Debug First, Then Ask</li>
 <li>The three modes of AI use: Explainer, Debugger, Generator</li>
 <li>Disclosure requirements and academic integrity policy</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>A reusable calculate_tax(price, rate) function used across a sales script.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>def</h4>
+<p>The keyword that defines a function. Followed by the function name, parentheses containing parameters, and a colon. The indented body runs every time the function is called. Think of it as creating a named recipe you can use repeatedly.</p>
+</div>
+<div class="concept-card">
+<h4>Parameters vs. Arguments</h4>
+<p>Parameters are the variable names in the function definition (<code>def tax(price, rate):</code>). Arguments are the actual values you pass when you call the function (<code>tax(100, 0.07)</code>). Parameters are placeholders; arguments are the real data.</p>
+</div>
+<div class="concept-card">
+<h4>return</h4>
+<p>Sends a value back to the caller and immediately exits the function. Without a return statement, the function returns <code>None</code>. If you try to use the result of a function that doesn't return anything, you'll get <code>None</code> where you expected a number — a common bug.</p>
+</div>
+<div class="concept-card">
+<h4>Scope</h4>
+<p>Variables created inside a function are local — they only exist during that function call. They do not exist before the function runs or after it returns. This is why you can reuse variable names like <code>total</code> inside different functions without conflict.</p>
+</div>
+<div class="concept-card">
+<h4>Traceback</h4>
+<p>Python's error report. Read it bottom-up: the last line names the error type and gives a description; the lines above show the call chain — which function called which. The most useful line is usually the last one.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>You are a data analyst at a regional retail chain. Every month, the finance team sends you a CSV with thousands of sales records. Each record needs three calculations: the sales tax, the post-discount price, and the final amount due. Without functions, you write those calculations inline every time — and when the tax rate changes from 7% to 7.5%, you have to hunt through hundreds of lines of code to update every occurrence.</p>
+<p>With functions, you write each calculation once, give it a descriptive name, and call it everywhere you need it. The code below shows a complete pricing pipeline — three functions that compose together to handle any sale:</p>
+<pre><code>def calculate_tax(price, rate):
+    """Return the tax amount for a given price and rate."""
+    return price * rate
+
+def apply_discount(price, tier):
+    """Return the discounted price based on the customer tier."""
+    if tier == "gold":
+        return price * 0.85      # 15% off
+    elif tier == "silver":
+        return price * 0.90      # 10% off
+    elif tier == "bronze":
+        return price * 0.95      # 5% off
+    else:
+        return price             # no discount
+
+def calculate_total(price, tier, tax_rate):
+    """Return the final total: discounted price + tax."""
+    discounted = apply_discount(price, tier)
+    tax = calculate_tax(discounted, tax_rate)
+    return discounted + tax
+
+# Apply to multiple records
+products = [("Widget A", 200, "gold"), ("Widget B", 150, "silver")]
+for name, price, tier in products:
+    total = calculate_total(price, tier, 0.07)
+    print(f"{name}: ${total:.2f}")</code></pre>
+<p>Now when the tax rate changes, you update one line — <code>0.07</code> in the call — and all 10,000 records update automatically.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Function</strong> — a named, reusable block of code that optionally takes inputs and returns an output</li>
+<li><strong>def</strong> — the keyword used to define a function in Python</li>
+<li><strong>Parameter</strong> — a variable in the function definition that receives a value when the function is called</li>
+<li><strong>Argument</strong> — the actual value passed to a function when it is called</li>
+<li><strong>return</strong> — sends a value back to the caller and exits the function; without it, the function returns None</li>
+<li><strong>Scope</strong> — the region of code where a variable is accessible; variables inside a function are local to that function</li>
+<li><strong>Traceback</strong> — Python's error report, read bottom-up; the last line shows the error type and message</li>
+<li><strong>Print-debugging</strong> — inserting temporary print() statements to inspect variable values at specific points in execution</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>1. "A function runs automatically when you define it."</strong> No — <code>def</code> only creates the function. Nothing runs until you call it by name with parentheses: <code>calculate_tax(100, 0.07)</code>.</p>
+<p><strong>2. "If a function has no return statement, it returns 0."</strong> No — it returns <code>None</code>. If you store the result and later try to do math with it, you will get a <code>TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</code>.</p>
+<p><strong>3. "AI tools can debug my code for me, so I don't need to learn debugging."</strong> AI tools are very good at explaining error messages. They are much less reliable at understanding the specific context of your code, especially when the bug is a logic error rather than a syntax error. You must be able to debug independently.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>In Module 08 you will use Git and GitHub to track changes to your code — including the functions you write in this module. A well-named function with a good docstring is much easier to understand when you revisit it weeks later, which is exactly why version control and good naming conventions go hand-in-hand.</p>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 3 — Functions; Ch. 6 — Return Values</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap03.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap03.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Intermediate Python (#2) — in progress</p>
 </div>
+
 <h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
 <div class="quiz-question">What keyword defines a function in Python?</div>
@@ -278,6 +241,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">def</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -286,6 +250,7 @@ footer {
 print(greet(&#x27;Maria&#x27;))</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Hello, Maria</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
 <div class="quiz-question">What does tax(200, 0.1) return?</div>
@@ -294,6 +259,7 @@ print(greet(&#x27;Maria&#x27;))</code></pre>
 print(tax(200, 0.1))</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">20.0</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
 <div class="quiz-question">What is a function parameter?</div>
@@ -305,6 +271,7 @@ print(tax(200, 0.1))</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A variable that receives a value when the function is called</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Code Trace</div>
 <div class="quiz-question">What error does this produce and why?</div>
@@ -313,6 +280,7 @@ print(tax(200, 0.1))</code></pre>
 print(add(5))</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">TypeError — add() requires 2 arguments but only 1 was given</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
 <div class="quiz-question">Which best describes a traceback?</div>
@@ -324,6 +292,7 @@ print(add(5))</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An error message showing where and why a program failed</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q7 · Code Trace</div>
 <div class="quiz-question">What is the output?</div>
@@ -333,9 +302,33 @@ result = double(double(3))
 print(result)</code></pre>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">12 <span style="color:var(--muted);">— double(3)=6, double(6)=12</span></div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Code Trace</div>
+<div class="quiz-question">What does this print, and why?</div>
+<pre><code>def no_return(x):
+    x * 2   # no return statement!
+
+result = no_return(5)
+print(result)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">None <span style="color:var(--muted);">— The function computes x * 2 but never returns it. Without return, Python returns None.</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Multiple Choice</div>
+<div class="quiz-question">When should you use AI as an "Explainer" mode rather than a "Generator"?</div>
+<ul class="quiz-options">
+<li>a) When you want the AI to write the whole function for you</li>
+<li>b) When you want to understand what an error message means without getting the fix directly</li>
+<li>c) When you are too tired to debug yourself</li>
+<li>d) Only when the code is very simple</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) When you want to understand what an error message means without getting the fix directly — Explainer mode builds your skills; Generator mode risks submitting code you don't understand.</div></details>
+</div>
+
 <div class="pn">
-<a href="week06_reading.html"><div class="label">← Previous</div><div class="title">Week 06 · Loops</div></a>
-<a class="next" href="week08_reading.html"><div class="label">Next →</div><div class="title">Week 08 · Git &amp; GitHub</div></a>
+<a href="week06_reading.html"><div class="label">← Previous</div><div class="title">Module 06 · Loops</div></a>
+<a class="next" href="week08_reading.html"><div class="label">Next →</div><div class="title">Module 08 · Git &amp; GitHub</div></a>
 </div>
 </div>
 

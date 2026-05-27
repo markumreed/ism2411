@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 14 Reading · Data Cleaning &amp; Descriptive Stats — ISM2411</title>
+<title>Module 14 Reading · Data Cleaning &amp; Descriptive Stats — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -91,7 +91,7 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
 
-/* week jump bar — quick switch between reading/lecture/lab */
+/* week jump bar */
 .weekjump {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   margin: 0 0 32px; padding: 10px 14px;
@@ -227,48 +227,155 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Week 14 · Reading</div>
+<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Module 14 · Reading</div>
 <h1>Data Cleaning &amp; Descriptive Stats</h1>
 <p class="lede">Standardize a sales CSV: drop empty rows, fix column types, rename columns to snake_case.</p>
 <div class="meta">
-<span class="chip accent">Week 14</span>
+<span class="chip accent">Module 14</span>
 <span class="chip">Unit 4</span>
 <span class="chip">Reading · Python Data Science Handbook Ch. 3 — Handling Missing Data; Operating on Data</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">DataCamp due</span>
 <span class="chip" style="color:#f472b6;border-color:#f472b655;">★ Capstone-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week14_reading.html" class="weekjump-link current">Reading</a>
 <a href="week14_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week14_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>There is a saying among data analysts: 80% of the work is cleaning. This week is the 80%. Missing values, wrong types, weird column names — once you can handle these, you can analyze any dataset that lands on your desk.</p>
-<h2>What you will learn this week</h2>
+<p>There is a widely quoted estimate among data professionals: roughly 80% of analytical work is data cleaning. That number feels dramatic until the first time you try to compute an average on a column where some values are stored as "$1,200.00" — a string with a dollar sign, a comma, and quotes. pandas will happily load that column, but every arithmetic operation on it will fail with a TypeError until you fix the type. Module 14 is about developing the reflexes to spot these problems before they sink your analysis.</p>
+
+<p>Real business data comes from many sources: CRM systems export dates in inconsistent formats, ERP downloads include header rows mixed with data, manual data entry produces "N/A", "n/a", "NA", and empty cells all meaning the same thing. A data analyst who cannot handle these variations cannot deliver results that anyone trusts. Learning to clean data is not a secondary skill — it is often the primary differentiator between an analyst who ships and one who gets stuck.</p>
+
+<p>The descriptive statistics side of this module is equally practical. Before you answer any business question, you need to understand the data's basic shape: how many rows, how spread out are the values, what is the range, are there impossible values (negative quantities, prices of zero for a premium product)? Running <code>df.describe()</code> in the first 60 seconds of any new dataset is a professional habit worth building now. It takes five seconds and has saved countless hours of downstream confusion.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
-<li>Handling missing values: dropna(), fillna()</li>
-<li>Renaming columns, fixing data types</li>
-<li>Descriptive stats: describe(), mean(), median() — applied, not theoretical</li>
-<li>Identifying and documenting data quality issues</li>
-<li>Business context: cleaning a messy sales dataset</li>
+<li>Handling missing values: <code>df.isnull().sum()</code>, <code>df.dropna()</code>, <code>df.fillna(value)</code></li>
+<li>Renaming columns to snake_case in one line</li>
+<li>Fixing data types: <code>astype(float)</code>, <code>pd.to_datetime()</code></li>
+<li>Removing duplicate rows: <code>df.duplicated()</code>, <code>df.drop_duplicates()</code></li>
+<li>Descriptive stats: <code>df.describe()</code>, <code>.mean()</code>, <code>.median()</code>, <code>.mode()</code>, <code>.std()</code></li>
+<li>Spotting outliers and impossible values with <code>describe()</code></li>
+<li>Documenting cleaning decisions in code comments</li>
+<li>Business context: cleaning a messy sales CSV with "$" prices and bad dates</li>
 </ul>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
-<p>Standardize a sales CSV: drop empty rows, fix column types, rename columns to snake_case.</p>
+<p>You receive a sales export from a legacy system. Prices are stored as strings with dollar signs. Dates are in mixed formats. Customer IDs have missing values. Column names have spaces and capital letters. You must produce a clean file that can be analyzed reliably.</p>
 </div>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>isnull() / isna()</h4>
+<p>Returns a boolean DataFrame where True = missing. Chain with <code>.sum()</code> to count missing values per column. <code>df.isnull().sum()</code> is the first diagnostic you run on any new dataset.</p>
+</div>
+<div class="concept-card">
+<h4>dropna()</h4>
+<p>Remove rows with missing values. Use <code>subset=["col"]</code> to drop only when a specific column is missing. Default drops rows with ANY missing value — often too aggressive for real data.</p>
+</div>
+<div class="concept-card">
+<h4>fillna()</h4>
+<p>Replace missing values with a constant or computed value. <code>df["price"].fillna(0)</code> fills with zero; <code>df["price"].fillna(df["price"].mean())</code> fills with the column mean — a common statistical imputation technique.</p>
+</div>
+<div class="concept-card">
+<h4>astype() / pd.to_datetime()</h4>
+<p><code>df["price"].astype(float)</code> converts a column's dtype. <code>pd.to_datetime(df["date"])</code> parses date strings into proper datetime objects so you can extract month, year, day-of-week, etc.</p>
+</div>
+<div class="concept-card">
+<h4>describe()</h4>
+<p>Returns count, mean, std, min, 25th/50th/75th percentile, and max for all numeric columns in one call. Use it to spot impossible values: negative quantities, prices of exactly zero, max values that are 100× the mean (outliers).</p>
+</div>
+</div>
+
 <h2>Required reading</h2>
 <p><strong>Python Data Science Handbook Ch. 3 — Handling Missing Data; Operating on Data</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html" target="_blank" rel="noopener">https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html</a></p>
+
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Data Manipulation with Pandas (#3) — due; EDA in Python (#7) — begins</p>
 </div>
-<h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Capstone-Eligible</span></h2>
+
+<h2>Business Scenario</h2>
+<p>Your company's sales team exports monthly data from a legacy order management system. The export has 4,800 rows and the following problems: the <code>Price</code> column stores values as strings like <code>"$1,200.00"</code>; the <code>Order Date</code> column has entries in three different date formats (<code>2024-01-15</code>, <code>01/15/2024</code>, and <code>January 15 2024</code>); 7% of rows are missing a <code>Customer ID</code>; and column names have spaces and capital letters. Here is the cleaning script you would write:</p>
+
+<pre><code>import pandas as pd
+
+df = pd.read_csv("data/messy_sales.csv")
+
+# Step 1: Standardize column names
+df.columns = df.columns.str.lower().str.replace(" ", "_")
+# "Order Date" → "order_date", "Customer ID" → "customer_id"
+
+# Step 2: Count missing values — always do this first
+print(df.isnull().sum())
+
+# Step 3: Drop rows missing essential identifiers
+df = df.dropna(subset=["customer_id"])  # drop if customer_id is null
+
+# Step 4: Fill numeric columns with column mean
+df["quantity"] = df["quantity"].fillna(df["quantity"].mean())
+
+# Step 5: Fix price — strip "$" and "," then convert to float
+df["price"] = df["price"].str.replace("$", "", regex=False)
+df["price"] = df["price"].str.replace(",", "", regex=False)
+df["price"] = df["price"].astype(float)
+
+# Step 6: Parse dates — pandas handles mixed formats with errors='coerce'
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
+print(f"Bad dates: {df['order_date'].isnull().sum()}")  # how many failed?
+
+# Step 7: Check for duplicates
+print(f"Duplicate rows: {df.duplicated().sum()}")
+df = df.drop_duplicates()
+
+# Step 8: Descriptive stats on the clean data
+print(df.describe())
+
+# Step 9: Save clean data
+df.to_csv("data/clean_sales.csv", index=False)
+print("Saved clean_sales.csv")</code></pre>
+
+<h2>Key Methods Reference</h2>
+<ul>
+<li><code>df.isnull().sum()</code> — count missing values per column</li>
+<li><code>df.info()</code> — dtypes plus non-null count per column in one view</li>
+<li><code>df.dropna()</code> — drop rows with any missing value</li>
+<li><code>df.dropna(subset=["col"])</code> — drop only if specific column is missing</li>
+<li><code>df["col"].fillna(value)</code> — replace NaN with value or expression</li>
+<li><code>df.columns.str.lower().str.replace(" ","_")</code> — standardize column names</li>
+<li><code>df.rename(columns={"old": "new"})</code> — rename specific columns</li>
+<li><code>df["col"].astype(float)</code> — convert column to numeric type</li>
+<li><code>pd.to_datetime(df["col"])</code> — parse date strings into datetime</li>
+<li><code>df.duplicated().sum()</code> — count duplicate rows</li>
+<li><code>df.drop_duplicates()</code> — remove duplicate rows</li>
+<li><code>df.describe()</code> — summary statistics for all numeric columns</li>
+<li><code>df["col"].mean()</code>, <code>.median()</code>, <code>.mode()</code>, <code>.std()</code> — individual stats</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<p><strong>Pitfall 1 — dropna() removes too many rows:</strong> By default, <code>df.dropna()</code> drops every row with even one missing value. On a dataset where 10 different columns each have 5% missing, you could lose 40% of your data. Use <code>subset=</code> to target only the columns that actually matter, and use <code>fillna()</code> for the rest.</p>
+<p><strong>Pitfall 2 — Forgetting to assign after cleaning:</strong> <code>df["price"].fillna(0)</code> does not modify <code>df</code> — it returns a new Series. You must write <code>df["price"] = df["price"].fillna(0)</code>. The same applies to <code>dropna()</code>, <code>drop_duplicates()</code>, and most other pandas methods.</p>
+<p><strong>Pitfall 3 — Treating the mean as always the right fill value:</strong> Filling missing prices with the column mean sounds reasonable but can introduce bias if prices vary by category. Always think about whether the fill value makes business sense before applying it.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead — Module 15</div>
+<p>Module 15 (Aggregation, Grouping &amp; Visualization) builds directly on a clean dataset. If your data still has string prices or unparsed dates, <code>groupby()</code> will produce wrong results and plotting will fail. The cleaning you do in Module 14 is what makes Module 15 possible.</p>
+</div>
+
+<h2 id="quiz">Module Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Capstone-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
-<div class="quiz-question">What does df.groupby(&#x27;region&#x27;)[&#x27;sales&#x27;].sum() return?</div>
+<div class="quiz-question">What does df.groupby('region')['sales'].sum() return?</div>
 <ul class="quiz-options">
 <li>a) Row count per region</li>
 <li>b) Total sales for each region</li>
@@ -277,12 +384,14 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Total sales for each region</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
-<div class="quiz-question">What does this code produce?</div>
-<pre><code>df[&#x27;profit&#x27;] = df[&#x27;revenue&#x27;] - df[&#x27;cost&#x27;]</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A new column &#x27;profit&#x27; added to the DataFrame: revenue minus cost for each row</div></details>
+<div class="quiz-question">What does this code produce?
+<pre><code>df['profit'] = df['revenue'] - df['cost']</code></pre></div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A new column 'profit' added to the DataFrame: revenue minus cost for each row</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
 <div class="quiz-question">Which method fills missing values with a specified value?</div>
@@ -294,14 +403,16 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">df.fillna()</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
-<div class="quiz-question">What is the output?</div>
+<div class="quiz-question">What is the output?
 <pre><code>import pandas as pd
-df = pd.DataFrame({&#x27;dept&#x27;:[&#x27;HR&#x27;,&#x27;IT&#x27;,&#x27;HR&#x27;,&#x27;IT&#x27;],&#x27;salary&#x27;:[60000,90000,65000,95000]})
-print(df.groupby(&#x27;dept&#x27;)[&#x27;salary&#x27;].mean())</code></pre>
+df = pd.DataFrame({'dept':['HR','IT','HR','IT'],'salary':[60000,90000,65000,95000]})
+print(df.groupby('dept')['salary'].mean())</code></pre></div>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">HR: 62500.0, IT: 92500.0 <span style="color:var(--muted);">— HR: (60k+65k)/2, IT: (90k+95k)/2</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
 <div class="quiz-question">What does describe() return for a numeric column?</div>
@@ -311,11 +422,51 @@ print(df.groupby(&#x27;dept&#x27;)[&#x27;salary&#x27;].mean())</code></pre>
 <li>c) Summary stats: count, mean, std, min, max</li>
 <li>d) First 5 rows</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Summary stats: count, mean, std, min, max</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Summary stats: count, mean, std, min, max (plus 25th, 50th, 75th percentiles)</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What is the one-line command to standardize all column names to lowercase with underscores replacing spaces?</div>
+<ul class="quiz-options">
+<li>a) df.columns = df.columns.lower()</li>
+<li>b) df.rename(columns=str.lower)</li>
+<li>c) df.columns = df.columns.str.lower().str.replace(" ", "_")</li>
+<li>d) df.columns.to_snake_case()</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) — chain .str.lower() and .str.replace(" ", "_") on the Index object</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Code Trace</div>
+<div class="quiz-question">A price column contains "$1,200.00" as a string. Write the two-step pandas code to clean it into a float.</div>
+<details class="quiz-answer"><summary>Answer</summary>
+<pre>df["price"] = df["price"].str.replace("$", "", regex=False)
+df["price"] = df["price"].str.replace(",", "", regex=False).astype(float)</pre>
+</details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">df.dropna(subset=["customer_id"]) does what?</div>
+<ul class="quiz-options">
+<li>a) Drops all columns except customer_id</li>
+<li>b) Drops rows where any column is null</li>
+<li>c) Drops rows where customer_id specifically is null</li>
+<li>d) Fills missing customer_ids with zero</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) — subset= targets only specific columns for the missing-value check</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Code Trace</div>
+<div class="quiz-question">After running df.describe(), the min value for quantity_sold is -5. What does this indicate and what should you do?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A negative quantity is likely a data entry error or a return/refund record. You should investigate: filter to rows where quantity_sold &lt; 0 and decide whether to drop them, flag them, or handle them as a separate category. Document your decision in a comment.</div></details>
+</div>
+
 <div class="pn">
-<a href="week13_reading.html"><div class="label">← Previous</div><div class="title">Week 13 · Intro to pandas</div></a>
-<a class="next" href="week15_reading.html"><div class="label">Next →</div><div class="title">Week 15 · Aggregation, Grouping &amp; Visualization</div></a>
+<a href="week13_reading.html"><div class="label">← Previous</div><div class="title">Module 13 · Intro to pandas</div></a>
+<a class="next" href="week15_reading.html"><div class="label">Next →</div><div class="title">Module 15 · Aggregation, Grouping &amp; Visualization</div></a>
 </div>
 </div>
 

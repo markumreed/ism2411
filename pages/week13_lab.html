@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 13 Lab · First DataFrame — Retail Sales Explorer — ISM2411</title>
+<title>Module 13 Lab · First DataFrame — Retail Sales Explorer — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -91,7 +91,7 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
 
-/* week jump bar — quick switch between reading/lecture/lab */
+/* week jump bar */
 .weekjump {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   margin: 0 0 32px; padding: 10px 14px;
@@ -132,20 +132,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .callout.purple { border-left-color: #c084fc; }
 .callout.purple .callout-title { color: #c084fc; }
 
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
-}
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
-}
-.topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
-}
-
 /* prev/next nav */
 .pn {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -165,58 +151,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
 footer {
   border-top: 1px solid var(--border); padding: 28px;
   text-align: center; font-family: var(--mono); font-size: 11px;
@@ -227,54 +161,131 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Week 13 · Lab</div>
+<div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Data Analysis with pandas · Module 13 · Lab</div>
 <h1>First DataFrame — Retail Sales Explorer</h1>
-<p class="lede">Load the retail sales CSV in pandas, explore it, and run your first filters.</p>
+<p class="lede">Load the retail sales CSV in pandas, explore it, and run your first filters. This is the foundation for every subsequent lab and the capstone.</p>
 <div class="meta">
-<span class="chip accent">Week 13 · Lab</span>
+<span class="chip accent">Module 13 · Lab</span>
 <span class="chip">Unit 4</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">GitHub submission</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week13_reading.html" class="weekjump-link">Reading</a>
 <a href="week13_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week13_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;margin-bottom:4px;">EXERCISE 1</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:10px;color:#34d399;letter-spacing:.08em;">BASIC</div>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Load it</div>
-<div style="color:var(--muted);font-size:15px;">import pandas as pd; df = pd.read_csv(&#x27;data/retail_sales.csv&#x27;). Print .head(), .shape, .columns, .dtypes.</div>
+<div style="color:var(--muted);font-size:15px;">Run <code>import pandas as pd; df = pd.read_csv('data/retail_sales.csv')</code>. Then print <code>.head()</code>, <code>.shape</code>, <code>.columns.tolist()</code>, and <code>.dtypes</code>.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: shape should be (5000, 6) or similar; dtypes should show object for text columns and float64/int64 for numbers.</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;margin-bottom:4px;">EXERCISE 2</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:10px;color:#34d399;letter-spacing:.08em;">BASIC</div>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Filter by region</div>
-<div style="color:var(--muted);font-size:15px;">Create south = df[df[&#x27;region&#x27;] == &#x27;South&#x27;]. How many rows?</div>
+<div style="color:var(--muted);font-size:15px;">Create <code>south = df[df['region'] == 'South']</code>. Print <code>len(south)</code>. Then print <code>south.head()</code> to confirm only South rows remain.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: a row count (some fraction of 5000) and a head showing 'South' in every region cell.</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;margin-bottom:4px;">EXERCISE 3</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:10px;color:#34d399;letter-spacing:.08em;">BASIC</div>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Top 5 by revenue</div>
-<div style="color:var(--muted);font-size:15px;">df.sort_values(&#x27;revenue&#x27;, ascending=False).head(5). Print them.</div>
+<div style="color:var(--muted);font-size:15px;">Run <code>df.sort_values('revenue', ascending=False).head(5)</code>. Print the result. Note the index values — they are not 0–4 because you haven't reset the index.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: 5 rows with the highest revenue values, descending order.</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;margin-bottom:4px;">EXERCISE 4</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:10px;color:#fbbf24;letter-spacing:.08em;">INTERMEDIATE</div>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Two-condition filter</div>
-<div style="color:var(--muted);font-size:15px;">Big southern orders: df[(df[&#x27;region&#x27;]==&#x27;South&#x27;) &amp; (df[&#x27;revenue&#x27;]&gt;1000)]. Note the &amp; and parens.</div>
+<div style="color:var(--muted);font-size:15px;">Create <code>big_south = df[(df['region']=='South') &amp; (df['revenue']&gt;1000)]</code>. Note the <code>&amp;</code> and parentheses — both are required. Print the length and the first 5 rows.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: fewer rows than either filter alone; all rows should be South AND revenue &gt; 1000.</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;margin-bottom:4px;">EXERCISE 5</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 5</div>
+<div style="font-family:var(--mono);font-size:10px;color:#fbbf24;letter-spacing:.08em;">INTERMEDIATE</div>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">A new column</div>
-<div style="color:var(--muted);font-size:15px;">df[&#x27;per_unit&#x27;] = df[&#x27;revenue&#x27;] / df[&#x27;quantity&#x27;]. Print .head() again to confirm the new column appears.</div>
+<div style="color:var(--muted);font-size:15px;">Create <code>df['per_unit'] = df['revenue'] / df['quantity']</code>. Print <code>.head()</code> again to confirm the new column appears. Then print the mean per-unit price across all rows.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: head() shows a new per_unit column; mean() returns a single float.</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;margin-bottom:4px;">EXERCISE 6</div>
-<div style="font-weight:700;margin-bottom:6px;">Save</div>
-<div style="color:var(--muted);font-size:15px;">df.to_csv(&#x27;data/explored.csv&#x27;, index=False).</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 6</div>
+<div style="font-family:var(--mono);font-size:10px;color:#fbbf24;letter-spacing:.08em;">INTERMEDIATE</div>
 </div>
+<div style="font-weight:700;margin-bottom:6px;">Unique values</div>
+<div style="color:var(--muted);font-size:15px;">Print <code>df['region'].unique()</code> and <code>df['region'].value_counts()</code>. The first shows all distinct values; the second shows how many rows each value appears in.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected output: array of region names; then a count table showing North, South, East, West (with possible nulls).</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 7</div>
+<div style="font-family:var(--mono);font-size:10px;color:#fbbf24;letter-spacing:.08em;">INTERMEDIATE</div>
+</div>
+<div style="font-weight:700;margin-bottom:6px;">Select columns</div>
+<div style="color:var(--muted);font-size:15px;">Create a new DataFrame with only the columns <code>region</code>, <code>product</code>, and <code>revenue</code>. Print its shape. Notice that selecting a subset of columns is a quick way to reduce memory and focus your analysis.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fbbf24;">EXERCISE 8</div>
+<div style="font-family:var(--mono);font-size:10px;color:#34d399;letter-spacing:.08em;">BASIC</div>
+</div>
+<div style="font-weight:700;margin-bottom:6px;">Save</div>
+<div style="color:var(--muted);font-size:15px;">Run <code>df.to_csv('data/explored.csv', index=False)</code>. Verify the file exists. Open it in a text editor to confirm the header row looks correct.</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 1 · CHALLENGE</div>
+<div style="font-weight:700;margin-bottom:6px;">Top 3 products by average per-unit price in the South</div>
+<div style="color:var(--muted);font-size:15px;">Chain together: filter to South, group by product, compute mean per_unit, sort descending, take top 3. You will need concepts from Module 15 (<code>groupby</code>), but try to reason through it. Hint: <code>south.groupby('product')['per_unit'].mean().sort_values(ascending=False).head(3)</code>.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 2 · CHALLENGE</div>
+<div style="font-weight:700;margin-bottom:6px;">What fraction of total revenue comes from orders above $500?</div>
+<div style="color:var(--muted);font-size:15px;">Filter to big orders, sum their revenue, divide by total revenue, multiply by 100. Express your answer as a percentage rounded to 1 decimal place. Use an f-string to print it cleanly.</div>
+</div>
+
+<h2>Reflection</h2>
+<div class="callout blue">
+<div class="callout-title">Self-assessment</div>
+<p><strong>1.</strong> Without looking at your code, can you explain what a boolean filter does in plain English? Practice saying it out loud.</p>
+<p><strong>2.</strong> What is the difference between <code>df["revenue"]</code> and <code>df[["revenue"]]</code>? When does the distinction matter?</p>
+<p><strong>3.</strong> If a colleague who only knows Excel asked you to explain why you would choose pandas for this task, what is the single most compelling reason you would give?</p>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Submit explore.py via GitHub (week13/), URL to Canvas.</p>
+<p>Submit <code>explore.py</code> (or <code>explore.ipynb</code>) via GitHub in a <code>module13/</code> folder. Paste the GitHub URL into Canvas. Your script must run from top to bottom without errors.</p>
+</div>
+
+<div class="pn">
+<a href="week13_lecture.html"><div class="label">← Previous</div><div class="title">Module 13 · Lecture</div></a>
+<a class="next" href="week14_reading.html"><div class="label">Next →</div><div class="title">Module 14 · Data Cleaning &amp; Descriptive Stats</div></a>
 </div>
 </div>
 

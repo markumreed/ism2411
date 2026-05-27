@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 2 Reading · The Command Line &amp; Your Environment — ISM2411</title>
+<title>Module 2 Reading · The Command Line &amp; Your Environment — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,25 +227,29 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 02 · Reading</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 02 · Reading</div>
 <h1>The Command Line &amp; Your Environment</h1>
 <p class="lede">Navigating to a project folder and running a Python script that processes a sales CSV.</p>
 <div class="meta">
-<span class="chip accent">Week 02</span>
+<span class="chip accent">Module 02</span>
 <span class="chip">Unit 1</span>
 <span class="chip">Reading · Think Python (TP) Ch. 1 — continued</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">DataCamp due</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week02_reading.html" class="weekjump-link current">Reading</a>
 <a href="week02_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week02_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Why this matters</h2>
-<p>The terminal is the place where everyone who works in data and engineering meets. GUIs change every five years; the shell does not. The five commands you learn this week are the same five you will use in 20 years.</p>
-<h2>What you will learn this week</h2>
+<p>The terminal is the place where everyone who works in data and engineering meets. GUIs change every five years; the shell does not. The five commands you learn this module are the same five you will use in 20 years. Every cloud server, every remote machine, every automated pipeline runs through a command line interface. The sooner you make it feel like home, the faster everything else clicks.</p>
+<p>There is a deeper reason too. When you click buttons in a GUI application, the application is issuing shell commands on your behalf — you just cannot see them. The terminal removes the middleman. You issue commands directly to the OS. This means you can do things no GUI can: automate sequences, pipe output from one command into another, schedule scripts to run at midnight, and process files that are too large to open in any desktop app.</p>
+<p>Business analysts who are comfortable at the command line have a compounding advantage. They can navigate to a project folder in three keystrokes instead of clicking through eight nested folders. They can verify that a script ran and produced the right output file without opening a file manager. They can install new Python packages in seconds and check which version of Python is installed without digging through settings menus. This module gives you that power.</p>
+
+<h2>What you will learn this module</h2>
 <ul class="topic-list">
 <li>Terminal basics: cd, ls / dir, mkdir, pwd, clear</li>
 <li>Relative vs. absolute file paths</li>
@@ -253,19 +257,78 @@ footer {
 <li>Running your first Python script from the terminal</li>
 <li>What .py files are and how the interpreter works</li>
 </ul>
+
+<h2>Core Concepts</h2>
+<div class="concept-grid">
+<div class="concept-card">
+<h4>Terminal / Shell</h4>
+<p>A text interface where you type commands and the OS executes them. macOS uses zsh, Linux uses bash, Windows uses PowerShell or cmd. All share the same core navigation commands covered this module.</p>
+</div>
+<div class="concept-card">
+<h4>Working Directory</h4>
+<p>The folder the shell is currently "inside." Every command you run operates relative to this location. <code>pwd</code> tells you where you are; <code>cd</code> moves you. Think of it as your current position on a map.</p>
+</div>
+<div class="concept-card">
+<h4>Absolute Path</h4>
+<p>A path that starts from the root of the file system: <code>/home/alice/projects/sales.csv</code>. It works from anywhere because it is fully specified — like a complete street address including city and country.</p>
+</div>
+<div class="concept-card">
+<h4>Relative Path</h4>
+<p>A path relative to your current working directory: <code>data/sales.csv</code>. Shorter and portable across machines, but only valid if you are in the right directory. <code>./</code> means "starting here"; <code>../</code> means "go up one level."</p>
+</div>
+<div class="concept-card">
+<h4>pip</h4>
+<p>Python's package manager. <code>pip install pandas</code> downloads and installs the pandas library from the internet. Think of it as an app store for Python modules — one command to add new capabilities.</p>
+</div>
+</div>
+
+<h2>Business Scenario</h2>
+<p>A sales operations analyst at a mid-size distributor needs to produce a weekly summary from a CSV file that the ERP system drops into <code>/data/exports/</code> every Friday at 6 PM. Previously she would open File Explorer, navigate to the folder, double-click the CSV, do calculations in Excel, and copy the results into an email — a 45-minute process. After this module, she writes a Python script called <code>weekly_summary.py</code> in VS Code, saves it in her project folder, and runs it from the terminal with <code>python3 weekly_summary.py</code>.</p>
+<p>The script finds the file using its path, reads the data, computes revenue and units sold by region, and prints a formatted summary. Running the script takes eight seconds. She schedules it with a cron job so the summary appears in her inbox automatically every Friday at 6:10 PM. The 45-minute manual process is gone. That automation begins with exactly the skills in this module: knowing where your files are, how to navigate there, and how to run a script.</p>
+
+<h2>Key Vocabulary</h2>
+<ul>
+<li><strong>Terminal (Shell)</strong> — a text-based interface for issuing commands to the operating system</li>
+<li><strong>pwd</strong> — "print working directory"; shows the full path of your current location</li>
+<li><strong>ls</strong> — lists files and folders in the current directory (use <code>dir</code> on Windows cmd)</li>
+<li><strong>cd</strong> — "change directory"; moves you into a different folder (<code>cd ..</code> goes up one level)</li>
+<li><strong>mkdir</strong> — "make directory"; creates a new folder</li>
+<li><strong>Absolute path</strong> — full path from the root: <code>/home/user/data/file.csv</code></li>
+<li><strong>Relative path</strong> — path from your current directory: <code>data/file.csv</code> or <code>../other/file.csv</code></li>
+<li><strong>Python interpreter</strong> — the program that reads your .py file and executes it line by line</li>
+<li><strong>pip</strong> — Python's package installer; use <code>pip install packagename</code> to add libraries</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Common Misconceptions</div>
+<ul style="margin:0;padding-left:18px;">
+<li><strong>"cd takes me to the file, not the folder."</strong> You can only <code>cd</code> into directories, not files. Navigate to the folder containing the file, then reference the file by name.</li>
+<li><strong>"Relative paths are always shorter."</strong> Not always — if you are deep in one branch and the file is in another branch, the relative path with <code>../../</code> can be longer than an absolute path. Use whichever is clearer.</li>
+<li><strong>"python and python3 are the same."</strong> On many systems, <code>python</code> runs Python 2 (old, deprecated) and <code>python3</code> runs Python 3 (current). Always use <code>python3</code> or confirm your setup with <code>python --version</code>.</li>
+</ul>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Looking Ahead</div>
+<p>Module 03 is where you write actual Python code for the first time: variables, data types, and your first <code>print()</code> statement. The terminal skills from this module are how you run that code — you will open the terminal, navigate to your script, and execute it exactly as you practiced here.</p>
+</div>
+
 <div class="callout green">
 <div class="callout-title">Business context</div>
 <p>Navigating to a project folder and running a Python script that processes a sales CSV.</p>
 </div>
+
 <h2>Required reading</h2>
 <p><strong>Think Python (TP) Ch. 1 — continued</strong></p>
 <p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap01.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap01.html</a></p>
 <div class="callout blue">
-<div class="callout-title">DataCamp this week</div>
+<div class="callout-title">DataCamp this module</div>
 <p>Introduction to Shell (#10) — due; Python Data Fundamentals (#1) — begins</p>
 </div>
-<h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
+
+<h2 id="quiz">Module Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
 <p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
 <div class="quiz-question">Which command prints the current working directory?</div>
@@ -277,6 +340,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">pwd <span style="color:var(--muted);">— pwd = print working directory</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
 <div class="quiz-question">What does the cd command do?</div>
@@ -288,6 +352,7 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Changes the current directory</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
 <div class="quiz-question">Which of the following is an absolute path?</div>
@@ -299,14 +364,16 @@ footer {
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">/home/user/data/sales.csv <span style="color:var(--muted);">— Absolute paths start from the root</span></div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
 <div class="quiz-question">What does this terminal sequence do?</div>
 <pre><code>mkdir project
 cd project
 pwd</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Creates a directory called &#x27;project&#x27;, moves into it, then prints its full path</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Creates a directory called 'project', moves into it, then prints its full path</div></details>
 </div>
+
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
 <div class="quiz-question">What file extension do Python scripts use?</div>
@@ -318,9 +385,34 @@ pwd</code></pre>
 </ul>
 <details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">.py</div></details>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What does <code>cd ..</code> do in the terminal?</div>
+<ul class="quiz-options">
+<li>a) Creates a new directory</li>
+<li>b) Moves up one level to the parent directory</li>
+<li>c) Lists hidden files</li>
+<li>d) Clears the screen</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Moves up one level to the parent directory <span style="color:var(--muted);">— <code>..</code> always refers to the parent of the current directory</span></div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q7 · Short Answer</div>
+<div class="quiz-question">What is the difference between a relative path and an absolute path? Give one example of each.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An absolute path starts from the file system root and works from anywhere: <code>/home/alice/data/sales.csv</code>. A relative path starts from the current working directory: <code>data/sales.csv</code>. The relative path only works if you are in the right directory.</div></details>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Q8 · Code Trace</div>
+<div class="quiz-question">You are in <code>/home/alice/projects/</code>. What does <code>cd ../data</code> do?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">It moves up to <code>/home/alice/</code> (the <code>..</code> step) and then into the <code>data</code> directory there, landing at <code>/home/alice/data/</code>.</div></details>
+</div>
+
 <div class="pn">
-<a href="week01_reading.html"><div class="label">← Previous</div><div class="title">Week 01 · What is a Computer?</div></a>
-<a class="next" href="week03_reading.html"><div class="label">Next →</div><div class="title">Week 03 · Variables, Data Types &amp; First Output</div></a>
+<a href="week01_reading.html"><div class="label">← Previous</div><div class="title">Module 01 · What is a Computer?</div></a>
+<a class="next" href="week03_reading.html"><div class="label">Next →</div><div class="title">Module 03 · Variables, Data Types &amp; First Output</div></a>
 </div>
 </div>
 

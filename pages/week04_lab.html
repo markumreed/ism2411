@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 4 Lab · Revenue, Margin &amp; Discount Calculator — ISM2411</title>
+<title>Module 4 Lab · Revenue, Margin &amp; Discount Calculator — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,48 +227,104 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 04 · Lab</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 04 · Lab</div>
 <h1>Revenue, Margin &amp; Discount Calculator</h1>
 <p class="lede">Apply arithmetic, comparison, and logical operators to real business formulas.</p>
 <div class="meta">
-<span class="chip accent">Week 04 · Lab</span>
+<span class="chip accent">Module 04 · Lab</span>
 <span class="chip">Unit 1</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week04_reading.html" class="weekjump-link">Reading</a>
 <a href="week04_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week04_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Revenue</div>
-<div style="color:var(--muted);font-size:15px;">Given price = 50 and quantity = 12, compute and print revenue.</div>
+<div style="color:var(--muted);font-size:15px;">Given price = 50 and quantity = 12, compute and print revenue. Format with a thousands separator and two decimal places.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: <code>Revenue: $600.00</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Margin</div>
-<div style="color:var(--muted);font-size:15px;">Given cost = 32 and price = 50, compute margin = (price - cost) / price. Format as a percentage with f&quot;{margin:.1%}&quot;.</div>
+<div style="color:var(--muted);font-size:15px;">Given cost = 32 and price = 50, compute margin = (price - cost) / price. Format as a percentage with f"{margin:.1%}".</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: <code>Margin: 36.0%</code></div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Two products</div>
-<div style="color:var(--muted);font-size:15px;">Create a small script comparing two products: which one has a higher margin? Use a comparison and print the answer.</div>
+<div style="color:var(--muted);font-size:15px;">Create a small script comparing two products: which one has a higher margin? Use a comparison and print the answer as a boolean: <code>product_a_wins = margin_a &gt; margin_b</code>.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: prints margins for both products and a True/False for which is higher</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Logical combo</div>
-<div style="color:var(--muted);font-size:15px;">Print whether a product is &quot;premium&quot;: price &gt; 100 AND margin &gt; 0.3. Print True/False.</div>
+<div style="color:var(--muted);font-size:15px;">Print whether a product is "premium": price &gt; 100 AND margin &gt; 0.3. Print True/False. Then change the values so one condition is met but not the other, and observe the result.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: <code>is_premium = True</code> (or False depending on your values)</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 5</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 5 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">BASIC</span></div>
 <div style="font-weight:700;margin-bottom:6px;">Common-mistake check</div>
-<div style="color:var(--muted);font-size:15px;">Try 17 / 5 and 17 // 5 and 17 % 5. Predict each output, then run to verify.</div>
+<div style="color:var(--muted);font-size:15px;">Try 17 / 5 and 17 // 5 and 17 % 5. Predict each output before running, then verify. For each one, write a sentence explaining what the operator does and when you would use it in a business calculation.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: <code>3.4</code>, <code>3</code>, <code>2</code> — with written explanations</div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 6 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Full pricing calculator</div>
+<div style="color:var(--muted);font-size:15px;">Write a script that asks the user for: product name, retail price, unit cost, quantity sold, and discount percentage (e.g., 10 for 10%). Compute and print: revenue (before discount), discounted revenue, gross margin, and net profit. Use f-strings with appropriate format specs for all numeric output.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: a formatted report with five lines of output, all values correct for the input provided</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 7 <span style="font-family:var(--mono);font-size:10px;color:#34d399;">INTERMEDIATE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Packaging problem</div>
+<div style="color:var(--muted);font-size:15px;">A warehouse ships items in boxes of 24. Ask the user for the number of items ordered. Print: how many full boxes are needed, how many loose items remain, and whether the order fits in exactly full boxes (no remainder). Use //, %, and a comparison operator.</div>
+<div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;">Expected: for 100 items — <code>Full boxes: 4</code>, <code>Loose items: 4</code>, <code>Exact fit: False</code></div>
+</div>
+
+<h2>Stretch Challenge</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH A <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Break-even calculator</div>
+<div style="color:var(--muted);font-size:15px;">Write a script that asks for: fixed costs (rent, salaries, etc.), variable cost per unit, and retail price per unit. Compute the break-even quantity: the number of units needed to cover all costs. Formula: <code>break_even = fixed_costs / (price - variable_cost)</code>. Use <code>//</code> to get the whole-unit answer and <code>%</code> to show the partial-unit remainder. Format all output professionally.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH B <span style="font-family:var(--mono);font-size:10px;color:#c084fc;">CHALLENGE</span></div>
+<div style="font-weight:700;margin-bottom:6px;">Operator precedence trap</div>
+<div style="color:var(--muted);font-size:15px;">Write five expressions where forgetting parentheses would give the wrong business answer. For each, show: (a) the expression without parentheses and its result, (b) the expression with correct parentheses and its result, (c) one sentence explaining which answer is correct and why. This exercise trains the professional habit of explicit parenthesization.</div>
+</div>
+
+<h2>Reflection</h2>
+
+<div class="callout blue">
+<div class="callout-title">Self-Assessment Questions</div>
+<ol style="margin:0;padding-left:18px;">
+<li>In Exercise 6, what would happen if you forgot to divide the discount percentage by 100 (i.e., used 10 instead of 0.10)? Describe the error this would cause in the output — would Python crash, or would it produce a wrong answer silently?</li>
+<li>The modulo operator (%) might seem obscure, but Exercise 7 shows it solving a real logistics problem. Describe another business scenario where you would need to know both "how many full groups" and "how many are left over."</li>
+<li>Looking back at Modules 01–04, you have gone from "what is a computer" to writing a working pricing calculator that handles user input and produces formatted financial output. What concept from these four modules do you feel least confident about, and what would help you strengthen it?</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Submit calculator.py to Canvas.</p>
+<p>Submit calculator.py to Canvas. Your file should include all exercises (1–7) as a single script, each exercise clearly marked with a comment like <code># --- Exercise 1 ---</code>. All numeric output must use appropriate f-string format specs.</p>
+</div>
+
+<div class="pn">
+<a href="week03_lab.html"><div class="label">← Previous</div><div class="title">Module 03 · Product Pricer with f-strings</div></a>
+<a class="next" href="week05_lab.html"><div class="label">Next →</div><div class="title">Module 05 · Conditionals</div></a>
 </div>
 </div>
 

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Course Assembly Guide — ISM2411</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --u1: #34d399; --u2: #60a5fa; --u3: #c084fc; --u4: #fbbf24; --u5: #f472b6;
+}
+[data-theme="light"] {
+  --bg: #fbfbf7; --bg2: #f5f5ee; --bg3: #ffffff;
+  --text: #1a1a26; --muted: #4a4a5a; --dim: #7a7a8c;
+  --border: rgba(0,0,0,.08); --border2: rgba(0,0,0,.14);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 48px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 17px; font-weight: 700; margin: 30px 0 10px; letter-spacing: -.005em; }
+h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; font-family: var(--mono); color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+
+/* callout boxes */
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.callout p:last-child { margin-bottom: 0; }
+.callout.green { border-left-color: #34d399; }
+.callout.green .callout-title { color: #34d399; }
+.callout.blue { border-left-color: #60a5fa; }
+.callout.blue .callout-title { color: #60a5fa; }
+.callout.purple { border-left-color: #c084fc; }
+.callout.purple .callout-title { color: #c084fc; }
+.callout.pink { border-left-color: #f472b6; }
+.callout.pink .callout-title { color: #f472b6; }
+.callout.red { border-left-color: #f87171; }
+.callout.red .callout-title { color: #f87171; }
+
+/* module catalog table */
+.mod-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+.mod-table th { background: var(--bg2); color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border2); }
+.mod-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.mod-table tr:last-child td { border-bottom: 0; }
+.mod-table tr:hover td { background: var(--bg2); }
+.mod-num { font-family: var(--mono); font-size: 11px; font-weight: 700; }
+.mod-title { font-weight: 600; }
+.mod-topics { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; border: 1px solid; margin: 2px 2px 0 0; }
+.tag.req  { color: #34d399; border-color: rgba(52,211,153,.35); background: rgba(52,211,153,.08); }
+.tag.opt  { color: var(--muted); border-color: var(--border2); }
+.tag.exam { color: #f87171; border-color: rgba(248,113,113,.35); background: rgba(248,113,113,.08); }
+.tag.cap  { color: #f472b6; border-color: rgba(244,114,182,.35); background: rgba(244,114,182,.08); }
+
+/* course plan cards */
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+.plan-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.plan-card-head { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.plan-card-head h3 { margin: 0 0 4px; font-size: 18px; }
+.plan-card-head p { margin: 0; font-size: 13px; color: var(--muted); }
+.plan-card-body { padding: 16px 20px; }
+.week-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; font-size: 14px; }
+.week-item:last-child { margin-bottom: 0; }
+.week-badge { flex-shrink: 0; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 3px 8px; border-radius: 999px; background: var(--bg3); border: 1px solid var(--border2); color: var(--muted); white-space: nowrap; }
+.week-content .mod-ref { font-weight: 600; color: var(--text); display: block; margin-bottom: 2px; }
+.week-content .mod-note { font-size: 12px; color: var(--muted); }
+.skip-note { font-size: 12px; font-family: var(--mono); color: var(--dim); margin: 12px 0 0; padding-top: 12px; border-top: 1px dashed var(--border); }
+
+/* full-width plan */
+.plan-full { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 24px 0; }
+.plan-full-head { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+.plan-full-head h3 { margin: 0 0 4px; }
+.plan-full-head p { margin: 0; color: var(--muted); font-size: 14px; }
+.unit-block { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+.unit-block:last-child { border-bottom: 0; }
+.unit-label { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 10px; }
+.mod-row { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+.mod-row:last-child { border-bottom: 0; }
+.mod-row .mn { font-family: var(--mono); font-size: 11px; color: var(--dim); flex-shrink: 0; width: 72px; }
+.mod-row .mt { font-weight: 600; flex: 1; }
+.mod-row .ms { font-size: 12px; color: var(--muted); }
+
+/* combining guide */
+.combine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+@media (max-width: 600px) { .combine-grid { grid-template-columns: 1fr; } }
+.combine-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.combine-card h4 { margin: 0 0 8px; font-size: 12px; }
+.combine-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+/* assessment table */
+.assess-row { display: grid; grid-template-columns: 120px 1fr 1fr 1fr; gap: 0; }
+.assess-head { background: var(--bg2); font-family: var(--mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; }
+.assess-cell { padding: 10px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); font-size: 13.5px; }
+.assess-cell:last-child { border-right: 0; }
+.assess-cell strong { display: block; font-size: 13px; margin-bottom: 4px; }
+.assess-cell span { font-size: 12px; color: var(--muted); }
+@media (max-width: 680px) { .assess-row { grid-template-columns: 1fr 1fr; } .assess-head:nth-child(3), .assess-head:nth-child(4), .assess-cell:nth-child(3), .assess-cell:nth-child(4) { display: none; } }
+
+/* dependency chain */
+.dep-chain { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 16px 0; }
+.dep-node { font-family: var(--mono); font-size: 12px; padding: 5px 12px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 6px; }
+.dep-arrow { color: var(--dim); font-size: 14px; }
+.dep-node.core { border-color: #34d399; color: #34d399; background: rgba(52,211,153,.08); }
+.dep-node.important { border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,.08); }
+.dep-node.optional { color: var(--muted); }
+
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="main">
+<div class="page-eyebrow">INSTRUCTOR RESOURCE · COURSE DESIGN</div>
+<h1>Course Assembly Guide</h1>
+<p class="lede">This course is built as a library of independent modules. Professors can assemble any subset into a 6-week, 9-week, or full 16-week course without rewriting anything — just choose your modules and assign them in order.</p>
+
+<div class="callout green">
+<div class="callout-title">How this works</div>
+<p>Each module contains three components: a <strong>Reading</strong> page (concepts and quiz), a <strong>Lecture</strong> page (worked examples and in-class activities), and a <strong>Lab</strong> page (hands-on exercises). You can assign all three, or assign only what your format supports. A 90-minute workshop might use the Lecture and Lab only; an asynchronous course might rely on Reading and Lab.</p>
+</div>
+
+<!-- ── MODULE CATALOG ────────────────────────────────────────────────────── -->
+<h2>Module Catalog</h2>
+<p>There are 14 teaching modules plus one midterm module and one capstone module, for 16 modules total. Each module is a complete, self-contained lesson. The table below shows every module, its key topics, approximate time, and which prerequisite modules should come before it.</p>
+
+<table class="mod-table">
+<thead>
+<tr>
+<th>Module</th>
+<th>Title</th>
+<th>Core Topics</th>
+<th>Prereqs</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">M01</span></td>
+<td><span class="mod-title">What is a Computer?</span></td>
+<td class="mod-topics">CPU, RAM, storage; files, paths, directories; what a program is; no coding this module</td>
+<td><span class="tag opt">None</span></td>
+<td>3–5 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">M02</span></td>
+<td><span class="mod-title">The Command Line</span></td>
+<td class="mod-topics">Terminal basics (cd, ls/dir, mkdir, pwd); relative vs. absolute paths; installing Python and VS Code; running first script</td>
+<td><span class="tag req">M01</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">M03</span></td>
+<td><span class="mod-title">Variables &amp; First Output</span></td>
+<td class="mod-topics">Strings, ints, floats, booleans; print() and input(); f-strings; Jupyter notebook; business variables (price, qty, name)</td>
+<td><span class="tag req">M02</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">M04</span></td>
+<td><span class="mod-title">Operators &amp; Expressions</span></td>
+<td class="mod-topics">Arithmetic, comparison, logical operators; order of operations; revenue = price × qty; margin calculations; type mismatches</td>
+<td><span class="tag req">M03</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">M05</span></td>
+<td><span class="mod-title">Conditionals</span></td>
+<td class="mod-topics">if / elif / else; Boolean logic; nested conditionals and when to avoid them; discount tiers; approval thresholds</td>
+<td><span class="tag req">M04</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">M06</span></td>
+<td><span class="mod-title">Loops</span></td>
+<td class="mod-topics">for and while loops; iterating over ranges and lists; break and continue; processing a list of sales transactions</td>
+<td><span class="tag req">M05</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">M07</span></td>
+<td><span class="mod-title">Functions, Debugging &amp; AI Literacy</span></td>
+<td class="mod-topics">Defining and calling functions; parameters and return values; reading tracebacks; print-debugging; the three AI modes; disclosure policy</td>
+<td><span class="tag req">M06</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">M08</span></td>
+<td><span class="mod-title">Git &amp; GitHub</span></td>
+<td class="mod-topics">Why version control; init / add / commit / push; README and folder conventions; all future work submitted via GitHub</td>
+<td><span class="tag req">M07</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:#f87171;">M09</span></td>
+<td><span class="mod-title">Midterm Assessment</span></td>
+<td class="mod-topics">Covers M01–M08; open-note cheatsheet; code trace, multiple choice, bug-fix problems; 60–75 min</td>
+<td><span class="tag exam">M01–M08</span></td>
+<td>75 min exam</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u3);">M10</span></td>
+<td><span class="mod-title">Lists &amp; Tuples</span></td>
+<td class="mod-topics">Indexing and slicing; common list methods (append, remove, sort); when to use tuple; product inventory list</td>
+<td><span class="tag req">M06</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u3);">M11</span></td>
+<td><span class="mod-title">Dictionaries</span></td>
+<td class="mod-topics">Key-value pairs; nesting, adding, updating, deleting; iterating with .items(); customer records and lookup tables</td>
+<td><span class="tag req">M10</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u3);">M12</span></td>
+<td><span class="mod-title">Working with Files</span></td>
+<td class="mod-topics">Reading and writing .txt and .csv; the csv module; relative paths in a repo; import sales data, export cleaned report</td>
+<td><span class="tag req">M11</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">M13</span></td>
+<td><span class="mod-title">Intro to pandas</span></td>
+<td class="mod-topics">Excel vs. Python; DataFrames and Series; pd.read_csv(); view, filter, sort; explore a retail sales dataset</td>
+<td><span class="tag req">M12</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">M14</span></td>
+<td><span class="mod-title">Data Cleaning &amp; Descriptive Stats</span></td>
+<td class="mod-topics">Missing values (fillna, dropna); renaming columns; fixing dtypes; describe(), mean(), median(); clean a messy dataset</td>
+<td><span class="tag req">M13</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">M15</span></td>
+<td><span class="mod-title">Grouping &amp; Visualization</span></td>
+<td class="mod-topics">groupby() and aggregations; bar, line, histogram with matplotlib; seaborn for stats charts; choosing the right chart</td>
+<td><span class="tag req">M14</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u5);">M16</span></td>
+<td><span class="mod-title">Capstone Project</span></td>
+<td class="mod-topics">End-to-end retail sales analysis; load → clean → analyze → visualize → push to GitHub; 5–7 min presentation</td>
+<td><span class="tag cap">M13–M15</span></td>
+<td>8–12 hr</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ── DEPENDENCY MAP ────────────────────────────────────────────────────── -->
+<h2>Learning Dependencies</h2>
+<p>Modules build on each other. Below is the primary dependency chain. Modules marked <span class="tag req">core</span> are prerequisite for everything that follows. The data structures block (M10–M12) can run immediately after the loops module (M06) if you want to defer Git to later.</p>
+
+<h4>Foundations chain</h4>
+<div class="dep-chain">
+  <div class="dep-node core">M01 Computer</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">M02 CLI</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">M03 Variables</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">M04 Operators</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">M05 Conditionals</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">M06 Loops</div>
+</div>
+
+<h4>Control flow → data structures chain</h4>
+<div class="dep-chain">
+  <div class="dep-node core">M06 Loops</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">M07 Functions</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node optional">M08 Git</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">M10 Lists</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">M11 Dicts</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node optional">M12 Files</div>
+</div>
+
+<h4>Data analysis chain</h4>
+<div class="dep-chain">
+  <div class="dep-node important">M10 Lists</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">M13 pandas</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">M14 Cleaning</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">M15 Visualization</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">M16 Capstone</div>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Skipping Git (M08)</div>
+<p>Git is valuable but not prerequisite for data analysis. In compressed courses, you can assign M08 as optional self-study or move it to the end of the course as a "professional practice" add-on. Students can still submit work via Canvas file upload instead of GitHub in the interim.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     6-WEEK COURSE
+═══════════════════════════════════════════════════════════════════════════ -->
+<h2>6-Week Course — Intensive / Workshop Format</h2>
+<p>Designed for boot-camp sessions, professional development workshops, or an accelerated summer intensive. Each "week" is a full day (6–8 hours) or two 3-hour sessions. Six content blocks cover all essential Python-for-business skills; the capstone is a 2-hour mini-project on the final day.</p>
+
+<div class="callout">
+<div class="callout-title">Format assumptions</div>
+<p>This format works best when students meet for full-day sessions (6–8 hours) or twice-weekly for 3 hours per session. DataCamp assignments from the 16-week course are optional here — use them as pre-work or evening practice if students have access.</p>
+</div>
+
+<div class="plan-full">
+<div class="plan-full-head">
+<h3>6-Week Module Map</h3>
+<p>14 teaching modules compressed into 6 intensive blocks. Modules 8, 9, and 12 are deferred or optional.</p>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Block 1 — Python Foundations (Modules 1 + 2 + 3)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M01</span><span class="mt">What is a Computer?</span><span class="ms">Morning session — conceptual only, no coding</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M02</span><span class="mt">The Command Line</span><span class="ms">Afternoon — install Python, run first script</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M03</span><span class="mt">Variables &amp; First Output</span><span class="ms">Combined with Block 1 lab OR as Block 2 opening</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Block 2 — Core Python (Modules 4 + 5)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M04</span><span class="mt">Operators &amp; Expressions</span><span class="ms">Morning — business formulas, revenue, margin</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M05</span><span class="mt">Conditionals</span><span class="ms">Afternoon — if/elif/else, discount tiers</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Block 3 — Control Flow (Modules 6 + 7)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M06</span><span class="mt">Loops</span><span class="ms">Morning — for/while, processing transaction lists</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M07</span><span class="mt">Functions &amp; Debugging</span><span class="ms">Afternoon — def/return, reading tracebacks, AI use policy</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--dim);">M08</span><span class="mt" style="color:var(--muted);">Git &amp; GitHub</span><span class="ms" style="color:var(--dim);">Optional — assign as self-study; submit work via Canvas instead</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Block 4 — Data Structures (Modules 10 + 11)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M10</span><span class="mt">Lists &amp; Tuples</span><span class="ms">Morning — indexing, slicing, list methods</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M11</span><span class="mt">Dictionaries</span><span class="ms">Afternoon — key-value pairs, customer records</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--dim);">M12</span><span class="mt" style="color:var(--muted);">Working with Files</span><span class="ms" style="color:var(--dim);">Skip or compress into a 30-min demo; pandas handles CSVs in Block 5</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Block 5 — Data Analysis with pandas (Modules 13 + 14 + 15)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M13</span><span class="mt">Intro to pandas</span><span class="ms">Morning — DataFrames, read_csv, filter, sort</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M14</span><span class="mt">Data Cleaning</span><span class="ms">Mid-day — missing values, dtypes, describe()</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M15</span><span class="mt">Grouping &amp; Visualization</span><span class="ms">Afternoon — groupby, matplotlib, seaborn</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u5);">Block 6 — Mini Capstone (Module 16, compressed)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u5);">M16</span><span class="mt">Mini Capstone</span><span class="ms">Full day — load dataset → 3 business questions → 3 charts → 3-min presentation</span></div>
+</div>
+</div>
+
+<h3>Assessment — 6-Week Format</h3>
+<ul>
+<li><strong>Block quizzes (3× informal)</strong> — short 5-question checks at end of Blocks 2, 3, and 4. Ungraded; used for pacing.</li>
+<li><strong>Lab submissions (each block)</strong> — students submit the lab notebook from each block. Graded on completion + correctness (rubric: does the code run without errors, does it produce the expected output).</li>
+<li><strong>Mini Capstone (Block 6)</strong> — 3-min presentation using the rubric at <a href="capstone_rubric.html">capstone_rubric.html</a>, compressed to 3 business questions (not 5) and 3 charts (not 5).</li>
+</ul>
+
+<div class="callout purple">
+<div class="callout-title">What to skip and why</div>
+<p><strong>M08 Git</strong>: students need time to master Python logic first. Assign the Git reading as optional evening work. Submit labs via Canvas or email.<br>
+<strong>M09 Midterm</strong>: replace with an ungraded code challenge at end of Block 3 to gauge progress.<br>
+<strong>M12 Files</strong>: pandas handles CSV loading natively; the raw file I/O module adds value in the 16-week version but can be a 20-minute demo in this format.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     9-WEEK COURSE
+═══════════════════════════════════════════════════════════════════════════ -->
+<h2>9-Week Course — Trimester / Accelerated Semester</h2>
+<p>Designed for university trimesters, 10-week quarters (with finals week off), or half-semester intensive electives. Each "week" is one standard class week (2–3 class sessions, 4–6 total hours). All core concepts are covered; Git is included but the formal midterm is replaced with a formative assessment.</p>
+
+<div class="callout">
+<div class="callout-title">Format assumptions</div>
+<p>Two or three class sessions per week, each 75–90 minutes. Labs are completed in class or assigned as take-home (1–2 hours). DataCamp assignments should be trimmed to the 4–5 most relevant courses (see below).</p>
+</div>
+
+<div class="plan-full">
+<div class="plan-full-head">
+<h3>9-Week Module Map</h3>
+<p>14 teaching modules grouped into 8 instructional weeks plus one project week.</p>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Week 1 — Foundations (Modules 1 + 2)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M01</span><span class="mt">What is a Computer?</span><span class="ms">Session 1 — reading + lecture (no lab)</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M02</span><span class="mt">The Command Line</span><span class="ms">Sessions 2–3 — install tools, lab: navigate terminal</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Week 2 — Python Basics (Modules 3 + 4)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M03</span><span class="mt">Variables &amp; First Output</span><span class="ms">Session 1 — reading + lecture</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M04</span><span class="mt">Operators &amp; Expressions</span><span class="ms">Sessions 2–3 — lecture + combined lab for M03–M04</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Week 3 — Control Flow I (Module 5)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M05</span><span class="mt">Conditionals</span><span class="ms">Full week — reading + lecture + lab; spend extra time on nested logic</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Week 4 — Control Flow II (Modules 6 + 7)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M06</span><span class="mt">Loops</span><span class="ms">Sessions 1–2 — reading + lecture + lab</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M07</span><span class="mt">Functions &amp; Debugging</span><span class="ms">Session 3 — lecture + lab; AI literacy discussion</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Week 5 — Version Control + Midpoint Check (Module 8)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M08</span><span class="mt">Git &amp; GitHub</span><span class="ms">Sessions 1–2 — reading + lecture + lab: push all prior labs to GitHub</span></div>
+<div class="mod-row"><span class="mn" style="color:#f87171;">M09★</span><span class="mt">Formative Assessment</span><span class="ms">Session 3 — 45-min ungraded code quiz covering M01–M08 (replaces formal midterm)</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Week 6 — Data Structures (Modules 10 + 11)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M10</span><span class="mt">Lists &amp; Tuples</span><span class="ms">Sessions 1–2 — reading + lecture + lab</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M11</span><span class="mt">Dictionaries</span><span class="ms">Session 3 — lecture + lab</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Week 7 — Files + pandas (Modules 12 + 13)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M12</span><span class="mt">Working with Files</span><span class="ms">Session 1 — compress to reading + 45-min demo lab</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M13</span><span class="mt">Intro to pandas</span><span class="ms">Sessions 2–3 — reading + lecture + lab</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Week 8 — Data Analysis (Modules 14 + 15)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M14</span><span class="mt">Data Cleaning &amp; Descriptive Stats</span><span class="ms">Sessions 1–2 — reading + lecture + lab</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M15</span><span class="mt">Grouping &amp; Visualization</span><span class="ms">Session 3 — lecture + lab</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u5);">Week 9 — Capstone (Module 16, compressed)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u5);">M16</span><span class="mt">Capstone Project</span><span class="ms">Full week — structured milestones Mon–Thu; 5-min presentations Fri (or async video)</span></div>
+</div>
+</div>
+
+<h3>Assessment — 9-Week Format</h3>
+<ul>
+<li><strong>Weekly labs (8×)</strong> — each submitted via GitHub (or Canvas if Git is still new). Graded on the standard lab rubric.</li>
+<li><strong>Formative midpoint check (Week 5)</strong> — 45-minute ungraded in-class quiz. Gives the instructor a read on student readiness before the data-analysis block. Not counted toward final grade; but students must attempt it.</li>
+<li><strong>Capstone project (Week 9)</strong> — use the <a href="capstone_rubric.html">full capstone rubric</a>, scaled to 3 required business questions (the rubric section for question 4 and 5 becomes extra credit).</li>
+</ul>
+
+<h3>DataCamp — 9-Week Recommended Courses</h3>
+<p>If your institution has DataCamp access, assign these 5 courses instead of the full 8-course 16-week list:</p>
+<ol>
+<li>Introduction to Python (#1) — complete by end of Week 2</li>
+<li>Intermediate Python (#2) — complete by end of Week 4</li>
+<li>Data Manipulation with pandas (#3) — complete by end of Week 7</li>
+<li>Introduction to Shell (#10) — complete by end of Week 1</li>
+<li>Introduction to Git (#11) — complete by end of Week 5</li>
+</ol>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     16-WEEK COURSE
+═══════════════════════════════════════════════════════════════════════════ -->
+<h2>16-Week Course — Full Semester</h2>
+<p>The original design. One module per week, with a midterm exam at Week 9. Each week has three dedicated class sessions: Reading (assigned before Tuesday), Lecture (Tuesday), and Lab (Thursday). The full DataCamp curriculum of 8 required courses runs in parallel.</p>
+
+<div class="plan-full">
+<div class="plan-full-head">
+<h3>16-Week Module Map</h3>
+<p>One module per week. The midterm falls at Week 9 (no new content). The capstone occupies all of Week 16.</p>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Unit 1 · Foundations (Modules 1–5)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M01</span><span class="mt">What is a Computer?</span><span class="ms">CPU, memory, storage, files, paths — no coding</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M02</span><span class="mt">The Command Line</span><span class="ms">Terminal, paths, Python install, run first script</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M03</span><span class="mt">Variables &amp; First Output</span><span class="ms">Types, print(), input(), f-strings, Jupyter</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M04</span><span class="mt">Operators &amp; Expressions</span><span class="ms">Arithmetic, comparison, logical; revenue formulas</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">M05</span><span class="mt">Conditionals</span><span class="ms">if / elif / else; decision logic; nested conditionals</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Unit 2 · Control Flow &amp; Structure (Modules 6–8 + Midterm)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M06</span><span class="mt">Loops</span><span class="ms">for / while; break / continue; process transactions</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M07</span><span class="mt">Functions, Debugging &amp; AI Literacy</span><span class="ms">def / return; tracebacks; AI modes; disclosure</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">M08</span><span class="mt">Git &amp; GitHub</span><span class="ms">Version control; push/pull; all work on GitHub from here</span></div>
+<div class="mod-row"><span class="mn" style="color:#f87171;">M09</span><span class="mt">Midterm Exam</span><span class="ms">Covers M01–M08 · open cheatsheet · 75 min · no new content</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Unit 3 · Data Structures (Modules 10–12)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M10</span><span class="mt">Lists &amp; Tuples</span><span class="ms">Indexing, slicing, methods; inventory list</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M11</span><span class="mt">Dictionaries</span><span class="ms">Key-value; nesting; customer records</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">M12</span><span class="mt">Working with Files</span><span class="ms">txt / csv; import data; export cleaned report</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Unit 4 · Data Analysis with pandas (Modules 13–15)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M13</span><span class="mt">Intro to pandas</span><span class="ms">DataFrames; read_csv; filter, sort</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M14</span><span class="mt">Data Cleaning &amp; Descriptive Stats</span><span class="ms">Missing values; dtypes; describe()</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">M15</span><span class="mt">Grouping &amp; Visualization</span><span class="ms">groupby(); matplotlib; seaborn</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u5);">Unit 5 · Capstone (Module 16)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u5);">M16</span><span class="mt">Capstone Project</span><span class="ms">End-to-end retail analysis; 5–7 min presentation; full rubric</span></div>
+</div>
+</div>
+
+<h3>Assessment — 16-Week Format</h3>
+<ul>
+<li><strong>Weekly labs (15×)</strong> — submitted via GitHub. Graded weekly on correctness and completion. Collectively 40% of grade.</li>
+<li><strong>Midterm exam (Week 9)</strong> — 75-minute in-class exam, open cheatsheet. 20% of grade. Covers M01–M08.</li>
+<li><strong>DataCamp completions (8 courses)</strong> — graded on completion, not score. 15% of grade.</li>
+<li><strong>Capstone project (Week 16)</strong> — end-to-end analysis, GitHub repo, live presentation. 25% of grade. Full rubric at <a href="capstone_rubric.html">capstone_rubric.html</a>.</li>
+</ul>
+
+<h3>DataCamp — 16-Week Full Curriculum</h3>
+<p>8 required courses + 2 optional. Assign to run in parallel with lecture content:</p>
+<ol>
+<li>Introduction to Python (#1) — complete by M05</li>
+<li>Intermediate Python (#2) — complete by M08</li>
+<li>Data Manipulation with pandas (#3) — complete by M14</li>
+<li>Joining Data with pandas (#4) — complete by M15</li>
+<li>Introduction to Data Visualization with Matplotlib (#5) — complete by M15</li>
+<li>Introduction to Data Visualization with Seaborn (#6) — complete by M15</li>
+<li>Python Data Science Toolbox I (#7) — complete by M12</li>
+<li>Data Cleaning in Python (#8) — complete by M14</li>
+<li><em>Introduction to Shell (#10) — complete by M02 (optional)</em></li>
+<li><em>Introduction to Git (#11) — complete by M08 (optional)</em></li>
+</ol>
+
+<!-- ── TIPS FOR CUSTOMIZING ─────────────────────────────────────────────── -->
+<h2>Tips for Combining Modules</h2>
+<p>When you merge two modules into one class session, here are the pairings that work best and the strategies that help:</p>
+
+<div class="combine-grid">
+<div class="combine-card">
+<h4>M01 + M02 (Computer + CLI)</h4>
+<p>Morning: conceptual (CPU, memory, paths). Afternoon: hands-on terminal. These share the "file system" mental model so flow naturally. Use M01 as the motivating story, M02 as the practice.</p>
+</div>
+<div class="combine-card">
+<h4>M03 + M04 (Variables + Operators)</h4>
+<p>Variables give you things to work with; operators give you ways to compute with them. Teach assignment in the morning and expressions in the afternoon. Share one extended business scenario (price × quantity = revenue) across both.</p>
+</div>
+<div class="combine-card">
+<h4>M06 + M07 (Loops + Functions)</h4>
+<p>Loops introduce the idea of repetition; functions let you name a block of repeated logic. Teach a loop first, then show how wrapping it in a function makes it reusable. The debugging section of M07 works well as a standalone afternoon exercise.</p>
+</div>
+<div class="combine-card">
+<h4>M10 + M11 (Lists + Dicts)</h4>
+<p>Lists are ordered; dicts are labeled. Teach both on the same dataset (a product inventory) — first as a list, then restructured as a dict. Students see exactly when and why each structure is the right choice.</p>
+</div>
+<div class="combine-card">
+<h4>M13 + M14 (pandas intro + Cleaning)</h4>
+<p>Load the dataset in M13's lab, then immediately clean it in M14. Students stay in the same dataset, so there's no context switch — just progressively richer operations on the same DataFrame.</p>
+</div>
+<div class="combine-card">
+<h4>M14 + M15 (Cleaning + Visualization)</h4>
+<p>Clean the data in the morning; visualize it in the afternoon. Students see the direct payoff of cleaning work. This pairing works especially well in a capstone-prep session.</p>
+</div>
+</div>
+
+<!-- ── WHAT TO SKIP ─────────────────────────────────────────────────────── -->
+<h2>What to Skip (and What to Replace It With)</h2>
+
+<div class="callout red">
+<div class="callout-title">Skipping Git (M08)</div>
+<p><strong>What you lose:</strong> Professional workflow practice, portfolio-ready GitHub presence.<br>
+<strong>What to do instead:</strong> Have students save all work in a <code>ism_course/</code> folder, zip it at the end, and submit via Canvas. Assign the Git reading as optional reading. You can introduce Git in the final week as a "you should know this exists" demo if time permits.</p>
+</div>
+
+<div class="callout">
+<div class="callout-title">Skipping the Midterm (M09)</div>
+<p><strong>What you lose:</strong> A formal summative assessment at the halfway point.<br>
+<strong>What to do instead:</strong> Replace with a 30-minute lab checkpoint where students trace three short code snippets and explain one bug. Grade it pass/fail. This keeps momentum without losing the diagnostic value.</p>
+</div>
+
+<div class="callout blue">
+<div class="callout-title">Skipping File I/O (M12)</div>
+<p><strong>What you lose:</strong> Raw file handling with Python's open() and the csv module.<br>
+<strong>What to do instead:</strong> Reduce M12 to a 20-minute lecture demo (show once, don't lab it). Students learn that open() exists; pandas' read_csv() handles the practical cases in M13. If you need to skip entirely, the pandas modules still work — they just assume the CSV is provided to students.</p>
+</div>
+
+<!-- ── CHOOSING THE RIGHT FORMAT ────────────────────────────────────────── -->
+<h2>Choosing the Right Format</h2>
+<p>If you're uncertain which format to use, this quick decision guide helps:</p>
+<ul>
+<li><strong>Professional development or corporate training</strong> → 6-week intensive. Adults want to see results fast. Skip Git, compress foundations, spend most time on pandas.</li>
+<li><strong>10-week quarter or trimester</strong> → 9-week course. Every core concept is covered at a reasonable pace. Treat the last week as overflow / catch-up if the class runs slow on loops or functions.</li>
+<li><strong>16-week semester with general business students</strong> → Full course as designed. The pacing allows time for confusion and recovery. Weekly labs keep students practiced.</li>
+<li><strong>Graduate elective or MBA module</strong> → Consider starting at M03 (skip computer basics) and ending at M15 (skip or compress capstone). Add one module on APIs or SQL if your students already know Excel well.</li>
+</ul>
+
+<div class="callout green">
+<div class="callout-title">Building your own sequence</div>
+<p>You are not locked into these three formats. The only hard constraint is the dependency chain: M01 → M02 → M03 → M04 → M05 → M06 before anything that involves loops or iteration. Beyond that, M07 (Functions) and M10–M11 (Data Structures) can swap order, M08 (Git) can move anywhere, and the pandas block (M13–M15) is self-contained once students know lists and have a CSV to open. Mix, match, and trim as your course context demands.</p>
+</div>
+
+<div class="pn" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:60px;">
+<a href="../index.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s;">
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">← Home</div>
+  <div style="font-weight:600;font-size:14px;">Full Course Index</div>
+</a>
+<a href="precourse.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s;text-align:right;">
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">Next →</div>
+  <div style="font-weight:600;font-size:14px;">Pre-Course Setup</div>
+</a>
+</div>
+</div>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>

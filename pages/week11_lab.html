@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 11 Lab · Customer Dictionary &amp; Lookup — ISM2411</title>
+<title>Module 11 Lab · Customer Dictionary &amp; Lookup — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -227,54 +227,100 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Week 11 · Lab</div>
+<div class="page-eyebrow" style="color:#c084fc;">Unit 3 · Data Structures · Module 11 · Lab</div>
 <h1>Customer Dictionary &amp; Lookup</h1>
-<p class="lede">Build customer records as dictionaries and use them for tier-based lookups.</p>
+<p class="lede">Build customer records as dictionaries, use tier-based lookups, and process a list of customers with a loop. This is the pattern that underlies every real CRM and analytics workflow.</p>
 <div class="meta">
-<span class="chip accent">Week 11 · Lab</span>
+<span class="chip accent">Module 11 · Lab</span>
 <span class="chip">Unit 3</span>
 <span class="chip" style="color:#34d399;border-color:rgba(52,211,153,.3);">GitHub submission</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week11_reading.html" class="weekjump-link">Reading</a>
 <a href="week11_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week11_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">One customer</div>
-<div style="color:var(--muted);font-size:15px;">Create one customer dict with at least 4 fields: name, email, tier, ytd_spend.</div>
+<div style="color:var(--muted);font-size:15px;">Create one customer dict with at least 4 fields: <code>name</code>, <code>email</code>, <code>tier</code>, <code>ytd_spend</code>. Print each field individually using key access. Then print the whole dict.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: each field on its own line, then the full dict</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 2</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 2 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Update and add</div>
-<div style="color:var(--muted);font-size:15px;">Add a phone field. Update the tier. Delete the email field with del. Print after each step.</div>
+<div style="color:var(--muted);font-size:15px;">Add a <code>phone</code> field. Update the tier to <code>"platinum"</code>. Delete the <code>email</code> field with <code>del</code>. Print the dict after each step so you can see it change.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: 3 printed versions of the dict showing each change</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 3</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 3 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Safe lookup</div>
-<div style="color:var(--muted);font-size:15px;">Use .get() to look up a field that does not exist and provide a default.</div>
+<div style="color:var(--muted);font-size:15px;">Use <code>.get()</code> to look up the <code>email</code> field you deleted in Exercise 2 — provide the default <code>"no email on file"</code>. Confirm it returns the default rather than crashing. Then use bracket notation to look up the same key and observe the KeyError.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: <code>.get()</code> returns default; bracket notation raises KeyError (catch it with try/except)</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 4</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 4 · Beginner</div>
 <div style="font-weight:700;margin-bottom:6px;">Iterate</div>
-<div style="color:var(--muted);font-size:15px;">Print every key:value pair using a for loop with .items().</div>
+<div style="color:var(--muted);font-size:15px;">Print every key:value pair using a <code>for</code> loop with <code>.items()</code>, formatted as <code>"name: Alice"</code>. Then try iterating without <code>.items()</code> and explain in a comment what the difference is.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: each field formatted on its own line</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 5</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 5 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">Lookup table</div>
-<div style="color:var(--muted);font-size:15px;">Build tier_discounts = {&quot;bronze&quot;:0, &quot;silver&quot;:.05, &quot;gold&quot;:.10, &quot;platinum&quot;:.15}. Look up the discount for the customer&#x27;s current tier using .get() with default 0.</div>
+<div style="color:var(--muted);font-size:15px;">Build <code>tier_discounts = {"bronze": 0, "silver": .05, "gold": .10, "platinum": .15}</code>. Look up the discount for the customer's current tier using <code>.get()</code> with default 0. Compute the discounted price for a $200 purchase. Print the tier, discount rate, and final price.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: tier · discount % · final price all printed</div>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 6</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 6 · Intermediate</div>
 <div style="font-weight:700;margin-bottom:6px;">List of dicts</div>
-<div style="color:var(--muted);font-size:15px;">Build a list customers = [dict1, dict2, dict3]. Loop through it and print each customer&#x27;s name and tier.</div>
+<div style="color:var(--muted);font-size:15px;">Build a list <code>customers = [dict1, dict2, dict3]</code> with at least 3 different customers (different tiers). Loop through it and for each customer print their name, tier, and the discount they receive on a $300 purchase using the <code>tier_discounts</code> lookup table.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: one formatted line per customer showing name, tier, discount amount</div>
 </div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 7 · Intermediate</div>
+<div style="font-weight:700;margin-bottom:6px;">Nested catalog</div>
+<div style="color:var(--muted);font-size:15px;">Build a nested product catalog: <code>catalog = {"Widget A": {"price": 9.99, "stock": 150}, "Gadget C": {"price": 49.99, "stock": 8}}</code>. Loop through the catalog and print any product with stock below 20 as a "LOW STOCK" alert.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: only Gadget C triggers the alert</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 8 · Advanced</div>
+<div style="font-weight:700;margin-bottom:6px;">Sales by region</div>
+<div style="color:var(--muted);font-size:15px;">Given a list of transaction dictionaries (each has <code>region</code> and <code>amount</code>), build a summary dictionary where each key is a region name and the value is the total sales for that region. Use a loop and <code>.get(region, 0)</code> to accumulate. Print the final summary sorted by region name.</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Sample input: <code>[{"region": "South", "amount": 300}, {"region": "North", "amount": 150}, {"region": "South", "amount": 200}]</code> → South: 500, North: 150</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+<p>Write a function <code>customer_report(customers, tier_discounts, purchase)</code> that accepts a list of customer dictionaries, a tier-to-discount mapping, and a purchase amount. It should print a formatted table with columns: Name, Tier, Discount, Final Price. Call it with at least 4 customers spanning all four tiers.</p>
+
+<h2>Reflection</h2>
+<div class="callout blue">
+<div class="callout-title">Before you submit</div>
+<p>In a Python comment at the top of your file, answer these two questions in 2-3 sentences each:</p>
+<ol>
+<li>In Exercise 3 you saw the difference between <code>.get()</code> and bracket notation. When in real work would you use each one, and what's your rule of thumb for choosing?</li>
+<li>Exercise 8 asked you to build a summary dictionary with a loop. What does this pattern remind you of from Excel, and why might the Python version be more useful for large datasets?</li>
+</ol>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
-<p>Submit customers.py via GitHub (week11/), URL to Canvas.</p>
+<p>Submit <code>customers.py</code> via GitHub (week11/ folder), URL to Canvas.</p>
+</div>
+
+<div class="pn">
+<a href="week11_lecture.html"><div class="label">← Previous</div><div class="title">Module 11 · Lecture</div></a>
+<a class="next" href="week12_reading.html"><div class="label">Next →</div><div class="title">Module 12 · Working with Files</div></a>
 </div>
 </div>
 

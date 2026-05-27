@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 5 Lab · Tiered Discount Calculator — ISM2411</title>
+<title>Module 5 Lab · Tiered Discount Calculator — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -91,7 +91,7 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
 
-/* week jump bar — quick switch between reading/lecture/lab */
+/* week jump bar */
 .weekjump {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   margin: 0 0 32px; padding: 10px 14px;
@@ -165,58 +165,6 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
 footer {
   border-top: 1px solid var(--border); padding: 28px;
   text-align: center; font-family: var(--mono); font-size: 11px;
@@ -227,43 +175,128 @@ footer {
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Week 05 · Lab</div>
+<div class="page-eyebrow" style="color:#34d399;">Unit 1 · Foundations · Module 05 · Lab</div>
 <h1>Tiered Discount Calculator</h1>
 <p class="lede">Use if/elif/else to apply business decision logic.</p>
 <div class="meta">
-<span class="chip accent">Week 05 · Lab</span>
+<span class="chip accent">Module 05 · Lab</span>
 <span class="chip">Unit 1</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week05_reading.html" class="weekjump-link">Reading</a>
 <a href="week05_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week05_lab.html" class="weekjump-link current">Lab</a>
 </div>
+
 <h2>Exercises</h2>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 1</div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;">EXERCISE 1</div>
+<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:#34d399;">BASIC</span>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Discount tiers</div>
 <div style="color:var(--muted);font-size:15px;">Write a function-free script: ask the user for a cart total. Apply: 15% off if &gt;= $500, 10% off if &gt;= $200, 5% off if &gt;= $100, otherwise no discount. Print the final price.</div>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STARTER CODE</p>
+<pre><code>total = float(input("Enter cart total: $"))
+# Add your if/elif/else here
+discount = 0  # replace with correct logic
+final = total * (1 - discount)
+print(f"Discount: {discount*100:.0f}%")</code></pre>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">EXPECTED OUTPUT (for total = 250)</p>
+<pre><code>Discount: 10%
+Final price: $225.00</code></pre>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 2</div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;">EXERCISE 2</div>
+<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:#34d399;">BASIC</span>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Approval flag</div>
-<div style="color:var(--muted);font-size:15px;">Add a second decision: if final price &gt; $1000, set status = &quot;manager_approval_required&quot;, else status = &quot;auto_approved&quot;. Print the status.</div>
+<div style="color:var(--muted);font-size:15px;">Add a second decision: if final price &gt; $1000, set status = "manager_approval_required", else status = "auto_approved". Print the status.</div>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">EXPECTED OUTPUT (for final = $637.50)</p>
+<pre><code>Status: auto_approved</code></pre>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 3</div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;">EXERCISE 3</div>
+<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;">INTERMEDIATE</span>
+</div>
 <div style="font-weight:700;margin-bottom:6px;">Combine conditions</div>
-<div style="color:var(--muted);font-size:15px;">Modify so that South-region orders get an extra 2% off. Use and to combine region check with total check.</div>
+<div style="color:var(--muted);font-size:15px;">Modify so that South-region orders get an extra 2% off on top of their tier discount. Use <code>and</code> to combine the region check with the total check. Test with region = "South" and total = 250.</div>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">EXPECTED OUTPUT</p>
+<pre><code>Region bonus applied: additional 2% off
+Final discount: 12%
+Final price: $220.00</code></pre>
 </div>
+
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;margin-bottom:4px;">EXERCISE 4</div>
-<div style="font-weight:700;margin-bottom:6px;">Refactor a nested if</div>
-<div style="color:var(--muted);font-size:15px;">Rewrite a nested if (e.g. if region == &quot;South&quot;: if total &gt; 100:...) as a flat one using and. Compare readability.</div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;">EXERCISE 4</div>
+<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;">INTERMEDIATE</span>
 </div>
+<div style="font-weight:700;margin-bottom:6px;">Refactor a nested if</div>
+<div style="color:var(--muted);font-size:15px;">Rewrite the nested if below as a flat one using <code>and</code>. Then add a comment explaining why the flat version is easier to read and test.</div>
+<pre><code># Nested version — rewrite this
+if region == "South":
+    if total &gt; 100:
+        if customer_type == "wholesale":
+            extra_discount = 0.03</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;">EXERCISE 5</div>
+<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;">INTERMEDIATE</span>
+</div>
+<div style="font-weight:700;margin-bottom:6px;">Anomaly flagging</div>
+<div style="color:var(--muted);font-size:15px;">Given a transaction amount, print "NORMAL" if between $1 and $9,999, "SUSPICIOUS" if $0 or negative, and "LARGE — REVIEW REQUIRED" if $10,000 or more. Test with values -50, 500, and 15000.</div>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">EXPECTED OUTPUT (for amount = 15000)</p>
+<pre><code>LARGE — REVIEW REQUIRED</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#34d399;">EXERCISE 6</div>
+<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;">INTERMEDIATE</span>
+</div>
+<div style="font-weight:700;margin-bottom:6px;">Boolean logic</div>
+<div style="color:var(--muted);font-size:15px;">A customer qualifies for a "VIP upgrade" if they have spent more than $2000 total this year OR have placed more than 10 orders. Write the condition. Then add a second rule: they are excluded if their account has any outstanding balance. Use <code>not</code>.</div>
+</div>
+
+<h2>Stretch Challenge</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 1 — CHALLENGE</div>
+<div style="font-weight:700;margin-bottom:6px;">Full pricing engine</div>
+<div style="color:var(--muted);font-size:15px;">Build a script that takes: cart total, customer region, customer type (retail/wholesale), and whether this is their first order. Apply rules in this order: (1) tier discount, (2) regional bonus if South, (3) wholesale extra 5%, (4) first-order 3% welcome discount. Compute and display the final price and a line-by-line breakdown of each discount applied.</div>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 2 — CHALLENGE</div>
+<div style="font-weight:700;margin-bottom:6px;">US federal income tax brackets (simplified)</div>
+<div style="color:var(--muted);font-size:15px;">For a single filer in 2024: 10% on income up to $11,600; 12% on $11,601–$47,150; 22% on $47,151–$100,525. Write an if/elif script that computes the marginal tax for a given income. Note: this is marginal taxation, not flat — each bracket only applies to the income within that range.</div>
+</div>
+
+<h2>Reflection</h2>
+<div class="callout blue">
+<div class="callout-title">Self-Assessment</div>
+<p><strong>1.</strong> Without looking at your code, can you explain in plain English what happens to order_total = 350 as it passes through your discount tier logic? Trace it step by step.</p>
+<p><strong>2.</strong> What is the difference between <code>if total &gt; 100 and total &lt; 500:</code> and two separate if statements checking each condition? Would both produce the same result? Why or why not?</p>
+<p><strong>3.</strong> Where in your day-to-day life do you encounter systems that use tiered conditional logic? (Think: tax brackets, shipping fees, insurance premiums, credit card rewards.) How does knowing Python conditionals change how you think about those systems?</p>
+</div>
+
 <div class="callout">
 <div class="callout-title">Submission</div>
 <p>Submit discount.py to Canvas.</p>
+</div>
+
+<div class="pn">
+<a href="week05_lecture.html"><div class="label">← Back</div><div class="title">Module 05 · Lecture</div></a>
+<a class="next" href="week06_lab.html"><div class="label">Next →</div><div class="title">Module 06 · Lab · Loops</div></a>
 </div>
 </div>
 

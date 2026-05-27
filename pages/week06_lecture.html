@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 6 Lecture · Loops — ISM2411</title>
+<title>Module 6 Lecture · Loops — ISM2411</title>
 <link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
 <style>
 :root {
@@ -41,87 +41,28 @@ body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
   font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
   color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
 }
-h1 {
-  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
-  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
-}
-h2 {
-  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-  letter-spacing: -.01em;
-}
-h3 {
-  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
-  letter-spacing: -.005em;
-}
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; letter-spacing: -.005em; }
 p, ul, ol { color: var(--text); font-size: 15.5px; }
 ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
-.lede {
-  font-size: 17.5px; color: var(--muted); line-height: 1.6;
-  margin: 0 0 28px; max-width: 720px;
-}
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
-
-/* code blocks */
-code {
-  font-family: var(--mono); font-size: .92em;
-  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
-  border: 1px solid var(--border);
-}
-pre {
-  background: var(--code-bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
-  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
-  color: #f0f0f5;
-}
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.55; color: #f0f0f5; }
 pre code { background: none; padding: 0; border: 0; color: inherit; }
-
-/* meta bar */
-.meta {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 8px 0 28px; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-}
-.meta .chip {
-  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
-  color: var(--muted);
-}
+.meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 28px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-family: var(--mono); font-size: 12px; }
+.meta .chip { padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px; color: var(--muted); }
 .meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
-
-/* week jump bar — quick switch between reading/lecture/lab */
-.weekjump {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  margin: 0 0 32px; padding: 10px 14px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-}
-.weekjump-label {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--dim); text-transform: uppercase; margin-right: 4px;
-}
-.weekjump-link {
-  padding: 5px 12px; border-radius: 999px; text-decoration: none;
-  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
-  transition: background .12s, color .12s, border-color .12s;
-}
+.weekjump { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 32px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+.weekjump-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--dim); text-transform: uppercase; margin-right: 4px; }
+.weekjump-link { padding: 5px 12px; border-radius: 999px; text-decoration: none; font-size: 13px; color: var(--muted); border: 1px solid var(--border2); transition: background .12s, color .12s, border-color .12s; }
 .weekjump-link:hover { color: var(--text); border-color: var(--accent); }
-.weekjump-link.current {
-  background: rgba(251,191,36,.12); color: var(--accent);
-  border-color: rgba(251,191,36,.4);
-}
-
-/* callout boxes */
-.callout {
-  margin: 22px 0; padding: 16px 20px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: 8px;
-}
-.callout-title {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
+.weekjump-link.current { background: rgba(251,191,36,.12); color: var(--accent); border-color: rgba(251,191,36,.4); }
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
 .callout p:last-child { margin-bottom: 0; }
 .callout.green { border-left-color: #34d399; }
 .callout.green .callout-title { color: #34d399; }
@@ -131,166 +72,220 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .callout.pink .callout-title { color: #f472b6; }
 .callout.purple { border-left-color: #c084fc; }
 .callout.purple .callout-title { color: #c084fc; }
-
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
-}
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
-}
+.topic-list { list-style: none; padding: 0; margin: 16px 0; }
+.topic-list li { position: relative; padding: 8px 0 8px 28px; border-bottom: 1px dashed var(--border); }
 .topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
-}
-
-/* prev/next nav */
-.pn {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-top: 60px;
-}
-.pn a {
-  display: block; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; text-decoration: none; color: var(--text);
-  transition: background .15s, transform .15s;
-}
+.topic-list li::before { content: '▸'; position: absolute; left: 6px; color: var(--accent); font-size: 12px; top: 10px; }
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 60px; }
+.pn a { display: block; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: background .15s, transform .15s; }
 .pn a:hover { background: var(--bg3); transform: translateY(-1px); }
-.pn .label {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
-  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
-}
+.pn .label { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
-
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
-footer {
-  border-top: 1px solid var(--border); padding: 28px;
-  text-align: center; font-family: var(--mono); font-size: 11px;
-  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
-}
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
 </style>
 </head>
 <body>
 
 <div class="wrap" id="main">
-<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow & Structure · Week 06 · Lecture</div>
+<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow &amp; Structure · Module 06 · Lecture</div>
 <h1>Loops</h1>
 <p class="lede">Loops are the reason we use programming for data work. Anything you want to do to one row of data, a loop lets you do to a million rows.</p>
 <div class="meta">
-<span class="chip accent">Week 06 · Lecture</span>
+<span class="chip accent">Module 06 · Lecture</span>
 <span class="chip">Unit 2</span>
 <span class="chip">75-min session</span>
 </div>
 <div class="weekjump">
-<span class="weekjump-label">This week:</span>
+<span class="weekjump-label">This module:</span>
 <a href="week06_reading.html" class="weekjump-link">Reading</a>
 <a href="week06_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week06_lab.html" class="weekjump-link">Lab</a>
 </div>
+
 <h2>Today's walkthrough</h2>
+
 <h3>for over a list</h3>
-<p>The most common loop pattern: iterate through a collection one item at a time.</p>
+<p>The most common loop pattern: iterate through a collection one item at a time. Python's <code>for</code> loop is designed for this — you do not need an index, a counter, or a length check. Just name the variable that will hold each item, and Python handles the rest.</p>
+<p>The variable name you choose (<code>sale</code>, <code>item</code>, <code>row</code>) should describe what each element represents. It is a temporary variable — it only exists while the loop is running, and it gets overwritten each iteration. After the loop, it holds the last value it was assigned.</p>
+<p>Below is the accumulator pattern in its simplest form. We initialize <code>total</code> to zero before the loop, update it inside the loop, and read the final result after the loop. This three-step pattern — initialize, loop, update — applies to sums, counts, maximums, minimums, and string concatenation.</p>
 <pre><code>sales = [100, 250, 75, 480, 200]
 total = 0
 for sale in sales:
     total += sale
 print(total)  # 1105</code></pre>
+
 <h3>for with range()</h3>
-<p>When you want to repeat something N times or count 0 through N-1, use range().</p>
+<p>When you want to repeat something a fixed number of times, or generate a numeric sequence, use <code>range()</code>. It takes up to three arguments: start, stop (excluded), and step. If you only give one argument, it starts at 0.</p>
+<p>A common use in business: generating row numbers, creating numbered reports, or processing data in fixed-size batches. <code>range()</code> is lazy — it does not store all the numbers in memory at once, which is why it works fine even for <code>range(10_000_000)</code>.</p>
+<p>You can combine <code>range()</code> with <code>len()</code> to get index-based access to a list: <code>for i in range(len(sales)):</code> gives you both the index <code>i</code> and the value <code>sales[i]</code>. This is less Pythonic than a direct for loop, but necessary when you need the index itself.</p>
 <pre><code>for i in range(5):
     print(i)
 # 0 1 2 3 4
 
 for i in range(2, 6):
     print(i)
-# 2 3 4 5</code></pre>
+# 2 3 4 5
+
+# Step argument — every other number
+for i in range(0, 10, 2):
+    print(i)
+# 0 2 4 6 8</code></pre>
+
 <h3>while loops</h3>
-<p>A while loop keeps going as long as a condition is True. Use it when you do not know in advance how many times you will loop.</p>
+<p>A while loop keeps going as long as a condition is True. Use it when you do not know in advance how many iterations you need — for example, reading user input until they enter a valid value, or processing records until you reach the end of a file.</p>
+<p>The critical rule with while loops: something inside the loop must eventually make the condition False, or the loop runs forever. This is called an infinite loop, and it is one of the most common bugs beginners write. The fix is always to ensure the loop variable is updated inside the body.</p>
+<p>A useful mental check before writing a while loop: "What will change between iterations? How will the condition eventually become False?" If you cannot answer both questions, you probably need to restructure the logic.</p>
 <pre><code>count = 0
 while count &lt; 4:
-    print(&quot;hello&quot;)
-    count += 1</code></pre>
+    print("hello")
+    count += 1  # without this line: infinite loop!</code></pre>
+
 <h3>break and continue</h3>
-<p>break exits the loop immediately. continue skips the rest of the current iteration and moves to the next.</p>
+<p><code>break</code> exits the loop immediately — the remaining items are not processed, and Python jumps to the first line after the loop. It is useful for early exit: once you have found what you are looking for, there is no point continuing.</p>
+<p><code>continue</code> skips the rest of the current iteration and moves to the next item. It is useful for filtering: when a condition means the current item should be ignored, <code>continue</code> keeps the loop going while bypassing the processing code for that item.</p>
+<p>Both should be used sparingly. A loop with many breaks and continues becomes hard to reason about. Often, restructuring the logic with an if/else is cleaner and easier to read.</p>
 <pre><code>for sale in sales:
     if sale &lt; 0:
         continue   # skip negatives
     if sale &gt; 10000:
         break      # stop on huge outlier
-    process(sale)</code></pre>
+    print(f"Processing sale: ${sale}")</code></pre>
+
 <h3>The pattern you will use 100 times this semester</h3>
-<p>Initialize, loop, update.</p>
+<p>Initialize, loop, update. This is not just a Python pattern — it is the fundamental structure of any aggregation over a dataset. SQL's GROUP BY, Excel's SUM, pandas' groupby are all abstractions of this same idea.</p>
+<p>The key insight: you cannot get the result in one step. You build it incrementally, one item at a time. The accumulator variable is your running total, running count, or running maximum — it carries state between iterations.</p>
 <pre><code>total = 0          # initialize
 for x in data:     # loop
     total += x     # update
+print(total)       # result</code></pre>
+
+<h2>Detailed Code Walkthrough</h2>
+
+<h3>Walkthrough 1: Full sales report in one pass</h3>
+<p>This example computes four statistics in a single loop. We use four accumulators simultaneously, then do the calculations that require all iterations to be complete (average) after the loop ends.</p>
+<pre><code>sales = [120, 80, 250, 175, 90, 410, 60, 215]
+
+total = 0           # line 3: will hold the sum
+count = 0           # line 4: will hold the number of transactions
+current_max = 0     # line 5: will hold the largest value
+above_100 = 0       # line 6: will count transactions over $100
+
+for sale in sales:              # line 8: iterate over each sale
+    total += sale               # line 9: add to running total
+    count += 1                  # line 10: increment counter
+    if sale &gt; current_max:      # line 11: is this the new max?
+        current_max = sale      # line 12: if so, update max
+    if sale &gt; 100:              # line 13: filter check
+        above_100 += 1          # line 14: increment filtered count
+
+average = total / count         # line 16: calculated AFTER loop completes
+
+print(f"Total:    ${total}")
+print(f"Count:    {count}")
+print(f"Average:  ${average:.2f}")
+print(f"Max:      ${current_max}")
+print(f"Over $100: {above_100}")</code></pre>
+
+<h3>Walkthrough 2: Finding the first match with break</h3>
+<p>This pattern is common in business systems: scan through records and stop as soon as you find one that meets a condition. The <code>found</code> flag tells you whether the loop ended because of break or because it ran out of items.</p>
+<pre><code>transactions = [50, 120, 300, 80, 25, 600, 95]
+threshold = 500
+found = False
+
+for t in transactions:
+    if t &gt;= threshold:
+        print(f"Alert: large transaction found — ${t}")
+        found = True
+        break           # stop after finding the first one
+
+if not found:
+    print("No transactions exceed the threshold.")</code></pre>
+
+<h2>Common Errors</h2>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 1 — Infinite while loop</div>
+<pre><code># WRONG — count never changes, loop runs forever
+count = 0
+while count &lt; 5:
+    print("hello")
+    # forgot: count += 1
+
+# RIGHT
+count = 0
+while count &lt; 5:
+    print("hello")
+    count += 1</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 2 — Accumulator initialized inside the loop</div>
+<pre><code># WRONG — total resets to 0 every iteration!
+for sale in sales:
+    total = 0       # this resets every time — bug!
+    total += sale
+print(total)        # only shows the last sale
+
+# RIGHT — initialize before the loop
+total = 0
+for sale in sales:
+    total += sale
 print(total)</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 3 — Off-by-one in range</div>
+<pre><code># WRONG — range(5) gives 0,1,2,3,4 (not 1-5)
+for i in range(5):
+    print(i)   # prints 0,1,2,3,4
+
+# If you want 1 through 5:
+for i in range(1, 6):
+    print(i)   # prints 1,2,3,4,5</code></pre>
+</div>
+
+<h2>Discussion Questions</h2>
+<ol>
+<li>When would you choose a while loop over a for loop? Give a realistic business scenario where a while loop is the cleaner choice.</li>
+<li>You need to find the average of a list of numbers. How does the accumulator pattern handle division by zero if the list is empty? How would you add a check for this?</li>
+<li>How is Python's for loop similar to Excel's SUMIF function? What can the Python loop do that SUMIF cannot?</li>
+<li>In what situations might break make code harder to maintain? Can you always rewrite a loop with break as one without it?</li>
+</ol>
+
 <h2>In-class activities</h2>
 <ul class="topic-list">
 <li>Sum all the sales in a list, then compute the average.</li>
 <li>Find the largest sale in a list without using max().</li>
 <li>Print only sales above $200.</li>
+<li>Count how many sales are below the average (two-pass: first compute average, then count).</li>
+<li>Use a while loop to simulate a "keep reading until negative" input pattern.</li>
+<li>Pair exercise: write a loop that finds the first sale that exceeds the average — share strategies with your partner.</li>
 </ul>
+
+<div class="callout green">
+<div class="callout-title">Key Takeaways</div>
+<ul>
+<li>The accumulator pattern (initialize → loop → update) is the foundation of all aggregation in data work.</li>
+<li>Use for when you are iterating over a collection; use while when the stopping condition depends on runtime state.</li>
+<li><code>range(stop)</code> starts at 0 and excludes stop — <code>range(5)</code> gives 0, 1, 2, 3, 4.</li>
+<li><code>break</code> exits the loop; <code>continue</code> skips to the next iteration — they are not interchangeable.</li>
+<li>Always initialize your accumulator variables before the loop begins, not inside it.</li>
+</ul>
+</div>
+
 <div class="callout">
 <div class="callout-title">Quiz reminder</div>
-<p>This week's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week06_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
+<p>This module's quiz is <strong>★ Midterm-Eligible</strong>. Questions repeat on the midterm verbatim or with minor variation. See the <a href="week06_reading.html#quiz">reading page</a> for the full quiz with answers.</p>
 </div>
 <div class="callout green">
 <div class="callout-title">Next session</div>
-<p>Hands-on lab: <a href="week06_lab.html">Week 6 Lab</a></p>
+<p>Hands-on lab: <a href="week06_lab.html">Module 6 Lab</a></p>
+</div>
+
+<div class="pn">
+<a href="week05_lecture.html"><div class="label">← Previous</div><div class="title">Module 05 · Conditionals</div></a>
+<a class="next" href="week07_lecture.html"><div class="label">Next →</div><div class="title">Module 07 · Functions, Debugging &amp; AI Literacy</div></a>
 </div>
 </div>
 
