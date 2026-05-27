@@ -1,0 +1,173 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ISM2411 Site-wide JS — nav, theme toggle, font-size controls
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function() {
+  // ── path detection ──────────────────────────────────────────────────────
+  const path = location.pathname;
+  const inPages = /\/pages\//.test(path) || /pages\//.test(path);
+  const root = inPages ? '../' : './';
+  const pg = inPages ? './' : 'pages/';
+
+  // ── theme (light / dark) ────────────────────────────────────────────────
+  const savedTheme = localStorage.getItem('ism2411-theme');
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme || (systemDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', initialTheme);
+
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('ism2411-theme', t);
+    const btn = document.getElementById('ism-theme-btn');
+    if (btn) btn.textContent = t === 'dark' ? '☀' : '☾';
+  }
+
+  // ── font size ────────────────────────────────────────────────────────────
+  const fontSizes = [14, 15, 16, 17, 18, 20, 22];
+  let fontIdx = parseInt(localStorage.getItem('ism2411-font') || '2', 10);
+  function applyFont() {
+    const px = fontSizes[fontIdx];
+    let s = document.getElementById('ism-font-style');
+    if (!s) {
+      s = document.createElement('style');
+      s.id = 'ism-font-style';
+      document.head.appendChild(s);
+    }
+    s.textContent = `body{font-size:${px}px !important;}`;
+    localStorage.setItem('ism2411-font', String(fontIdx));
+  }
+  applyFont();
+
+  // ── nav HTML ─────────────────────────────────────────────────────────────
+  const nav = document.createElement('nav');
+  nav.className = 'ism-nav';
+  nav.setAttribute('aria-label', 'Site navigation');
+  nav.innerHTML = `
+    <a class="nav-home" href="${root}index.html">ISM2411</a>
+
+    <div class="nav-dd">
+      <button class="nav-dd-btn" data-dd="precourse" aria-haspopup="true" aria-expanded="false">Start Here ▾</button>
+      <div class="nav-dd-menu" data-menu="precourse">
+        <a href="${pg}precourse.html">Pre-course Setup</a>
+        <a href="${pg}syllabus.html">Syllabus</a>
+        <a href="${pg}unit_all_overview.html">All Units Overview</a>
+      </div>
+    </div>
+
+    <div class="nav-dd">
+      <button class="nav-dd-btn" data-dd="u1" aria-haspopup="true" aria-expanded="false">Unit 1 ▾</button>
+      <div class="nav-dd-menu" data-menu="u1">
+        <div class="dd-section">Unit 1 · Foundations</div>
+        <a href="${pg}unit_1_overview.html">Overview</a>
+        <a href="${pg}unit_1_cheatsheet.html">Cheat Sheet</a>
+        <a href="${pg}week01_reading.html">Week 1 · What is a Computer?</a>
+        <a href="${pg}week02_reading.html">Week 2 · The Command Line</a>
+        <a href="${pg}week03_reading.html">Week 3 · Variables &amp; Data Types</a>
+        <a href="${pg}week04_reading.html">Week 4 · Operators</a>
+        <a href="${pg}week05_reading.html">Week 5 · Conditionals</a>
+      </div>
+    </div>
+
+    <div class="nav-dd">
+      <button class="nav-dd-btn" data-dd="u2" aria-haspopup="true" aria-expanded="false">Unit 2 ▾</button>
+      <div class="nav-dd-menu" data-menu="u2">
+        <div class="dd-section">Unit 2 · Control Flow &amp; Structure</div>
+        <a href="${pg}unit_2_overview.html">Overview</a>
+        <a href="${pg}unit_2_cheatsheet.html">Cheat Sheet</a>
+        <a href="${pg}week06_reading.html">Week 6 · Loops</a>
+        <a href="${pg}week07_reading.html">Week 7 · Functions &amp; AI Literacy</a>
+        <a href="${pg}week08_reading.html">Week 8 · Git &amp; GitHub</a>
+        <a href="${pg}week09_midterm.html">Week 9 · Midterm</a>
+      </div>
+    </div>
+
+    <div class="nav-dd">
+      <button class="nav-dd-btn" data-dd="u3" aria-haspopup="true" aria-expanded="false">Unit 3 ▾</button>
+      <div class="nav-dd-menu" data-menu="u3">
+        <div class="dd-section">Unit 3 · Data Structures</div>
+        <a href="${pg}unit_3_overview.html">Overview</a>
+        <a href="${pg}unit_3_cheatsheet.html">Cheat Sheet</a>
+        <a href="${pg}week10_reading.html">Week 10 · Lists &amp; Tuples</a>
+        <a href="${pg}week11_reading.html">Week 11 · Dictionaries</a>
+        <a href="${pg}week12_reading.html">Week 12 · Files &amp; CSVs</a>
+      </div>
+    </div>
+
+    <div class="nav-dd">
+      <button class="nav-dd-btn" data-dd="u4" aria-haspopup="true" aria-expanded="false">Unit 4 ▾</button>
+      <div class="nav-dd-menu" data-menu="u4">
+        <div class="dd-section">Unit 4 · pandas</div>
+        <a href="${pg}unit_4_overview.html">Overview</a>
+        <a href="${pg}unit_4_cheatsheet.html">Cheat Sheet</a>
+        <a href="${pg}week13_reading.html">Week 13 · Intro to pandas</a>
+        <a href="${pg}week14_reading.html">Week 14 · Cleaning &amp; Stats</a>
+        <a href="${pg}week15_reading.html">Week 15 · Grouping &amp; Charts</a>
+      </div>
+    </div>
+
+    <div class="nav-dd">
+      <button class="nav-dd-btn" data-dd="u5" aria-haspopup="true" aria-expanded="false">Unit 5 ▾</button>
+      <div class="nav-dd-menu" data-menu="u5">
+        <div class="dd-section">Unit 5 · Capstone</div>
+        <a href="${pg}unit_5_overview.html">Overview</a>
+        <a href="${pg}week16_capstone.html">Week 16 · Capstone Build</a>
+      </div>
+    </div>
+
+    <div class="nav-spacer"></div>
+
+    <div class="nav-tools">
+      <button id="ism-font-down" class="tool-btn" aria-label="Decrease font size" title="Smaller text">A−</button>
+      <button id="ism-font-up" class="tool-btn" aria-label="Increase font size" title="Larger text">A+</button>
+      <button id="ism-theme-btn" class="tool-btn" aria-label="Toggle theme" title="Light / dark">${initialTheme === 'dark' ? '☀' : '☾'}</button>
+    </div>
+  `;
+
+  // ── insert skip link + nav ───────────────────────────────────────────────
+  const skip = document.createElement('a');
+  skip.href = '#main';
+  skip.className = 'skip-link';
+  skip.textContent = 'Skip to main content';
+
+  document.body.prepend(nav);
+  document.body.prepend(skip);
+
+  // ── dropdown behaviour ──────────────────────────────────────────────────
+  document.querySelectorAll('.nav-dd-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const key = btn.dataset.dd;
+      const menu = document.querySelector(`[data-menu="${key}"]`);
+      const isOpen = menu.classList.contains('open');
+      document.querySelectorAll('.nav-dd-menu').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.nav-dd-btn').forEach(b => b.setAttribute('aria-expanded','false'));
+      if (!isOpen) {
+        menu.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-dd-menu').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.nav-dd-btn').forEach(b => b.setAttribute('aria-expanded','false'));
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.nav-dd-menu').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.nav-dd-btn').forEach(b => b.setAttribute('aria-expanded','false'));
+    }
+  });
+
+  // ── theme button ─────────────────────────────────────────────────────────
+  document.getElementById('ism-theme-btn').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+
+  // ── font buttons ─────────────────────────────────────────────────────────
+  document.getElementById('ism-font-up').addEventListener('click', () => {
+    if (fontIdx < fontSizes.length - 1) { fontIdx++; applyFont(); }
+  });
+  document.getElementById('ism-font-down').addEventListener('click', () => {
+    if (fontIdx > 0) { fontIdx--; applyFont(); }
+  });
+})();

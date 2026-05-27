@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 6 Reading · Loops — ISM2411</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --code-bg2:  #1a1a26;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --code-bg:  #1a1a26;
+  --code-bg2: #15151f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
+}
+h2 {
+  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  letter-spacing: -.01em;
+}
+h3 {
+  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
+  letter-spacing: -.005em;
+}
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede {
+  font-size: 17.5px; color: var(--muted); line-height: 1.6;
+  margin: 0 0 28px; max-width: 720px;
+}
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+
+/* code blocks */
+code {
+  font-family: var(--mono); font-size: .92em;
+  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+  color: #f0f0f5;
+}
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+
+/* meta bar */
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 8px 0 28px; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  font-family: var(--mono); font-size: 12px;
+}
+.meta .chip {
+  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
+  color: var(--muted);
+}
+.meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
+
+/* week jump bar — quick switch between reading/lecture/lab */
+.weekjump {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 0 0 32px; padding: 10px 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+}
+.weekjump-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--dim); text-transform: uppercase; margin-right: 4px;
+}
+.weekjump-link {
+  padding: 5px 12px; border-radius: 999px; text-decoration: none;
+  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
+.weekjump-link.current {
+  background: rgba(251,191,36,.12); color: var(--accent);
+  border-color: rgba(251,191,36,.4);
+}
+
+/* callout boxes */
+.callout {
+  margin: 22px 0; padding: 16px 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+}
+.callout-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout.green { border-left-color: #34d399; }
+.callout.green .callout-title { color: #34d399; }
+.callout.blue { border-left-color: #60a5fa; }
+.callout.blue .callout-title { color: #60a5fa; }
+.callout.pink { border-left-color: #f472b6; }
+.callout.pink .callout-title { color: #f472b6; }
+.callout.purple { border-left-color: #c084fc; }
+.callout.purple .callout-title { color: #c084fc; }
+
+/* topic list */
+.topic-list {
+  list-style: none; padding: 0; margin: 16px 0;
+}
+.topic-list li {
+  position: relative; padding: 8px 0 8px 28px;
+  border-bottom: 1px dashed var(--border);
+}
+.topic-list li:last-child { border-bottom: 0; }
+.topic-list li::before {
+  content: '▸'; position: absolute; left: 6px; color: var(--accent);
+  font-size: 12px; top: 10px;
+}
+
+/* prev/next nav */
+.pn {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 60px;
+}
+.pn a {
+  display: block; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  transition: background .15s, transform .15s;
+}
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
+}
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+
+/* quiz */
+.quiz-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+}
+.quiz-q {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--accent); margin-bottom: 8px;
+}
+.quiz-question {
+  font-weight: 600; margin-bottom: 10px;
+}
+.quiz-question pre {
+  margin: 8px 0 0; font-size: 12.5px;
+}
+.quiz-options {
+  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
+}
+.quiz-options li { padding: 3px 0; color: var(--muted); }
+.quiz-answer {
+  margin-top: 10px; padding: 8px 12px;
+  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
+  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
+  color: #34d399;
+}
+.quiz-answer summary {
+  cursor: pointer; user-select: none; font-weight: 600;
+  list-style: none;
+}
+.quiz-answer summary::-webkit-details-marker { display: none; }
+.quiz-answer summary::before { content: '▸ '; }
+.quiz-answer[open] summary::before { content: '▾ '; }
+.quiz-answer pre {
+  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
+  color: #f0f0f5;
+}
+
+/* concept cards */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 12px; margin: 18px 0;
+}
+.concept-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.concept-card h4 {
+  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
+  color: var(--accent); letter-spacing: .04em;
+}
+.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="main">
+<div class="page-eyebrow" style="color:#60a5fa;">Unit 2 · Control Flow & Structure · Week 06 · Reading</div>
+<h1>Loops</h1>
+<p class="lede">Summing a list of sales totals, finding the largest order in a batch.</p>
+<div class="meta">
+<span class="chip accent">Week 06</span>
+<span class="chip">Unit 2</span>
+<span class="chip">Reading · Think Python (TP) Ch. 7 — Iteration and Search</span>
+<span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm-Eligible</span>
+</div>
+<div class="weekjump">
+<span class="weekjump-label">This week:</span>
+<a href="week06_reading.html" class="weekjump-link current">Reading</a>
+<a href="week06_lecture.html" class="weekjump-link">Lecture</a>
+<a href="week06_lab.html" class="weekjump-link">Lab</a>
+</div>
+<h2>Why this matters</h2>
+<p>Loops are where Python finally beats Excel. Excel can do a formula on one row, then you drag down. Python writes one loop and runs it on a million rows in a second. The pattern is always the same: initialize, loop, update.</p>
+<h2>What you will learn this week</h2>
+<ul class="topic-list">
+<li>for loops and while loops</li>
+<li>Iterating over ranges and lists</li>
+<li>Loop control: break and continue</li>
+<li>Business context: processing a list of sales transactions</li>
+</ul>
+<div class="callout green">
+<div class="callout-title">Business context</div>
+<p>Summing a list of sales totals, finding the largest order in a batch.</p>
+</div>
+<h2>Required reading</h2>
+<p><strong>Think Python (TP) Ch. 7 — Iteration and Search</strong></p>
+<p>Read before Tuesday's session. Open: <a href="https://allendowney.github.io/ThinkPython/chap07.html" target="_blank" rel="noopener">https://allendowney.github.io/ThinkPython/chap07.html</a></p>
+<div class="callout blue">
+<div class="callout-title">DataCamp this week</div>
+<p>Intermediate Python (#2) — begins</p>
+</div>
+<h2>Weekly Quiz <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">★ Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Code Trace</div>
+<div class="quiz-question">What does this print?</div>
+<pre><code>for i in range(3):
+    print(i)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;"><pre><code>0
+1
+2</code></pre> <span style="color:var(--muted);">— range(3) produces 0, 1, 2</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What is the output of: print(list(range(2, 6)))?</div>
+<ul class="quiz-options">
+<li>a) [2,3,4,5,6]</li>
+<li>b) [2,3,4,5]</li>
+<li>c) [1,2,3,4,5]</li>
+<li>d) [2,6]</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">[2,3,4,5]</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What is the value of total?</div>
+<pre><code>total = 0
+sales = [100, 200, 150]
+for s in sales:
+    total += s
+print(total)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">450</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">Which statement immediately exits a loop?</div>
+<ul class="quiz-options">
+<li>a) stop</li>
+<li>b) exit</li>
+<li>c) break</li>
+<li>d) end</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">break</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Code Trace</div>
+<div class="quiz-question">How many times does &#x27;hello&#x27; print?</div>
+<pre><code>count = 0
+while count &lt; 4:
+    print(&#x27;hello&#x27;)
+    count += 1</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">4 times</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What does continue do inside a loop?</div>
+<ul class="quiz-options">
+<li>a) Exits the loop</li>
+<li>b) Skips the rest of the current iteration</li>
+<li>c) Restarts from the beginning</li>
+<li>d) Pauses the loop</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Skips the rest of the current iteration</div></details>
+</div>
+<div class="pn">
+<a href="week05_reading.html"><div class="label">← Previous</div><div class="title">Week 05 · Conditionals</div></a>
+<a class="next" href="week07_reading.html"><div class="label">Next →</div><div class="title">Week 07 · Functions, Debugging &amp; AI Literacy</div></a>
+</div>
+</div>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISM2411 — Python for Business</title>
+<link rel="stylesheet" id="ism-site-css" href="assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --u1: #34d399;
+  --u2: #60a5fa;
+  --u3: #c084fc;
+  --u4: #fbbf24;
+  --u5: #f472b6;
+  --reading:  #818cf8;
+  --lecture:  #2dd4bf;
+  --lab:      #4ade80;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #555566;
+  --dim:     #8a8a9c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { min-height: 100vh; line-height: 1.6; }
+a { color: inherit; }
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+.hero {
+  padding: clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px) clamp(36px, 6vw, 72px);
+  max-width: 1100px; margin: 0 auto; text-align: center;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(40px, 7vw, 76px); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.05; margin: 0 0 18px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--u4) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero h1 em { font-style: normal; color: var(--u4); -webkit-text-fill-color: var(--u4); }
+.hero-sub {
+  font-size: clamp(15px, 1.6vw, 19px); color: var(--muted);
+  max-width: 660px; margin: 0 auto 26px; line-height: 1.55;
+}
+.hero-chips {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11px;
+}
+.chip {
+  padding: 6px 12px; border: 1px solid var(--border2); border-radius: 999px;
+  color: var(--muted); background: rgba(255,255,255,.02);
+  letter-spacing: .04em;
+}
+
+/* ── Main layout ─────────────────────────────────────────────────────── */
+.main { max-width: 1300px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px) 80px; }
+
+.section-head {
+  display: flex; align-items: baseline; gap: 14px;
+  margin: 56px 0 22px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-head h2 {
+  font-size: 22px; font-weight: 700; letter-spacing: -.01em;
+  margin: 0; color: var(--text);
+}
+.sec-eyebrow {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+  color: var(--dim); text-transform: uppercase;
+}
+.sec-count {
+  margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--dim);
+}
+
+/* ── Pre-course banner ───────────────────────────────────────────────── */
+.precourse-card {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 22px;
+  align-items: center; padding: 22px 26px;
+  background: linear-gradient(135deg, rgba(45,212,191,.08) 0%, rgba(251,191,36,.06) 100%);
+  border: 1px solid rgba(45,212,191,.22); border-radius: 12px;
+  text-decoration: none; transition: transform .2s, box-shadow .2s;
+}
+.precourse-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(45,212,191,.18); }
+.pc-emoji { font-size: 38px; }
+.pc-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.pc-sub   { font-size: 13px; color: var(--muted); }
+.pc-arrow { font-size: 22px; color: var(--lecture); opacity: .7; }
+
+/* ── Overview row ────────────────────────────────────────────────────── */
+.ov-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.ov-card {
+  display: block; padding: 18px 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none;
+  transition: transform .2s, background .2s, border-color .2s;
+}
+.ov-card:hover { transform: translateY(-2px); background: var(--bg3); border-color: var(--border2); }
+.ov-num   { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 6px; }
+.ov-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.ov-weeks { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+/* ── Unit headers ────────────────────────────────────────────────────── */
+.unit-head {
+  display: flex; align-items: center; gap: 16px;
+  margin: 52px 0 18px; padding: 18px 24px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; border-left-width: 4px;
+}
+.unit-head.u1 { border-left-color: var(--u1); }
+.unit-head.u2 { border-left-color: var(--u2); }
+.unit-head.u3 { border-left-color: var(--u3); }
+.unit-head.u4 { border-left-color: var(--u4); }
+.unit-head.u5 { border-left-color: var(--u5); }
+
+.unit-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+.unit-head.u1 .unit-eyebrow { color: var(--u1); }
+.unit-head.u2 .unit-eyebrow { color: var(--u2); }
+.unit-head.u3 .unit-eyebrow { color: var(--u3); }
+.unit-head.u4 .unit-eyebrow { color: var(--u4); }
+.unit-head.u5 .unit-eyebrow { color: var(--u5); }
+
+.unit-title { font-size: 18px; font-weight: 700; margin: 2px 0; }
+.unit-sub   { font-size: 13px; color: var(--muted); }
+.unit-spacer { flex: 1; }
+.unit-link {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .04em;
+  padding: 6px 12px; border: 1px solid var(--border2);
+  border-radius: 6px; color: var(--muted); text-decoration: none;
+  transition: background .15s, border-color .15s;
+}
+.unit-link:hover { background: rgba(255,255,255,.05); }
+
+/* ── Week cards ──────────────────────────────────────────────────────── */
+.week-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 14px;
+}
+.week-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+  transition: border-color .2s, background .2s;
+  display: flex; flex-direction: column; min-height: 168px;
+}
+.week-card:hover { border-color: var(--border2); background: var(--bg3); }
+
+.wc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.wc-num  { font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .12em; }
+.wc-dot  { width: 7px; height: 7px; border-radius: 50%; }
+.week-card.u1 .wc-dot { background: var(--u1); }
+.week-card.u2 .wc-dot { background: var(--u2); }
+.week-card.u3 .wc-dot { background: var(--u3); }
+.week-card.u4 .wc-dot { background: var(--u4); }
+.week-card.u5 .wc-dot { background: var(--u5); }
+
+.wc-title { font-size: 15.5px; font-weight: 700; color: var(--text); margin: 2px 0 6px; letter-spacing: -.005em; }
+.wc-sub   { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; flex: 1; }
+
+.wc-pills { display: flex; gap: 7px; flex-wrap: wrap; margin-top: auto; }
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 999px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em;
+  text-decoration: none; border: 1px solid;
+  transition: background .15s, transform .15s;
+}
+.pill:hover { transform: translateY(-1px); }
+.pill.reading { color: var(--reading); border-color: rgba(129,140,248,.34); background: rgba(129,140,248,.08); }
+.pill.lecture { color: var(--lecture); border-color: rgba(45,212,191,.34); background: rgba(45,212,191,.08); }
+.pill.lab     { color: var(--lab);     border-color: rgba(74,222,128,.34); background: rgba(74,222,128,.08); }
+.pill.exam    { color: #f87171; border-color: rgba(248,113,113,.38); background: rgba(248,113,113,.08); }
+
+/* ── Midterm band ────────────────────────────────────────────────────── */
+.midterm-band {
+  background: linear-gradient(135deg, rgba(248,113,113,.08), rgba(251,191,36,.06));
+  border: 1px solid rgba(248,113,113,.28); border-radius: 12px;
+  padding: 18px 24px; display: flex; align-items: center; gap: 16px;
+}
+.mb-emoji { font-size: 26px; }
+.mb-body { flex: 1; }
+.mb-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.mb-sub { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+/* ── Legend ──────────────────────────────────────────────────────────── */
+.legend {
+  display: flex; gap: 18px; margin-bottom: 18px;
+  font-family: var(--mono); font-size: 11px; color: var(--dim);
+  flex-wrap: wrap;
+}
+.leg-item { display: flex; align-items: center; gap: 6px; }
+.leg-dot  { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── Cheat sheet row ─────────────────────────────────────────────────── */
+.cheat-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border); padding: 30px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero       { animation: fadeUp .6s ease; }
+.hero-chips { animation: fadeUp .6s .1s ease both; }
+
+@media (max-width: 640px) {
+  .precourse-card { grid-template-columns: 1fr; text-align: center; }
+  .pc-arrow { display: none; }
+  .unit-head { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">ISM2411 &nbsp;·&nbsp; USF Muma College of Business</div>
+  <h1>Python for<br><em>Business</em></h1>
+  <p class="hero-sub">
+    From <em>"what is a computer?"</em> to a finished capstone — 16 weeks of
+    Python for students with no prior programming experience. Load, clean, analyze,
+    and visualize real business data.
+  </p>
+  <div class="hero-chips">
+    <span class="chip">16 weeks</span>
+    <span class="chip">Hybrid</span>
+    <span class="chip">No prerequisites</span>
+    <span class="chip">Free textbooks</span>
+    <span class="chip">GitHub portfolio</span>
+    <span class="chip">Capstone project</span>
+  </div>
+</div>
+
+<main class="main" id="main">
+
+  <!-- ── PRE-COURSE ─────────────────────────────────────────────────────── -->
+  <section id="precourse">
+    <div class="section-head">
+      <span class="sec-eyebrow">Before Week 1</span>
+      <h2>Pre-course setup</h2>
+      <span class="sec-count">1 page</span>
+    </div>
+    <a class="precourse-card" href="pages/precourse.html">
+      <div class="pc-emoji">⚙️</div>
+      <div>
+        <div class="pc-title">Install Python, VS Code & verify your environment</div>
+        <div class="pc-sub">15-minute setup walkthrough — finish this before the first class. Works on macOS, Windows, and Linux.</div>
+      </div>
+      <div class="pc-arrow">→</div>
+    </a>
+  </section>
+
+  <!-- ── OVERVIEWS ──────────────────────────────────────────────────────── -->
+  <section id="overviews">
+    <div class="section-head">
+      <span class="sec-eyebrow">At a glance</span>
+      <h2>Unit overviews</h2>
+      <span class="sec-count">6 pages</span>
+    </div>
+    <div class="ov-grid">
+      <a class="ov-card" href="pages/unit_all_overview.html">
+        <div class="ov-num" style="color:var(--muted);">All Units</div>
+        <div class="ov-title">Full course map</div>
+        <div class="ov-weeks">16 weeks · 5 units · 8 DataCamp courses</div>
+      </a>
+      <a class="ov-card" href="pages/unit_1_overview.html">
+        <div class="ov-num" style="color:var(--u1);">Unit 1</div>
+        <div class="ov-title">Foundations</div>
+        <div class="ov-weeks">Weeks 1–5 · computer, shell, variables, operators, conditionals</div>
+      </a>
+      <a class="ov-card" href="pages/unit_2_overview.html">
+        <div class="ov-num" style="color:var(--u2);">Unit 2</div>
+        <div class="ov-title">Control Flow &amp; Structure</div>
+        <div class="ov-weeks">Weeks 6–8 · loops, functions, debugging, Git/GitHub</div>
+      </a>
+      <a class="ov-card" href="pages/unit_3_overview.html">
+        <div class="ov-num" style="color:var(--u3);">Unit 3</div>
+        <div class="ov-title">Data Structures</div>
+        <div class="ov-weeks">Weeks 10–12 · lists, tuples, dicts, files</div>
+      </a>
+      <a class="ov-card" href="pages/unit_4_overview.html">
+        <div class="ov-num" style="color:var(--u4);">Unit 4</div>
+        <div class="ov-title">Data Analysis with pandas</div>
+        <div class="ov-weeks">Weeks 13–15 · DataFrames, cleaning, grouping, charts</div>
+      </a>
+      <a class="ov-card" href="pages/unit_5_overview.html">
+        <div class="ov-num" style="color:var(--u5);">Unit 5</div>
+        <div class="ov-title">Capstone</div>
+        <div class="ov-weeks">Week 16 · end-to-end project &amp; presentations</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── LEGEND ─────────────────────────────────────────────────────────── -->
+  <div class="section-head" style="margin-top:56px;">
+    <span class="sec-eyebrow">Weekly content</span>
+    <h2>16 weeks · what's on each card</h2>
+  </div>
+  <div class="legend">
+    <span class="leg-item"><span class="leg-dot" style="background:var(--reading);"></span> Reading — the why before the how</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--lecture);"></span> Lecture — slides + code walkthrough</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--lab);"></span> Lab — hands-on practice</span>
+  </div>
+
+  <!-- ── UNIT 1 ─────────────────────────────────────────────────────────── -->
+  <section id="unit1">
+    <div class="unit-head u1">
+      <div>
+        <div class="unit-eyebrow">Unit 1 · Weeks 1–5</div>
+        <div class="unit-title">Foundations</div>
+        <div class="unit-sub">Build comfort with computers, the command line, and Python's core building blocks.</div>
+      </div>
+      <div class="unit-spacer"></div>
+      <a class="unit-link" href="pages/unit_1_overview.html">Overview</a>
+      <a class="unit-link" href="pages/unit_1_cheatsheet.html">Cheat Sheet</a>
+    </div>
+    <div class="week-grid">
+      <div class="week-card u1">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 01</span></div>
+        <div class="wc-title">What is a Computer?</div>
+        <div class="wc-sub">CPU, memory, storage in plain English; files, paths, directories; what a program is. No coding this week — conceptual foundation only.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week01_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week01_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week01_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u1">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 02</span></div>
+        <div class="wc-title">The Command Line</div>
+        <div class="wc-sub">Terminal basics — cd, ls, mkdir, pwd. Relative vs. absolute paths. Installing Python and VS Code. Run your first script from the terminal.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week02_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week02_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week02_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u1">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 03</span></div>
+        <div class="wc-title">Variables & First Output</div>
+        <div class="wc-sub">Strings, ints, floats, booleans. print() and input(). f-strings. Brief Jupyter notebook orientation. Storing product name, price, quantity.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week03_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week03_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week03_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u1">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 04</span></div>
+        <div class="wc-title">Operators & Expressions</div>
+        <div class="wc-sub">Arithmetic, comparison, logical. Order of operations. Business formulas: revenue, margin. Integer division and type mismatches.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week04_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week04_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week04_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u1">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 05</span></div>
+        <div class="wc-title">Conditionals</div>
+        <div class="wc-sub">if / elif / else. Decision logic. Nested conditionals and when to avoid them. Discount tiers, approval thresholds, flagging anomalies.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week05_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week05_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week05_lab.html">Lab</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UNIT 2 ─────────────────────────────────────────────────────────── -->
+  <section id="unit2">
+    <div class="unit-head u2">
+      <div>
+        <div class="unit-eyebrow">Unit 2 · Weeks 6–8</div>
+        <div class="unit-title">Control Flow &amp; Structure</div>
+        <div class="unit-sub">Write programs that repeat and organize tasks; manage code with Git.</div>
+      </div>
+      <div class="unit-spacer"></div>
+      <a class="unit-link" href="pages/unit_2_overview.html">Overview</a>
+      <a class="unit-link" href="pages/unit_2_cheatsheet.html">Cheat Sheet</a>
+    </div>
+    <div class="week-grid">
+      <div class="week-card u2">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 06</span></div>
+        <div class="wc-title">Loops</div>
+        <div class="wc-sub">for and while loops. Iterating over ranges and lists. break and continue. Process a list of sales transactions.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week06_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week06_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week06_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u2">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 07</span></div>
+        <div class="wc-title">Functions, Debugging & AI Literacy</div>
+        <div class="wc-sub">Defining and calling functions. Tracebacks. Debug First, Then Ask — the three modes of AI use and the disclosure rule.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week07_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week07_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week07_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u2">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 08</span></div>
+        <div class="wc-title">Git & GitHub</div>
+        <div class="wc-sub">Why version control matters. init / add / commit / push. README, folder conventions, commit messages. All future code submitted via GitHub.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week08_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week08_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week08_lab.html">Lab</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- midterm band -->
+    <div class="midterm-band" style="margin-top:18px;">
+      <div class="mb-emoji">📝</div>
+      <div class="mb-body">
+        <div class="mb-title">Week 9 — Midterm Exam</div>
+        <div class="mb-sub">Covers Units 1–2 (Weeks 1–8) · open notes · 60–75 min · no new content this week</div>
+      </div>
+      <a class="pill exam" href="pages/week09_midterm.html">Exam Guide</a>
+    </div>
+  </section>
+
+  <!-- ── UNIT 3 ─────────────────────────────────────────────────────────── -->
+  <section id="unit3">
+    <div class="unit-head u3">
+      <div>
+        <div class="unit-eyebrow">Unit 3 · Weeks 10–12</div>
+        <div class="unit-title">Data Structures</div>
+        <div class="unit-sub">Work with collections of data — the foundation of all business analytics.</div>
+      </div>
+      <div class="unit-spacer"></div>
+      <a class="unit-link" href="pages/unit_3_overview.html">Overview</a>
+      <a class="unit-link" href="pages/unit_3_cheatsheet.html">Cheat Sheet</a>
+    </div>
+    <div class="week-grid">
+      <div class="week-card u3">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 10</span></div>
+        <div class="wc-title">Lists & Tuples</div>
+        <div class="wc-sub">Indexing, slicing, common list methods. When to use a tuple instead. A product inventory list.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week10_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week10_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week10_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u3">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 11</span></div>
+        <div class="wc-title">Dictionaries</div>
+        <div class="wc-sub">Key-value pairs. Nesting, adding, updating, deleting. Iterating. Customer records and lookup tables.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week11_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week11_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week11_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u3">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 12</span></div>
+        <div class="wc-title">Working with Files</div>
+        <div class="wc-sub">Reading and writing .txt and .csv files. The csv module. Relative paths in a repo. Import sales data, export a cleaned report.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week12_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week12_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week12_lab.html">Lab</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UNIT 4 ─────────────────────────────────────────────────────────── -->
+  <section id="unit4">
+    <div class="unit-head u4">
+      <div>
+        <div class="unit-eyebrow">Unit 4 · Weeks 13–15</div>
+        <div class="unit-title">Data Analysis with pandas</div>
+        <div class="unit-sub">Apply Python to real business data using industry-standard tools.</div>
+      </div>
+      <div class="unit-spacer"></div>
+      <a class="unit-link" href="pages/unit_4_overview.html">Overview</a>
+      <a class="unit-link" href="pages/unit_4_cheatsheet.html">Cheat Sheet</a>
+    </div>
+    <div class="week-grid">
+      <div class="week-card u4">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 13</span></div>
+        <div class="wc-title">Intro to pandas</div>
+        <div class="wc-sub">Excel vs. Python for data work. DataFrames and Series. Load a CSV. View, filter, sort. Explore a retail sales dataset.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week13_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week13_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week13_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u4">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 14</span></div>
+        <div class="wc-title">Data Cleaning & Descriptive Stats</div>
+        <div class="wc-sub">Missing values. Renaming columns, fixing dtypes. describe(), mean(), median(). Clean a messy sales dataset.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week14_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week14_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week14_lab.html">Lab</a>
+        </div>
+      </div>
+      <div class="week-card u4">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 15</span></div>
+        <div class="wc-title">Grouping & Visualization</div>
+        <div class="wc-sub">groupby() and aggregations. Bar, line, histogram with matplotlib. Seaborn for quick stats charts. Choosing the right chart.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week15_reading.html">Reading</a>
+          <a class="pill lecture" href="pages/week15_lecture.html">Lecture</a>
+          <a class="pill lab" href="pages/week15_lab.html">Lab</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UNIT 5 — Capstone ──────────────────────────────────────────────── -->
+  <section id="unit5">
+    <div class="unit-head u5">
+      <div>
+        <div class="unit-eyebrow">Unit 5 · Week 16</div>
+        <div class="unit-title">Capstone</div>
+        <div class="unit-sub">Apply everything end-to-end; present findings to the class.</div>
+      </div>
+      <div class="unit-spacer"></div>
+      <a class="unit-link" href="pages/unit_5_overview.html">Overview</a>
+    </div>
+    <div class="week-grid">
+      <div class="week-card u5" style="grid-column: 1 / -1;">
+        <div class="wc-head"><span class="wc-dot"></span><span class="wc-num">WEEK 16 · Capstone Build &amp; Presentations</span></div>
+        <div class="wc-title">Retail Sales Analysis — full workflow on a real dataset</div>
+        <div class="wc-sub">Mon–Thu structured milestones: load &amp; inspect → clean &amp; document → answer 3 business questions → produce 3 charts → push to GitHub. Thu–Fri presentations (5–7 min each) + course reflection.</div>
+        <div class="wc-pills">
+          <a class="pill reading" href="pages/week16_capstone.html">Capstone Guide</a>
+          <a class="pill lecture" href="pages/capstone_rubric.html">Rubric</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CHEAT SHEETS ───────────────────────────────────────────────────── -->
+  <section id="cheatsheets">
+    <div class="section-head">
+      <span class="sec-eyebrow">Reference</span>
+      <h2>Cheat sheets</h2>
+      <span class="sec-count">4 pages</span>
+    </div>
+    <div class="cheat-row">
+      <a class="ov-card" href="pages/unit_1_cheatsheet.html">
+        <div class="ov-num" style="color:var(--u1);">Unit 1</div>
+        <div class="ov-title">Shell &amp; Python basics</div>
+        <div class="ov-weeks">cd · ls · mkdir · print · types · operators · if</div>
+      </a>
+      <a class="ov-card" href="pages/unit_2_cheatsheet.html">
+        <div class="ov-num" style="color:var(--u2);">Unit 2</div>
+        <div class="ov-title">Loops, functions &amp; Git</div>
+        <div class="ov-weeks">for · while · def · return · git add · commit · push</div>
+      </a>
+      <a class="ov-card" href="pages/unit_3_cheatsheet.html">
+        <div class="ov-num" style="color:var(--u3);">Unit 3</div>
+        <div class="ov-title">Lists, dicts &amp; files</div>
+        <div class="ov-weeks">[] · {} · append · keys · csv · open</div>
+      </a>
+      <a class="ov-card" href="pages/unit_4_cheatsheet.html">
+        <div class="ov-num" style="color:var(--u4);">Unit 4</div>
+        <div class="ov-title">pandas &amp; charts</div>
+        <div class="ov-weeks">read_csv · groupby · fillna · plt.bar · sns</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── SYLLABUS / POLICIES ────────────────────────────────────────────── -->
+  <section id="syllabus" style="margin-top:56px;">
+    <div class="section-head">
+      <span class="sec-eyebrow">Course information</span>
+      <h2>Syllabus &amp; policies</h2>
+    </div>
+    <div class="ov-grid">
+      <a class="ov-card" href="pages/syllabus.html">
+        <div class="ov-num" style="color:var(--muted);">📋 Syllabus</div>
+        <div class="ov-title">Full course information</div>
+        <div class="ov-weeks">Texts · grades · midterm · capstone · DataCamp</div>
+      </a>
+      <a class="ov-card" href="pages/ai_policy.html">
+        <div class="ov-num" style="color:var(--muted);">🤖 AI Use Policy</div>
+        <div class="ov-title">Explainer / Debugger / Generator</div>
+        <div class="ov-weeks">When AI helps · when it hurts · disclosure required</div>
+      </a>
+      <a class="ov-card" href="pages/datacamp.html">
+        <div class="ov-num" style="color:var(--muted);">📚 DataCamp Plan</div>
+        <div class="ov-title">8 required + 2 optional</div>
+        <div class="ov-weeks">Free access · graded on completion · 2 extra-credit</div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS
+</footer>
+
+<script id="ism-site-js" src="assets/js/site.js"></script>
+</body>
+</html>

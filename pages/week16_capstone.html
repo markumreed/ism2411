@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Capstone Project — Week 16 — ISM2411</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --code-bg2:  #1a1a26;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --code-bg:  #1a1a26;
+  --code-bg2: #15151f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
+}
+h2 {
+  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  letter-spacing: -.01em;
+}
+h3 {
+  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
+  letter-spacing: -.005em;
+}
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede {
+  font-size: 17.5px; color: var(--muted); line-height: 1.6;
+  margin: 0 0 28px; max-width: 720px;
+}
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+
+/* code blocks */
+code {
+  font-family: var(--mono); font-size: .92em;
+  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+  color: #f0f0f5;
+}
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+
+/* meta bar */
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 8px 0 28px; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  font-family: var(--mono); font-size: 12px;
+}
+.meta .chip {
+  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
+  color: var(--muted);
+}
+.meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
+
+/* week jump bar — quick switch between reading/lecture/lab */
+.weekjump {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 0 0 32px; padding: 10px 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+}
+.weekjump-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--dim); text-transform: uppercase; margin-right: 4px;
+}
+.weekjump-link {
+  padding: 5px 12px; border-radius: 999px; text-decoration: none;
+  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
+.weekjump-link.current {
+  background: rgba(251,191,36,.12); color: var(--accent);
+  border-color: rgba(251,191,36,.4);
+}
+
+/* callout boxes */
+.callout {
+  margin: 22px 0; padding: 16px 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+}
+.callout-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout.green { border-left-color: #34d399; }
+.callout.green .callout-title { color: #34d399; }
+.callout.blue { border-left-color: #60a5fa; }
+.callout.blue .callout-title { color: #60a5fa; }
+.callout.pink { border-left-color: #f472b6; }
+.callout.pink .callout-title { color: #f472b6; }
+.callout.purple { border-left-color: #c084fc; }
+.callout.purple .callout-title { color: #c084fc; }
+
+/* topic list */
+.topic-list {
+  list-style: none; padding: 0; margin: 16px 0;
+}
+.topic-list li {
+  position: relative; padding: 8px 0 8px 28px;
+  border-bottom: 1px dashed var(--border);
+}
+.topic-list li:last-child { border-bottom: 0; }
+.topic-list li::before {
+  content: '▸'; position: absolute; left: 6px; color: var(--accent);
+  font-size: 12px; top: 10px;
+}
+
+/* prev/next nav */
+.pn {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 60px;
+}
+.pn a {
+  display: block; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  transition: background .15s, transform .15s;
+}
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
+}
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+
+/* quiz */
+.quiz-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+}
+.quiz-q {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--accent); margin-bottom: 8px;
+}
+.quiz-question {
+  font-weight: 600; margin-bottom: 10px;
+}
+.quiz-question pre {
+  margin: 8px 0 0; font-size: 12.5px;
+}
+.quiz-options {
+  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
+}
+.quiz-options li { padding: 3px 0; color: var(--muted); }
+.quiz-answer {
+  margin-top: 10px; padding: 8px 12px;
+  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
+  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
+  color: #34d399;
+}
+.quiz-answer summary {
+  cursor: pointer; user-select: none; font-weight: 600;
+  list-style: none;
+}
+.quiz-answer summary::-webkit-details-marker { display: none; }
+.quiz-answer summary::before { content: '▸ '; }
+.quiz-answer[open] summary::before { content: '▾ '; }
+.quiz-answer pre {
+  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
+  color: #f0f0f5;
+}
+
+/* concept cards */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 12px; margin: 18px 0;
+}
+.concept-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.concept-card h4 {
+  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
+  color: var(--accent); letter-spacing: .04em;
+}
+.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
+}
+</style>
+</head>
+<body>
+
+<main id="content"><div class="wrap">
+<div class="page-eyebrow">WEEK 16 · CAPSTONE PROJECT</div>
+<h1>Capstone — Retail Sales Analysis</h1>
+<p class="lede">A single sustained project using a real-shaped retail sales dataset of about 5,000 rows. You will clean it, ask three business questions, answer them with code and visualizations, and present your findings. This is the deliverable you'll add to your portfolio.</p>
+
+<div class="callout">
+<strong>What this is:</strong> A practical demonstration that you can take a CSV file no one has explained to you, figure out what it contains, decide what's interesting, and tell that story clearly. This is the exact skill employers are paying for.
+</div>
+
+<h2>The dataset</h2>
+<p>You'll receive a file called <code>retail_sales.csv</code> at the start of Week 13. It contains roughly 5,000 rows of fictional retail transactions with these columns:</p>
+<ul>
+<li><code>order_date</code> — date of the sale (mostly clean, with some bad values)</li>
+<li><code>product_category</code> — one of about 8 categories (with some typos)</li>
+<li><code>region</code> — one of North, South, East, West (some nulls)</li>
+<li><code>unit_price</code> — dollar amount per item (some negatives = returns)</li>
+<li><code>quantity_sold</code> — units in the order (some zeros)</li>
+<li><code>customer_segment</code> — Consumer, Corporate, or Home Office</li>
+</ul>
+<p>The data is intentionally messy. Cleaning it well is half the assignment.</p>
+
+<h2>Deliverables</h2>
+<ol>
+<li><strong>A single Python script or Jupyter notebook</strong> (<code>capstone_yourname.py</code> or <code>.ipynb</code>) that loads the raw CSV, cleans it, computes your analysis, and produces your visualizations.</li>
+<li><strong>A short written report</strong> (1-2 pages, PDF) — the three business questions you chose, your findings, and one chart per question. This is what a manager would read.</li>
+<li><strong>A 5-minute presentation</strong> in class during Week 16 — walk us through one finding, show one chart, tell us the business implication.</li>
+<li><strong>A GitHub repo</strong> containing all of the above plus a <code>README.md</code> explaining how to run your code.</li>
+</ol>
+
+<h2>Milestones</h2>
+<div class="grade-table">
+<table>
+<thead><tr><th>Week</th><th>Milestone</th><th>What's due</th></tr></thead>
+<tbody>
+<tr><td>W13</td><td>Dataset received</td><td>Load it, run <code>.head()</code>, <code>.info()</code>, <code>.describe()</code>. Get a feel for what's there.</td></tr>
+<tr><td>W14</td><td>Cleaning complete</td><td>Submit a Jupyter notebook (or script) showing how you handled missing values, bad dates, negative prices, and typos. <em>10% checkpoint</em>.</td></tr>
+<tr><td>W15</td><td>Three questions chosen</td><td>Email the instructor your three business questions. Get feedback before final analysis. <em>5% checkpoint</em>.</td></tr>
+<tr><td>W16</td><td>Final deliverables + presentation</td><td>Repo URL, PDF report, in-class talk. <em>10% checkpoint</em>.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Example business questions</h2>
+<p>You choose three. Here are examples — pick from these or invent your own (better):</p>
+<ul>
+<li>Which product category drove the most revenue, and was that consistent across regions?</li>
+<li>Is there a seasonal pattern in sales? Which months are strongest?</li>
+<li>How does the Corporate segment differ from Consumer in average order size?</li>
+<li>Are there products that appear to be returns-heavy (high count of negative unit_price)?</li>
+<li>Which region has the highest average order value, and what's driving that?</li>
+<li>What share of revenue comes from the top 20% of customer segments by volume?</li>
+</ul>
+
+<h2>What "good" looks like</h2>
+<ul>
+<li>Your cleaning steps are explained — every <code>dropna</code> or <code>fillna</code> or <code>astype</code> has a comment saying why</li>
+<li>Your charts have titles, axis labels, and reasonable formatting (not the default unlabeled mess)</li>
+<li>Your three findings are stated as <strong>numbers with context</strong> — "Furniture drove 34% of revenue, vs. 22% for Electronics" not "Furniture sold a lot"</li>
+<li>Your code runs from top to bottom without errors if someone clones your repo and runs it</li>
+<li>Your README tells a reader how to run your code in 3-5 lines</li>
+</ul>
+
+<h2>What "weak" looks like</h2>
+<ul>
+<li>Unlabeled charts copy-pasted from default pandas plotting</li>
+<li>Findings stated as opinions ("I think Electronics is popular")</li>
+<li>Code that crashes halfway through because cleaning was incomplete</li>
+<li>A README that just says "run the file"</li>
+<li>Three "questions" that are actually one question rephrased</li>
+</ul>
+
+<h2>AI use rules for the capstone</h2>
+<p>See the full <a href="ai_policy.html">AI Policy</a>. Specific to the capstone: Generator mode is restricted to <em>syntax only</em> — you may ask AI to remind you of pandas syntax. You may NOT ask AI to choose your business questions, interpret your findings, or write your report. Disclosure is required in your README.</p>
+
+<h2>Grading</h2>
+<p>See the <a href="capstone_rubric.html">Capstone Rubric</a> for exactly how points are awarded. The four dimensions are weighted equally (25% each): code clarity, visualizations, insight quality, and communication.</p>
+
+<div class="pn">
+<a href="week15_reading.html"><div class="label">← Previous</div><div class="title">Week 15 — Grouping &amp; Visualization</div></a>
+<a class="next" href="capstone_rubric.html"><div class="label">Next →</div><div class="title">Capstone Rubric</div></a>
+</div>
+</div></main>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>

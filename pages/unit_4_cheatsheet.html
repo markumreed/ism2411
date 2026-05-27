@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unit 4 Cheatsheet — Data Analysis with pandas — ISM2411</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --code-bg2:  #1a1a26;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --code-bg:  #1a1a26;
+  --code-bg2: #15151f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
+}
+h2 {
+  font-size: 22px; font-weight: 700; margin: 40px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  letter-spacing: -.01em;
+}
+h3 {
+  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
+  letter-spacing: -.005em;
+}
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede {
+  font-size: 17.5px; color: var(--muted); line-height: 1.6;
+  margin: 0 0 28px; max-width: 720px;
+}
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+
+/* code blocks */
+code {
+  font-family: var(--mono); font-size: .92em;
+  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+  color: #f0f0f5;
+}
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+
+/* meta bar */
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 8px 0 28px; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  font-family: var(--mono); font-size: 12px;
+}
+.meta .chip {
+  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
+  color: var(--muted);
+}
+.meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
+
+/* week jump bar — quick switch between reading/lecture/lab */
+.weekjump {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 0 0 32px; padding: 10px 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+}
+.weekjump-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--dim); text-transform: uppercase; margin-right: 4px;
+}
+.weekjump-link {
+  padding: 5px 12px; border-radius: 999px; text-decoration: none;
+  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
+.weekjump-link.current {
+  background: rgba(251,191,36,.12); color: var(--accent);
+  border-color: rgba(251,191,36,.4);
+}
+
+/* callout boxes */
+.callout {
+  margin: 22px 0; padding: 16px 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+}
+.callout-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout.green { border-left-color: #34d399; }
+.callout.green .callout-title { color: #34d399; }
+.callout.blue { border-left-color: #60a5fa; }
+.callout.blue .callout-title { color: #60a5fa; }
+.callout.pink { border-left-color: #f472b6; }
+.callout.pink .callout-title { color: #f472b6; }
+.callout.purple { border-left-color: #c084fc; }
+.callout.purple .callout-title { color: #c084fc; }
+
+/* topic list */
+.topic-list {
+  list-style: none; padding: 0; margin: 16px 0;
+}
+.topic-list li {
+  position: relative; padding: 8px 0 8px 28px;
+  border-bottom: 1px dashed var(--border);
+}
+.topic-list li:last-child { border-bottom: 0; }
+.topic-list li::before {
+  content: '▸'; position: absolute; left: 6px; color: var(--accent);
+  font-size: 12px; top: 10px;
+}
+
+/* prev/next nav */
+.pn {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 60px;
+}
+.pn a {
+  display: block; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  transition: background .15s, transform .15s;
+}
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
+}
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+
+/* quiz */
+.quiz-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+}
+.quiz-q {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--accent); margin-bottom: 8px;
+}
+.quiz-question {
+  font-weight: 600; margin-bottom: 10px;
+}
+.quiz-question pre {
+  margin: 8px 0 0; font-size: 12.5px;
+}
+.quiz-options {
+  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
+}
+.quiz-options li { padding: 3px 0; color: var(--muted); }
+.quiz-answer {
+  margin-top: 10px; padding: 8px 12px;
+  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
+  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
+  color: #34d399;
+}
+.quiz-answer summary {
+  cursor: pointer; user-select: none; font-weight: 600;
+  list-style: none;
+}
+.quiz-answer summary::-webkit-details-marker { display: none; }
+.quiz-answer summary::before { content: '▸ '; }
+.quiz-answer[open] summary::before { content: '▾ '; }
+.quiz-answer pre {
+  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
+  color: #f0f0f5;
+}
+
+/* concept cards */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 12px; margin: 18px 0;
+}
+.concept-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.concept-card h4 {
+  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
+  color: var(--accent); letter-spacing: .04em;
+}
+.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
+}
+</style>
+</head>
+<body>
+
+<main id="content"><div class="wrap">
+<div class="page-eyebrow">UNIT 4 CHEATSHEET · QUICK REFERENCE</div>
+<h1>Unit 4 — Data Analysis with pandas</h1>
+<p class="lede">DataFrames, cleaning, grouping, plotting. The 25 patterns that cover 90% of real analytics work.</p>
+<style>
+.cs-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin: 24px 0; }
+@media (min-width: 720px) { .cs-grid { grid-template-columns: 1fr 1fr; } }
+.cs-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 4px solid #fbbf24; border-radius: 10px; padding: 18px 20px;
+}
+.cs-card h3 { margin: 0 0 10px; color: #fbbf24; font-size: 14px; letter-spacing: .04em; }
+.cs-card pre { margin: 0; font-size: 12.5px; }
+.cs-note { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+</style>
+<div class="callout">
+<strong>How to use this:</strong> Print it. Annotate it. Bring it to lab. Cheatsheets are syntax-only — they don't teach concepts. Read the unit's weekly pages first, then come back here when you forget syntax mid-task.
+</div>
+<div class="cs-grid">
+<div class="cs-card"><h3>Loading data</h3>
+<pre><code>import pandas as pd
+
+df = pd.read_csv("sales.csv")
+df = pd.read_excel("data.xlsx")
+df = pd.read_csv("url-to-file.csv")
+
+df.head()        # first 5 rows
+df.tail(10)      # last 10 rows
+df.shape         # (rows, columns)
+df.columns       # column names
+df.dtypes        # column types</code></pre></div>
+
+<div class="cs-card"><h3>Inspecting</h3>
+<pre><code>df.info()           # types + null counts
+df.describe()       # summary stats
+df.describe(include="object")  # for strings
+
+df["region"].value_counts()  # category counts
+df["region"].unique()        # unique values
+df["region"].nunique()       # how many unique</code></pre></div>
+
+<div class="cs-card"><h3>Selecting columns</h3>
+<pre><code>df["price"]                    # 1 column → Series
+df[["price", "qty"]]           # multiple → DataFrame
+
+# add a new column
+df["total"] = df["price"] * df["qty"]
+
+# drop a column
+df = df.drop(columns=["unused"])</code></pre></div>
+
+<div class="cs-card"><h3>Filtering rows</h3>
+<pre><code>df[df["price"] &gt; 100]
+df[df["region"] == "North"]
+df[(df["price"] &gt; 50) &amp; (df["region"] == "South")]
+df[df["region"].isin(["East","West"])]
+df[df["product"].str.contains("Pro")]</code></pre>
+<div class="cs-note">Use <code>&amp;</code> and <code>|</code>, not <code>and/or</code>. Parens around each condition.</div></div>
+
+<div class="cs-card"><h3>Sorting</h3>
+<pre><code>df.sort_values("price")
+df.sort_values("price", ascending=False)
+df.sort_values(["region", "price"])
+df.sort_values("price").head(10)   # top 10</code></pre></div>
+
+<div class="cs-card"><h3>Missing data</h3>
+<pre><code>df.isna().sum()           # null count per col
+df.dropna()               # remove rows with ANY null
+df.dropna(subset=["price"])  # only price nulls
+df["price"].fillna(0)
+df["price"].fillna(df["price"].mean())</code></pre></div>
+
+<div class="cs-card"><h3>Type fixing</h3>
+<pre><code>df["price"] = df["price"].astype(float)
+df["date"] = pd.to_datetime(df["date"])
+df["category"] = df["category"].astype("category")
+
+# strip whitespace from strings
+df["name"] = df["name"].str.strip()</code></pre></div>
+
+<div class="cs-card"><h3>Group by</h3>
+<pre><code># total sales per region
+df.groupby("region")["sales"].sum()
+
+# multiple stats at once
+df.groupby("region")["sales"].agg(["sum","mean","count"])
+
+# multiple columns
+df.groupby(["region","product"])["sales"].sum()</code></pre></div>
+
+<div class="cs-card"><h3>Aggregations</h3>
+<pre><code>df["price"].sum()
+df["price"].mean()
+df["price"].median()
+df["price"].min()
+df["price"].max()
+df["price"].std()
+df["region"].count()</code></pre></div>
+
+<div class="cs-card"><h3>Apply a function</h3>
+<pre><code>def tier(price):
+    if price &gt; 100: return "high"
+    if price &gt; 50:  return "mid"
+    return "low"
+
+df["tier"] = df["price"].apply(tier)
+# or shorter:
+df["tier"] = df["price"].apply(lambda p: "high" if p &gt; 100 else "low")</code></pre></div>
+
+<div class="cs-card"><h3>Plotting (matplotlib)</h3>
+<pre><code>import matplotlib.pyplot as plt
+
+df["sales"].plot(kind="line")
+df["region"].value_counts().plot(kind="bar")
+df.plot.scatter(x="price", y="qty")
+df["price"].plot(kind="hist", bins=20)
+
+plt.title("Sales by Month")
+plt.xlabel("Month")
+plt.ylabel("USD")
+plt.show()</code></pre></div>
+
+<div class="cs-card"><h3>Saving results</h3>
+<pre><code>df.to_csv("cleaned.csv", index=False)
+df.to_excel("out.xlsx", index=False)
+
+# save a chart
+plt.savefig("chart.png", dpi=150)</code></pre></div>
+</div>
+<div class="callout warn">
+<strong>Reminder:</strong> The midterm exam (Unit 1-2) and capstone-eligible quizzes (Unit 3-4) test understanding, not memorization. The cheatsheet won't be available on the midterm — but the patterns will be in your head if you've used it enough.
+</div>
+</div></main>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>
