@@ -59,11 +59,11 @@
         <div class="dd-section">Unit 1 · Foundations</div>
         <a href="${pg}unit_1_overview.html">Overview</a>
         <a href="${pg}unit_1_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week01_reading.html">Week 1 · What is a Computer?</a>
-        <a href="${pg}week02_reading.html">Week 2 · The Command Line</a>
-        <a href="${pg}week03_reading.html">Week 3 · Variables &amp; Data Types</a>
-        <a href="${pg}week04_reading.html">Week 4 · Operators</a>
-        <a href="${pg}week05_reading.html">Week 5 · Conditionals</a>
+        <a href="${pg}week01_reading.html">Module 1 · What is a Computer?</a>
+        <a href="${pg}week02_reading.html">Module 2 · The Command Line</a>
+        <a href="${pg}week03_reading.html">Module 3 · Variables &amp; Data Types</a>
+        <a href="${pg}week04_reading.html">Module 4 · Operators</a>
+        <a href="${pg}week05_reading.html">Module 5 · Conditionals</a>
       </div>
     </div>
 
@@ -73,10 +73,10 @@
         <div class="dd-section">Unit 2 · Control Flow &amp; Structure</div>
         <a href="${pg}unit_2_overview.html">Overview</a>
         <a href="${pg}unit_2_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week06_reading.html">Week 6 · Loops</a>
-        <a href="${pg}week07_reading.html">Week 7 · Functions &amp; AI Literacy</a>
-        <a href="${pg}week08_reading.html">Week 8 · Git &amp; GitHub</a>
-        <a href="${pg}week09_midterm.html">Week 9 · Midterm</a>
+        <a href="${pg}week06_reading.html">Module 6 · Loops</a>
+        <a href="${pg}week07_reading.html">Module 7 · Functions &amp; AI Literacy</a>
+        <a href="${pg}week08_reading.html">Module 8 · Git &amp; GitHub</a>
+        <a href="${pg}week09_midterm.html">Module 9 · Midterm</a>
       </div>
     </div>
 
@@ -86,9 +86,9 @@
         <div class="dd-section">Unit 3 · Data Structures</div>
         <a href="${pg}unit_3_overview.html">Overview</a>
         <a href="${pg}unit_3_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week10_reading.html">Week 10 · Lists &amp; Tuples</a>
-        <a href="${pg}week11_reading.html">Week 11 · Dictionaries</a>
-        <a href="${pg}week12_reading.html">Week 12 · Files &amp; CSVs</a>
+        <a href="${pg}week10_reading.html">Module 10 · Lists &amp; Tuples</a>
+        <a href="${pg}week11_reading.html">Module 11 · Dictionaries</a>
+        <a href="${pg}week12_reading.html">Module 12 · Files &amp; CSVs</a>
       </div>
     </div>
 
@@ -98,9 +98,9 @@
         <div class="dd-section">Unit 4 · pandas</div>
         <a href="${pg}unit_4_overview.html">Overview</a>
         <a href="${pg}unit_4_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week13_reading.html">Week 13 · Intro to pandas</a>
-        <a href="${pg}week14_reading.html">Week 14 · Cleaning &amp; Stats</a>
-        <a href="${pg}week15_reading.html">Week 15 · Grouping &amp; Charts</a>
+        <a href="${pg}week13_reading.html">Module 13 · Intro to pandas</a>
+        <a href="${pg}week14_reading.html">Module 14 · Cleaning &amp; Stats</a>
+        <a href="${pg}week15_reading.html">Module 15 · Grouping &amp; Charts</a>
       </div>
     </div>
 
@@ -109,7 +109,7 @@
       <div class="nav-dd-menu" data-menu="u5">
         <div class="dd-section">Unit 5 · Capstone</div>
         <a href="${pg}unit_5_overview.html">Overview</a>
-        <a href="${pg}week16_capstone.html">Week 16 · Capstone Build</a>
+        <a href="${pg}week16_capstone.html">Module 16 · Capstone Build</a>
       </div>
     </div>
 
