@@ -207,6 +207,16 @@ footer {
   text-align: center; font-family: var(--mono); font-size: 11px;
   color: var(--dim); letter-spacing: .08em; margin-top: 60px;
 }
+/* ism-mobile */
+@media(max-width:600px){
+  .pn{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre{font-size:12px;padding:12px 14px}
+  .sched-row{grid-template-columns:80px 1fr;font-size:12.5px}
+  .sched-row span:last-child{display:none}
+  .concept-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
