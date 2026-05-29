@@ -81,6 +81,17 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+
+/* video playlist */
+.vpl-stage{margin-bottom:12px}
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg3)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text)}
 </style>
 </head>
 <body>
@@ -100,43 +111,33 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <a href="week07_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week07_lab.html" class="weekjump-link">Lab</a>
 </div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 0;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/PLACEHOLDER_V07"
-      title="Python Functions for Business"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
+<div style="display:flex;align-items:center;gap:12px;margin:0 0 0;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Lecture Videos &middot; 3</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
+<div class="vid-playlist" style="margin:28px 0 32px;">
+  <div class="vpl-stage">
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+      <iframe
+        style="position:absolute;top:0;left:0;width:100%;height:100%;"
+        src="https://www.youtube.com/embed/PLACEHOLDER_V07"
+        title="Python Functions for Business"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
-</div>
-
-<div class="video-embed" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/PLACEHOLDER_V08"
-      title="Python Debugging — How to Read Tracebacks & Fix Errors"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
-</div>
-
-<div class="video-embed" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/PLACEHOLDER_V12"
-      title="AI Literacy for Programmers"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
+  <div class="vpl-tiles">
+    <div class="vpl-tile vpl-active" onclick="vplSwitch(this,'https://www.youtube.com/embed/PLACEHOLDER_V07','Python Functions for Business')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Python Functions for Business</span>
+    </div>
+    <div class="vpl-tile" onclick="vplSwitch(this,'https://www.youtube.com/embed/PLACEHOLDER_V08','Python Debugging — How to Read Tracebacks & Fix Errors')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">Python Debugging — How to Read Tracebacks &amp; Fix Errors</span>
+    </div>
+    <div class="vpl-tile" onclick="vplSwitch(this,'https://www.youtube.com/embed/PLACEHOLDER_V12','AI Literacy for Programmers')">
+      <span class="vpl-num">03</span>
+      <span class="vpl-title">AI Literacy for Programmers</span>
+    </div>
   </div>
 </div>
 
@@ -317,6 +318,15 @@ print(add(5, 3))   # 8</code></pre>
 </div>
 
 <footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script>
+function vplSwitch(tile,src,title){
+  var p=tile.closest(".vid-playlist");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var f=p.querySelector(".vpl-stage iframe");
+  f.src=src;f.title=title;
+}
+</script>
 <script id="ism-site-js" src="../assets/js/site.js"></script>
 </body>
 </html>
