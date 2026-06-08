@@ -116,6 +116,8 @@
       </div>
     </div>
 
+    <a class="nav-dd-btn" href="${pg}faq.html" style="text-decoration:none;">FAQ</a>
+
     <div class="nav-spacer"></div>
 
     <div class="nav-tools">
@@ -142,6 +144,7 @@
       <a href="${pg}precourse.html">Pre-course Setup</a>
       <a href="${pg}syllabus.html">Syllabus</a>
       <a href="${pg}unit_all_overview.html">All Units Overview</a>
+      <a href="${pg}faq.html">FAQ</a>
     </div>
     <div class="mob-section">
       <div class="mob-section-label">Unit 1 · Foundations</div>
