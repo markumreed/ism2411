@@ -51,7 +51,6 @@
       <button class="nav-dd-btn" data-dd="precourse" aria-haspopup="true" aria-expanded="false">Start Here ▾</button>
       <div class="nav-dd-menu" data-menu="precourse">
         <a href="${pg}precourse.html">Pre-course Setup</a>
-        <a href="${pg}faq.html">FAQ</a>
         <a href="${pg}syllabus.html">Syllabus</a>
         <a href="${pg}unit_all_overview.html">All Units Overview</a>
       </div>
@@ -141,7 +140,6 @@
     <div class="mob-section">
       <div class="mob-section-label">Start Here</div>
       <a href="${pg}precourse.html">Pre-course Setup</a>
-      <a href="${pg}faq.html">FAQ</a>
       <a href="${pg}syllabus.html">Syllabus</a>
       <a href="${pg}unit_all_overview.html">All Units Overview</a>
     </div>
