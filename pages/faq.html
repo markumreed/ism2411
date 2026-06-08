@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAQ — ISM2411 Python for Business</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:      #0f0f17;
+  --bg2:     #15151f;
+  --bg3:     #1a1a26;
+  --text:    #e8e8f0;
+  --muted:   #9a9aab;
+  --dim:     #6a6a7c;
+  --border:  rgba(255,255,255,.08);
+  --border2: rgba(255,255,255,.14);
+  --accent:  #fbbf24;
+  --code-bg: #0a0a12;
+  --mono:    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --code-bg: #1a1a26;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 820px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 40px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
+}
+.lede {
+  font-size: 16px; color: var(--muted); line-height: 1.65;
+  margin: 0 0 16px; max-width: 680px;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: #fcd34d; }
+
+code {
+  font-family: var(--mono); font-size: .88em;
+  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 7px; padding: 13px 16px; overflow-x: auto;
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.6;
+  color: #f0f0f5; margin: 10px 0 0;
+}
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+
+/* meta pills */
+.meta-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 28px; }
+.meta-pill {
+  font-family: var(--mono); font-size: 10px; padding: 3px 10px;
+  border: 1px solid var(--border); border-radius: 20px;
+  color: var(--dim); background: var(--bg2);
+}
+
+/* section divider */
+.section-divider {
+  display: flex; align-items: center; gap: 12px; margin: 44px 0 20px;
+}
+.section-divider .line { flex: 1; height: 1px; background: var(--border); }
+.section-divider .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--dim); white-space: nowrap;
+}
+
+/* callout */
+.callout {
+  margin: 0 0 28px; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+  font-size: 14px; color: var(--muted); line-height: 1.65;
+}
+.callout strong { color: var(--text); }
+.callout.green { border-left-color: #34d399; }
+.callout.blue  { border-left-color: #60a5fa; }
+
+/* error badge */
+.err-badge {
+  display: inline-block; font-family: var(--mono); font-size: 12px;
+  font-weight: 700; padding: 2px 9px; border-radius: 5px;
+  background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.3);
+  color: #f87171; margin-bottom: 6px;
+}
+
+/* FAQ accordion */
+.faq-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+
+details.faq {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+details.faq[open] { border-color: var(--border2); }
+details.faq[open] > summary { border-bottom: 1px solid var(--border); color: var(--text); }
+
+details.faq > summary {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; cursor: pointer; list-style: none;
+  font-size: 14.5px; font-weight: 600; color: var(--muted);
+  line-height: 1.4; gap: 12px;
+  transition: color .12s;
+  user-select: none;
+}
+details.faq > summary::-webkit-details-marker { display: none; }
+details.faq > summary::marker { display: none; }
+details.faq > summary:hover { color: var(--text); }
+details.faq > summary .q-icon {
+  flex-shrink: 0; font-family: var(--mono); font-size: 18px;
+  color: var(--accent); line-height: 1; width: 18px; text-align: center;
+}
+details.faq[open] > summary .q-icon::before { content: '−'; }
+details.faq:not([open]) > summary .q-icon::before { content: '+'; }
+
+.faq-body {
+  padding: 16px 18px 18px; background: var(--bg3);
+  font-size: 14px; color: var(--muted); line-height: 1.75;
+}
+.faq-body p { margin: 0 0 10px; }
+.faq-body p:last-child { margin-bottom: 0; }
+.faq-body ul { padding-left: 20px; margin: 8px 0; }
+.faq-body li { margin: 5px 0; }
+.faq-body strong { color: var(--text); }
+
+/* prev/next */
+.pn {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 60px;
+}
+.pn a {
+  display: block; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  transition: background .15s, transform .15s;
+}
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
+}
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
+}
+
+@media(max-width:600px) {
+  .pn { grid-template-columns: 1fr; }
+  pre { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<main id="content"><div class="wrap">
+
+<!-- ── Page header ── -->
+<div class="page-eyebrow">ISM2411 &middot; PYTHON FOR BUSINESS &middot; REFERENCE</div>
+<h1>FAQ</h1>
+<p class="lede">Answers to the most common setup problems and Python errors in this course. Read the question, try the fix, move on.</p>
+<div class="meta-pills">
+  <span class="meta-pill">Setup &amp; Installation</span>
+  <span class="meta-pill">Common Python Errors</span>
+  <span class="meta-pill">No scroll required &mdash; expand what you need</span>
+</div>
+
+<div class="callout">
+  <strong>How to use this page:</strong> Find the question that matches your situation. Expand it. Try the fix. If it doesn't resolve your issue, post in the course discussion board with your OS, the step you're on, and a screenshot of the error.
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SECTION 1: SETUP                    -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Setup &amp; Installation</div><div class="line"></div></div>
+
+<div class="faq-list">
+
+  <details class="faq">
+    <summary>
+      <span>Python says &ldquo;command not found&rdquo; or &ldquo;No such file or directory&rdquo; on Mac</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>On Mac, the correct command is <code>python3</code>, not <code>python</code>. The bare <code>python</code> command either does not exist or still points to the old Python 2 that shipped with older macOS versions.</p>
+      <p><strong>Fix:</strong> Always use <code>python3</code> in the terminal:</p>
+      <pre>python3 --version</pre>
+      <p>VS Code handles this automatically once the Python extension is installed and the interpreter is selected &mdash; you only need <code>python3</code> when typing commands directly in the terminal.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>&ldquo;python is not recognized as an internal or external command&rdquo; on Windows</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>This means Python was installed without being added to your PATH. On the Python installer&rsquo;s first screen, the <strong>&ldquo;Add Python to PATH&rdquo;</strong> checkbox at the bottom was not checked.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Open <strong>Settings &rarr; Apps</strong> and uninstall Python</li>
+        <li>Re-download from <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a></li>
+        <li>On the <strong>first screen</strong> of the installer, check <strong>&ldquo;Add Python 3.12 to PATH&rdquo;</strong> before clicking anything else</li>
+        <li>Open a new PowerShell window and run <code>python --version</code> to confirm</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>VS Code says &ldquo;No Python interpreter selected&rdquo;</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>VS Code needs to know which Python installation to use. This prompt appears the first time you open a <code>.py</code> file or try to run one.</p>
+      <p><strong>Fix:</strong> Press <code>&#x2318;Shift+P</code> (Mac) or <code>Ctrl+Shift+P</code> (Windows) to open the Command Palette. Type <strong>Python: Select Interpreter</strong> and press Enter. Choose the entry that shows <strong>Python 3.10</strong> or higher. The version number will appear in the bottom-right corner of VS Code whenever a <code>.py</code> file is open.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>The run button is missing, or right-clicking doesn&rsquo;t show &ldquo;Run Python File in Terminal&rdquo;</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The <strong>Run Python File in Terminal</strong> option only appears when the Python extension is installed and enabled in VS Code.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Open Extensions with <code>&#x2318;Shift+X</code> (Mac) or <code>Ctrl+Shift+X</code> (Windows)</li>
+        <li>Search for <strong>Python</strong></li>
+        <li>Confirm the Microsoft extension shows a <strong>Disable</strong> button (not <strong>Install</strong>)</li>
+        <li>If it shows Install, click it and wait for installation to finish</li>
+        <li>Reload VS Code after installing (close and reopen)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>I installed Python but it still isn&rsquo;t found when I run code in VS Code</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>VS Code caches the Python interpreter list at startup. If you installed Python after opening VS Code, it may not know about the new installation yet.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Close VS Code completely and reopen it</li>
+        <li>Open a <code>.py</code> file and use <strong>Python: Select Interpreter</strong> from the Command Palette to pick the correct version</li>
+        <li>If no Python 3.10+ appears in the list, confirm the installation was successful by running <code>python3 --version</code> (Mac) or <code>python --version</code> (Windows) in a terminal outside VS Code</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>VS Code shows multiple Python versions &mdash; which one do I pick?</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Multiple versions are common on Mac, where older versions may exist alongside newer ones. This is not a problem.</p>
+      <p><strong>Fix:</strong> Pick the highest version that is <strong>3.10 or above</strong>. Look for an entry like <code>Python 3.12.x</code> and select it. The version number shows in the VS Code bottom-right corner when a <code>.py</code> file is open. As long as it shows 3.10 or higher, you are set.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><code>python --version</code> shows Python 2.7 on Mac</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>On Mac, the <code>python</code> command (without the 3) sometimes still points to the old Python 2.7 that Apple bundled with older versions of macOS. Python 2 is end-of-life and is not used in this course.</p>
+      <p><strong>Fix:</strong> Always use <code>python3</code> on Mac, never plain <code>python</code>. Run:</p>
+      <pre>python3 --version</pre>
+      <p>This should return Python 3.10 or higher. If it does not, install Python 3 from <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a>.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>DataCamp isn&rsquo;t showing up or I don&rsquo;t have access</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>DataCamp access is granted through a course invite link distributed in Week 1. There is nothing to set up before then.</p>
+      <p><strong>Fix:</strong> Wait for the invite email from the instructor, which arrives at your USF email during Week 1. Accept the invite and log in with your USF email address. If you accepted the invite but still do not have access, contact the instructor with your USF email and DataCamp username.</p>
+    </div>
+  </details>
+
+</div><!-- /faq-list -->
+
+<!-- ═══════════════════════════════════ -->
+<!-- SECTION 2: PYTHON ERRORS            -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Common Python Errors</div><div class="line"></div></div>
+
+<div class="callout blue">
+  <strong>How to read an error message:</strong> Start at the <strong>bottom</strong> of the red output. The last line tells you the error type and message. The line above it tells you the file name and line number. That is where to look first.
+</div>
+
+<div class="faq-list">
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">SyntaxError: invalid syntax</span> &mdash; Python won&rsquo;t run my file at all</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>A <code>SyntaxError</code> means Python cannot even parse the file &mdash; there is a structural problem before any code runs. The error message includes a line number: go to that line first.</p>
+      <p><strong>Most common causes:</strong></p>
+      <ul>
+        <li>Missing colon <code>:</code> at the end of an <code>if</code>, <code>for</code>, <code>while</code>, or <code>def</code> line</li>
+        <li>Unclosed parenthesis <code>(</code> or bracket <code>[</code> &mdash; often on the line <em>before</em> the reported line</li>
+        <li>Mismatched or unclosed quotation marks</li>
+        <li>Using <code>=</code> instead of <code>==</code> inside an <code>if</code> condition</li>
+      </ul>
+      <pre># Wrong — missing colon
+if x > 10
+    print(x)
+
+# Correct
+if x > 10:
+    print(x)</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">IndentationError</span> &mdash; unexpected indent or expected an indented block</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Python uses indentation (whitespace at the start of a line) to define code blocks. Every line inside an <code>if</code>, <code>for</code>, or <code>def</code> must be indented consistently.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Use <strong>4 spaces</strong> per indent level &mdash; never tabs mixed with spaces</li>
+        <li>In VS Code, go to <strong>View &rarr; Appearance &rarr; Render Whitespace</strong> to see exactly what is there</li>
+        <li>VS Code shows a <strong>Spaces / Tab Size</strong> indicator in the bottom-right corner; click it and choose <strong>Indent Using Spaces: 4</strong></li>
+      </ul>
+      <pre># Wrong — missing indent after def
+def greet(name):
+print("Hello", name)   # IndentationError
+
+# Correct
+def greet(name):
+    print("Hello", name)</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">NameError: name 'x' is not defined</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>You used a variable before assigning it a value, or the name has a typo.</p>
+      <p><strong>Common causes:</strong></p>
+      <ul>
+        <li>Spelling mistake: <code>totla</code> instead of <code>total</code></li>
+        <li>Using a variable outside the function it was defined in (scope issue)</li>
+        <li>Running cells out of order in a Jupyter notebook</li>
+      </ul>
+      <pre># Wrong — total not defined yet
+print(total)
+total = 0
+
+# Correct
+total = 0
+print(total)</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">TypeError: can only concatenate str (not &ldquo;int&rdquo;) to str</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>You tried to combine a string and a number using <code>+</code>. Python does not do this automatically &mdash; you must convert the number to a string first.</p>
+      <p><strong>Fix:</strong> Use an f-string (the preferred approach) or <code>str()</code>:</p>
+      <pre># Wrong
+age = 21
+print("You are " + age + " years old")   # TypeError
+
+# Option 1 — f-string (recommended)
+print(f"You are {age} years old")
+
+# Option 2 — str() conversion
+print("You are " + str(age) + " years old")</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">TypeError: &hellip; object is not subscriptable</span> or <span class="err-badge">not iterable</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p><strong>&ldquo;Not subscriptable&rdquo;</strong> means you used <code>[index]</code> on something that is not a list or string &mdash; most commonly a number or <code>None</code>.</p>
+      <p><strong>&ldquo;Not iterable&rdquo;</strong> means you tried to loop over something that is not a sequence &mdash; again, often a number or <code>None</code>.</p>
+      <p><strong>Fix:</strong> Check what type the variable actually is. Add a <code>print(type(variable))</code> line before the error to see what you are working with.</p>
+      <pre>result = 42
+print(result[0])   # TypeError: 'int' is not subscriptable
+
+# Fix: result should be a list
+result = [42]
+print(result[0])   # 42</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">IndexError: list index out of range</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>You tried to access a list position that does not exist. If a list has 3 items, valid indexes are 0, 1, and 2. Accessing index 3 causes this error.</p>
+      <pre>names = ["Ana", "Ben", "Cai"]
+print(names[3])   # IndexError — only 0, 1, 2 exist
+
+# Safe approach: check length first
+if len(names) > 3:
+    print(names[3])</pre>
+      <p><strong>Common cause in loops:</strong> using <code>range(len(items) + 1)</code> instead of <code>range(len(items))</code>.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">KeyError: &lsquo;key_name&rsquo;</span> &mdash; dictionary lookup fails</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>You accessed a dictionary with a key that does not exist in it. Usually a typo or a key that only exists in some records.</p>
+      <pre>record = {"name": "Ana", "score": 95}
+print(record["scroe"])   # KeyError — typo, should be "score"</pre>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Check the spelling of the key name</li>
+        <li>Use <code>print(record.keys())</code> to see what keys are actually present</li>
+        <li>Use <code>.get()</code> to provide a default value instead of crashing: <code>record.get("score", 0)</code></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">AttributeError: &lsquo;NoneType&rsquo; object has no attribute &lsquo;&hellip;&rsquo;</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>A function returned <code>None</code> (nothing) instead of the value you expected. You then tried to call a method on that <code>None</code> value.</p>
+      <pre># Wrong — sort() modifies in place and returns None
+names = ["Cai", "Ana", "Ben"]
+sorted_names = names.sort()
+print(sorted_names[0])   # AttributeError: NoneType
+
+# Fix — use sorted() which returns a new list
+sorted_names = sorted(names)
+print(sorted_names[0])   # "Ana"</pre>
+      <p><strong>Fix:</strong> Check what your function actually returns. Add <code>print(result)</code> before the line that crashes to confirm it is not <code>None</code>.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">FileNotFoundError: No such file or directory</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Python could not find the file at the path you gave it. Either the file does not exist, the name is spelled wrong, or you are running the script from a different directory than you think.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>In the VS Code terminal, run <code>pwd</code> to see where Python is looking</li>
+        <li>Run <code>ls</code> to see what files are in that directory</li>
+        <li>Move the data file into the same folder as your script, then reference it by filename only: <code>open("data.csv")</code> not <code>open("Downloads/data.csv")</code></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">ZeroDivisionError: division by zero</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Your code attempted to divide a number by zero. This often happens when a variable that should contain a count is 0 because no data was processed yet, or because of a data quality issue.</p>
+      <pre># Fix: guard before dividing
+if total > 0:
+    average = revenue / total
+else:
+    average = 0</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>My <code>if</code> condition is never true even though it should be</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The most common cause is using <code>=</code> (assignment) instead of <code>==</code> (comparison) in a condition. In Python 3 this is a <code>SyntaxError</code> inside an <code>if</code>, but it shows up as wrong logic in other situations.</p>
+      <p>The second most common cause: comparing a string to a number, or comparing with the wrong case.</p>
+      <pre># Wrong — comparing with wrong type
+score = input("Enter score: ")  # input() returns a string
+if score > 90:                  # TypeError or always False
+    print("A")
+
+# Fix — convert first
+score = float(input("Enter score: "))
+if score > 90:
+    print("A")</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>My code runs but nothing prints &mdash; the terminal is blank</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Two common causes:</p>
+      <ul>
+        <li><strong>Missing parentheses:</strong> In Python 3, <code>print</code> is a function and requires parentheses: <code>print("hello")</code> not <code>print "hello"</code></li>
+        <li><strong>Code inside a function that is never called:</strong> If your code is inside a <code>def</code> block but you never call the function, nothing runs</li>
+      </ul>
+      <pre># Wrong — Python 3 requires parentheses
+print "Hello"   # SyntaxError in Python 3
+
+# Correct
+print("Hello")
+
+# Wrong — function defined but never called
+def run():
+    print("Hello")
+# nothing printed!
+
+# Correct
+def run():
+    print("Hello")
+run()   # call it</pre>
+    </div>
+  </details>
+
+</div><!-- /faq-list -->
+
+<!-- ── Getting more help ── -->
+<div class="section-divider"><div class="line"></div><div class="label">Still Stuck?</div><div class="line"></div></div>
+<div class="callout">
+  <strong>Post in the course discussion board</strong> with: (1) the full error message — copy all the red text, not just the last line, (2) the code that caused it, and (3) what you already tried. The first 15 minutes of each class session are reserved for setup questions.
+</div>
+
+<div class="pn">
+  <a href="precourse.html">
+    <div class="label">&larr; Back</div>
+    <div class="title">Pre-Course Setup Tutorial</div>
+  </a>
+  <a class="next" href="glossary.html">
+    <div class="label">Also useful &rarr;</div>
+    <div class="title">Glossary</div>
+  </a>
+</div>
+
+</div></main>
+
+<footer>ISM2411 &middot; PYTHON FOR BUSINESS &middot; USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>
