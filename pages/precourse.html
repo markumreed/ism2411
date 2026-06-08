@@ -38,6 +38,7 @@
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
 body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
 .wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+
 .page-eyebrow {
   font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
   color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
@@ -60,12 +61,11 @@ ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
 .lede {
   font-size: 17.5px; color: var(--muted); line-height: 1.6;
-  margin: 0 0 28px; max-width: 720px;
+  margin: 0 0 16px; max-width: 720px;
 }
 a { color: var(--accent); }
 a:hover { color: #fcd34d; }
 
-/* code blocks */
 code {
   font-family: var(--mono); font-size: .92em;
   background: var(--bg2); padding: 1px 6px; border-radius: 4px;
@@ -79,41 +79,7 @@ pre {
 }
 pre code { background: none; padding: 0; border: 0; color: inherit; }
 
-/* meta bar */
-.meta {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 8px 0 28px; padding: 14px 18px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  font-family: var(--mono); font-size: 12px;
-}
-.meta .chip {
-  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
-  color: var(--muted);
-}
-.meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
-
-/* week jump bar — quick switch between reading/lecture/lab */
-.weekjump {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  margin: 0 0 32px; padding: 10px 14px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-}
-.weekjump-label {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--dim); text-transform: uppercase; margin-right: 4px;
-}
-.weekjump-link {
-  padding: 5px 12px; border-radius: 999px; text-decoration: none;
-  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
-  transition: background .12s, color .12s, border-color .12s;
-}
-.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
-.weekjump-link.current {
-  background: rgba(251,191,36,.12); color: var(--accent);
-  border-color: rgba(251,191,36,.4);
-}
-
-/* callout boxes */
+/* callout */
 .callout {
   margin: 22px 0; padding: 16px 20px;
   background: var(--bg2); border: 1px solid var(--border);
@@ -123,28 +89,166 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
   font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
   text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
 }
+.callout p { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
 .callout p:last-child { margin-bottom: 0; }
-.callout.green { border-left-color: #34d399; }
-.callout.green .callout-title { color: #34d399; }
-.callout.blue { border-left-color: #60a5fa; }
-.callout.blue .callout-title { color: #60a5fa; }
-.callout.pink { border-left-color: #f472b6; }
-.callout.pink .callout-title { color: #f472b6; }
-.callout.purple { border-left-color: #c084fc; }
-.callout.purple .callout-title { color: #c084fc; }
+.callout.green  { border-left-color: #34d399; }
+.callout.green  .callout-title { color: #34d399; }
+.callout.blue   { border-left-color: #60a5fa; }
+.callout.blue   .callout-title { color: #60a5fa; }
+.callout.warn   { border-left-color: #f87171; }
+.callout.warn   .callout-title { color: #f87171; }
 
-/* topic list */
-.topic-list {
-  list-style: none; padding: 0; margin: 16px 0;
+/* meta pills */
+.meta-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 24px; }
+.meta-pill {
+  font-family: var(--mono); font-size: 10px; padding: 3px 10px;
+  border: 1px solid var(--border); border-radius: 20px;
+  color: var(--dim); background: var(--bg2);
 }
-.topic-list li {
-  position: relative; padding: 8px 0 8px 28px;
-  border-bottom: 1px dashed var(--border);
+
+/* section divider */
+.section-divider {
+  display: flex; align-items: center; gap: 12px; margin: 44px 0 20px;
 }
-.topic-list li:last-child { border-bottom: 0; }
-.topic-list li::before {
-  content: '▸'; position: absolute; left: 6px; color: var(--accent);
-  font-size: 12px; top: 10px;
+.section-divider .line { flex: 1; height: 1px; background: var(--border); }
+.section-divider .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--dim); white-space: nowrap;
+}
+
+/* tool header */
+.tool-header { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+.tool-icon { font-size: 28px; flex-shrink: 0; }
+.tool-name { font-size: 20px; font-weight: 700; color: var(--text); }
+.tool-why { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 16px; }
+
+/* platform badges */
+.platform-badge {
+  display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 12px;
+  margin-right: 4px; margin-bottom: 4px;
+}
+.pb-mac { background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.3); color: #34d399; }
+.pb-win { background: rgba(96,165,250,.1); border: 1px solid rgba(96,165,250,.3); color: #60a5fa; }
+.pb-all { background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); color: var(--accent); }
+
+/* OS tabs */
+.os-tabs {
+  display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid var(--border);
+}
+.os-tab {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 8px 18px; cursor: pointer;
+  border: 1px solid var(--border); border-bottom: none; margin-bottom: -2px;
+  color: var(--dim); background: var(--bg2); border-radius: 6px 6px 0 0;
+  transition: color .12s, background .12s;
+}
+.os-tab:hover { color: var(--muted); }
+.os-tab.active {
+  color: var(--accent); background: var(--bg3);
+  border-color: rgba(251,191,36,.4); border-bottom-color: var(--bg3);
+  font-weight: bold;
+}
+[data-theme="light"] .os-tab.active { border-bottom-color: var(--bg3); }
+.os-panel {
+  display: none; background: var(--bg3); border: 1px solid var(--border);
+  border-top: none; border-radius: 0 0 8px 8px; padding: 20px 22px; margin-bottom: 20px;
+}
+.os-panel.active { display: block; }
+.os-panel p { font-size: 14px; color: var(--muted); margin-bottom: 10px; line-height: 1.7; }
+.os-panel p:last-child { margin-bottom: 0; }
+
+/* step blocks */
+.step-block {
+  display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start;
+}
+.step-circle {
+  min-width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+  color: #0f0f17; font-family: var(--mono); font-size: 13px; font-weight: bold;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-inner .step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.step-inner p { font-size: 14px; color: var(--muted); margin-bottom: 6px; line-height: 1.7; }
+.step-inner p:last-child { margin-bottom: 0; }
+.step-inner code { font-size: .82em; }
+
+/* verify box */
+.verify-box {
+  background: rgba(52,211,153,.06); border: 1px solid rgba(52,211,153,.22);
+  border-radius: 8px; padding: 14px 18px; margin-top: 12px;
+}
+.verify-box .vb-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; color: #34d399; margin-bottom: 8px;
+}
+.verify-box .vb-cmd { font-family: var(--mono); font-size: 12px; color: var(--text); margin-bottom: 4px; }
+.verify-box .vb-exp { font-size: 12px; color: var(--muted); }
+
+/* big verify block */
+.big-verify {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 16px;
+}
+.big-verify .bv-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 12px;
+}
+.big-verify pre { font-size: 12px; color: #f0f0f5; line-height: 1.8; white-space: pre; margin: 0; background: none; border: none; padding: 0; }
+.big-verify .cm  { color: #6c7086; }
+.big-verify .ok  { color: #a6e3a1; }
+
+/* concept/overview table */
+.concept-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+.concept-table th {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim); text-align: left;
+  padding: 7px 12px; border-bottom: 1px solid var(--border2);
+  background: var(--bg2);
+}
+.concept-table td {
+  padding: 9px 12px; border-bottom: 1px solid var(--border);
+  color: var(--muted); vertical-align: top;
+}
+.concept-table tr:last-child td { border-bottom: none; }
+.concept-table td:first-child {
+  font-family: var(--mono); font-size: 12px; color: var(--text); white-space: nowrap;
+}
+
+/* troubleshooting */
+.trouble-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media(max-width: 580px) { .trouble-row { grid-template-columns: 1fr; } }
+.trouble-q {
+  background: rgba(251,191,36,.06); border: 1px solid rgba(251,191,36,.25);
+  border-radius: 7px; padding: 12px 14px;
+}
+.trouble-a {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 7px; padding: 12px 14px;
+}
+.tq-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
+}
+.ta-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: #34d399; margin-bottom: 6px;
+}
+.tq-text, .ta-text { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.tq-text code, .ta-text code { font-size: .82em; }
+
+/* final checklist */
+.checklist-final {
+  list-style: none; display: flex; flex-direction: column;
+  gap: 8px; margin-bottom: 14px; padding: 0;
+}
+.checklist-final li {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+}
+.checklist-final li::before {
+  content: "☐"; font-size: 16px; color: var(--dim);
+  flex-shrink: 0; margin-top: -2px;
 }
 
 /* prev/next nav */
@@ -166,167 +270,413 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 
-/* quiz */
-.quiz-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
-}
-.quiz-q {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  color: var(--accent); margin-bottom: 8px;
-}
-.quiz-question {
-  font-weight: 600; margin-bottom: 10px;
-}
-.quiz-question pre {
-  margin: 8px 0 0; font-size: 12.5px;
-}
-.quiz-options {
-  list-style: none; padding: 0; margin: 8px 0; font-family: var(--mono); font-size: 13px;
-}
-.quiz-options li { padding: 3px 0; color: var(--muted); }
-.quiz-answer {
-  margin-top: 10px; padding: 8px 12px;
-  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25);
-  border-radius: 6px; font-family: var(--mono); font-size: 12.5px;
-  color: #34d399;
-}
-.quiz-answer summary {
-  cursor: pointer; user-select: none; font-weight: 600;
-  list-style: none;
-}
-.quiz-answer summary::-webkit-details-marker { display: none; }
-.quiz-answer summary::before { content: '▸ '; }
-.quiz-answer[open] summary::before { content: '▾ '; }
-.quiz-answer pre {
-  margin: 8px 0 0; background: var(--code-bg); font-size: 12px;
-  color: #f0f0f5;
-}
-
-/* concept cards */
-.concept-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 12px; margin: 18px 0;
-}
-.concept-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.concept-card h4 {
-  margin: 0 0 6px; font-size: 13px; font-family: var(--mono);
-  color: var(--accent); letter-spacing: .04em;
-}
-.concept-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-
 footer {
   border-top: 1px solid var(--border); padding: 28px;
   text-align: center; font-family: var(--mono); font-size: 11px;
   color: var(--dim); letter-spacing: .08em; margin-top: 60px;
 }
-/* ism-mobile */
-@media(max-width:600px){
-  .pn{grid-template-columns:1fr}
-  .two-col{grid-template-columns:1fr}
-  .vpl-tile{min-width:unset;flex:1 1 100%}
-  pre{font-size:12px;padding:12px 14px}
-  .sched-row{grid-template-columns:80px 1fr;font-size:12.5px}
-  .sched-row span:last-child{display:none}
-  .concept-grid{grid-template-columns:1fr}
+
+/* mobile */
+@media(max-width:600px) {
+  .pn { grid-template-columns: 1fr; }
+  pre { font-size: 12px; padding: 12px 14px; }
+  .concept-table { display: block; overflow-x: auto; }
 }
 </style>
 </head>
 <body>
 
 <main id="content"><div class="wrap">
-<div class="page-eyebrow">BEFORE WEEK 1 · SETUP</div>
+
+<!-- ── Page header ── -->
+<div class="page-eyebrow">ISM2411 &middot; PYTHON FOR BUSINESS &middot; BEFORE WEEK 1</div>
 <h1>Pre-Course Setup</h1>
-<p class="lede">Install Python and VS Code on your laptop before our first class meeting. This setup takes about 30 minutes and lets you write and run code from day one. If anything goes wrong, that's expected — bring questions to Week 1.</p>
+<p class="lede">Install Python and VS Code before your first class session &mdash; step-by-step instructions for Mac and Windows. About 30 minutes start to finish.</p>
+<div class="meta-pills">
+  <span class="meta-pill">Complete before Day 1</span>
+  <span class="meta-pill">Mac + Windows instructions</span>
+  <span class="meta-pill">~30 min total</span>
+  <span class="meta-pill">Hello-world verification included</span>
+</div>
 
 <div class="callout">
-<strong>What you'll install:</strong> Python 3.12 (the language), VS Code (the editor), and the Python extension for VS Code. All free. Works on Mac, Windows, and Linux.
+  <div class="callout-title">What you&rsquo;ll install</div>
+  <p>Python 3.12 (the language), VS Code (the editor), and the Python extension for VS Code. All free. Finish this before Week 1 so class time is spent writing Python, not troubleshooting installation.</p>
 </div>
 
-<h2>Step 1 — Install Python</h2>
-<p>Go to <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a> and download the latest Python 3 installer for your operating system.</p>
+<!-- ── Overview table ── -->
+<div class="section-divider"><div class="line"></div><div class="label">What You Are Installing &mdash; Overview</div><div class="line"></div></div>
+<table class="concept-table">
+  <thead>
+    <tr><th>Tool</th><th>What it is</th><th>Mac</th><th>Windows</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Python 3</td>
+      <td>The programming language used throughout this course</td>
+      <td>Download the .pkg installer from python.org</td>
+      <td>Download the .exe installer; check &ldquo;Add Python to PATH&rdquo;</td>
+    </tr>
+    <tr>
+      <td>VS Code</td>
+      <td>Code editor &mdash; where you write every script this semester</td>
+      <td>Download the .dmg from code.visualstudio.com</td>
+      <td>Download the .exe from code.visualstudio.com</td>
+    </tr>
+    <tr>
+      <td>Python extension</td>
+      <td>Adds Python language support and run-button to VS Code</td>
+      <td>Install inside VS Code</td>
+      <td>Install inside VS Code</td>
+    </tr>
+    <tr>
+      <td>Pylance</td>
+      <td>Smarter autocomplete and type hints inside VS Code</td>
+      <td>Install inside VS Code</td>
+      <td>Install inside VS Code</td>
+    </tr>
+  </tbody>
+</table>
 
-<h3>macOS</h3>
-<ol>
-<li>Download the macOS 64-bit universal2 installer (.pkg file)</li>
-<li>Open the installer, click through the defaults, finish.</li>
-<li>Open Terminal (⌘+Space, type "Terminal") and run: <code>python3 --version</code></li>
-<li>You should see something like <code>Python 3.12.x</code></li>
-</ol>
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STEP 1: Python                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Step 1 &mdash; Python 3</div><div class="line"></div></div>
+<div class="tool-header">
+  <div class="tool-icon">&#x1F40D;</div>
+  <div>
+    <div class="tool-name">Python 3</div>
+    <div><span class="platform-badge pb-all">Mac + Windows</span></div>
+  </div>
+</div>
+<p class="tool-why">The language this course is built around. You need Python 3.10 or higher &mdash; 3.12 is recommended.</p>
 
-<h3>Windows</h3>
-<ol>
-<li>Download the Windows installer (64-bit)</li>
-<li><strong>Important:</strong> On the first screen, check the box that says <em>"Add Python to PATH"</em> before clicking Install Now</li>
-<li>Open PowerShell (Start menu → type "PowerShell") and run: <code>python --version</code></li>
-<li>You should see <code>Python 3.12.x</code></li>
-</ol>
-
-<div class="callout warn">
-<strong>Windows note:</strong> If <code>python --version</code> doesn't work, you likely missed the "Add to PATH" checkbox. Reinstall and check that box.
+<div class="os-tabs">
+  <div class="os-tab active" onclick="show('python','mac',this)">&#x1F34E; Mac / Linux</div>
+  <div class="os-tab" onclick="show('python','win',this)">&#x1FA9F; Windows</div>
 </div>
 
-<h2>Step 2 — Install VS Code</h2>
-<p>VS Code is the editor we'll use all semester. Get it from <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">code.visualstudio.com</a>.</p>
-<ol>
-<li>Click the big blue Download button — it auto-detects your OS</li>
-<li>Run the installer with default settings</li>
-<li>Open VS Code once it's installed</li>
-</ol>
-
-<h2>Step 3 — Install the Python Extension</h2>
-<ol>
-<li>Open VS Code</li>
-<li>Click the Extensions icon in the left sidebar (looks like four squares) or press <code>Ctrl+Shift+X</code> (Windows) / <code>⌘+Shift+X</code> (Mac)</li>
-<li>Search for <strong>Python</strong> — install the one published by <strong>Microsoft</strong> (it has the most downloads)</li>
-<li>While you're there, also install <strong>Pylance</strong> (also by Microsoft) — it gives smarter autocomplete</li>
-</ol>
-
-<h2>Step 4 — Verify it all works</h2>
-<ol>
-<li>In VS Code, go to <strong>File → New File</strong></li>
-<li>Save it as <code>hello.py</code> on your Desktop</li>
-<li>Type this single line and save:
-<pre><code>print("Hello, ISM2411")</code></pre>
-</li>
-<li>Right-click in the editor and choose <strong>"Run Python File in Terminal"</strong></li>
-<li>The terminal should print <code>Hello, ISM2411</code></li>
-</ol>
-
-<div class="callout ok">
-<strong>If you see <code>Hello, ISM2411</code> in the terminal, you're done.</strong> You have a working Python development environment. Welcome to the course.
+<div id="python-mac" class="os-panel active">
+  <div class="step-block">
+    <div class="step-circle">1</div>
+    <div class="step-inner">
+      <div class="step-title">Download the installer</div>
+      <p>Go to <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a> and click the big <strong>Download Python 3.12.x</strong> button. This downloads a <code>.pkg</code> installer for macOS.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">2</div>
+    <div class="step-inner">
+      <div class="step-title">Run the installer</div>
+      <p>Open the downloaded <code>.pkg</code> file and click through the defaults. You do not need to change any settings. Click <strong>Install</strong>.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">3</div>
+    <div class="step-inner">
+      <div class="step-title">Verify</div>
+      <p>Open <strong>Terminal</strong> (press <code>&#x2318;Space</code> and type &ldquo;Terminal&rdquo;). Run:</p>
+      <pre>python3 --version</pre>
+    </div>
+  </div>
+  <div class="verify-box">
+    <div class="vb-label">&#x2713; Verify</div>
+    <div class="vb-cmd">$ python3 --version</div>
+    <div class="vb-exp">Expected: <strong>Python 3.10.x, 3.11.x, or 3.12.x</strong></div>
+  </div>
 </div>
 
-<h2>Step 5 — Create a DataCamp account</h2>
-<p>USF has a free DataCamp for Classrooms license for this course. You'll get an invite link from the instructor in Week 1. No setup needed before then — just be ready to accept the invite when it arrives in your USF email.</p>
+<div id="python-win" class="os-panel">
+  <div class="step-block">
+    <div class="step-circle">1</div>
+    <div class="step-inner">
+      <div class="step-title">Download the installer</div>
+      <p>Go to <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a> and click <strong>Download Python 3.12.x</strong>. This downloads a <code>.exe</code> installer.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">2</div>
+    <div class="step-inner">
+      <div class="step-title">Check &ldquo;Add Python to PATH&rdquo; &mdash; critical step</div>
+      <p>Run the <code>.exe</code> installer. On the <strong>very first screen</strong>, before clicking anything else, check the box labeled <strong>&ldquo;Add Python 3.12 to PATH&rdquo;</strong> at the bottom. Then click <strong>Install Now</strong>.</p>
+      <p>If you skip this, <code>python</code> will not work in the terminal and you will need to reinstall.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">3</div>
+    <div class="step-inner">
+      <div class="step-title">Verify</div>
+      <p>Open <strong>PowerShell</strong> (Start menu &rarr; type &ldquo;PowerShell&rdquo;). Run:</p>
+      <pre>python --version</pre>
+    </div>
+  </div>
+  <div class="verify-box">
+    <div class="vb-label">&#x2713; Verify</div>
+    <div class="vb-cmd">PS&gt; python --version</div>
+    <div class="vb-exp">Expected: <strong>Python 3.12.x</strong></div>
+  </div>
+</div>
 
-<h2>Common problems</h2>
-<h3>"python is not recognized" on Windows</h3>
-<p>You forgot to check "Add Python to PATH" during install. Uninstall Python from Settings → Apps, then reinstall with that box checked.</p>
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STEP 2: VS Code                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Step 2 &mdash; VS Code</div><div class="line"></div></div>
+<div class="tool-header">
+  <div class="tool-icon">&#x1F4BB;</div>
+  <div>
+    <div class="tool-name">Visual Studio Code</div>
+    <div><span class="platform-badge pb-all">Mac + Windows</span></div>
+  </div>
+</div>
+<p class="tool-why">Your code editor for every script and project this semester. Free, lightweight, and the industry standard for Python development.</p>
 
-<h3>"command not found: python" on Mac</h3>
-<p>On Mac, the command is <code>python3</code>, not <code>python</code>. Both work in VS Code once the extension is installed.</p>
+<div class="os-tabs">
+  <div class="os-tab active" onclick="show('vscode','mac',this)">&#x1F34E; Mac / Linux</div>
+  <div class="os-tab" onclick="show('vscode','win',this)">&#x1FA9F; Windows</div>
+</div>
 
-<h3>VS Code says "No Python interpreter selected"</h3>
-<p>Press <code>Ctrl+Shift+P</code> (or <code>⌘+Shift+P</code> on Mac), type <em>"Python: Select Interpreter"</em>, and choose the Python 3.12 entry.</p>
+<div id="vscode-mac" class="os-panel active">
+  <div class="step-block">
+    <div class="step-circle">1</div>
+    <div class="step-inner">
+      <div class="step-title">Download VS Code</div>
+      <p>Go to <a href="https://code.visualstudio.com" target="_blank" rel="noopener">code.visualstudio.com</a> and click the big blue <strong>Download for Mac</strong> button. This downloads a <code>.zip</code> file.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">2</div>
+    <div class="step-inner">
+      <div class="step-title">Install</div>
+      <p>Open your Downloads folder. Double-click the <code>.zip</code> to unzip it. Drag <strong>Visual Studio Code.app</strong> into your <strong>Applications</strong> folder. Open it from Applications or Spotlight (<code>&#x2318;Space</code> &rarr; type &ldquo;code&rdquo;).</p>
+    </div>
+  </div>
+  <div class="verify-box">
+    <div class="vb-label">&#x2713; Verify</div>
+    <div class="vb-cmd">Visual Studio Code opens from the Applications folder</div>
+    <div class="vb-exp">Expected: <strong>VS Code window appears without an error</strong></div>
+  </div>
+</div>
 
-<h3>Multiple Python versions installed</h3>
-<p>This is common on Mac. As long as VS Code's interpreter is set to Python 3.10+, you're fine.</p>
+<div id="vscode-win" class="os-panel">
+  <div class="step-block">
+    <div class="step-circle">1</div>
+    <div class="step-inner">
+      <div class="step-title">Download VS Code</div>
+      <p>Go to <a href="https://code.visualstudio.com" target="_blank" rel="noopener">code.visualstudio.com</a> and click <strong>Download for Windows</strong>. This downloads a <code>.exe</code> installer.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">2</div>
+    <div class="step-inner">
+      <div class="step-title">Install</div>
+      <p>Run the installer. Accept the license agreement. On the <strong>Select Additional Tasks</strong> screen, check both <strong>Add to PATH</strong> boxes. Click through to Install.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">3</div>
+    <div class="step-inner">
+      <div class="step-title">Restart and open VS Code</div>
+      <p>After installation completes, open the Start menu and search for <strong>Visual Studio Code</strong> to confirm it installed.</p>
+    </div>
+  </div>
+  <div class="verify-box">
+    <div class="vb-label">&#x2713; Verify</div>
+    <div class="vb-cmd">Visual Studio Code appears in the Start menu and opens</div>
+    <div class="vb-exp">Expected: <strong>VS Code window appears without an error</strong></div>
+  </div>
+</div>
 
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STEP 3: Python Extension                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Step 3 &mdash; Python &amp; Pylance Extensions</div><div class="line"></div></div>
+<div class="tool-header">
+  <div class="tool-icon">&#x1F9E9;</div>
+  <div>
+    <div class="tool-name">VS Code Extensions</div>
+    <div><span class="platform-badge pb-all">Mac + Windows &mdash; same steps</span></div>
+  </div>
+</div>
+<p class="tool-why">These two extensions add Python language support, the run button, and smart autocomplete to VS Code.</p>
+
+<div class="step-block">
+  <div class="step-circle">1</div>
+  <div class="step-inner">
+    <div class="step-title">Open Extensions</div>
+    <p>In VS Code, click the <strong>Extensions</strong> icon in the left sidebar (four squares) or press <code>&#x2318;Shift+X</code> (Mac) / <code>Ctrl+Shift+X</code> (Windows).</p>
+  </div>
+</div>
+<div class="step-block">
+  <div class="step-circle">2</div>
+  <div class="step-inner">
+    <div class="step-title">Install Python</div>
+    <p>Search for <strong>Python</strong>. Install the extension published by <strong>Microsoft</strong> (it has millions of downloads and will be the top result). Wait for installation to complete.</p>
+  </div>
+</div>
+<div class="step-block">
+  <div class="step-circle">3</div>
+  <div class="step-inner">
+    <div class="step-title">Install Pylance</div>
+    <p>Search for <strong>Pylance</strong>. Install the extension also published by <strong>Microsoft</strong>. This gives you smarter autocomplete and inline type hints as you type.</p>
+  </div>
+</div>
+<div class="verify-box">
+  <div class="vb-label">&#x2713; Verify</div>
+  <div class="vb-cmd">Both Python and Pylance appear in your Installed extensions list</div>
+  <div class="vb-exp">Expected: <strong>Both show a blue &ldquo;Disable&rdquo; button (not &ldquo;Install&rdquo;)</strong></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STEP 4: Verify                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Step 4 &mdash; Verify Everything Works</div><div class="line"></div></div>
+<div class="tool-header">
+  <div class="tool-icon">&#x2705;</div>
+  <div>
+    <div class="tool-name">Hello-World Test</div>
+    <div><span class="platform-badge pb-all">Mac + Windows</span></div>
+  </div>
+</div>
+<p class="tool-why">Write and run one line of Python to confirm the entire toolchain &mdash; Python, VS Code, and the extension &mdash; are all connected and working.</p>
+
+<div class="step-block">
+  <div class="step-circle">1</div>
+  <div class="step-inner">
+    <div class="step-title">Create a new Python file</div>
+    <p>In VS Code, go to <strong>File &rarr; New File</strong>. Save it as <code>hello.py</code> on your Desktop (use <code>&#x2318;S</code> on Mac or <code>Ctrl+S</code> on Windows).</p>
+  </div>
+</div>
+<div class="step-block">
+  <div class="step-circle">2</div>
+  <div class="step-inner">
+    <div class="step-title">Type the code</div>
+    <p>Type this single line in the file:</p>
+    <pre>print("Hello, ISM2411")</pre>
+    <p>Save the file.</p>
+  </div>
+</div>
+<div class="step-block">
+  <div class="step-circle">3</div>
+  <div class="step-inner">
+    <div class="step-title">Run it</div>
+    <p>Right-click anywhere in the editor and choose <strong>&ldquo;Run Python File in Terminal&rdquo;</strong>. A terminal panel opens at the bottom of VS Code and runs your file.</p>
+  </div>
+</div>
+<div class="step-block">
+  <div class="step-circle">4</div>
+  <div class="step-inner">
+    <div class="step-title">Select the interpreter if prompted</div>
+    <p>If VS Code shows a prompt like <em>&ldquo;No Python interpreter selected&rdquo;</em> or a pop-up in the bottom-right corner, click it and select the <strong>Python 3.12.x</strong> entry from the list. Then run the file again.</p>
+  </div>
+</div>
+
+<div class="big-verify">
+  <div class="bv-label">Expected output in the terminal panel</div>
+  <pre><span class="cm"># After running hello.py you should see:</span>
+Hello, ISM2411
+<span class="ok">&#x2713; If this appears, your environment is fully working.</span></pre>
+</div>
+
+<div class="callout green">
+  <div class="callout-title">&#x2713; You&rsquo;re done</div>
+  <p>If you see <code>Hello, ISM2411</code> in the terminal panel, Python and VS Code are communicating correctly. You have a working development environment and are ready for Week 1.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STEP 5: DataCamp                                 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Step 5 &mdash; DataCamp Account</div><div class="line"></div></div>
+<div class="tool-header">
+  <div class="tool-icon">&#x1F4CA;</div>
+  <div>
+    <div class="tool-name">DataCamp</div>
+    <div><span class="platform-badge pb-all">Nothing to install now</span></div>
+  </div>
+</div>
+<p class="tool-why">USF has a free DataCamp for Classrooms license for this course. You will complete short interactive exercises there outside of class.</p>
+
+<div class="callout blue">
+  <div class="callout-title">No setup needed before Week 1</div>
+  <p>You will receive an invite link from the instructor in Week 1. Accept it using your USF email. No payment or credit card is required &mdash; the course license covers everything.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- FINAL CHECKLIST                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Pre-Course Checklist &mdash; Everything Done?</div><div class="line"></div></div>
+<ul class="checklist-final">
+  <li><strong>Python installed</strong> &mdash; <code>python3 --version</code> (Mac) or <code>python --version</code> (Windows) returns Python 3.10 or higher</li>
+  <li><strong>VS Code installed</strong> &mdash; opens from Applications (Mac) or Start menu (Windows) without errors</li>
+  <li><strong>Python extension installed</strong> &mdash; published by Microsoft, shows &ldquo;Disable&rdquo; not &ldquo;Install&rdquo; in the Extensions panel</li>
+  <li><strong>Pylance installed</strong> &mdash; published by Microsoft, shows &ldquo;Disable&rdquo; in the Extensions panel</li>
+  <li><strong>Interpreter selected</strong> &mdash; the bottom-right corner of VS Code shows Python 3.10+ when a <code>.py</code> file is open</li>
+  <li><strong>hello.py runs</strong> &mdash; right-clicking <code>hello.py</code> and choosing &ldquo;Run Python File in Terminal&rdquo; prints <code>Hello, ISM2411</code></li>
+  <li><strong>DataCamp</strong> &mdash; accept the instructor invite in Week 1 using your USF email (nothing to do before then)</li>
+</ul>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TROUBLESHOOTING                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Troubleshooting &mdash; Common Problems and Fixes</div><div class="line"></div></div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>python is not recognized</code> on Windows</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">You missed the &ldquo;Add Python to PATH&rdquo; checkbox during installation. Go to Settings &rarr; Apps, uninstall Python, then reinstall with that box checked.</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>command not found: python</code> on Mac</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">On Mac the command is <code>python3</code>, not <code>python</code>. Both work in VS Code once the extension is installed. Always use <code>python3</code> in the terminal.</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">VS Code says &ldquo;No Python interpreter selected&rdquo;</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Press <code>Ctrl+Shift+P</code> (or <code>&#x2318;Shift+P</code> on Mac). Type <strong>Python: Select Interpreter</strong> and press Enter. Choose the Python 3.12 entry from the list.</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">Multiple Python versions are installed</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Common on Mac. As long as the VS Code interpreter is set to Python 3.10 or higher, you are fine. You can check the interpreter version in the bottom-right corner of VS Code when a <code>.py</code> file is open.</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">Right-click menu does not show &ldquo;Run Python File in Terminal&rdquo;</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">The Python extension is not installed or not enabled. Open Extensions (<code>Ctrl+Shift+X</code>), confirm the Microsoft Python extension shows <strong>Disable</strong> (not <strong>Install</strong>). Reload VS Code after installation.</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">The terminal runs but prints an error instead of the output</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Read the error message carefully. A <code>SyntaxError</code> usually means a typo in the code &mdash; check your quotation marks and spelling. A <code>ModuleNotFoundError</code> means a missing package (not expected at this stage).</div></div>
+</div>
+
+<!-- ── Getting help ── -->
+<div class="section-divider"><div class="line"></div><div class="label">Getting Help Before Day 1</div><div class="line"></div></div>
 <div class="callout">
-<strong>Still stuck?</strong> Bring your laptop to Week 1. The first 15 minutes are reserved for setup troubleshooting.
+  <div class="callout-title">Still stuck?</div>
+  <p>Post in the course discussion board with your operating system and version, which step you are on, and a screenshot of the error message. The instructor monitors the board before the semester starts. The first 15 minutes of Week 1 are also reserved for setup troubleshooting &mdash; bring your laptop.</p>
 </div>
 
+<!-- ── Prev/next nav ── -->
 <div class="pn">
-<div></div>
-<a class="next" href="week01_reading.html"><div class="label">Next →</div><div class="title">Week 1 — What is a Computer?</div></a>
+  <div></div>
+  <a class="next" href="week01_reading.html">
+    <div class="label">Next &rarr;</div>
+    <div class="title">Week 1 &mdash; What is a Computer?</div>
+  </a>
 </div>
+
 </div></main>
 
-<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<footer>ISM2411 &middot; PYTHON FOR BUSINESS &middot; USF MUMA COLLEGE OF BUSINESS</footer>
+
+<script>
+function show(group, panel, el) {
+  document.querySelectorAll('[id^="' + group + '"]').forEach(p => p.classList.remove('active'));
+  document.getElementById(group + '-' + panel).classList.add('active');
+  el.parentElement.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
 <script id="ism-site-js" src="../assets/js/site.js"></script>
 </body>
 </html>
