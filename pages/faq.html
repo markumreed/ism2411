@@ -186,7 +186,7 @@ footer {
 </div>
 
 <div class="callout">
-  <strong>How to use this page:</strong> Find the question that matches your situation. Expand it. Try the fix. If it doesn't resolve your issue, post in the course discussion board with your OS, the step you're on, and a screenshot of the error.
+  <strong>How to use this page:</strong> Find the question that matches your situation. Expand it. Try the fix. If it doesn't resolve your issue, email your professor or TA using the format at the bottom of this page, or come to office hours.
 </div>
 
 <!-- ═══════════════════════════════════ -->
@@ -565,8 +565,56 @@ run()   # call it</pre>
 
 <!-- ── Getting more help ── -->
 <div class="section-divider"><div class="line"></div><div class="label">Still Stuck?</div><div class="line"></div></div>
+
 <div class="callout">
-  <strong>Post in the course discussion board</strong> with: (1) the full error message — copy all the red text, not just the last line, (2) the code that caused it, and (3) what you already tried. The first 15 minutes of each class session are reserved for setup questions.
+  <strong>Don&rsquo;t sit stuck for more than 20 minutes.</strong> Email your professor or TA, come to office hours, or ask at the start of the next class. Use the format below so the problem can be diagnosed immediately &mdash; vague emails get slow responses.
+</div>
+
+<p style="font-size:14px;color:var(--muted);margin:20px 0 10px;font-weight:600;">What to include:</p>
+<ul style="font-size:14px;color:var(--muted);padding-left:22px;line-height:1.9;margin-bottom:20px;">
+  <li>Your <strong style="color:var(--text);">operating system</strong> and version (e.g. macOS 14 Sonoma, Windows 11)</li>
+  <li>The <strong style="color:var(--text);">full error message</strong> &mdash; copy all the red text, not just the last line. Paste it directly into the email body.</li>
+  <li>The <strong style="color:var(--text);">code that caused it</strong> &mdash; paste it as plain text in the email. Do <em>not</em> attach a <code>.py</code> file; they are frequently blocked by university email filters and will never arrive.</li>
+  <li>Your <strong style="color:var(--text);">GitHub repo link</strong> if the assignment is submitted there &mdash; share the URL, not the files.</li>
+  <li>A <strong style="color:var(--text);">screenshot</strong> of the error as it appears in VS Code.</li>
+  <li><strong style="color:var(--text);">What you already tried</strong> &mdash; so the response doesn&rsquo;t repeat suggestions you&rsquo;ve already tested.</li>
+</ul>
+
+<p style="font-size:13px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Example email</p>
+<pre style="font-size:13px;line-height:1.8;">Subject: ISM2411 &mdash; FileNotFoundError in Week 3 lab
+
+Hi Professor [Name],
+
+I&rsquo;m getting the following error and cannot figure out what&rsquo;s wrong
+after checking the FAQ.
+
+OS: macOS 14.2 Sonoma
+Python version: 3.12.1
+
+Error message (full text):
+------------------------------------------------
+Traceback (most recent call last):
+  File &quot;lab03.py&quot;, line 12, in &lt;module&gt;
+    with open(&quot;data.csv&quot;) as f:
+FileNotFoundError: [Errno 2] No such file or directory: &apos;data.csv&apos;
+------------------------------------------------
+
+Code (pasted below &mdash; not attached):
+------------------------------------------------
+[paste your code here]
+------------------------------------------------
+
+GitHub repo: https://github.com/yourusername/ism2411-lab03
+
+What I already tried:
+- Checked the filename spelling
+- Moved data.csv to the same folder as the script
+
+Thank you,
+[Your full name]</pre>
+
+<div class="callout warn" style="margin-top:16px;">
+  <strong>Do not attach .py files.</strong> University email filters frequently block <code>.py</code> attachments and the message will never arrive. Always paste your code directly into the email body or share a GitHub link.
 </div>
 
 <div class="pn">
