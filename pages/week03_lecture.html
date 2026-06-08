@@ -433,12 +433,24 @@ print(f"Price: {price}")   # output: Price: 19.99</code></pre>
 </ul>
 
 
-<div style="display:flex;align-items:center;gap:12px;margin:44px 0 12px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Module Infographic</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);margin-bottom:40px;">
-  <img src="../assets/img/infographics/01_variables_and_data_types_infographic.png"
-       alt="Python Variables & Data Types — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
+<div style="display:flex;align-items:center;gap:12px;margin:44px 0 12px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Module Infographics &middot; 2</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
+<div class="infographic-tabs" style="margin-bottom:40px;">
+  <div class="vpl-tiles" style="margin-bottom:8px;">
+    <div class="vpl-tile vpl-active" onclick="igrSwitch(this,'../assets/img/infographics/01_variables_and_data_types_infographic.png','Python Variables &amp; Data Types')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Python Variables &amp; Data Types</span>
+    </div>
+    <div class="vpl-tile" onclick="igrSwitch(this,'../assets/img/infographics/03_fstrings_infographic.png','Mastering Python F-Strings')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">Mastering Python F-Strings</span>
+    </div>
+  </div>
+  <div class="igr-stage" style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);">
+    <img src="../assets/img/infographics/01_variables_and_data_types_infographic.png"
+         alt="Python Variables &amp; Data Types"
+         loading="lazy"
+         style="width:100%;height:auto;display:block;min-height:200px;">
+  </div>
 </div>
 
 <div class="callout green">
@@ -475,6 +487,13 @@ function vplSwitch(tile,src,title){
   tile.classList.add("vpl-active");
   var f=p.querySelector(".vpl-stage iframe");
   f.src=src;f.title=title;
+}
+function igrSwitch(tile,src,alt){
+  var p=tile.closest(".infographic-tabs");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var img=p.querySelector(".igr-stage img");
+  img.src=src;img.alt=alt;
 }
 </script>
 <script id="ism-site-js" src="../assets/js/site.js"></script>

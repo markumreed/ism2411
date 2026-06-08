@@ -223,6 +223,16 @@ footer {
   text-align: center; font-family: var(--mono); font-size: 11px;
   color: var(--dim); letter-spacing: .08em; margin-top: 60px;
 }
+/* video/infographic playlist */
+.vpl-stage{margin-bottom:12px}
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg3)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text)}
 /* ism-mobile */
 @media(max-width:600px){
   .pn{grid-template-columns:1fr}
@@ -317,12 +327,24 @@ footer {
 </ul>
 
 
-<div style="display:flex;align-items:center;gap:12px;margin:44px 0 12px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Module Infographic</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);margin-bottom:40px;">
-  <img src="../assets/img/infographics/13_what_is_a_computer_infographic.png"
-       alt="What is a Computer? — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
+<div style="display:flex;align-items:center;gap:12px;margin:44px 0 12px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Module Infographics &middot; 2</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
+<div class="infographic-tabs" style="margin-bottom:40px;">
+  <div class="vpl-tiles" style="margin-bottom:8px;">
+    <div class="vpl-tile vpl-active" onclick="igrSwitch(this,'../assets/img/infographics/13_what_is_a_computer_infographic.png','The Programmer\'s Kitchen — CPU, RAM &amp; Storage')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">The Programmer's Kitchen &mdash; CPU, RAM &amp; Storage</span>
+    </div>
+    <div class="vpl-tile" onclick="igrSwitch(this,'../assets/img/infographics/13_ai_literacy_infographic.png','AI Literacy — Code Without Short-Circuiting Your Learning')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">AI Literacy &mdash; Code Without Short-Circuiting Your Learning</span>
+    </div>
+  </div>
+  <div class="igr-stage" style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);">
+    <img src="../assets/img/infographics/13_what_is_a_computer_infographic.png"
+         alt="The Programmer's Kitchen &mdash; CPU, RAM &amp; Storage"
+         loading="lazy"
+         style="width:100%;height:auto;display:block;min-height:200px;">
+  </div>
 </div>
 
 <div class="callout green">
@@ -352,6 +374,15 @@ footer {
 </div>
 
 <footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script>
+function igrSwitch(tile,src,alt){
+  var p=tile.closest(".infographic-tabs");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var img=p.querySelector(".igr-stage img");
+  img.src=src;img.alt=alt;
+}
+</script>
 <script id="ism-site-js" src="../assets/js/site.js"></script>
 </body>
 </html>

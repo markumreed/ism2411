@@ -394,12 +394,24 @@ $ which python3    # shows the install path on Mac/Linux</code></pre>
 </ul>
 
 
-<div style="display:flex;align-items:center;gap:12px;margin:44px 0 12px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Module Infographic</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);margin-bottom:40px;">
-  <img src="../assets/img/infographics/14_python_setup_infographic.png"
-       alt="Python Setup & First Script — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
+<div style="display:flex;align-items:center;gap:12px;margin:44px 0 12px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);">Module Infographics &middot; 2</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
+<div class="infographic-tabs" style="margin-bottom:40px;">
+  <div class="vpl-tiles" style="margin-bottom:8px;">
+    <div class="vpl-tile vpl-active" onclick="igrSwitch(this,'../assets/img/infographics/14_python_setup_infographic.png','Python Setup &amp; First Script')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Python Setup &amp; First Script</span>
+    </div>
+    <div class="vpl-tile" onclick="igrSwitch(this,'../assets/img/infographics/09_terminal_toolkit_infographic.png','Terminal Toolkit &mdash; 5 Core Commands')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">Terminal Toolkit &mdash; 5 Core Commands</span>
+    </div>
+  </div>
+  <div class="igr-stage" style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);">
+    <img src="../assets/img/infographics/14_python_setup_infographic.png"
+         alt="Python Setup &amp; First Script"
+         loading="lazy"
+         style="width:100%;height:auto;display:block;min-height:200px;">
+  </div>
 </div>
 
 <div class="callout green">
@@ -436,6 +448,13 @@ function vplSwitch(tile,src,title){
   tile.classList.add("vpl-active");
   var f=p.querySelector(".vpl-stage iframe");
   f.src=src;f.title=title;
+}
+function igrSwitch(tile,src,alt){
+  var p=tile.closest(".infographic-tabs");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var img=p.querySelector(".igr-stage img");
+  img.src=src;img.alt=alt;
 }
 </script>
 <script id="ism-site-js" src="../assets/js/site.js"></script>
