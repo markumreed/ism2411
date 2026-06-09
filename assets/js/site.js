@@ -53,6 +53,7 @@
         <a href="${pg}precourse.html">Pre-course Setup</a>
         <a href="${pg}syllabus.html">Syllabus</a>
         <a href="${pg}unit_all_overview.html">All Units Overview</a>
+        <a href="${pg}course_map.html">Course Map</a>
       </div>
     </div>
 
@@ -144,6 +145,7 @@
       <a href="${pg}precourse.html">Pre-course Setup</a>
       <a href="${pg}syllabus.html">Syllabus</a>
       <a href="${pg}unit_all_overview.html">All Units Overview</a>
+      <a href="${pg}course_map.html">Course Map</a>
       <a href="${pg}faq.html">FAQ</a>
     </div>
     <div class="mob-section">
