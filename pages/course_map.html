@@ -614,8 +614,13 @@ function animateArrows(uid) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     activeUnit = null;
-    document.querySelectorAll('.unit').forEach(u => u.classList.remove('active'));
-    document.getElementById('detail').classList.remove('open');
+    document.querySelectorAll('.unit').forEach(u => {
+      u.classList.remove('active');
+      u.setAttribute('aria-pressed', 'false');
+    });
+    const detail = document.getElementById('detail');
+    detail.classList.remove('open');
+    detail.style.removeProperty('border-color');
     document.querySelectorAll('.arrow-col').forEach(a => a.classList.remove('active'));
   }
   if (['1','2','3','4','5'].includes(e.key)) {
