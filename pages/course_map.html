@@ -574,7 +574,10 @@ function toggle(el) {
   const detail = document.getElementById('detail');
   const inner  = document.getElementById('detail-inner');
 
-  document.querySelectorAll('.unit').forEach(u => u.classList.remove('active'));
+  document.querySelectorAll('.unit').forEach(u => {
+    u.classList.remove('active');
+    u.setAttribute('aria-pressed', 'false');
+  });
 
   if (activeUnit === uid) {
     activeUnit = null;
@@ -585,6 +588,7 @@ function toggle(el) {
 
   activeUnit = uid;
   el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
 
   const d = DETAILS[uid];
   inner.innerHTML = d.cols.map(col => `
