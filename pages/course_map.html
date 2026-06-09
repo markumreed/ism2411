@@ -25,11 +25,11 @@
   --muted:  #6b6b80;
   --dimmer: #3a3a48;
 
-  --u1-dim:  rgba(52,211,153,0.10);  --u1-mid:  rgba(52,211,153,0.22);  --u1-glow: rgba(52,211,153,0.35);
-  --u2-dim:  rgba(96,165,250,0.10);  --u2-mid:  rgba(96,165,250,0.22);  --u2-glow: rgba(96,165,250,0.35);
-  --u3-dim:  rgba(192,132,252,0.10); --u3-mid:  rgba(192,132,252,0.22); --u3-glow: rgba(192,132,252,0.35);
-  --u4-dim:  rgba(251,191,36,0.10);  --u4-mid:  rgba(251,191,36,0.22);  --u4-glow: rgba(251,191,36,0.35);
-  --u5-dim:  rgba(244,114,182,0.10); --u5-mid:  rgba(244,114,182,0.22); --u5-glow: rgba(244,114,182,0.35);
+  --u1-mid:  rgba(52,211,153,0.22);  --u1-glow: rgba(52,211,153,0.35);
+  --u2-mid:  rgba(96,165,250,0.22);  --u2-glow: rgba(96,165,250,0.35);
+  --u3-mid:  rgba(192,132,252,0.22); --u3-glow: rgba(192,132,252,0.35);
+  --u4-mid:  rgba(251,191,36,0.22);  --u4-glow: rgba(251,191,36,0.35);
+  --u5-mid:  rgba(244,114,182,0.22); --u5-glow: rgba(244,114,182,0.35);
 
   --mono: 'JetBrains Mono', ui-monospace, monospace;
 }
@@ -155,11 +155,11 @@ header h1 {
 .unit.active { transform: translateY(-3px); }
 
 /* Per-unit colour slots */
-.u1 { --c:var(--u1); --cdim:var(--u1-dim); --cmid:var(--u1-mid); --cglow:var(--u1-glow); }
-.u2 { --c:var(--u2); --cdim:var(--u2-dim); --cmid:var(--u2-mid); --cglow:var(--u2-glow); }
-.u3 { --c:var(--u3); --cdim:var(--u3-dim); --cmid:var(--u3-mid); --cglow:var(--u3-glow); }
-.u4 { --c:var(--u4); --cdim:var(--u4-dim); --cmid:var(--u4-mid); --cglow:var(--u4-glow); }
-.u5 { --c:var(--u5); --cdim:var(--u5-dim); --cmid:var(--u5-mid); --cglow:var(--u5-glow); }
+.u1 { --c:var(--u1); --cmid:var(--u1-mid); --cglow:var(--u1-glow); }
+.u2 { --c:var(--u2); --cmid:var(--u2-mid); --cglow:var(--u2-glow); }
+.u3 { --c:var(--u3); --cmid:var(--u3-mid); --cglow:var(--u3-glow); }
+.u4 { --c:var(--u4); --cmid:var(--u4-mid); --cglow:var(--u4-glow); }
+.u5 { --c:var(--u5); --cmid:var(--u5-mid); --cglow:var(--u5-glow); }
 
 .unit::before { background: radial-gradient(ellipse at 50% 0%, var(--cmid), transparent 70%); }
 .unit:hover::before, .unit.active::before { opacity: 1; }
@@ -261,13 +261,14 @@ header h1 {
               opacity     0.3s ease,
               border-color 0.3s ease;
 }
-.detail-bar.open { max-height: 130px; opacity: 1; }
+.detail-bar.open { max-height: 150px; opacity: 1; }
 .detail-inner {
   padding: 14px 18px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 18px;
 }
+.detail-col {}
 .detail-label {
   font-size: 9px;
   letter-spacing: 0.18em;
@@ -362,7 +363,7 @@ footer {
   <div class="units">
 
     <!-- ── Unit 1 ── -->
-    <div class="unit u1" data-unit="1" onclick="toggle(this)">
+    <div class="unit u1" data-unit="1" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 01 &nbsp;·&nbsp; Weeks 1–5</div>
       <div class="unit-title">Foundations</div>
@@ -386,7 +387,7 @@ footer {
     </div>
 
     <!-- ── Unit 2 ── -->
-    <div class="unit u2" data-unit="2" onclick="toggle(this)">
+    <div class="unit u2" data-unit="2" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 02 &nbsp;·&nbsp; Weeks 6–8 + W9</div>
       <div class="unit-title">Control Flow<br>&amp; Structure</div>
@@ -410,7 +411,7 @@ footer {
     </div>
 
     <!-- ── Unit 3 ── -->
-    <div class="unit u3" data-unit="3" onclick="toggle(this)">
+    <div class="unit u3" data-unit="3" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 03 &nbsp;·&nbsp; Weeks 10–12</div>
       <div class="unit-title">Data<br>Structures</div>
@@ -434,7 +435,7 @@ footer {
     </div>
 
     <!-- ── Unit 4 ── -->
-    <div class="unit u4" data-unit="4" onclick="toggle(this)">
+    <div class="unit u4" data-unit="4" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 04 &nbsp;·&nbsp; Weeks 13–15</div>
       <div class="unit-title">pandas &amp;<br>Analysis</div>
@@ -458,7 +459,7 @@ footer {
     </div>
 
     <!-- ── Unit 5 ── -->
-    <div class="unit u5" data-unit="5" onclick="toggle(this)">
+    <div class="unit u5" data-unit="5" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 05 &nbsp;·&nbsp; Week 16</div>
       <div class="unit-title">Capstone</div>
@@ -578,7 +579,7 @@ function toggle(el) {
   if (activeUnit === uid) {
     activeUnit = null;
     detail.classList.remove('open');
-    detail.style.borderColor = '';
+    detail.style.removeProperty('border-color');
     return;
   }
 
@@ -595,7 +596,7 @@ function toggle(el) {
     </div>
   `).join('');
 
-  detail.style.borderColor = `color-mix(in srgb, ${d.color} 40%, transparent)`;
+  detail.style.setProperty('border-color', `color-mix(in srgb, ${d.color} 40%, transparent)`);
   detail.classList.add('open');
   animateArrows(uid);
 }
@@ -616,6 +617,15 @@ document.addEventListener('keydown', e => {
   if (['1','2','3','4','5'].includes(e.key)) {
     toggle(document.querySelectorAll('.unit')[parseInt(e.key) - 1]);
   }
+});
+
+document.querySelectorAll('.unit').forEach(unit => {
+  unit.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggle(unit);
+    }
+  });
 });
 </script>
 
