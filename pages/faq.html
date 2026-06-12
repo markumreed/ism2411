@@ -574,6 +574,26 @@ run()   # call it</pre>
   <strong>Try the duck first.</strong> Before you hit send, explain the failing code out loud, one line at a time, to an inanimate object &mdash; <em>rubber duck debugging</em>, named in <em>The Pragmatic Programmer</em> (Hunt &amp; Thomas, Addison-Wesley, 1999). Saying what each line literally does, instead of what you assumed it does, exposes a surprising number of bugs before you finish the explanation. And if the duck doesn&rsquo;t crack it, you have just rehearsed exactly the &ldquo;what I already tried&rdquo; story your email needs. Full technique in the <a href="week07_reading.html">Module 7 reading</a>.
 </div>
 
+<p style="font-size:13px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:20px 0 8px;">Example &mdash; a duck session becomes the email</p>
+<pre style="font-size:13px;line-height:1.8;">You, to the duck:
+
+&quot;This script should open data.csv and print the first row.
+Line 12 calls open('data.csv') &mdash; and the file IS in the
+same folder as lab03.py, I can see it in VS Code. But the
+open() call raises FileNotFoundError. So Python is not
+looking in the folder I think it&rsquo;s looking in. I ran the
+script with the Run button &mdash; maybe the working directory
+isn&rsquo;t the script&rsquo;s folder. I don&rsquo;t know how to check that.&quot;
+
+The duck didn&rsquo;t fix it &mdash; but it just wrote your email:
+
+What I expected:  open('data.csv') finds the file next to lab03.py
+What happened:    FileNotFoundError on line 12
+What I tried:     confirmed data.csv is in the same folder as the
+                  script; suspect the working directory differs
+                  from the script&rsquo;s folder &mdash; not sure how to verify</pre>
+<p style="font-size:14px;color:var(--muted);margin:10px 0 20px;">A duck session that fails still ends somewhere specific. That last sentence &mdash; <em>&ldquo;I suspect X but don&rsquo;t know how to verify it&rdquo;</em> &mdash; is the most useful line a help email can contain. It goes straight into the &ldquo;what you already tried&rdquo; item below, and it is the difference between an answer in one reply and three rounds of &ldquo;can you tell me more.&rdquo;</p>
+
 <p style="font-size:14px;color:var(--muted);margin:20px 0 10px;font-weight:600;">What to include:</p>
 <ul style="font-size:14px;color:var(--muted);padding-left:22px;line-height:1.9;margin-bottom:20px;">
   <li>Your <strong style="color:var(--text);">operating system</strong> and version (e.g. macOS 14 Sonoma, Windows 11)</li>
