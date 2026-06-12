@@ -176,6 +176,11 @@ print(calculate_tax(0, 0.07))     # 0.0</code></pre>
     return price * quantity
 NameError: name &#x27;quantity&#x27; is not defined</code></pre>
 
+<h3>Rubber duck debugging</h3>
+<p>Before the in-class exercise, one more tool — and it costs nothing. <strong>Rubber duck debugging</strong> comes from <em>The Pragmatic Programmer</em> by Andrew Hunt and David Thomas (Addison-Wesley, 1999), which tells of a developer who kept a small yellow rubber duck on his desk and worked through stubborn bugs by explaining his code to it, line by line, out loud.</p>
+<p>It works because a bug is a gap between what you <em>think</em> the code does and what it <em>actually</em> does. While the explanation stays in your head, your brain fills that gap with assumptions. Saying each line out loud — what it literally does, not what it should do — forces you to confront the code as written. The bug very often announces itself mid-sentence: "…and this function doubles the price and returns— wait. It never returns anything."</p>
+<p>The routine: state what the code is supposed to do, explain every line in order without skipping the "obvious" ones, and stop the moment your explanation disagrees with the actual output — that disagreement is the neighborhood of the bug. In today's exercise, do this between print-debugging and asking the AI: if the duck doesn't crack it, the explanation you just rehearsed is exactly the question you paste into ChatGPT or Claude.</p>
+
 <h3>Debug First, Then Ask — the in-class exercise</h3>
 <p>You will get a script with 3 intentional bugs. Step 1: try to debug using only <code>print()</code> and the traceback. Add print statements before, during, and after suspect code to see what values variables actually hold. This is called print-debugging, and it is the first tool every developer reaches for. Step 2: paste only the error message into ChatGPT or Claude and ask what it means — NOT for the fix. Step 3: fix it yourself, using the AI's explanation as a guide. Step 4: class debrief on what you found.</p>
 <p>This sequence matters. If you go straight to "fix my code" in an AI tool, you skip the most valuable part of the process: understanding why the error occurred. The exam will show you error messages and ask you to identify the cause. If you have never debugged code yourself, you will not be able to answer those questions.</p>
