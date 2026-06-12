@@ -184,11 +184,12 @@ for price, tier in orders:
 <div style="font-weight:700;margin-bottom:6px;">Debug First, Then Ask</div>
 <div style="color:var(--muted);font-size:15px;">You will be given broken_sales.py with 3 intentional bugs. Follow the four-step protocol:</div>
 <ol style="color:var(--muted);font-size:15px;margin-top:8px;">
-<li><strong>5 min — Solo debug:</strong> Add print() statements to trace variable values. Read the traceback. Write down what you think each bug is before fixing anything.</li>
+<li><strong>5 min — Solo debug:</strong> Add print() statements to trace variable values. Read the traceback. Then explain the suspect section out loud, line by line, to a rubber duck — or your water bottle, any patient object works. Write down what you think each bug is before fixing anything.</li>
 <li><strong>5 min — AI Explainer:</strong> Paste only the error message (not your code) into ChatGPT or Claude. Ask "what does this error mean?" Do not ask for the fix.</li>
 <li><strong>5 min — Fix it yourself:</strong> Use the AI's explanation as a guide. Write the fix in your own words as a comment before implementing it.</li>
 <li><strong>5 min — Class debrief:</strong> Share what you found. Did the AI's explanation match the actual bug?</li>
 </ol>
+<div style="color:var(--dim);font-size:13px;margin-top:8px;">The out-loud explanation in step 1 is <em>rubber duck debugging</em> — <em>The Pragmatic Programmer</em> (Hunt &amp; Thomas, 1999). Full technique in the <a href="week07_reading.html">Module 7 reading</a>.</div>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -226,7 +227,7 @@ print(x)           # has x changed?</code></pre>
 <h2>Reflection</h2>
 <div class="callout blue">
 <div class="callout-title">Self-Assessment</div>
-<p><strong>1.</strong> In Exercise 5 (Debug First, Then Ask), what was the first bug you spotted? Did you find it from the traceback, from a print() statement, or only after asking AI? What does that tell you about your current debugging instincts?</p>
+<p><strong>1.</strong> In Exercise 5 (Debug First, Then Ask), what was the first bug you spotted? Did you find it from the traceback, from a print() statement, from explaining the code out loud to the duck, or only after asking AI? What does that tell you about your current debugging instincts?</p>
 <p><strong>2.</strong> Without looking at your code, explain in plain English what <code>apply_discount(price, tier)</code> does, what its inputs are, and what it returns. Could a colleague use it without reading the body?</p>
 <p><strong>3.</strong> If you used AI on any part of today's lab, write the disclosure comment you would add to the top of your file. Then reflect: did the AI use build your understanding, or did it shortcut it?</p>
 </div>
