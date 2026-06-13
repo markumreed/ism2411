@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Troubleshooting Guide — ISM2411</title>
+<meta name="description" content="The most common errors in ISM2411, organized by type, with causes and fixes — Python for Business.">
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --red:       #f87171;
+  --green:     #34d399;
+  --code-bg:   #0a0a12;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --red:     #dc2626;
+  --green:   #059669;
+  --code-bg: #1a1a26;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 44px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.callout p { margin: 0 0 8px; font-size: 14.5px; color: var(--muted); }
+.callout p:last-child { margin-bottom: 0; }
+.callout.green { border-left-color: var(--green); }
+.callout.green .callout-title { color: var(--green); }
+.err-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin: 14px 0; }
+.err-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.err-chip { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--red); background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.3); padding: 3px 10px; border-radius: 6px; }
+.err-seen { font-family: var(--mono); font-size: 10.5px; color: var(--dim); letter-spacing: .06em; }
+.err-seen a { color: var(--dim); }
+.err-msg { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; overflow-x: auto; white-space: pre; }
+.err-card p { margin: 0 0 8px; font-size: 14.5px; color: var(--muted); }
+.err-card p:last-child { margin-bottom: 0; }
+.err-card strong { color: var(--text); }
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 60px; }
+.pn a { display: block; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: background .15s, transform .15s; }
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+/* ism-mobile */
+@media(max-width:600px){
+  .pn{grid-template-columns:1fr}
+  .err-msg{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="main">
+<div class="page-eyebrow">REFERENCE · ISM2411</div>
+<h1>Troubleshooting Guide</h1>
+<p class="lede">The most common errors in ISM2411, organized by type. Find your error, read the cause, apply the fix.</p>
+
+<div class="callout">
+<div class="callout-title">The one rule for reading any error</div>
+<p>Read the traceback <strong>from the bottom up</strong>. The bottom line gives you the error type and the exact message. The line above gives you the file name and line number. Start there. Do not read from the top.</p>
+</div>
+
+<h2>Environment &amp; Files</h2>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">ModuleNotFoundError</span><span class="err-seen">First seen: <a href="week13_reading.html">Module 13</a></span></div>
+<div class="err-msg">ModuleNotFoundError: No module named 'pandas'</div>
+<p><strong>Cause:</strong> The package is not installed for the Python that ran your code — often VS Code or Jupyter is using a different interpreter than the one you installed into.</p>
+<p><strong>Fix:</strong> Run <code>pip install pandas</code> (or <code>pip3 install pandas</code>). In VS Code, check the interpreter shown in the status bar; in Jupyter, check the kernel menu. Install into the one you are actually running.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">FileNotFoundError</span><span class="err-seen">First seen: <a href="week12_reading.html">Module 12</a></span></div>
+<div class="err-msg">FileNotFoundError: [Errno 2] No such file or directory: 'data.csv'</div>
+<p><strong>Cause:</strong> Python could not find the file at the path you gave. Usually the file is fine — your <em>working directory</em> is not the folder you think it is.</p>
+<p><strong>Fix:</strong> Add <code>import os; print(os.getcwd())</code> to see where Python is actually looking. Run the script from the folder that contains the file, or use the full path.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">not a git repository</span><span class="err-seen">First seen: <a href="week08_reading.html">Module 8</a></span></div>
+<div class="err-msg">fatal: not a git repository (or any of the parent directories): .git</div>
+<p><strong>Cause:</strong> You ran a <code>git</code> command outside your project folder, or never ran <code>git init</code> in it.</p>
+<p><strong>Fix:</strong> <code>cd</code> into the project folder first. If it has never been initialized, run <code>git init</code> once.</p>
+</div>
+
+<h2>Python Syntax &amp; Logic</h2>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">SyntaxError</span><span class="err-seen">First seen: <a href="week05_reading.html">Module 5</a></span></div>
+<div class="err-msg">SyntaxError: expected ':'</div>
+<p><strong>Cause:</strong> Python could not parse the file — a missing colon after <code>if</code>/<code>def</code>/<code>for</code>, an unclosed parenthesis or bracket, or a mismatched quote.</p>
+<p><strong>Fix:</strong> Go to the reported line, then check the line <em>above</em> it too — the actual mistake is often one line earlier than where Python noticed.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">IndentationError</span><span class="err-seen">First seen: <a href="week05_reading.html">Module 5</a></span></div>
+<div class="err-msg">IndentationError: unexpected indent</div>
+<p><strong>Cause:</strong> A line is indented inconsistently — wrong number of spaces, or tabs mixed with spaces.</p>
+<p><strong>Fix:</strong> Use 4 spaces per level, never tabs. In VS Code, enable View → Render Whitespace to see exactly what is there.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">NameError</span><span class="err-seen">First seen: <a href="week07_reading.html">Module 7</a></span></div>
+<div class="err-msg">NameError: name 'result' is not defined</div>
+<p><strong>Cause:</strong> A variable was used before it was assigned, its name is misspelled, or it was created inside a function (local scope) and accessed outside.</p>
+<p><strong>Fix:</strong> Check spelling first. If the variable lives inside a function, <code>return</code> it and capture the result instead of reaching for it directly.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">TypeError</span><span class="err-seen">First seen: <a href="week03_reading.html">Module 3</a></span></div>
+<div class="err-msg">TypeError: can only concatenate str (not "int") to str</div>
+<p><strong>Cause:</strong> An operation was applied to the wrong type. The classic: <code>input()</code> always returns a string, and you did math with it.</p>
+<p><strong>Fix:</strong> Convert immediately: <code>qty = int(input("Quantity: "))</code>. For printing, use an f-string: <code>f"Items: {count}"</code>.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">ValueError</span><span class="err-seen">First seen: <a href="week04_reading.html">Module 4</a></span></div>
+<div class="err-msg">ValueError: could not convert string to float: '$24.99'</div>
+<p><strong>Cause:</strong> The type of the operation is right, but the content is not valid — converting a string that does not look like a number.</p>
+<p><strong>Fix:</strong> Clean the string first: <code>float("$24.99".replace("$", ""))</code>. For whole numbers in a decimal string, use <code>int(float("24.99"))</code>.</p>
+</div>
+
+<h2>Data Structures &amp; pandas</h2>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">IndexError</span><span class="err-seen">First seen: <a href="week10_reading.html">Module 10</a></span></div>
+<div class="err-msg">IndexError: list index out of range</div>
+<p><strong>Cause:</strong> You asked for a position that does not exist. Lists are zero-indexed — a 3-item list has indexes 0, 1, and 2.</p>
+<p><strong>Fix:</strong> Print <code>len(items)</code> before indexing. For the last item, use <code>items[-1]</code>.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">KeyError</span><span class="err-seen">First seen: <a href="week11_reading.html">Module 11</a></span></div>
+<div class="err-msg">KeyError: 'amout'   ← typo, should be 'amount'</div>
+<p><strong>Cause:</strong> A dictionary key (or pandas column name) does not exist — usually a typo, wrong capitalization, or an invisible trailing space in a CSV header.</p>
+<p><strong>Fix:</strong> Print <code>record.keys()</code> or <code>df.columns</code> and compare character by character. Use <code>.get('key', default)</code> for optional keys.</p>
+</div>
+
+<div class="err-card">
+<div class="err-head"><span class="err-chip">AttributeError</span><span class="err-seen">First seen: <a href="week13_reading.html">Module 13</a></span></div>
+<div class="err-msg">AttributeError: 'DataFrame' object has no attribute 'groupyb'</div>
+<p><strong>Cause:</strong> A misspelled method or attribute name — pandas method typos are the classic case.</p>
+<p><strong>Fix:</strong> Check the spelling against the cheat sheet (<code>groupby</code>, <code>describe</code>, <code>to_csv</code>). If unsure what an object offers, <code>print(dir(df))</code>.</p>
+</div>
+
+<h2>Still stuck?</h2>
+
+<div class="callout green">
+<div class="callout-title">✓ Step 0 — explain it to the duck</div>
+<p>Before asking anyone, explain the failing code out loud, one line at a time, to an inanimate object — <strong>rubber duck debugging</strong>, named in <em>The Pragmatic Programmer</em> (Hunt &amp; Thomas, Addison-Wesley, 1999). Stating what each line literally does, instead of what you assumed it does, surfaces a surprising number of bugs mid-sentence. Full technique in the <a href="week07_reading.html">Module 7 reading</a>.</p>
+</div>
+
+<p>If the duck doesn't crack it and the error persists:</p>
+<ol>
+<li>Copy the <strong>full traceback</strong> — all lines from "Traceback" to the last line, not just the last line</li>
+<li>Write one sentence describing what you were trying to do when it appeared</li>
+<li>Email your professor or TA using the <a href="faq.html">format on the FAQ page</a>, bring it to office hours, or post it to the class discussion board with your code pasted as text (not a screenshot)</li>
+</ol>
+<p style="color:var(--muted);font-size:14.5px;">Don't sit stuck for more than 20 minutes — the duck costs two of them, and the other eighteen are better spent with help on the way.</p>
+
+<div class="pn">
+  <a href="faq.html">
+    <div class="label">&larr; Back</div>
+    <div class="title">FAQ</div>
+  </a>
+  <a class="next" href="glossary.html">
+    <div class="label">Also useful &rarr;</div>
+    <div class="title">Glossary</div>
+  </a>
+</div>
+</div>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>
