@@ -356,7 +356,7 @@ print(type(result))</code></pre></div>
 <li>c) df.groupby("region").describe()</li>
 <li>d) df.groupby(["revenue", "order_id"]).region.sum()</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) — .agg() accepts a dictionary mapping column names to aggregation functions</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">df.groupby("region").agg({"revenue": "sum", "order_id": "count"}) <span style="color:var(--muted);">— — .agg() accepts a dictionary mapping column names to aggregation functions</span></div></details>
 </div>
 
 <div class="quiz-item">

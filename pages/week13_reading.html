@@ -432,7 +432,7 @@ print(df['price'].mean())</code></pre></div>
 <li>c) df[df["revenue"] &gt; 1000, df["region"] == "South"]</li>
 <li>d) df.filter(revenue=1000, region="South")</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) — use &amp; (not and) and wrap each condition in parentheses</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">df[(df["revenue"] > 1000) & (df["region"] == "South")] <span style="color:var(--muted);">— — use &amp; (not and) and wrap each condition in parentheses</span></div></details>
 </div>
 
 <div class="quiz-item">

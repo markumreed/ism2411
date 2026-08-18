@@ -445,7 +445,7 @@ print(df.groupby('dept')['salary'].mean())</code></pre></div>
 <li>c) df.columns = df.columns.str.lower().str.replace(" ", "_")</li>
 <li>d) df.columns.to_snake_case()</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) — chain .str.lower() and .str.replace(" ", "_") on the Index object</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">df.columns = df.columns.str.lower().str.replace(" ", "_") <span style="color:var(--muted);">— — chain .str.lower() and .str.replace(" ", "_") on the Index object</span></div></details>
 </div>
 
 <div class="quiz-item">
@@ -466,7 +466,7 @@ df["price"] = df["price"].str.replace(",", "", regex=False).astype(float)</pre>
 <li>c) Drops rows where customer_id specifically is null</li>
 <li>d) Fills missing customer_ids with zero</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">c) — subset= targets only specific columns for the missing-value check</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Drops rows where customer_id specifically is null <span style="color:var(--muted);">— — subset= targets only specific columns for the missing-value check</span></div></details>
 </div>
 
 <div class="quiz-item">

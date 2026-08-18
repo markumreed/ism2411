@@ -450,7 +450,7 @@ with open("output.csv","w",newline="") as f:
 <li>c) DictReader can only read files with fewer than 10 columns</li>
 <li>d) There is no difference</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">b) reader returns each row as a list; DictReader returns each row as a dictionary using the header row as keys — making column access by name possible: <code>row["price"]</code> instead of <code>row[1]</code></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">reader returns each row as a list; DictReader returns each row as a dictionary with the header as keys <span style="color:var(--muted);">— reader returns each row as a list; DictReader returns each row as a dictionary using the header row as keys — making column access by name possible: <code>row["price"]</code> instead of <code>row[1]</code></span></div></details>
 </div>
 
 <div class="quiz-item">
