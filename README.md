@@ -67,7 +67,7 @@ ism2411/
 | Component | Weight |
 |-----------|-------:|
 | Weekly labs & quizzes | 35% |
-| DataCamp courses (8 required) | 15% |
+| DataCamp courses (5 required) | 15% |
 | Midterm exam | 20% |
 | Capstone project | 25% |
 | Participation | 5% |
