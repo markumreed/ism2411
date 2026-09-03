@@ -295,7 +295,7 @@ footer {
 <div class="meta-pills">
   <span class="meta-pill">Complete before Day 1</span>
   <span class="meta-pill">Mac + Windows instructions</span>
-  <span class="meta-pill">~30 min total</span>
+  <span class="meta-pill">~30&ndash;45 min total (Windows: +15&ndash;20 min for WSL)</span>
   <span class="meta-pill">Hello-world verification included</span>
 </div>
 
@@ -349,8 +349,19 @@ footer {
       <td>Install inside VS Code</td>
       <td>Install inside VS Code</td>
     </tr>
+    <tr>
+      <td>WSL (Ubuntu)</td>
+      <td>Windows Subsystem for Linux &mdash; gives Windows a Linux terminal</td>
+      <td>Not needed</td>
+      <td>Required</td>
+    </tr>
   </tbody>
 </table>
+
+<div class="callout warn">
+  <div class="callout-title">Windows users &mdash; one extra step</div>
+  <p>Windows students also install WSL (Windows Subsystem for Linux) and set it as their default terminal. This gives you a real Linux terminal running Ubuntu, which matches the terminal commands used in class and avoids PowerShell behaving differently from what's demonstrated. Plan an extra 15&ndash;20 minutes and make sure Windows Update is current before starting &mdash; WSL installation requires administrator access and a restart.</p>
+</div>
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- STEP 1: Python                                   -->
@@ -432,9 +443,100 @@ footer {
 </div>
 
 <!-- ═══════════════════════════════════════════════ -->
-<!-- STEP 2: VS Code                                  -->
+<!-- STEP 2: WSL / Ubuntu Terminal (Windows Only)     -->
 <!-- ═══════════════════════════════════════════════ -->
-<div class="section-divider"><div class="line"></div><div class="label">Step 2 &mdash; VS Code</div><div class="line"></div></div>
+<div class="section-divider"><div class="line"></div><div class="label">Step 2 &mdash; WSL &amp; Ubuntu Terminal (Windows Only)</div><div class="line"></div></div>
+<div class="tool-header">
+  <div class="tool-icon">&#x1FA9F;</div>
+  <div>
+    <div class="tool-name">WSL &mdash; Windows Subsystem for Linux</div>
+    <div><span class="platform-badge pb-win">Windows Only</span></div>
+  </div>
+</div>
+<p class="tool-why">Gives Windows a real Linux terminal running Ubuntu, so your terminal matches what's demonstrated in class. Mac users already have a Linux-like terminal built in and skip this step.</p>
+
+<div class="os-tabs">
+  <div class="os-tab active" onclick="show('wsl','mac',this)">&#x1F34E; Mac / Linux</div>
+  <div class="os-tab" onclick="show('wsl','win',this)">&#x1FA9F; Windows</div>
+</div>
+
+<div id="wsl-mac" class="os-panel active">
+  <div class="step-block">
+    <div class="step-circle">&#x2713;</div>
+    <div class="step-inner">
+      <div class="step-title">Mac users &mdash; skip this step</div>
+      <p>The Terminal app on macOS is already a Unix terminal, so there's nothing to install here. Continue to Step 3 (VS Code).</p>
+    </div>
+  </div>
+</div>
+
+<div id="wsl-win" class="os-panel">
+  <div class="step-block">
+    <div class="step-circle">1</div>
+    <div class="step-inner">
+      <div class="step-title">Open PowerShell as Administrator</div>
+      <p>Click Start, search for <strong>PowerShell</strong>, right-click it and choose <strong>Run as administrator</strong>. Click Yes on the prompt.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">2</div>
+    <div class="step-inner">
+      <div class="step-title">Install WSL and Ubuntu</div>
+      <p>In the Administrator PowerShell window, run:</p>
+      <pre>wsl --install</pre>
+      <p>This installs WSL 2 and Ubuntu automatically &mdash; it takes 5&ndash;15 minutes depending on your internet connection.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">3</div>
+    <div class="step-inner">
+      <div class="step-title">Restart your computer</div>
+      <p>When installation finishes you'll be prompted to restart. Do it &mdash; WSL won't work until after the restart.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">4</div>
+    <div class="step-inner">
+      <div class="step-title">Create your Ubuntu username and password</div>
+      <p>After restarting, Ubuntu opens automatically and asks you to create a username and password. Use something simple, all lowercase, no spaces &mdash; this is separate from your Windows login. When you type the password, nothing appears on screen; that's normal, just type it and press Enter.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">5</div>
+    <div class="step-inner">
+      <div class="step-title">Make Ubuntu the default profile in Windows Terminal</div>
+      <p>Open <strong>Windows Terminal</strong>. Click the small down arrow (&#x25BC;) next to the <code>+</code> button and choose <strong>Settings</strong> (or press <code>Ctrl+,</code>).</p>
+      <p>Select <strong>Startup</strong> in the sidebar. Open the <strong>Default profile</strong> menu and select <strong>Ubuntu</strong> (it may be named <strong>Ubuntu 24.04 LTS</strong> or similar). Click <strong>Save</strong>.</p>
+      <p>Close every Windows Terminal window, then reopen Windows Terminal from the Start menu. It should now open directly into Ubuntu &mdash; no typing <code>wsl</code> required.</p>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-circle">6</div>
+    <div class="step-inner">
+      <div class="step-title">Make Ubuntu the default terminal in VS Code too</div>
+      <p>Open VS Code. Press <code>Ctrl+Shift+P</code> and type <strong>Terminal: Select Default Profile</strong>. Choose <strong>Ubuntu (WSL)</strong>. Close any terminal panel already open in VS Code, then open a new one with <code>Ctrl+`</code> &mdash; it should open inside Ubuntu.</p>
+    </div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-title">A quick note on Python</div>
+    <p>Ubuntu comes with its own Python 3, separate from the one you just installed on Windows. Once your terminal defaults to Ubuntu, that's the <code>python3</code> you'll use for class terminal commands. If <code>python3 --version</code> doesn't work inside Ubuntu, run <code>sudo apt update &amp;&amp; sudo apt install python3 -y</code>.</p>
+  </div>
+  <div class="verify-box">
+    <div class="vb-label">&#x2713; Verify</div>
+    <div class="vb-cmd">Close and reopen Windows Terminal (no typing <code>wsl</code>)</div>
+    <div class="vb-exp">Expected: <strong>Prompt reads <code>yourname@yourcomputer:~$</code>, not <code>PS C:\Users\yourname&gt;</code></strong></div>
+  </div>
+  <div class="verify-box" style="margin-top:8px;">
+    <div class="vb-label">&#x2713; Verify</div>
+    <div class="vb-cmd">$ uname -a</div>
+    <div class="vb-exp">Expected: <strong>Output mentions Linux (and usually WSL)</strong></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STEP 3: VS Code                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Step 3 &mdash; VS Code</div><div class="line"></div></div>
 <div class="tool-header">
   <div class="tool-icon">&#x1F4BB;</div>
   <div>
@@ -503,7 +605,7 @@ footer {
 <!-- ═══════════════════════════════════════════════ -->
 <!-- STEP 3: Python Extension                         -->
 <!-- ═══════════════════════════════════════════════ -->
-<div class="section-divider"><div class="line"></div><div class="label">Step 3 &mdash; Python &amp; Pylance Extensions</div><div class="line"></div></div>
+<div class="section-divider"><div class="line"></div><div class="label">Step 4 &mdash; Python &amp; Pylance Extensions</div><div class="line"></div></div>
 <div class="tool-header">
   <div class="tool-icon">&#x1F9E9;</div>
   <div>
@@ -543,7 +645,7 @@ footer {
 <!-- ═══════════════════════════════════════════════ -->
 <!-- STEP 4: Verify                                   -->
 <!-- ═══════════════════════════════════════════════ -->
-<div class="section-divider"><div class="line"></div><div class="label">Step 4 &mdash; Verify Everything Works</div><div class="line"></div></div>
+<div class="section-divider"><div class="line"></div><div class="label">Step 5 &mdash; Verify Everything Works</div><div class="line"></div></div>
 <div class="tool-header">
   <div class="tool-icon">&#x2705;</div>
   <div>
@@ -599,7 +701,7 @@ Hello, ISM2411
 <!-- ═══════════════════════════════════════════════ -->
 <!-- STEP 5: DataCamp                                 -->
 <!-- ═══════════════════════════════════════════════ -->
-<div class="section-divider"><div class="line"></div><div class="label">Step 5 &mdash; DataCamp Account</div><div class="line"></div></div>
+<div class="section-divider"><div class="line"></div><div class="label">Step 6 &mdash; DataCamp Account</div><div class="line"></div></div>
 <div class="tool-header">
   <div class="tool-icon">&#x1F4CA;</div>
   <div>
@@ -620,6 +722,8 @@ Hello, ISM2411
 <div class="section-divider"><div class="line"></div><div class="label">Pre-Course Checklist &mdash; Everything Done?</div><div class="line"></div></div>
 <ul class="checklist-final">
   <li><strong>Python installed</strong> &mdash; <code>python3 --version</code> (Mac) or <code>python --version</code> (Windows) returns Python 3.10 or higher</li>
+  <li><strong>Windows only &mdash; WSL Ubuntu installed</strong> &mdash; Ubuntu terminal opens and works (Mac users skip this)</li>
+  <li><strong>Windows only &mdash; Windows Terminal defaults to Ubuntu</strong> &mdash; opening Windows Terminal goes straight into Ubuntu without typing <code>wsl</code> first</li>
   <li><strong>VS Code installed</strong> &mdash; opens from Applications (Mac) or Start menu (Windows) without errors</li>
   <li><strong>Python extension installed</strong> &mdash; published by Microsoft, shows &ldquo;Disable&rdquo; not &ldquo;Install&rdquo; in the Extensions panel</li>
   <li><strong>Pylance installed</strong> &mdash; published by Microsoft, shows &ldquo;Disable&rdquo; in the Extensions panel</li>
@@ -661,6 +765,16 @@ Hello, ISM2411
 <div class="trouble-row">
   <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">The terminal runs but prints an error instead of the output</div></div>
   <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Read the error message carefully. A <code>SyntaxError</code> usually means a typo in the code &mdash; check your quotation marks and spelling. A <code>ModuleNotFoundError</code> means a missing package (not expected at this stage).</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">Windows Terminal still opens PowerShell, not Ubuntu</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Go to Windows Terminal &rarr; Settings (<code>Ctrl+,</code>) &rarr; <strong>Startup</strong>. Confirm <strong>Default profile</strong> is set to <strong>Ubuntu</strong>, then click <strong>Save</strong>. Close every Windows Terminal window (not just the tab) and reopen the app.</div></div>
+</div>
+
+<div class="trouble-row">
+  <div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>wsl --install</code> fails or mentions virtualization</div></div>
+  <div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Some machines need virtualization enabled in BIOS/UEFI first. Restart, enter BIOS setup (usually Del or F2 during startup), find &ldquo;Virtualization Technology&rdquo; or &ldquo;Intel VT-x&rdquo; and enable it. Save, restart, then try <code>wsl --install</code> again.</div></div>
 </div>
 
 <!-- ── Getting help ── -->
