@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 3 — Product Pricer with f-strings</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 3 &nbsp;·&nbsp; Module 03 &nbsp;·&nbsp; Unit 1 &nbsp;·&nbsp; Foundations</p>
+<h1>Product Pricer with f-strings</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Intro</span>
+<span class="t-item"><strong>0:05–0:13</strong> Ex 1 — Variables &amp; Types</span>
+<span class="t-item"><strong>0:13–0:21</strong> Ex 2 — f-string Practice</span>
+<span class="t-item"><strong>0:21–0:31</strong> Ex 3 — Input Version</span>
+<span class="t-item"><strong>0:31–0:43</strong> Ex 4 — Product Card</span>
+<span class="t-item"><strong>0:43–0:55</strong> Ex 5 — Type Investigation (REPL)</span>
+<span class="t-item"><strong>0:55–1:10</strong> Stretch A — Three-Product Comparison</span>
+<span class="t-item"><strong>1:10–1:15</strong> Wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along. Module 02 got students <em>running</em> a script someone else wrote (essentially — <code>hello.py</code> is one line). This is the first lab where students write meaningfully structured code themselves: multiple variables of different types, working together, formatted into professional-looking output. The two ideas to protect time for are (1) that Python variables carry a <em>type</em>, and types determine behavior (<code>+</code> means something completely different for strings than for numbers), and (2) the f-string format-spec mini-language, which will be reused in nearly every remaining module this semester. Prerequisites: Module 02 — terminal navigation, running a <code>.py</code> file, reading a basic error message. Submission: <code>pricer.py</code> to Canvas, Exercises 1–4 as one runnable script with comments separating each exercise. Guide uses Notebook / $4.99 / $3.29 / 12 units throughout — all output verified against those exact numbers.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 02: terminal navigation, running a <code>.py</code> file, reading a basic error message</span></div>
+<div><span class="k">Exercises covered</span><span class="v">1–5 (required) + Stretch A/B (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>pricer.py</code> to Canvas — Exercises 1–4 as one runnable script, a comment separating each exercise</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week03_lab. Five required exercises plus Stretch A comfortably fill 75 minutes at a code-along pace; Stretch B is a fast, discussion-style closer. If the room is behind, cut Stretch B to a one-sentence teaser rather than skipping Exercise 5 or Stretch A. Pre-create an empty <code>pricer.py</code> — everything is typed live. Have <code>python3</code> with no filename ready for Exercise 5's REPL demo.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Create variables of <code>str</code>, <code>float</code>, <code>int</code>, and <code>bool</code> type and confirm a variable's type with <code>type()</code>.</li>
+<li>Build an f-string that both computes a value inline (<code>{unit_price * quantity}</code>) and formats it for display (<code>:.2f</code>).</li>
+<li>Convert <code>input()</code>'s string return value to the correct numeric type before doing math with it.</li>
+<li>Explain why <code>"5" + "3"</code> and <code>5 + 3</code> produce different results, and connect that directly to why <code>input()</code> conversion is mandatory, not optional.</li>
+<li>Use the Python interactive interpreter (the REPL) as a quick scratch space for testing small expressions, separate from running a saved <code>.py</code> file.</li>
+</ul>
+<aside class="notes">The verbs matter. This is the first lab where students write meaningfully structured code themselves — objective 4 (the <code>"5" + "3"</code> reasoning) is the conceptual spine that objective 3 (<code>input()</code> conversion) hangs off of.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Intro — every value has a type</td><td>5</td></tr>
+<tr><td>0:05–0:13</td><td>Exercise 1 — Variables and Types</td><td>8</td></tr>
+<tr><td>0:13–0:21</td><td>Exercise 2 — f-string Practice</td><td>8</td></tr>
+<tr><td>0:21–0:31</td><td>Exercise 3 — Input Version</td><td>10</td></tr>
+<tr><td>0:31–0:43</td><td>Exercise 4 — Multi-Variable Product Card</td><td>12</td></tr>
+<tr><td>0:43–0:55</td><td>Exercise 5 — Type Investigation in the REPL</td><td>12</td></tr>
+<tr><td>0:55–1:10</td><td>Stretch A — Three-Product Comparison</td><td>15</td></tr>
+<tr><td>1:10–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Five required exercises plus Stretch A fill the full 75 minutes at a normal teaching pace. Stretch B (format-spec exploration) is a fast, discussion-style closer rather than a full block — if the room is behind schedule, cut Stretch B to a single one-sentence teaser rather than skipping Exercise 5 or Stretch A.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>Every value has a type</h1>
+<aside class="notes">
+Say to the class: "Module 02 got you running a one-line script someone basically handed you. Today you write a real script from scratch: four variables of different types, working together, printed as something that looks like it belongs in a business report. The single most important idea today is that every value in Python has a <em>type</em>, and the type changes what an operator like <code>+</code> actually does. Get that wrong and your program doesn't crash — it just does something you didn't expect. Sound familiar? That's the same 'silent wrong answer' theme from every module this semester."
+Do: open <code>pricer.py</code>, type the header comment — <code># pricer.py</code> / <code># ISM2411 Module 03 Lab — Product Pricer with f-strings</code>.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 8 min · 0:05–0:13</span>
+<h1>Variables and Types</h1>
+<aside class="notes">
+Teaching goal: every value has a type; <code>type()</code> is how you ask Python what it thinks a value is, and the four types here (<code>str</code>, <code>float</code>, <code>int</code>, <code>bool</code>) are the four students will use constantly all semester.
+Say to the class: "Four variables, four different types. We're going to ask Python directly what type each one is, rather than just trusting our own guess."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 ---
+product = "Notebook"
+unit_price = 4.99
+quantity = 12
+in_stock = True
+print(type(product))
+print(type(unit_price))
+print(type(quantity))
+print(type(in_stock))
+</div>
+<p class="expect">Type it into the editor unchanged first and Run; then confirm editing a value and re-running still works.</p>
+<aside class="notes">
+Line by line:
+- <code>product = "Notebook"</code> — a <strong>string</strong> (<code>str</code>): text, always wrapped in quotes. The quotes are what make it a string; <code>product = Notebook</code> (no quotes) is a <code>NameError</code>. Worth running that broken version live for 10 seconds — a very common typo.
+- <code>unit_price = 4.99</code> — a <strong>float</strong>: any number with a decimal point, even if that decimal is <code>.00</code>.
+- <code>quantity = 12</code> — an <strong>int</strong>: a whole number, no decimal point at all. <code>12.0</code> would be a <code>float</code> — the decimal point is the only thing that matters to Python, not whether the value is whole.
+- <code>in_stock = True</code> — a <strong>bool</strong>: exactly <code>True</code> or <code>False</code>, capitalized, no quotes. First time booleans appear this semester as literal values students type — treat it as new. This is not the string <code>"True"</code>, it is the keyword <code>True</code>.
+- <code>print(type(product))</code> — <code>type()</code> is a built-in that returns a value which prints as <code>&lt;class 'str'&gt;</code>. Say explicitly: that is Python's <em>display format</em> for "this is the string type" — the word <code>class</code> is not something to worry about yet. Don't rabbit-hole.
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>&lt;class 'str'&gt;
+&lt;class 'float'&gt;
+&lt;class 'int'&gt;
+&lt;class 'bool'&gt;</pre>
+<aside class="notes">Run it live; confirm every student sees exactly this. Four lines, one per <code>print(type(...))</code>, in the order the variables were defined.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If I write <code>quantity = "12"</code> instead — <em>with</em> quotes — what does <code>type(quantity)</code> report?</p>
+<button data-opt="A"><code>&lt;class 'int'&gt;</code></button>
+<button data-opt="B"><code>&lt;class 'str'&gt;</code></button>
+<button data-opt="C"><code>SyntaxError</code></button>
+<p class="why"><code>&lt;class 'str'&gt;</code> — the quotes make it text, not a number. This is the exact setup for Exercise 3's <code>input()</code> conversion problem: if you tried to do math with it later, <code>"12" * something</code> would not multiply. Flag that connection now, out loud.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "what does <code>type(quantity)</code> report, and what would go wrong later if I tried to do math with it?" Answer: <code>&lt;class 'str'&gt;</code> — and this is the exact setup for Exercise 3's <code>input()</code> conversion problem, so flag that connection explicitly now.</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting quotes around the string value, producing <code>NameError: name 'Notebook' is not defined</code> — a good 10-second live demo.</p>
+<p>Writing <code>12.00</code> for quantity out of habit (it's dollars-adjacent in their head) and being confused that <code>type()</code> reports <code>float</code>, not <code>int</code> — Python only looks at whether you typed a decimal point, not whether the value "should" be whole.</p>
+<p>Writing <code>true</code> (lowercase) instead of <code>True</code> — Python is case-sensitive; <code>true</code> is not a keyword, so this raises <code>NameError</code> just like the unquoted string. Same error type, two totally different mistakes: the category tells you "undefined name," not <em>why</em>.</p>
+</div>
+<aside class="notes">The lowercase-<code>true</code> and unquoted-string cases both raise <code>NameError</code> — a useful moment to note that an error category names a symptom, not a cause.</aside>
+</section>
+
+<!-- 11. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 8 min · 0:13–0:21</span>
+<h1>f-string Practice</h1>
+<aside class="notes">
+Teaching goal: an f-string can <em>compute</em> a value inline, not just display an already-computed variable — this is new relative to Module 01's f-string usage (which only displayed pre-computed variables).
+Say to the class: "So far every f-string you've written has displayed a variable that was already computed on a previous line. Today's version does the math <em>inside</em> the braces, live."
+</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 ---
+product = "Notebook"
+unit_price = 4.99
+quantity = 12
+print(f"{quantity} units of {product} at ${unit_price} each = ${unit_price * quantity:.2f}")
+</div>
+<p class="expect">A fresh script run — Exercise 1's <code>print(type(...))</code> lines are gone, nothing carries over between exercises unless it's re-typed. (Exercise 4 will build a combined script where variables <em>do</em> carry over within one file.)</p>
+<aside class="notes">
+Walk the string left to right — four separate substitutions:
+- <code>{quantity}</code> — plain substitution, prints <code>12</code>.
+- <code>{product}</code> — plain substitution, prints <code>Notebook</code>.
+- <code>{unit_price}</code> — plain substitution, prints <code>4.99</code>. No format spec needed here only because <code>4.99</code> already has exactly two decimals — a coincidence of the value, not something to rely on. If <code>unit_price</code> were <code>5</code>, this would print <code>5</code>, not <code>5.00</code>.
+- <code>{unit_price * quantity:.2f}</code> — the one doing real work: <code>unit_price * quantity</code> is evaluated first (<code>4.99 * 12 = 59.88</code>), <em>then</em> the <code>:.2f</code> format spec is applied to that computed result. The calculation and the formatting are two separate steps in the same braces, in that order.
+The <code>$</code> outside the braces is just literal text.
+</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>12 units of Notebook at $4.99 each = $59.88</pre>
+<aside class="notes">Run it live; confirm every student sees exactly this one line. <code>4.99 * 12 = 59.88</code>, formatted to two decimals by <code>:.2f</code>.</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If I changed <code>unit_price</code> to <code>5</code> (no decimal), what does <code>{unit_price * quantity:.2f}</code> print?</p>
+<button data-opt="A"><code>60</code></button>
+<button data-opt="B"><code>5</code></button>
+<button data-opt="C"><code>60.00</code></button>
+<p class="why"><code>60.00</code> — the format spec does the work of adding the trailing zeros regardless of the input's original precision. (The bare <code>{unit_price}</code> substitution, by contrast, would print <code>5</code>.)</p>
+</div>
+<aside class="notes">Check for understanding (guide): walk both substitutions that involve <code>unit_price</code>. <code>{unit_price}</code> alone would print <code>5</code>; <code>{unit_price * quantity:.2f}</code> would still print <code>60.00</code>, because <code>:.2f</code> adds the trailing zeros no matter the input precision.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Putting the format spec on the wrong part of the expression, e.g. <code>{unit_price:.2f * quantity}</code> — a <code>SyntaxError</code>, because the format spec has to come <em>after</em> the complete expression, not in the middle of it. Show this error live; format-spec placement mistakes recur all semester.</p>
+<p>Forgetting the <code>$</code> is a literal character and trying to make it "part of" the number — <code>$</code> outside the braces is just text.</p>
+</div>
+<aside class="notes">Read the <code>SyntaxError</code> traceback together — it is a recurring one worth building familiarity with early.</aside>
+</section>
+
+<!-- 16. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 10 min · 0:21–0:31</span>
+<h1>Input Version — two passes</h1>
+<aside class="notes">
+Teaching goal: convert Exercise 2 from hardcoded values to real user input — and hit the type-conversion requirement head-on, since this is the exercise the reflection questions specifically ask students to reason about.
+Say to the class: "Same summary line as Exercise 2, but now the values come from whoever runs the script. Watch closely — <code>input()</code> is going to hand us exactly the wrong type for two of these three values, and I want you to predict the failure before we hit it."
+Two passes: first deliberately WITHOUT conversion (let the room see the failure), then fixed with <code>float()</code> / <code>int()</code>.
+</aside>
+</section>
+
+<!-- 17. EXERCISE 3 — broken pass -->
+<section class="s-code">
+<h3>Pass 1 — broken (no conversion)</h3>
+<div class="run" data-lang="python" data-stdin="Notebook&#10;4.99&#10;12">
+# --- Exercise 3 (broken first pass — do not leave this in the final file) ---
+product = input("Product: ")
+unit_price = input("Unit price: ")
+quantity = input("Quantity: ")
+print(f"{quantity} units of {product} at ${unit_price} each = ${unit_price * quantity:.2f}")
+</div>
+<p class="expect">The stdin box is pre-filled with <code>Notebook</code> / <code>4.99</code> / <code>12</code> — the three <code>input()</code> answers, one per line. Run it: it raises a <code>TypeError</code>.</p>
+<aside class="notes">
+Explain the error, out loud, slowly: <code>unit_price * quantity</code> is trying to multiply two <em>strings</em> together (both <code>input()</code> results came back as <code>str</code>, unconverted). Python does support <code>*</code> between a string and an <em>int</em> — but that means something completely different from arithmetic (it repeats the string that many times, e.g. <code>"ab" * 3</code> gives <code>"ababab"</code>) — and here Python can't even do that, because <em>both</em> operands are strings, and string-times-string isn't defined at all. Unpacking "can't multiply sequence by non-int of type 'str'" explicitly is the actual teaching moment — it is a genuinely confusing message to a beginner.
+</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — broken output -->
+<section class="s-out">
+<h3>Pass 1 — what it raises</h3>
+<pre>Product: Notebook
+Unit price: 4.99
+Quantity: 12
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 5, in &lt;module&gt;
+    print(f"{quantity} units of {product} at ${unit_price} each = ${unit_price * quantity:.2f}")
+                                                                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: can't multiply sequence by non-int of type 'str'</pre>
+<aside class="notes">Verified against CPython 3.12.2 (Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match; the file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path on a real machine — the load-bearing last line is identical). This IS the exact error from the reflection prompt. Make someone say "TypeError," not just "it breaks."</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — fixed pass -->
+<section class="s-code">
+<h3>Pass 2 — fixed (float / int conversion)</h3>
+<div class="run" data-lang="python" data-stdin="Notebook&#10;4.99&#10;12">
+# --- Exercise 3 ---
+product = input("Product: ")
+unit_price = float(input("Unit price: "))
+quantity = int(input("Quantity: "))
+print(f"{quantity} units of {product} at ${unit_price} each = ${unit_price * quantity:.2f}")
+</div>
+<p class="expect">Same seeded stdin (<code>Notebook</code> / <code>4.99</code> / <code>12</code>). Now it runs.</p>
+<aside class="notes">
+Line by line, the fix:
+- <code>unit_price = float(input("Unit price: "))</code> — <code>input()</code> returns a string; <code>float()</code> wraps that call and converts the result. Same inside-out reading pattern as prior modules.
+- <code>quantity = int(input("Quantity: "))</code> — same pattern with <code>int()</code>, since a quantity should be a whole number.
+- <code>product</code> stays unconverted, deliberately — it's meant to remain text.
+</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — fixed output -->
+<section class="s-out">
+<h3>Pass 2 — expected output</h3>
+<pre>Product: Notebook
+Unit price: 4.99
+Quantity: 12
+12 units of Notebook at $4.99 each = $59.88</pre>
+<aside class="notes">The load-bearing line is the last one — <code>12 units of Notebook at $4.99 each = $59.88</code> — which matches the guide's Expected output exactly. The first three lines are the echoed <code>input()</code> prompts + answers from the seeded stdin.</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">You forget to convert <code>unit_price</code> to <code>float</code> in Exercise 3. What is the <em>exact</em> error type?</p>
+<button data-opt="A"><code>TypeError</code></button>
+<button data-opt="B"><code>ValueError</code></button>
+<button data-opt="C">No error — just wrong output</button>
+<p class="why">A <code>TypeError</code>, specifically <code>can't multiply sequence by non-int of type 'str'</code> — you can't multiply a string by another string. Make someone say "TypeError," not just "it breaks."</p>
+</div>
+<aside class="notes">Check for understanding (guide): this is the exact question from tonight's reflection prompt — ask it now, out loud, so students have rehearsed the answer before they see it on the lab page. "What exactly goes wrong, and what's the exact error type, if you forget to convert <code>unit_price</code> to <code>float</code>?" (A <code>TypeError</code>, about not being able to multiply a string by another string.)</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Converting <code>product</code> with <code>str()</code> out of an over-corrected instinct — harmless (it's already a string), but say explicitly: converting a string to a string is a no-op, not an error, just unnecessary.</p>
+<p>Converting <code>quantity</code> with <code>float()</code> instead of <code>int()</code> — runs fine, but changes <code>type(quantity)</code> to <code>float</code>, which prints <code>12.0</code> instead of <code>12</code> in the summary line unless the format spec compensates. Ask the room to predict the output change, live.</p>
+</div>
+<aside class="notes">Both mistakes run without crashing — good "silent behavior change" examples. Have the room predict before you demo the <code>float()</code>-instead-of-<code>int()</code> swap.</aside>
+</section>
+
+<!-- 23. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 12 min · 0:31–0:43</span>
+<h1>Multi-Variable Product Card</h1>
+<aside class="notes">
+Teaching goal: combine everything so far — multiple variables, a derived value (margin), and several format specs — into one clean, multi-line report. This is the exercise that most resembles what "real" business scripts look like.
+Say to the class: "One more variable — <code>unit_cost</code> — and we're computing a derived value, margin, the same formula from the reading. Five lines of output, cleanly aligned."
+</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 ---
+product = "Notebook"
+unit_price = 4.99
+unit_cost = 3.29
+quantity = 12
+revenue = unit_price * quantity
+margin = (unit_price - unit_cost) / unit_price
+
+print(f"Product:  {product}")
+print(f"Price:    ${unit_price:.2f}")
+print(f"Qty:      {quantity}")
+print(f"Revenue:  ${revenue:.2f}")
+print(f"Margin:   {margin:.1%}")
+</div>
+<p class="expect">Labels are padded with extra spaces by hand so the values line up in a column — a <em>manual</em> alignment technique, and a fragile one (a much longer product name breaks it). Better tools exist (<code>{label:&lt;10}</code>) but are out of scope today.</p>
+<aside class="notes">
+Line by line:
+- <code>unit_cost = 3.29</code> — the new variable this exercise introduces.
+- <code>revenue = unit_price * quantity</code> — same formula pattern, stored in its own variable this time rather than computed inline. Ask: "Why compute this on its own line instead of inline like Exercise 2?" Once a calculation has a name of its own, the code that prints it becomes easier to read — a genuine style upgrade worth naming.
+- <code>margin = (unit_price - unit_cost) / unit_price</code> — parentheses required for the same order-of-operations reason as always; flag it briefly, don't re-derive.
+- The five <code>print()</code> lines — currency <code>${...:.2f}</code>, plain <code>{quantity}</code>, currency again, percentage <code>{margin:.1%}</code>. All four specs have now appeared in this course — say so explicitly.
+</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Product:  Notebook
+Price:    $4.99
+Qty:      12
+Revenue:  $59.88
+Margin:   34.1%</pre>
+<aside class="notes">Run it live; confirm every student sees exactly this. <code>revenue = 4.99 * 12 = 59.88</code>; <code>margin = (4.99 - 3.29) / 4.99 = 0.3407… → 34.1%</code> at one decimal.</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If <code>unit_cost</code> were <em>higher</em> than <code>unit_price</code> — selling at a loss — what prints for margin, and does it crash?</p>
+<button data-opt="A">It crashes</button>
+<button data-opt="B"><code>0.0%</code></button>
+<button data-opt="C">A negative percentage, no crash</button>
+<p class="why">A negative percentage, e.g. <code>-10.0%</code> — no crash, since there's nothing mathematically invalid about a negative margin. Python will happily compute a nonsensical business result without any complaint — the "silent wrong answer" theme again.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If <code>unit_cost</code> were higher than <code>unit_price</code> — selling at a loss — what would this script print for margin, and would it crash?" (A negative percentage, e.g. <code>-10.0%</code> — no crash; a good moment to note Python computes nonsensical business results without complaint.)</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Misaligning the manual spacing (extra or missing spaces in the label strings) — cosmetic, not a functional bug, but "does this look like a report" is literally what the exercise tests.</p>
+<p>Using <code>unit_price</code> instead of <code>unit_cost</code> in the margin formula by copy-paste habit — produces <code>margin = 0.0</code> (since <code>unit_price - unit_price</code> is always zero), a "silent wrong answer, and a suspiciously round one." <code>0.0%</code> margin should visibly look wrong.</p>
+</div>
+<aside class="notes">The <code>0.0%</code> case is a good example of a bug that is easy to eyeball once you know to look — encourage a quick "does this number make sense" glance at every output.</aside>
+</section>
+
+<!-- 28. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 12 min · 0:43–0:55</span>
+<h1>Type Investigation in the REPL</h1>
+<aside class="notes">
+Teaching goal: introduce the Python interactive interpreter (REPL) as a separate tool from running a saved script — a fast scratchpad for testing small expressions — and use it to directly observe the <code>str</code>-vs-<code>int</code> addition distinction that motivates every type-conversion rule so far.
+Say to the class: "Everything today has been inside a saved file you run with <code>python3 pricer.py</code>. There's a second way to run Python: type <code>python3</code> with no filename, and you get an interactive prompt where you can type one expression at a time and see the result immediately. This is where you'll quickly test an idea before committing it to a script."
+</aside>
+</section>
+
+<!-- 29. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5 (REPL sequence, wrapped in <code>print()</code> so it runs here)</h3>
+<div class="run" data-lang="python">
+print(type("12"))
+print(type(12))
+print(type(12.0))
+print(type(True))
+print("5" + "3")
+print(5 + 3)
+</div>
+<p class="expect">In the real REPL you would type each line bare (no <code>print()</code>) and the interpreter auto-echoes the result — <code>"5" + "3"</code> shows as <code>'53'</code> with quotes, because that's how the REPL marks a string. Here we wrap each in <code>print()</code> so the deck can run it; <code>print()</code> drops the quotes.</p>
+<aside class="notes">
+Explain each result as it appears:
+- <code>type("12")</code> → <code>&lt;class 'str'&gt;</code> — the quotes make <code>"12"</code> a string that happens to <em>look like</em> a number; Python treats it purely as text.
+- <code>type(12)</code> → <code>&lt;class 'int'&gt;</code>, <code>type(12.0)</code> → <code>&lt;class 'float'&gt;</code> — reinforce the decimal-point rule from Exercise 1, now via the REPL.
+- <code>type(True)</code> → <code>&lt;class 'bool'&gt;</code> — consistent with Exercise 1.
+- <code>"5" + "3"</code> → <code>53</code> (REPL shows <code>'53'</code>) — <strong>the payoff of the whole exercise.</strong> <code>+</code> between two strings means <strong>concatenation</strong>, not addition. <code>"5"</code> and <code>"3"</code> are text, so <code>+</code> sticks them end to end.
+- <code>5 + 3</code> → <code>8</code> — same <code>+</code> symbol, but both operands are <code>int</code>, so it means ordinary arithmetic.
+Connective idea (say verbatim): "Same symbol, <code>+</code>, two completely different behaviors depending on type. This is <em>exactly</em> why <code>input()</code> results have to be converted before you do math with them — <code>input()</code> always returns a string, so <code>price + tax</code> where both came straight from <code>input()</code> wouldn't add two numbers, it would glue two pieces of text together. And it wouldn't necessarily crash."
+</aside>
+</section>
+
+<!-- 30. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>&lt;class 'str'&gt;
+&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'bool'&gt;
+53
+8</pre>
+<aside class="notes">Via <code>print()</code>: <code>"5" + "3"</code> shows as <code>53</code> (no quotes). In the bare REPL the same line auto-echoes as <code>'53'</code> — the quotes are the REPL telling you "this is a string." Worth a 10-second aside if a sharp student asks why quotes appear in the REPL but not in <code>print()</code> output.</aside>
+</section>
+
+<!-- 31. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q"><code>"5" + 3</code> — a string plus an int, not two strings — does what?</p>
+<button data-opt="A"><code>TypeError</code></button>
+<button data-opt="B"><code>8</code></button>
+<button data-opt="C"><code>"53"</code></button>
+<p class="why">It raises <code>TypeError: can only concatenate str (not "int") to str</code>. Python refuses to guess which behavior — concatenation or addition — you meant when the types don't match cleanly. That refusal is genuinely reassuring: it means Python won't silently do the wrong thing here.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "Predict, before I run it: what does <code>"5" + 3</code> — a string plus an int — do?" (Raises <code>TypeError: can only concatenate str (not "int") to str</code> — demonstrate live if time allows; a natural bridge into "Python refuses to guess which behavior you meant when the types don't match cleanly.")</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Typing <code>exit()</code> or closing the terminal window instead of using <code>Ctrl+D</code> (Mac/Linux) or <code>Ctrl+Z</code> then Enter (Windows) to leave the REPL — not wrong, just slower; mention the shortcut once.</p>
+<p>Confusion about why the REPL echoes back a <em>value</em> (like <code>'53'</code>) for a bare expression but does nothing extra for a bare <code>print(...)</code> — the REPL auto-displays the result of the last expression typed, a REPL-only convenience. A saved script never does this, which is precisely why <code>print()</code> is required in every script exercise all semester.</p>
+</div>
+<aside class="notes">The auto-echo vs explicit-<code>print()</code> distinction is the reason scripts always need <code>print()</code> — worth making explicit here.</aside>
+</section>
+
+<!-- 33. STRETCH A — divider -->
+<section class="s-sec">
+<span class="chip">Stretch A · 15 min · 0:55–1:10</span>
+<h1>Three-Product Comparison</h1>
+<aside class="notes">
+Teaching goal: scale Exercise 4's single product card to three products using parallel variable naming, and use comparison operators to pick a winner — direct rehearsal for the "many records" processing that loops (a later module) will handle more elegantly.
+Say to the class: "Three products, three full sets of variables, three margins — and a final line declaring the winner. This previews a real pain point: right now, with no loops yet, three products means typing almost the same code three times. Notice that discomfort — it's setting up why we'll want a better tool for this soon."
+</aside>
+</section>
+
+<!-- 34. STRETCH A — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch A (loop version)</h3>
+<div class="run" data-lang="python">
+# --- Stretch A ---
+product1, price1, cost1, qty1 = "Notebook", 4.99, 3.29, 12
+product2, price2, cost2, qty2 = "Pen", 1.99, 0.85, 50
+product3, price3, cost3, qty3 = "Stapler", 12.49, 7.10, 5
+
+margin1 = (price1 - cost1) / price1
+margin2 = (price2 - cost2) / price2
+margin3 = (price3 - cost3) / price3
+
+for name, price, qty, margin in [
+    (product1, price1, qty1, margin1),
+    (product2, price2, qty2, margin2),
+    (product3, price3, qty3, margin3),
+]:
+    print(f"Product: {name} | Price: ${price:.2f} | Qty: {qty} | "
+          f"Revenue: ${price * qty:.2f} | Margin: {margin:.1%}")
+
+best_margin, best_product = max([(margin1, product1), (margin2, product2), (margin3, product3)])
+print(f"Highest margin: {best_product} at {best_margin:.1%}")
+</div>
+<p class="expect">If your section hasn't covered <code>for</code> loops yet, replace the loop with three explicit, separately-typed <code>print()</code> calls (one per product) — the appendix answer key shows both versions, and both give the same first three output lines.</p>
+<aside class="notes">
+Line by line:
+- The three <code>productN, priceN, costN, qtyN = ...</code> lines — tuple unpacking, scaled to three parallel sets. <strong>Numbered variable names like this are a known anti-pattern</strong> — the exercise is teaching students to feel that pain, not endorsing it. Honest answer to "isn't there a better way": "yes, a list of dictionaries or a loop-friendly structure — that's a later module; today is intentionally the 'hard way' so the better way lands harder."
+- The <code>for</code> loop over a list of tuples is one legitimate way to avoid three near-identical <code>print()</code> calls. If <code>for</code> loops aren't in scope for your section, use three explicit <code>print()</code> calls instead so the loop syntax doesn't introduce an unannounced concept.
+- <code>max([(margin1, product1), ...])</code> — <code>max()</code> on a list of tuples compares tuples element by element, so it compares the <em>margins first</em> (margin is listed first in each tuple) and only looks at the product name to break ties. Tuple comparison does the comparison logic for you.
+Check for understanding (guide): "If I added a fourth product, what has to change?" (Every numbered-variable line needs a new set — <code>product4, price4, cost4, qty4</code> — and the loop's list or the manual print calls need a fourth entry. Get someone to say out loud that this doesn't scale — that's the intended discomfort.)
+</aside>
+</section>
+
+<!-- 35. STRETCH A — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Product: Notebook | Price: $4.99 | Qty: 12 | Revenue: $59.88 | Margin: 34.1%
+Product: Pen | Price: $1.99 | Qty: 50 | Revenue: $99.50 | Margin: 57.3%
+Product: Stapler | Price: $12.49 | Qty: 5 | Revenue: $62.45 | Margin: 43.2%
+Highest margin: Pen at 57.3%</pre>
+<aside class="notes">Four lines: one per product, then the winner. Pen has the highest margin (57.3%) even though it has the lowest unit price — a nice "margin and price are different questions" aside. Common mistake to watch for: mixing up which numbered variable belongs to which product mid-script (e.g. using <code>cost2</code> in a formula meant for product 3) — the classic consequence of the numbered-variable anti-pattern.</aside>
+</section>
+
+<!-- 36. STRETCH B — divider -->
+<section class="s-sec">
+<span class="chip">Stretch B · as time allows</span>
+<h1>Format Spec Exploration</h1>
+<aside class="notes">
+Frame it as a quick, verbal walkthrough rather than a full live-coded block if time is short — designed as REPL exploration, not a script. If time is genuinely tight, this closing line alone is worth saying: "Everything in that <code>:</code> after the value in an f-string is its own small formatting language — you've now seen currency, percentages, thousands separators, zero-padding, and alignment. That's most of what you'll need all semester."
+</aside>
+</section>
+
+<!-- 37. STRETCH B — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch B (format specs)</h3>
+<div class="run" data-lang="python">
+print(f"{1234567:.2f}")
+print(f"{1234567:,.0f}")
+print(f"{0.3456:.1%}")
+print(f"{42:05d}")
+print(f"{'hello':>20}")
+</div>
+<p class="expect">In the REPL each bare f-string auto-echoes with surrounding quotes; via <code>print()</code> here you see the string contents directly.</p>
+<aside class="notes">
+One sentence each, said out loud:
+- <code>.2f</code> forces two decimals even on a whole number.
+- <code>,.0f</code> adds thousands separators with zero decimals.
+- <code>.1%</code> multiplies by 100 and appends a percent sign, one decimal digit.
+- <code>05d</code> pads an integer with leading zeros to a total width of 5 characters (order numbers, zip codes).
+- <code>&gt;20</code> right-aligns text within a 20-character-wide field (the "columns that line up" problem Exercise 4's manual spacing was working around by hand).
+</aside>
+</section>
+
+<!-- 38. STRETCH B — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>1234567.00
+1,234,567
+34.6%
+00042
+               hello</pre>
+<aside class="notes">Line 5 is <code>hello</code> right-aligned in a 20-char field — 15 leading spaces then the 5 letters. In the bare REPL these show as <code>'1234567.00'</code>, <code>'1,234,567'</code>, <code>'34.6%'</code>, <code>'00042'</code>, <code>'               hello'</code> (with quotes).</aside>
+</section>
+
+<!-- 39. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>What exact error do you get if you forget to convert price from string to <code>float</code> in Exercise 3 — and which line causes it?</li>
+<li>Why does <code>"5" + "3"</code> give <code>"53"</code>, and how does that explain why <code>input()</code> conversion is mandatory?</li>
+<li>Name a real career scenario where you'd use variables, types, and f-strings — specific enough to say what the variables would be.</li>
+</ul>
+<aside class="notes">
+Strong-answer guidance:
+1. The exact error is <code>TypeError: can't multiply sequence by non-int of type 'str'</code>, and the answer should connect it to the <code>unit_price * quantity</code> line specifically, not just say "it errors."
+2. A strong answer states explicitly that <code>+</code> behaves differently based on operand type, and that <code>input()</code> always returns strings regardless of what the user typed.
+3. No wrong answer — push for a scenario specific enough to name what the variables would be (not just "I'd use it for my job").
+</aside>
+</section>
+
+<!-- 40. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li>File is named exactly <code>pricer.py</code></li>
+<li>Contains Exercises 1–4 as one runnable script, in order</li>
+<li>Each exercise has a comment separating it from the next</li>
+<li>All numeric output uses an appropriate f-string format spec</li>
+<li>Script runs top to bottom with no errors</li>
+</ul>
+<aside class="notes">Review this on screen together in the last few minutes. Preview Module 04: "Today's <code>unit_price * quantity</code> and margin formulas come back next module, at real business scale — revenue, discounts, and the operators that combine into full financial logic. You'll also meet the <em>other</em> division operator, <code>//</code>, and see exactly how a missing parenthesis can silently break a formula like today's margin calculation."</aside>
+</section>
+
+<!-- 41. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 3</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w03.md (Week 3 facilitation guide). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
