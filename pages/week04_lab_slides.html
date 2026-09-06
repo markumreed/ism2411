@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 4 — Revenue, Margin &amp; Discount Calculator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 4 &nbsp;·&nbsp; Module 04 &nbsp;·&nbsp; Unit 1 &nbsp;·&nbsp; Foundations</p>
+<h1>Revenue, Margin &amp; Discount Calculator</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Intro</span>
+<span class="t-item"><strong>0:05–0:10</strong> Ex 1 — Revenue</span>
+<span class="t-item"><strong>0:10–0:15</strong> Ex 2 — Margin</span>
+<span class="t-item"><strong>0:15–0:22</strong> Ex 3 — Two Products</span>
+<span class="t-item"><strong>0:22–0:30</strong> Ex 4 — Logical Combo</span>
+<span class="t-item"><strong>0:30–0:40</strong> Ex 5 — / // %</span>
+<span class="t-item"><strong>0:40–0:55</strong> Ex 6 — Full Calculator</span>
+<span class="t-item"><strong>0:55–1:07</strong> Ex 7 — Packaging</span>
+<span class="t-item"><strong>1:07–1:15</strong> Stretch + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along — you type on the shared screen, students type along on their own machines and run every step with you. This is the first lab this semester where students write real, graded business logic — arithmetic operators, comparisons, and boolean logic applied to pricing, margin, and discount formulas. Modules 1–3 were about reading and typing things correctly; this module is about <em>computing</em> things correctly, and about the specific ways Python's operators quietly do something other than what a spreadsheet-trained brain expects (integer vs. float division, operator precedence, percentage-as-decimal). Budget real time for the mistakes — they are the content, not a distraction from it. Prerequisites: Modules 01–03 — file system basics, variables and data types, <code>print()</code> / f-strings. Submission: <code>calculator.py</code> to Canvas, all seven exercises in one file, each marked with a <code># --- Exercise N ---</code> comment. Pure Python built-ins throughout — no new libraries, no internet. All output in this deck verified against CPython 3.12 (== Pyodide 0.26.4).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — you type on the shared screen, students type along and run every step with you</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Modules 01–03: file system basics, variables and data types, <code>print()</code> / f-strings</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch A/B (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>calculator.py</code> to Canvas — all seven exercises in one file, each marked with a <code># --- Exercise N ---</code> comment</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week04_lab. Class length 75 minutes. The exercises use all available time; if your section moves faster, the two Stretch challenges and the "Extra Practice" block in the Appendix are the release valve — do <strong>not</strong> cut required exercises short to reach the stretch material. Pre-create an empty <code>calculator.py</code> — do not pre-write the exercises; everything is meant to be typed live, mistakes included. Open a terminal pane next to the editor so output is visible without alt-tabbing. Decide in advance which two or three students you'll cold-call for Exercise 5.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Write arithmetic expressions using <code>+ - * / // %</code> and correctly predict what each one returns, including the float-vs-integer distinction between <code>/</code> and <code>//</code>.</li>
+<li>Use comparison operators (<code>&gt; &lt; == &gt;=</code> etc.) to produce a boolean value and explain what a boolean <em>is</em> (not a string, not a number).</li>
+<li>Combine two boolean conditions with <code>and</code> / <code>or</code> and correctly reason about the resulting truth value.</li>
+<li>Format numeric output for a business audience using f-string format specs: <code>,.2f</code> for currency, <code>.1%</code> for percentages.</li>
+<li>Read a multi-line business calculation and identify where a missing parenthesis would silently produce a wrong (but plausible-looking) answer — this is the single highest-value takeaway of the day.</li>
+<li>Collect multiple values from a user with <code>input()</code>, convert them to the correct numeric type, and use them in a downstream calculation.</li>
+</ul>
+<aside class="notes">The verbs are lifted verbatim from the guide's Learning Objectives. Objective 5 (the missing-parenthesis / silent-wrong-answer idea) is the spine of the whole lab — Exercises 2, 4, and 6 each preview it, and Stretch B drills it directly.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Intro — computing, not just typing</td><td>5</td></tr>
+<tr><td>0:05–0:10</td><td>Exercise 1 — Revenue</td><td>5</td></tr>
+<tr><td>0:10–0:15</td><td>Exercise 2 — Margin</td><td>5</td></tr>
+<tr><td>0:15–0:22</td><td>Exercise 3 — Two Products</td><td>7</td></tr>
+<tr><td>0:22–0:30</td><td>Exercise 4 — Logical Combo</td><td>8</td></tr>
+<tr><td>0:30–0:40</td><td>Exercise 5 — Common-Mistake Check: <code>/ // %</code></td><td>10</td></tr>
+<tr><td>0:40–0:55</td><td>Exercise 6 — Full Pricing Calculator</td><td>15</td></tr>
+<tr><td>0:55–1:07</td><td>Exercise 7 — Packaging Problem</td><td>12</td></tr>
+<tr><td>1:07–1:15</td><td>Stretch A / B (as time allows) + Wrap-Up</td><td>8</td></tr>
+</tbody>
+</table>
+<aside class="notes">The seven required exercises plus two stretch challenges fill the full 75 minutes at a normal teaching pace. Wrap-Up is the last ~5 minutes of the 1:07–1:15 block. If your section is behind, drop the stretch material — never the required exercises. Exercise 5 is the highest-leverage exercise in the lab; Exercise 6 is where students spend the most independent time.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>Computing things, not just typing them</h1>
+<aside class="notes">
+Teaching goal: set up the two traps the whole lab is about — Python's division operators, and the missing parenthesis that silently produces a wrong number.
+Say to the class (verbatim): "Modules 1 through 3 got you reading file paths, storing values in variables, and printing them out formatted. Today we start actually <em>computing</em> things — and we're doing it with real business formulas: revenue, margin, discounts. Two warnings before we start. One: Python's division operators do not work the way your calculator does — <code>/</code> and <code>//</code> give you different types of answers, and that difference matters. Two: today's single most important idea is that a missing parenthesis doesn't crash your program — it just quietly gives you the wrong number. Nobody tells you. Your boss doesn't tell you. The spreadsheet doesn't tell you. You have to catch it yourself. That's what today is really about."
+Do: open <code>calculator.py</code>, type the header comment together — <code># calculator.py</code> / <code># ISM2411 Module 04 Lab — Revenue, Margin &amp; Discount Calculator</code>. Tell students this comment convention — one header line, plus a <code># --- Exercise N ---</code> comment above every exercise — is required for submission and will be required in every script for the rest of the semester.
+Common mistakes: none yet — this is framing.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 5 min · 0:05–0:10</span>
+<h1>Revenue</h1>
+<aside class="notes">
+Teaching goal: multiplication as the business operation "price times quantity," and the first f-string format spec of the semester: thousands separator + fixed decimals.
+Say to the class (verbatim): "Revenue is the simplest formula in the whole lab — price times quantity — but the <em>output formatting</em> is the actual skill we're practicing. <code>$600</code> and <code>$600.00</code> mean the same number to Python, but only one of them looks like something a manager would accept in a report."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 ---
+price = 50
+quantity = 12
+revenue = price * quantity
+print(f"Revenue: ${revenue:,.2f}")
+</div>
+<p class="expect">Type it unchanged and Run. Expected: <code>Revenue: $600.00</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>price = 50</code> — an integer variable. No dollar sign, no comma, no quotes — just the raw number. <code>price = "$50"</code> would make this a string, and <code>"$50" * 12</code> would repeat the text, not multiply. Worth a 15-second aside.
+- <code>quantity = 12</code> — likewise a plain integer.
+- <code>revenue = price * quantity</code> — <code>*</code> is multiplication; both operands are <code>int</code>, so <code>revenue</code> is also an <code>int</code> (<code>600</code>), not a float yet.
+- <code>print(f"Revenue: ${revenue:,.2f}")</code> — slow down here. The <code>f</code> before the quote makes this an f-string: anything in <code>{ }</code> is Python code, evaluated and substituted. The literal <code>$</code> is just a character. Inside the braces, <code>revenue</code> is the value; everything after <code>:</code> is the format spec. <code>,</code> inserts a thousands separator (<code>1200</code> → <code>1,200</code>) — not needed for 600 here, but essential in Exercise 6. <code>.2f</code> means "fixed-point, 2 digits after the decimal" — turns the integer <code>600</code> into the display string <code>600.00</code>. This changes only the display, not the stored value.
+Common mistakes: forgetting the <code>f</code> (braces print literally — most common error in the room, walk by and check); putting the format spec outside the braces (<code>f"...${revenue}:,.2f"</code>); writing <code>.2f,</code> instead of <code>,.2f</code> → <code>ValueError: Invalid format specifier</code> (next slide shows it).
+Check for understanding (guide): "If I change <code>quantity</code> to <code>12.5</code>, does this line still work, and does the output still make sense?" Answer: <strong>Yes</strong> — <code>revenue</code> becomes a float, <code>,.2f</code> still formats it correctly. This previews that <code>,.2f</code> works on both ints and floats, which matters in Exercise 6.
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Revenue: $600.00</pre>
+<aside class="notes">Run it live; confirm every student sees exactly this. Matches the guide's "Run it. Expected output" for Exercise 1.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — comma in the wrong place</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 (deliberately broken: comma misplaced in the format spec) ---
+price = 50
+quantity = 12
+revenue = price * quantity
+print(f"Revenue: ${revenue:.2f,}")
+</div>
+<p class="expect">Students who write <code>.2f,</code> instead of <code>,.2f</code> get a <code>ValueError</code>. Run it — read the message aloud once.</p>
+<aside class="notes">
+Teaching goal: the format spec has a fixed grammar; the separator comes <em>before</em> the precision, not after. The error message actually says <code>Invalid format specifier</code>, which is worth reading aloud once so students recognize it later.
+Line-by-line: identical to the working version except the format spec is <code>:.2f,</code> — a trailing comma Python cannot parse.
+Common mistakes: this <em>is</em> the mistake — confusing <code>,.2f</code> order. Show the traceback, then fix it back to <code>,.2f</code> and move on.
+The file path shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path under CPython — not load-bearing. The load-bearing last line is <code>ValueError: Invalid format specifier '.2f,' for object of type 'int'</code>.
+</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — broken output -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 5, in &lt;module&gt;
+    print(f"Revenue: ${revenue:.2f,}")
+                      ^^^^^^^^^^^^^^
+ValueError: Invalid format specifier '.2f,' for object of type 'int'</pre>
+<aside class="notes">Verified against CPython 3.12.2. Pyodide 0.26.4 bundles CPython 3.12, so the message and caret markers match; only the file path differs (<code>&lt;exec&gt;</code> vs a temp path). Make someone say "ValueError," and specifically that the format spec is what's invalid.</aside>
+</section>
+
+<!-- 11. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If I change <code>quantity</code> to <code>12.5</code>, does <code>print(f"Revenue: ${revenue:,.2f}")</code> still work — and does the output still make sense?</p>
+<button data-opt="A">Yes — <code>revenue</code> becomes a float and <code>,.2f</code> still formats it correctly</button>
+<button data-opt="B">No — <code>,.2f</code> only works on integers, so it raises a <code>TypeError</code></button>
+<button data-opt="C">It runs, but the decimals are dropped and it prints <code>Revenue: $625</code></button>
+<p class="why" hidden>Yes — <code>revenue</code> becomes a float, and <code>,.2f</code> still formats it correctly. This previews that <code>,.2f</code> works on both ints and floats, which matters in Exercise 6.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Yes — <code>revenue</code> becomes a float, <code>,.2f</code> still formats it correctly. This previews that <code>,.2f</code> works on both ints and floats, which matters in Exercise 6.)"</aside>
+</section>
+
+<!-- 12. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting the <code>f</code> before the string — the braces print literally as <code>{revenue:,.2f}</code> instead of substituting. The most common error in the room; walk by and check for it.</p>
+<p>Putting the format spec inside quotes but outside the braces, e.g. <code>f"Revenue: ${revenue}:,.2f"</code> — the colon has to be <em>inside</em> the braces.</p>
+<p>Confusing <code>,.2f</code> order — writing <code>.2f,</code> gets a <code>ValueError: Invalid format specifier</code>. Read that message aloud once.</p>
+</div>
+<aside class="notes">All three are from the guide's "Common student mistakes to watch for" for Exercise 1. The forgotten-<code>f</code> case is worth an explicit lap around the room.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 5 min · 0:10–0:15</span>
+<h1>Margin</h1>
+<aside class="notes">
+Teaching goal: true division (<code>/</code>) always returns a float, and the <code>.1%</code> format spec — the first time students see Python multiply a decimal by 100 and add a <code>%</code> sign automatically.
+Say to the class (verbatim): "Margin is the percentage of the price that's profit. The formula is <code>(price - cost) / price</code>. Watch what happens with the formatting here — we are <em>not</em> going to multiply by 100 ourselves."
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 ---
+cost = 32
+price = 50
+margin = (price - cost) / price
+print(f"Margin: {margin:.1%}")
+</div>
+<p class="expect">Expected: <code>Margin: 36.0%</code>. Note the parentheses around <code>price - cost</code> are required, not stylistic.</p>
+<aside class="notes">
+Line-by-line:
+- <code>cost = 32</code>, <code>price = 50</code> — reusing <code>price</code> here shadows the value from Exercise 1. Variables are <strong>not</strong> scoped per-exercise; it's fine here because it's the same value, but flag that Exercise 3 renames to <code>price_a</code> / <code>price_b</code> to avoid this kind of collision.
+- <code>margin = (price - cost) / price</code> — the parentheses are <strong>required</strong>. <code>price - cost / price</code> would divide <code>cost</code> by <code>price</code> first (division binds tighter than subtraction) and then subtract — a completely different, wrong number. First live preview of the precedence trap Stretch B drills directly.
+- <code>/</code> is <strong>true division</strong> — always returns a <code>float</code>, even when the answer comes out evenly (<code>10 / 2</code> is <code>5.0</code>). Contrast verbally with <code>//</code>, coming in Exercise 5.
+- <code>margin</code> is <code>0.36</code> — a decimal fraction, not "36".
+- <code>f"Margin: {margin:.1%}"</code> — the <code>%</code> format type multiplies by 100 <em>and</em> appends a literal <code>%</code>. <code>.1</code> means one digit after the decimal in the percentage. So <code>0.36</code> becomes <code>36.0%</code>.
+Common mistakes: manually multiplying by 100 first (<code>... / price * 100</code>) and <em>then</em> using <code>.1%</code>, which double-multiplies → <code>3600.0%</code>. Extremely common — make the student explain out loud why the number is 100x too big. Also omitting the parentheses around <code>price - cost</code>.
+Check for understanding (guide): "What data type is <code>margin</code> right now — before it's ever printed?" Answer: a <code>float</code>, <code>0.36</code>. The <code>%</code> in the f-string changes <em>display</em>, not the stored type.
+</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Margin: 36.0%</pre>
+<aside class="notes">Run it live. <code>(50 - 32) / 50 = 0.36</code>; <code>.1%</code> renders that as <code>36.0%</code>. Matches the guide's "Run it. Expected output" for Exercise 2.</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">What data type is <code>margin</code> right now — before it's ever printed?</p>
+<button data-opt="A"><code>str</code> — it's <code>"36.0%"</code></button>
+<button data-opt="B"><code>float</code> — it's <code>0.36</code></button>
+<button data-opt="C"><code>int</code> — it's <code>36</code></button>
+<p class="why" hidden>A <code>float</code>, <code>0.36</code>. The <code>%</code> in the f-string changes <em>display</em>, not the stored type — reinforce this distinction, it recurs in Exercise 6.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(A <code>float</code>, <code>0.36</code>. The <code>%</code> in the f-string changes <em>display</em>, not the stored type — reinforce this distinction, it recurs in Exercise 6.)"</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Manually multiplying by 100 first (<code>margin = (price - cost) / price * 100</code>) and <em>then</em> using <code>.1%</code> — this double-multiplies and gives <code>3600.0%</code>. Very common. Don't just correct it; ask the student to explain out loud why the number is 100x too big — "because <code>%</code> already multiplies by 100" is what makes it stick.</p>
+<p>Omitting the parentheses around <code>price - cost</code>. Division binds tighter than subtraction, so the result is a plausible-looking but wrong number — no crash.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 7 min · 0:15–0:22</span>
+<h1>Two Products</h1>
+<aside class="notes">
+Teaching goal: comparison operators produce a <code>bool</code>, and a <code>bool</code> is a real, printable value — not a string, not a special case.
+Say to the class (verbatim): "Now we compare two products by margin. Notice I'm renaming variables this time — <code>price_a</code>, <code>cost_a</code>, <code>price_b</code>, <code>cost_b</code> — because we just saw what happens when you reuse a bare <code>price</code> for two different things. This exercise also introduces the <code>bool</code> type: <code>True</code> and <code>False</code>, capitalized, no quotes."
+</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 ---
+price_a, cost_a = 50, 32
+price_b, cost_b = 80, 60
+margin_a = (price_a - cost_a) / price_a
+margin_b = (price_b - cost_b) / price_b
+product_a_wins = margin_a &gt; margin_b
+print(f"Product A margin: {margin_a:.1%}")
+print(f"Product B margin: {margin_b:.1%}")
+print(f"Product A wins: {product_a_wins}")
+</div>
+<p class="expect">Ask the room to predict both margins before running — 36.0% and 25.0%. Product B has a lower margin despite a higher price.</p>
+<aside class="notes">
+Line-by-line:
+- <code>price_a, cost_a = 50, 32</code> — <strong>tuple unpacking</strong>: one line assigns two variables, left to right. Optional shorthand for two separate lines — either style is fine.
+- <code>margin_a = (price_a - cost_a) / price_a</code> and the matching <code>margin_b</code> line — identical formula from Exercise 2, applied to each product. Predict before running: 36.0% and 25.0%. Higher price does not automatically mean higher margin (10-second business aside).
+- <code>product_a_wins = margin_a &gt; margin_b</code> — <code>&gt;</code> is a <strong>comparison operator</strong>. This line does not print and does not branch — it evaluates <code>margin_a &gt; margin_b</code> to <code>True</code> or <code>False</code> and stores that value. A comparison is an expression that produces a value, exactly like <code>2 + 2</code> produces <code>4</code>.
+- <code>print(f"Product A wins: {product_a_wins}")</code> — <code>product_a_wins</code> is a <code>bool</code>; f-strings print booleans as the literal words <code>True</code> / <code>False</code> (capital, no quotes). <code>True</code> is not the string <code>"True"</code> — <code>if product_a_wins == "True":</code> would silently never match. Worth stating now even though <code>if</code> is Module 05.
+Common mistakes: writing <code>=</code> instead of <code>==</code>, or an assignment chain like <code>product_a_wins = margin_a = margin_b</code> which silently overwrites both margins. Distinguish <code>=</code> (assignment, "put this value in this box") from <code>&gt; &lt; ==</code> (comparison, "ask a true/false question").
+Check for understanding (guide): "If Product B's margin had been <em>higher</em> than Product A's, what would <code>product_a_wins</code> print?" Answer: <code>False</code> — the variable name doesn't change what's stored in it; <code>product_a_wins</code> is just a label, it will happily hold <code>False</code>.
+</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Product A margin: 36.0%
+Product B margin: 25.0%
+Product A wins: True</pre>
+<aside class="notes">Run it live. <code>margin_a = 0.36</code>, <code>margin_b = 0.25</code>, <code>0.36 &gt; 0.25</code> is <code>True</code>. Matches the guide's "Run it. Expected output" for Exercise 3.</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If Product B's margin had been <em>higher</em> than Product A's, what would <code>product_a_wins</code> print?</p>
+<button data-opt="A"><code>True</code> — the variable is named <code>product_a_wins</code>, so it stays true</button>
+<button data-opt="B"><code>False</code></button>
+<button data-opt="C">An error — the name no longer matches the value</button>
+<p class="why" hidden><code>False</code> — the variable name doesn't change what's stored in it; <code>product_a_wins</code> is just a label, it will happily hold <code>False</code>.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>False</code> — make someone say it out loud, and make someone else explain that the variable name doesn't change what's stored in it; <code>product_a_wins</code> is just a label, it will happily hold <code>False</code>.)"</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Confusing <code>=</code> with a comparison. They haven't hit <code>==</code> yet (that's Exercise 4), but if a student writes <code>product_a_wins = margin_a = margin_b</code> out of confusion, catch it — that's an assignment chain, not a comparison, and it silently overwrites <code>margin_a</code> and <code>margin_b</code> both to whatever <code>margin_b</code> was.</p>
+<p>Good moment to distinguish <code>=</code> (assignment — "put this value in this box") from <code>&gt;</code> <code>&lt;</code> <code>==</code> (comparison — "ask a true/false question").</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 23. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 8 min · 0:22–0:30</span>
+<h1>Logical Combo</h1>
+<aside class="notes">
+Teaching goal: combining two boolean conditions with <code>and</code>, and observing how changing one input changes the combined result.
+Say to the class (verbatim): "A 'premium' product needs to satisfy <em>two</em> conditions at once: price over 100 AND margin over 30%. This is where <code>and</code> comes in — it's not addition, it's a logical operator that only returns <code>True</code> when both sides are <code>True</code>."
+</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — the <code>and</code> truth table</h3>
+<div class="concept">
+<div class="concept-lbl">Say it once, explicitly</div>
+<p><code>True and True</code> → <code>True</code>. Every other combination — <code>True and False</code>, <code>False and True</code>, <code>False and False</code> → <code>False</code>. Both sides must be true.</p>
+<p>Python evaluates <code>price &gt; 100 and margin &gt; 0.3</code> in three explicit steps: first <code>price &gt; 100</code> on its own, then <code>margin &gt; 0.3</code> on its own, and only <em>then</em> does <code>and</code> combine the two booleans.</p>
+</div>
+<aside class="notes">Students commonly try to read <code>price &gt; 100 and margin &gt; 0.3</code> as one big arithmetic-style expression; walk it in three explicit steps on the board/screen. This card is the guide's "and truth table" plus its "read this out loud exactly as Python evaluates it" paragraph.</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — pass 1 -->
+<section class="s-code">
+<h3>Pass 1 — both conditions met</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 ---
+price = 120
+margin = 0.35
+is_premium = price &gt; 100 and margin &gt; 0.3
+print(f"is_premium = {is_premium}")
+</div>
+<p class="expect">Expected: <code>is_premium = True</code>. <code>120 &gt; 100</code> → <code>True</code>; <code>0.35 &gt; 0.3</code> → <code>True</code>; <code>True and True</code> → <code>True</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>price = 120</code>, <code>margin = 0.35</code> — margin is entered directly as a decimal here (not computed), since this exercise isolates the logic, not the formula.
+- <code>is_premium = price &gt; 100 and margin &gt; 0.3</code> — first <code>price &gt; 100</code> (<code>120 &gt; 100</code> → <code>True</code>), then <code>margin &gt; 0.3</code> (<code>0.35 &gt; 0.3</code> → <code>True</code>), then <code>and</code> combines them (<code>True and True</code> → <code>True</code>).
+Common mistakes: writing <code>margin &gt; 30</code> (forgetting margin is a decimal, not a whole-number percentage) — runs without error, always evaluates unexpectedly. A "silent wrong answer" bug. Also confusing <code>and</code> with <code>&amp;</code> (bitwise, not logical) — one sentence: "we're not using that operator today."
+</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — pass 1 output -->
+<section class="s-out">
+<h3>Pass 1 — expected output</h3>
+<pre>is_premium = True</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 4's first values.</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — pass 2 -->
+<section class="s-code">
+<h3>Pass 2 — change the values so exactly one condition is met</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 (one condition met, not both) ---
+price = 120
+margin = 0.20
+is_premium = price &gt; 100 and margin &gt; 0.3
+print(f"is_premium = {is_premium}")
+</div>
+<p class="expect">Output is <code>is_premium = False</code>, even though <code>price &gt; 100</code> alone is <code>True</code>. This is the entire point of the exercise.</p>
+<aside class="notes">
+Say explicitly: "One true condition is not enough for <code>and</code>. Both have to be true." <code>price &gt; 100</code> is <code>True</code>, but <code>margin &gt; 0.3</code> is now <code>False</code> (<code>0.20 &gt; 0.3</code> is false), so <code>True and False</code> → <code>False</code>. Next slide shows the reverse case for the same reason from the other side.
+</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — pass 2 output -->
+<section class="s-out">
+<h3>Pass 2 — expected output</h3>
+<pre>is_premium = False</pre>
+<aside class="notes">One true condition is not enough for <code>and</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 29. EXERCISE 4 — pass 3 -->
+<section class="s-code">
+<h3>Pass 3 — the reverse: price fails, margin passes</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 (the other side: price fails, margin passes) ---
+price = 80
+margin = 0.35
+is_premium = price &gt; 100 and margin &gt; 0.3
+print(f"is_premium = {is_premium}")
+</div>
+<p class="expect">Also <code>False</code> — for the same reason from the other side: <code>False and True</code> → <code>False</code>.</p>
+<aside class="notes">The guide: "Then try the reverse (<code>price = 80, margin = 0.35</code>) and get <code>False</code> again, for the same reason from the other side." <code>80 &gt; 100</code> is <code>False</code>; <code>False and True</code> → <code>False</code>.</aside>
+</section>
+
+<!-- 30. EXERCISE 4 — pass 3 output -->
+<section class="s-out">
+<h3>Pass 3 — expected output</h3>
+<pre>is_premium = False</pre>
+<aside class="notes">Verified against CPython 3.12.2. <code>and</code> needs <em>both</em> sides true; failing either side, from either direction, yields <code>False</code>.</aside>
+</section>
+
+<!-- 31. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">I want to check if a product is premium <em>OR</em> on clearance — would I use <code>and</code> here?</p>
+<button data-opt="A">Yes — <code>and</code> is how you combine any two conditions</button>
+<button data-opt="B">No — use <code>or</code>, which returns <code>True</code> if <em>either</em> side is true</button>
+<button data-opt="C">No — use <code>&amp;</code>, the bitwise operator</button>
+<p class="why" hidden>No — <code>or</code>, which returns <code>True</code> if <em>either</em> side is true. Don't code it yet — that's a natural bridge into Stretch B and into next module's <code>if</code>/<code>elif</code> — just get the room to say "or" out loud correctly.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(No — <code>or</code>, which returns <code>True</code> if <em>either</em> side is true. Don't code it yet — that's a natural bridge into Stretch B and into next module's <code>if</code>/<code>elif</code> — just get the room to say "or" out loud correctly.)"</aside>
+</section>
+
+<!-- 32. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>price &gt; 100 and margin &gt; 30</code> — forgetting margin is a decimal, not a whole-number percentage. This compiles and runs without error, just always evaluates unexpectedly. A "silent wrong answer" bug, exactly the category the intro warned about — flag it as such.</p>
+<p>Confusing <code>and</code> with <code>&amp;</code> — <code>&amp;</code> exists in Python but is bitwise, not logical, and will misbehave here. One sentence: "we're not using that operator today."</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 10 min · 0:30–0:40</span>
+<h1>Common-Mistake Check: <code>/</code>, <code>//</code>, <code>%</code></h1>
+<aside class="notes">
+Teaching goal: this is the highest-leverage exercise in the lab. Students must be able to distinguish true division, floor division, and modulo — this distinction underpins Exercise 7 and half of next semester's logic.
+Say to the class (verbatim): "Before we run anything — everyone write down, on paper or in a comment, your prediction for <code>17 / 5</code>, <code>17 // 5</code>, and <code>17 % 5</code>. I will cold-call three of you before we run this."
+Do this as a genuine predict-then-verify exercise — do not type the code until predictions are collected. Common wrong predictions: <code>17 // 5</code> predicted as <code>3.4</code> (confusing it with <code>/</code>); <code>17 % 5</code> predicted as some kind of percentage (<code>%</code> here is the <em>modulo</em> operator, unrelated to the <code>.1%</code> format spec from Exercise 2 — two completely different uses of the same character).
+</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — predict -->
+<section class="s-out">
+<h3>Predict — before running</h3>
+<div class="predict">
+<p>Write down your prediction for each: <code>17 / 5</code>, <code>17 // 5</code>, <code>17 % 5</code>. The instructor will cold-call three students before the code is typed.</p>
+<pre class="answer" hidden>17 / 5  -> 3.4   true division: divide normally, always returns a float
+17 // 5 -> 3     floor division: divide, then round DOWN to a whole number
+17 % 5  -> 2     modulo: the remainder left after floor division (17 = 5*3 + 2)</pre>
+</div>
+<aside class="notes">Reveal only after predictions are collected. Common wrong predictions: <code>17 // 5</code> as <code>3.4</code>; <code>17 % 5</code> as a percentage. The identity <code>(a // b) * b + (a % b)</code> always reconstructs <code>a</code> — write it on the board, it is the single sentence that makes Exercise 7 make sense.</aside>
+</section>
+
+<!-- 35. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5</h3>
+<div class="run" data-lang="python">
+# --- Exercise 5 ---
+print(17 / 5)    # true division
+print(17 // 5)   # floor division
+print(17 % 5)    # modulo (remainder)
+</div>
+<p class="expect">Expected output: <code>3.4</code>, then <code>3</code>, then <code>2</code>. Then have each student write one sentence per operator explaining what it does and when they'd use it in a business calculation (2 minutes of quiet writing — it's built into the 10-minute budget).</p>
+<aside class="notes">
+Line-by-line:
+- <code>17 / 5</code> — true division, always returns a <code>float</code>: <code>3.4</code>. "What a calculator gives you."
+- <code>17 // 5</code> — floor division: divide, then round <em>down</em> to the nearest whole number, discarding the fractional part entirely (toward negative infinity, not toward zero). Result: <code>3</code>. Two positive ints → an <code>int</code>; <code>17.0 // 5</code> is <code>3.0</code>.
+- <code>17 % 5</code> — modulo: the <strong>remainder</strong> after floor division. <code>17 = 5 &times; 3 + 2</code>, so the remainder is <code>2</code>. <code>//</code> and <code>%</code> are a matched pair: <code>(a // b) * b + (a % b)</code> always reconstructs <code>a</code>.
+Common mistakes: assuming <code>//</code> rounds to the <em>nearest</em> integer rather than always down (<code>-7 // 2</code> is <code>-4</code>, not <code>-3</code> — optional aside). Confusing <code>%</code> the operator with <code>%</code> in a format spec — same character, two unrelated meanings depending on context.
+Check for understanding (guide): "If I have 50 items and box size 8, what does <code>50 // 8</code> give me, and what does <code>50 % 8</code> give me — without running it?" Answer: <code>6</code> full boxes, <code>2</code> left over. Hand-verify: <code>8 &times; 6 = 48</code>, <code>50 &minus; 48 = 2</code>. This is exactly what Exercise 7 automates.
+</aside>
+</section>
+
+<!-- 36. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>3.4
+3
+2</pre>
+<aside class="notes">Run it live; confirm every student sees exactly this. Matches the guide's "Run it. Expected output" for Exercise 5. Note <code>3.4</code> is a float (true division), <code>3</code> and <code>2</code> are ints.</aside>
+</section>
+
+<!-- 37. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">I have 50 items and a box size of 8. Without running it — what does <code>50 // 8</code> give, and what does <code>50 % 8</code> give?</p>
+<button data-opt="A"><code>50 // 8</code> → <code>6</code> full boxes; <code>50 % 8</code> → <code>2</code> left over</button>
+<button data-opt="B"><code>50 // 8</code> → <code>6.25</code>; <code>50 % 8</code> → <code>2</code></button>
+<button data-opt="C"><code>50 // 8</code> → <code>6</code>; <code>50 % 8</code> → <code>4</code></button>
+<p class="why" hidden><code>6</code> full boxes, <code>2</code> left over. Verify by hand: <code>8 &times; 6 = 48</code>, <code>50 &minus; 48 = 2</code>. This hand-verification is exactly what Exercise 7 automates.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>6</code> full boxes, <code>2</code> left over. Have someone verify by hand: <code>8 &times; 6 = 48</code>, <code>50 &minus; 48 = 2</code>. This hand-verification is exactly what Exercise 7 automates.)"</aside>
+</section>
+
+<!-- 38. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Assuming <code>//</code> rounds to the <em>nearest</em> integer rather than always down. If time allows: <code>-7 // 2</code> is <code>-4</code>, not <code>-3</code> — floor division rounds toward negative infinity, not toward zero. Optional; skip it if you're behind.</p>
+<p>Confusing <code>%</code> (modulo, works on numbers) with <code>%</code> in an f-string format spec (multiplies by 100 for display). Same character, two unrelated meanings: inside a format spec after a colon it's display formatting; between two numbers it's modulo.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 39. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 15 min · 0:40–0:55</span>
+<h1>Full Pricing Calculator</h1>
+<aside class="notes">
+Teaching goal: collecting multiple inputs with <code>input()</code>, converting text to numbers with <code>float()</code>, and chaining several of today's formulas into one coherent report. This is the exercise students will spend the most time on independently — go a little slower and leave room for the room to type along in real time.
+Say to the class (verbatim): "Everything up to now used values we typed directly into the script. Real tools ask the <em>user</em> for values. <code>input()</code> always returns a string — even if someone types <code>50</code> — so every numeric input has to be explicitly converted, or your very first calculation will crash."
+Build it in three passes — first just the inputs, then the calculations, then the formatted report. Do not type the whole block at once.
+</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — pass 1 -->
+<section class="s-code">
+<h3>Pass 1 — collect inputs (with a debug print)</h3>
+<div class="run" data-lang="python" data-stdin="Wireless Mouse&#10;29.99&#10;11.50&#10;340&#10;15">
+# --- Exercise 6 (Pass 1 — collect inputs, debug-print to confirm) ---
+product_name = input("Product name: ")
+retail_price = float(input("Retail price: "))
+unit_cost = float(input("Unit cost: "))
+quantity_sold = int(input("Quantity sold: "))
+discount_percent = float(input("Discount percent (e.g. 10 for 10%): "))
+print(product_name, retail_price, unit_cost, quantity_sold, discount_percent)
+</div>
+<p class="expect">Stdin seeded with <code>Wireless Mouse</code> / <code>29.99</code> / <code>11.50</code> / <code>340</code> / <code>15</code>. The last <code>print</code> is a temporary debug line — remove it before Pass 2.</p>
+<aside class="notes">
+Line-by-line:
+- <code>product_name = input("Product name: ")</code> — <code>input()</code> displays the prompt, pauses, and returns whatever the user typed <strong>as a string</strong>, always — even <code>"340"</code> comes back as text. <code>product_name</code> genuinely is a string, so no conversion needed here.
+- <code>retail_price = float(input("Retail price: "))</code> — read inside-out: <code>input(...)</code> runs first and returns a string (<code>"29.99"</code>), then <code>float(...)</code> converts it. Function composition — one function's return value fed directly into another.
+- <code>unit_cost = float(...)</code> — same pattern.
+- <code>quantity_sold = int(input(...))</code> — uses <code>int()</code>, not <code>float()</code>, because a quantity should be a whole number. If a student types <code>340.5</code> here, <code>int("340.5")</code> raises a <code>ValueError</code> — next slide runs that live.
+- <code>discount_percent = float(...)</code> — collected as a whole number like <code>15</code>, <strong>not</strong> <code>0.15</code>; the conversion to a decimal fraction happens in Pass 2.
+Common mistakes: forgetting <code>float()</code>/<code>int()</code> around <code>input()</code> entirely — walk the room during Pass 1 for this.
+</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — pass 1 output -->
+<section class="s-out">
+<h3>Pass 1 — expected output</h3>
+<pre>Product name: Wireless Mouse
+Retail price: 29.99
+Unit cost: 11.50
+Quantity sold: 340
+Discount percent (e.g. 10 for 10%): 15
+Wireless Mouse 29.99 11.5 340 15.0</pre>
+<aside class="notes">The first five lines are the echoed <code>input()</code> prompts + the seeded answers (in the Pyodide stdin box each prompt and its answer land on one line). Under a headless <code>python3</code> pipe the five prompts print concatenated on one line before the debug line — not load-bearing. The load-bearing line is the last one: <code>Wireless Mouse 29.99 11.5 340 15.0</code> — note <code>float("11.50")</code> prints as <code>11.5</code> and <code>float("15")</code> as <code>15.0</code>. Remove this debug print before Pass 2.</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — pass 2 (reference only) -->
+<section class="s-code">
+<h3>Pass 2 — compute (shown for reference — needs Pass 1's inputs to run)</h3>
+<pre><code class="language-python">discount_decimal = discount_percent / 100
+revenue = retail_price * quantity_sold
+discounted_revenue = revenue * (1 - discount_decimal)
+gross_margin = (retail_price - unit_cost) / retail_price
+net_profit = discounted_revenue - (unit_cost * quantity_sold)</code></pre>
+<p class="expect">This block only makes sense on top of Pass 1's variables — the runnable full script is on the next slide.</p>
+<aside class="notes">
+Line-by-line:
+- <code>discount_decimal = discount_percent / 100</code> — the exact conversion flagged as missing in Pass 1: <code>15</code> becomes <code>0.15</code>. Call back to the Exercise 4 mistake pattern and to the reflection question, which asks students to describe exactly this bug.
+- <code>revenue = retail_price * quantity_sold</code> — same formula as Exercise 1, now with live user input.
+- <code>discounted_revenue = revenue * (1 - discount_decimal)</code> — if the discount is 15%, the customer pays 85%, so multiply revenue by <code>(1 - 0.15) = 0.85</code>. The parentheses around <code>1 - discount_decimal</code> are required — without them, order of operations multiplies <code>discount_decimal</code> by <code>revenue</code> first, then subtracts from <code>1</code>: a nonsense number.
+- <code>gross_margin = (retail_price - unit_cost) / retail_price</code> — identical formula to Exercise 2, at the per-unit level (margin doesn't depend on quantity).
+- <code>net_profit = discounted_revenue - (unit_cost * quantity_sold)</code> — total cost of goods sold is <code>unit_cost * quantity_sold</code>; net profit is what's left of discounted revenue after covering it. The parentheses here aren't strictly required (<code>*</code> binds tighter than <code>-</code>) but include them anyway — explicit parentheses that aren't strictly necessary are still good practice, they make the formula readable without recalling precedence rules. A style point, not a correctness one.
+</aside>
+</section>
+
+<!-- 43. EXERCISE 6 — int() broken -->
+<section class="s-code">
+<h3>Deliberately broken — <code>int()</code> on a decimal string</h3>
+<div class="run" data-lang="python" data-stdin="340.5">
+# --- Exercise 6 (deliberate error: int() cannot parse a decimal string) ---
+quantity_sold = int(input("Quantity sold: "))
+print(quantity_sold)
+</div>
+<p class="expect">If a student types <code>340.5</code> for the quantity, <code>int("340.5")</code> raises a <code>ValueError</code> — <code>int()</code> cannot parse a string containing a decimal point directly. Run it live and let the class see the traceback.</p>
+<aside class="notes">
+Teaching goal: <code>int()</code> parses only clean integer text — <code>"340"</code> works, <code>"340.5"</code> does not. If a quantity might legitimately be fractional, that's a design signal to use <code>float()</code> instead (but a quantity of items should not be fractional).
+Line-by-line: the seeded stdin is <code>340.5</code>; <code>int(input(...))</code> reads <code>"340.5"</code> and <code>int()</code> refuses it.
+Common mistakes: this is a deliberately good moment to run it live. The file path shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path under CPython — not load-bearing. Load-bearing last line: <code>ValueError: invalid literal for int() with base 10: '340.5'</code>.
+</aside>
+</section>
+
+<!-- 44. EXERCISE 6 — int() broken output -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Quantity sold: 340.5
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 2, in &lt;module&gt;
+    quantity_sold = int(input("Quantity sold: "))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '340.5'</pre>
+<aside class="notes">Verified against CPython 3.12.2. The first line is the echoed prompt + seeded answer; under a headless <code>python3</code> pipe the prompt has no trailing newline before the traceback — not load-bearing. Load-bearing last line: <code>ValueError: invalid literal for int() with base 10: '340.5'</code>.</aside>
+</section>
+
+<!-- 45. EXERCISE 6 — full script -->
+<section class="s-code">
+<h3>Pass 3 — full script (inputs + compute + formatted report)</h3>
+<div class="run" data-lang="python" data-stdin="Wireless Mouse&#10;29.99&#10;11.50&#10;340&#10;15">
+# --- Exercise 6 ---
+product_name = input("Product name: ")
+retail_price = float(input("Retail price: "))
+unit_cost = float(input("Unit cost: "))
+quantity_sold = int(input("Quantity sold: "))
+discount_percent = float(input("Discount percent (e.g. 10 for 10%): "))
+
+discount_decimal = discount_percent / 100
+revenue = retail_price * quantity_sold
+discounted_revenue = revenue * (1 - discount_decimal)
+gross_margin = (retail_price - unit_cost) / retail_price
+net_profit = discounted_revenue - (unit_cost * quantity_sold)
+
+print(f"Product: {product_name}")
+print(f"Revenue (before discount): ${revenue:,.2f}")
+print(f"Discounted revenue: ${discounted_revenue:,.2f}")
+print(f"Gross margin: {gross_margin:.1%}")
+print(f"Net profit: ${net_profit:,.2f}")
+</div>
+<p class="expect">Run with sample input <code>Wireless Mouse</code>, <code>29.99</code>, <code>11.50</code>, <code>340</code>, <code>15</code>. Every format spec here reuses exactly what students learned in Exercises 1 and 2 — nothing new, only application.</p>
+<aside class="notes">
+Pass 3 is the report:
+- Five <code>print()</code> lines — currency <code>${...:,.2f}</code>, currency again, percentage <code>{...:.1%}</code>, currency again. Call out explicitly: "nothing new in this block, only application."
+Common mistakes: using <code>discount_percent</code> directly instead of <code>discount_decimal</code> in the <code>discounted_revenue</code> line — produces a wildly wrong (usually negative or huge) number rather than a crash. This is the flagship "silent wrong answer" of the whole lab; if you see it, ask the student what the output <em>should</em> look like and let them notice the number is implausible on their own first. Also: typing a comma or dollar sign when prompted (e.g. <code>$29.99</code>) → <code>float()</code> raises <code>ValueError</code>.
+Check for understanding (guide): "Why does <code>product_name</code> not need <code>float()</code> or <code>int()</code> around it, but every other input line does?" Answer: because it's meant to stay text — converting it would either error out or be meaningless. Conversion is a deliberate choice based on what the value represents, not a rule applied to every <code>input()</code> call.
+</aside>
+</section>
+
+<!-- 46. EXERCISE 6 — full output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Product: Wireless Mouse
+Revenue (before discount): $10,196.60
+Discounted revenue: $8,667.11
+Gross margin: 61.7%
+Net profit: $4,757.11</pre>
+<aside class="notes">Under the Pyodide stdin box the five prompts appear first, each with its seeded answer; under a headless <code>python3</code> pipe the five prompts print concatenated before <code>Product: ...</code> — not load-bearing. The five report lines match the guide's "Run the full script with sample input ... Expected output" exactly. Checks: <code>revenue = 29.99 &times; 340 = 10196.60</code>; <code>discounted_revenue = 10196.60 &times; 0.85 = 8667.11</code>; <code>gross_margin = (29.99 - 11.50) / 29.99 = 0.6165... → 61.7%</code>; <code>net_profit = 8667.11 - (11.50 &times; 340) = 8667.11 - 3910 = 4757.11</code>.</aside>
+</section>
+
+<!-- 47. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Why does <code>product_name</code> not need <code>float()</code> or <code>int()</code> around it, but every other input line does?</p>
+<button data-opt="A">Because it's meant to stay text — conversion is a deliberate choice based on what the value represents</button>
+<button data-opt="B">Because <code>input()</code> already returns a name as the right type automatically</button>
+<button data-opt="C">Because <code>float()</code> and <code>int()</code> only work on the first <code>input()</code> in a script</button>
+<p class="why" hidden>Because it's meant to stay text — converting it would either error out or be meaningless. Conversion is a deliberate choice based on what the value represents, not a rule applied to every <code>input()</code> call.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Because it's meant to stay text — converting it would either error out or be meaningless. Get someone to state that conversion is a deliberate choice based on what the value represents, not a rule applied to every <code>input()</code> call.)"</aside>
+</section>
+
+<!-- 48. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>float()</code>/<code>int()</code> around <code>input()</code> entirely — <code>retail_price * quantity_sold</code> either crashes (<code>TypeError: can't multiply sequence by non-int of type 'str'</code>) or silently does string repetition if only one side got converted. Walk the room during Pass 1.</p>
+<p>Using <code>discount_percent</code> instead of <code>discount_decimal</code> in the <code>discounted_revenue</code> line — a wildly wrong (usually negative or huge) number, no crash. The flagship "silent wrong answer" of the whole lab. Ask the student what the output <em>should</em> look like first.</p>
+<p>Typing a comma or dollar sign when prompted (e.g. <code>$29.99</code>) — <code>float()</code> cannot parse that and raises <code>ValueError</code>. Warn students before they test their own script.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 49. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 12 min · 0:55–1:07</span>
+<h1>Packaging Problem</h1>
+<aside class="notes">
+Teaching goal: applying <code>//</code> and <code>%</code> together to a real logistics scenario — the payoff exercise for Exercise 5's prediction work.
+Say to the class (verbatim): "A warehouse ships in boxes of 24. Someone orders 100 items. How many full boxes, and how many are left over? You already know how to answer this — you did it by hand at the end of Exercise 5."
+</aside>
+</section>
+
+<!-- 50. EXERCISE 7 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 7 (order of 100)</h3>
+<div class="run" data-lang="python" data-stdin="100">
+# --- Exercise 7 ---
+items_ordered = int(input("Items ordered: "))
+box_size = 24
+full_boxes = items_ordered // box_size
+loose_items = items_ordered % box_size
+exact_fit = loose_items == 0
+print(f"Full boxes: {full_boxes}")
+print(f"Loose items: {loose_items}")
+print(f"Exact fit: {exact_fit}")
+</div>
+<p class="expect">Stdin seeded with <code>100</code>. Expected: <code>Full boxes: 4</code>, <code>Loose items: 4</code>, <code>Exact fit: False</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>items_ordered = int(input(...))</code> — same <code>int(input(...))</code> pattern from Exercise 6; ask the room to name it before you explain it.
+- <code>box_size = 24</code> — fixed, not user input; a warehouse constant.
+- <code>full_boxes = items_ordered // box_size</code> — floor division from Exercise 5: how many complete groups of 24 fit into <code>items_ordered</code>.
+- <code>loose_items = items_ordered % box_size</code> — modulo: whatever's left after taking out as many full boxes as possible. Restate the identity with real numbers once output is on screen: <code>4 &times; 24 + 4 = 100</code>.
+- <code>exact_fit = loose_items == 0</code> — a <strong>new use of <code>==</code></strong>, the equality comparison, distinct from the assignment <code>=</code> used everywhere else. Say it slowly: one equals sign assigns a value into a variable; two equals signs asks "are these two things equal?" and produces a <code>bool</code>. Spend 20 real seconds on it here.
+Common mistakes: writing <code>exact_fit = loose_items = 0</code> (single <code>=</code>) — assigns <code>0</code> to both, so it prints <code>Exact fit: 0</code>, not <code>Exact fit: False</code> — a good diagnostic tell. Reversing the order (<code>box_size // items_ordered</code>) runs without error but answers a different, wrong question — ask "what does that number even represent?"
+Check for understanding (guide): "A shift is 8 hours long. An employee has worked 53 hours this week. Using the same two operators, what expression tells you how many <em>full</em> shifts that is, and what expression tells you the <em>leftover</em> partial hours?" Answer: <code>53 // 8</code> → 6 full shifts; <code>53 % 8</code> → 5 leftover hours.
+</aside>
+</section>
+
+<!-- 51. EXERCISE 7 — expected output -->
+<section class="s-out">
+<h3>Expected output (order of 100)</h3>
+<pre>Full boxes: 4
+Loose items: 4
+Exact fit: False</pre>
+<aside class="notes">The first line is the echoed prompt + seeded answer <code>100</code>; under a headless <code>python3</code> pipe the prompt has no trailing newline — not load-bearing. The three result lines match the guide's "Run it with <code>items_ordered = 100</code>. Expected output" exactly. <code>100 // 24 = 4</code>, <code>100 % 24 = 4</code>, <code>4 == 0</code> is <code>False</code>.</aside>
+</section>
+
+<!-- 52. EXERCISE 7 — re-run evenly -->
+<section class="s-code">
+<h3>Immediately re-run with a number that divides evenly (96)</h3>
+<div class="run" data-lang="python" data-stdin="96">
+# --- Exercise 7 ---
+items_ordered = int(input("Items ordered: "))
+box_size = 24
+full_boxes = items_ordered // box_size
+loose_items = items_ordered % box_size
+exact_fit = loose_items == 0
+print(f"Full boxes: {full_boxes}")
+print(f"Loose items: {loose_items}")
+print(f"Exact fit: {exact_fit}")
+</div>
+<p class="expect">Stdin seeded with <code>96</code>. This is the only case in the whole lab where <code>exact_fit</code> actually flips to <code>True</code> — it confirms <code>== 0</code> is doing real comparison work, not just always returning <code>False</code>.</p>
+<aside class="notes">
+Same code, input <code>96</code>. <code>96 // 24 = 4</code>, <code>96 % 24 = 0</code>, <code>0 == 0</code> is <code>True</code>. This second run is important — the only time students see <code>exact_fit</code> become <code>True</code>.
+</aside>
+</section>
+
+<!-- 53. EXERCISE 7 — re-run output -->
+<section class="s-out">
+<h3>Expected output (order of 96)</h3>
+<pre>Full boxes: 4
+Loose items: 0
+Exact fit: True</pre>
+<aside class="notes">Matches the guide's "Immediately re-run with a number that divides evenly, e.g. <code>96</code> ... Expected output." Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 54. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">A shift is 8 hours. An employee worked 53 hours. Which two expressions give <em>full shifts</em> and <em>leftover partial hours</em>?</p>
+<button data-opt="A"><code>53 // 8</code> → 6 full shifts; <code>53 % 8</code> → 5 leftover hours</button>
+<button data-opt="B"><code>53 / 8</code> → 6.625 full shifts; <code>53 % 8</code> → 5 leftover hours</button>
+<button data-opt="C"><code>8 // 53</code> → full shifts; <code>8 % 53</code> → leftover hours</button>
+<p class="why" hidden><code>53 // 8</code> → 6 full shifts; <code>53 % 8</code> → 5 leftover hours. This is the built-in extra practice example for this exercise — the same "full groups / how much left over" structure as the warehouse boxes.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>53 // 8</code> → 6 full shifts; <code>53 % 8</code> → 5 leftover hours. This is the built-in extra practice example for this exercise — use it here if you have a couple of spare minutes, or hold it for the wrap-up if the room needs one more rep of the same idea in a new context.)"</aside>
+</section>
+
+<!-- 55. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>exact_fit = loose_items = 0</code> (single <code>=</code>) by accident — this <strong>assigns</strong> <code>0</code> to both <code>loose_items</code> and <code>exact_fit</code>, silently overwriting the real remainder with <code>0</code> and making <code>exact_fit</code> hold the integer <code>0</code>. Because Python treats <code>0</code> as "falsy," the output prints <code>Exact fit: 0</code>, not <code>Exact fit: False</code> — a good diagnostic tell if a student's output looks almost right but not quite.</p>
+<p>Reversing the order — <code>box_size // items_ordered</code> — runs without error but answers a different, wrong question. Ask a comprehension question: "What does that number even represent?"</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 56. STRETCH A — divider -->
+<section class="s-sec">
+<span class="chip">Stretch A · as time allows</span>
+<h1>Break-Even Calculator</h1>
+<aside class="notes">
+Teaching goal: combining <code>//</code> and <code>%</code> in a genuinely useful financial formula — how many units a business must sell before it stops losing money.
+Frame it, live-code it if you have time, otherwise assign it as optional take-home practice. Same operators as Exercises 5–7, new formula.
+</aside>
+</section>
+
+<!-- 57. STRETCH A — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch A</h3>
+<div class="run" data-lang="python" data-stdin="12500&#10;8&#10;20">
+# --- Stretch A ---
+fixed_costs = int(input("Fixed costs (rent, salaries, etc.): "))
+variable_cost_per_unit = float(input("Variable cost per unit: "))
+retail_price_per_unit = float(input("Retail price per unit: "))
+
+contribution_margin = retail_price_per_unit - variable_cost_per_unit
+break_even_units = fixed_costs // contribution_margin
+remainder = fixed_costs % contribution_margin
+
+print(f"Break-even quantity: {break_even_units:.0f} whole units, "
+      f"plus ${remainder:,.2f} still uncovered at that quantity")
+print(f"Exact (fractional) break-even: "
+      f"{fixed_costs / contribution_margin:.2f} units")
+</div>
+<p class="expect">Run with <code>fixed_costs = 12500</code>, <code>variable_cost_per_unit = 8</code>, <code>retail_price_per_unit = 20</code>.</p>
+<aside class="notes">
+Line-by-line (abbreviated):
+- <code>contribution_margin = retail_price_per_unit - variable_cost_per_unit</code> — how much of each unit's price is left after covering the <em>variable</em> cost of making it; this pays down the <em>fixed</em> costs one unit at a time. Here <code>20 - 8 = 12.0</code>.
+- <code>break_even_units = fixed_costs // contribution_margin</code> — how many whole units it takes for accumulated contribution margin to cover fixed costs. <code>12500 // 12.0 = 1041.0</code>.
+- <code>remainder = fixed_costs % contribution_margin</code> — how much fixed cost is still uncovered right at that whole-unit boundary. <code>12500 % 12.0 = 8.0</code>. This is why the business needs to sell <em>one more</em> unit than the floor-division answer to be truly profitable — a good discussion point.
+Common mistakes: same numbered-operator confusions as Exercise 5; <code>//</code> on a float returns a float (<code>1041.0</code>), which is why the output uses <code>:.0f</code> to drop the decimal.
+</aside>
+</section>
+
+<!-- 58. STRETCH A — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Break-even quantity: 1041 whole units, plus $8.00 still uncovered at that quantity
+Exact (fractional) break-even: 1041.67 units</pre>
+<aside class="notes">Under a headless <code>python3</code> pipe the three prompts print concatenated first — not load-bearing. The two result lines match the guide's "Run with ... Expected output" for Stretch A exactly. <code>12500 / 12 = 1041.666...</code> → <code>1041.67</code> at two decimals; <code>break_even_units</code> is <code>1041.0</code> shown as <code>1041</code> by <code>:.0f</code>; <code>remainder</code> is <code>8.0</code> shown as <code>$8.00</code>.</aside>
+</section>
+
+<!-- 59. STRETCH B — divider -->
+<section class="s-sec">
+<span class="chip">Stretch B · as time allows</span>
+<h1>Operator Precedence Trap</h1>
+<aside class="notes">
+Teaching goal: this exercise is the direct payoff of every "the parentheses are required here" aside from the last hour. If you only have time for one stretch exercise, pick this one over Stretch A — it's the more important idea and does not require re-explaining a new formula.
+Say to the class (verbatim): "Five expressions. For each, I'll show you the version without parentheses and the version with — and you'll see they give <em>different numbers</em>. Neither one crashes. That's the whole danger."
+For each one you work through, require the same three-part answer the exercise asks for: (a) the unparenthesized expression and its result, (b) the parenthesized expression and its result, (c) one sentence on which is correct and why.
+</aside>
+</section>
+
+<!-- 60. STRETCH B — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch B (five traps, no-parens vs. parenthesized)</h3>
+<div class="run" data-lang="python">
+# --- Stretch B — five precedence traps: no-parens vs. parenthesized ---
+a, b, c = 10, 20, 90
+print("1 no parens:", a + b + c / 3)
+print("1 parens:   ", (a + b + c) / 3)
+
+price, cost = 600, 320
+print("2 no parens:", price - cost / price)
+print("2 parens:   ", (price - cost) / price)
+
+price, margin = 15, 0.2
+print("3 no parens:", price &lt; 20 or price &gt; 200 and margin &lt; 0.15)
+print("3 parens:   ", (price &lt; 20 or price &gt; 200) and margin &lt; 0.15)
+
+items, reserved, box_size = 100, 15, 24
+print("4 no parens:", items - reserved // box_size)
+print("4 parens:   ", (items - reserved) // box_size)
+
+principal, rate, years = 1000, 0.05, 3
+print("5 no parens:", principal * 1 + rate ** years)
+print("5 parens:   ", principal * (1 + rate) ** years)
+</div>
+<p class="expect">Bare expressions don't auto-echo in a <code>.run</code> block, so each pair is wrapped in <code>print()</code>. The guide rounds several results for display — see the notes on the next slide.</p>
+<aside class="notes">
+One sentence each (guide):
+1. Average of three margins — <code>wrong</code> = <code>60.0</code> (only <code>c</code> gets divided by 3, because <code>/</code> binds tighter than <code>+</code>). <code>right</code> = <code>40.0</code>, the true average.
+2. Margin formula — <code>wrong</code> ≈ <code>599.47</code> (division before subtraction, so this computes <code>price − (cost / price)</code> — plausible as a dollar figure, not a margin). <code>right</code> ≈ <code>0.4667</code>, the correct 46.7% margin.
+3. Logical flag — <code>wrong</code> = <code>True</code> (<code>and</code> binds tighter than <code>or</code>, so it evaluates as <code>price &lt; 20 or (price &gt; 200 and margin &lt; 0.15)</code> — the low price alone triggers the flag). <code>right</code> = <code>False</code>. Flag this as the most dangerous of the five, because a boolean result gives no numeric hint that anything is wrong.
+4. Reserved-stock boxing — <code>wrong</code> = <code>100</code> (<code>reserved // box_size</code> is <code>0</code>, since 15 &lt; 24). <code>right</code> = <code>3</code> (subtract the 15 reserved first, then box the remaining 85).
+5. Compound growth — <code>wrong</code> = <code>1000.000125</code> (<code>**</code> binds before <code>*</code>, computing <code>(principal * 1) + (rate ** years)</code>). <code>right</code> ≈ <code>1157.63</code>, correct 5% compounded over 3 years.
+Don't just show the numbers — make students articulate the <em>why</em>, since that's the actual submitted deliverable.
+</aside>
+</section>
+
+<!-- 61. STRETCH B — expected output -->
+<section class="s-out">
+<h3>Expected output (raw Python values)</h3>
+<pre>1 no parens: 60.0
+1 parens:    40.0
+2 no parens: 599.4666666666667
+2 parens:    0.4666666666666667
+3 no parens: True
+3 parens:    False
+4 no parens: 100
+4 parens:    3
+5 no parens: 1000.000125
+5 parens:    1157.6250000000002</pre>
+<aside class="notes">Verified against CPython 3.12.2. The guide states these results rounded for readability: trap 2 no-parens <code>599.47</code> (raw <code>599.4666666666667</code>), trap 2 parens <code>0.4667</code> / 46.7% (raw <code>0.4666666666666667</code>), trap 5 parens <code>1157.63</code> (raw <code>1157.6250000000002</code>). All other values match the guide exactly. The <em>point</em> is unchanged: every "no parens" line is a different number from its "parens" line, and none of them crash.</aside>
+</section>
+
+<!-- 62. STRETCH B — pitfalls -->
+<section class="s-warn">
+<h3>Why this is dangerous</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>None of the ten expressions raises an error. The wrong ones just produce a different number — and in trap 2 (<code>599.47</code>) and Extra 3, a number that's low enough to pass a sloppy sanity check.</p>
+<p>Trap 3 is the most dangerous of the five: same variables, opposite conclusions, and a boolean result gives no numeric hint that anything is wrong.</p>
+<p>The professional habit: add explicit parentheses even when precedence would technically give the right answer — the reader shouldn't have to recall the rules.</p>
+</div>
+<aside class="notes">Drawn from the guide's Stretch B commentary and the Wrap-Up's "silent wrong answer" framing. If you only have time for one stretch, do this one.</aside>
+</section>
+
+<!-- 63. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>In Exercise 6, what would happen if you forgot to divide the discount percentage by 100 (used <code>15</code> instead of <code>0.15</code>)? Would Python crash, or produce a wrong answer silently?</li>
+<li>The modulo operator (<code>%</code>) might seem obscure, but Exercise 7 shows it solving a real logistics problem. Describe another business scenario where you need both "how many full groups" and "how many are left over."</li>
+<li>Looking back at Modules 01–04, what concept do you feel least confident about, and what would help you strengthen it?</li>
+</ul>
+<aside class="notes">
+Do not answer these for the class — preview what a strong answer looks like:
+1. Forgetting to divide <code>discount_percent</code> by 100 does <strong>not</strong> crash Python. It silently produces a nonsensical <code>discounted_revenue</code>, often negative. This is the exact "silent wrong answer" category the whole lab has been building toward.
+2. Accept anything with a real "how many full groups, how much left over" structure: paying employees in fixed-size batches, filling shipping pallets, splitting a bill among tables at a restaurant.
+3. No wrong answer — this question is genuinely diagnostic for you as the instructor. If several students name the same concept, that's a signal for next week's office hours or a two-minute recap at the start of Module 05.
+</aside>
+</section>
+
+<!-- 64. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>calculator.py</code></li>
+<li>Contains all seven exercises (1–7) in one file, in order</li>
+<li>Each exercise has a <code># --- Exercise N ---</code> comment above it</li>
+<li>All numeric output uses an appropriate f-string format spec (<code>,.2f</code> for currency, <code>.1%</code> for percentages)</li>
+<li>Script runs top to bottom with no errors when given valid input</li>
+<li>A comment block at the top of the file with answers to all 3 Self-Assessment Questions</li>
+</ul>
+<aside class="notes">Review the checklist together, on screen. Preview Module 05 (verbatim): "Every boolean we made today — <code>is_premium</code>, <code>product_a_wins</code>, <code>exact_fit</code> — just sat there as a printed value. Next module, we finally get to <em>branch</em> on them: <code>if</code>/<code>elif</code>/<code>else</code>. Today's <code>and</code>/<code>or</code> work is the direct prerequisite."</aside>
+</section>
+
+<!-- 65. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 4</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w04.md (Week 4 facilitation guide — "Revenue, Margin &amp; Discount Calculator"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
