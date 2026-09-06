@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 2 — First Terminal Session &amp; First Python Script</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 2 &nbsp;·&nbsp; Module 02 &nbsp;·&nbsp; Unit 1 &nbsp;·&nbsp; Foundations</p>
+<h1>First Terminal Session &amp; First Python Script</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Intro — stop clicking, start typing</span>
+<span class="t-item"><strong>0:05–0:13</strong> Ex 1 — Terminal Warm-Up</span>
+<span class="t-item"><strong>0:13–0:18</strong> Ex 2 — Verify Python</span>
+<span class="t-item"><strong>0:18–0:26</strong> Ex 3 — Write <code>hello.py</code></span>
+<span class="t-item"><strong>0:26–0:32</strong> Ex 4 — Path Practice</span>
+<span class="t-item"><strong>0:32–0:40</strong> Ex 5 — Make a Sub-Project</span>
+<span class="t-item"><strong>0:40–0:50</strong> Ex 6 — Deliberate Error Experiment</span>
+<span class="t-item"><strong>0:50–0:58</strong> Ex 7 — Run from the Wrong Directory</span>
+<span class="t-item"><strong>0:58–1:08</strong> Stretch A — Multi-Print <code>intro.py</code></span>
+<span class="t-item"><strong>1:08–1:15</strong> Wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along — but in the terminal rather than an editor for most of the session: students type every command themselves, on their own machine, in real time. This is the highest-variance lab of the semester to run, because it is the first time every student's <em>environment</em> — not just their code — is on the critical path. A perfectly typed command fails for a student whose PATH isn't set up correctly. Budget real slack for environment troubleshooting; "my terminal says command not found" will eat real minutes for 10–20% of a typical room, and this timing plan already assumes that friction. Prerequisites: Module 01 vocabulary (file, directory, path); Python and VS Code already installed per the precourse setup page. Submission: screenshot of both <code>hello.py</code> outputs (Exercises 3 and 5) plus <code>python3 --version</code> output, to Canvas. Exercises 1–7 are required; Stretch A as time allows, Stretch B is a genuine bonus — do not sacrifice Exercise 6 or 7 to reach it, since those two carry this lab's most important ideas (reading errors, understanding why current directory matters).
+This deck mixes two runnable block types: <code>data-lang="shell"</code> blocks (a real zsh emulator) for the terminal-navigation exercises, and <code>data-lang="python"</code> blocks (Pyodide) for the first <code>hello.py</code> and every later script. Every runnable block is paired with a static "Expected output" slide, so the deck still teaches fully if Pyodide never loads.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, mostly in the terminal — students type every command themselves, on their own machine, in real time</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 01 vocabulary (file, directory, path); Python and VS Code installed per the precourse setup page</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch A/B (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v">Screenshot of both <code>hello.py</code> outputs (Exercises 3 and 5) plus <code>python3 --version</code> output, to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week02_lab. Before class: run every exercise yourself first on the platform you'll demo (Mac and Windows command differences are real — know both, since your room will have both). Have the precourse setup page open in a tab to route any student with a broken install to office hours rather than debugging a from-scratch broken install live. File-explorer policy for this lab: no GUI file management — if a student opens Finder/Explorer to make a folder instead of using <code>mkdir</code>, redirect them back to the terminal; the entire point is muscle memory for terminal navigation.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Navigate the file system entirely from the terminal — <code>pwd</code>, <code>ls</code>, <code>mkdir</code>, <code>cd</code> — without touching a mouse.</li>
+<li>Explain the difference between the current working directory and the filesystem overall, and predict what <code>pwd</code> will print after a <code>cd</code> command.</li>
+<li>Write, save, and run a <code>.py</code> file from the terminal with <code>python3 filename.py</code>.</li>
+<li>Read a Python traceback (<code>SyntaxError</code> or <code>NameError</code>) and extract the line number and error type from it, rather than treating it as unreadable noise.</li>
+<li>Explain why running a script depends on your current directory, and correctly use a relative path (<code>python3 module02/hello.py</code>) to run a script from a different location.</li>
+</ul>
+<aside class="notes">The verbs are taken verbatim from the guide's Learning Objectives. Objective 4 (reading a traceback) is the spine of Exercise 6 — the guide calls that "the most important exercise in this lab." Objective 5 (current directory determines what a script can find) is Exercise 7, which resolves confusion that may have already surfaced back in Exercise 3.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Intro — stop clicking icons, start typing commands</td><td>5</td></tr>
+<tr><td>0:05–0:13</td><td>Exercise 1 — Terminal Warm-Up (<code>pwd</code>, <code>ls</code>, <code>mkdir</code>, <code>cd</code>)</td><td>8</td></tr>
+<tr><td>0:13–0:18</td><td>Exercise 2 — Verify Python</td><td>5</td></tr>
+<tr><td>0:18–0:26</td><td>Exercise 3 — Write <code>hello.py</code></td><td>8</td></tr>
+<tr><td>0:26–0:32</td><td>Exercise 4 — Path Practice</td><td>6</td></tr>
+<tr><td>0:32–0:40</td><td>Exercise 5 — Make a Sub-Project</td><td>8</td></tr>
+<tr><td>0:40–0:50</td><td>Exercise 6 — Deliberate Error Experiment</td><td>10</td></tr>
+<tr><td>0:50–0:58</td><td>Exercise 7 — Run from the Wrong Directory</td><td>8</td></tr>
+<tr><td>0:58–1:08</td><td>Stretch A — Multi-Print <code>intro.py</code></td><td>10</td></tr>
+<tr><td>1:08–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>7</td></tr>
+</tbody>
+</table>
+<aside class="notes">This plan uses all 75 minutes across the seven required exercises plus Stretch A. Stretch B (installing <code>requests</code> with pip) is intentionally light-touch — Module 02's real teaching goal is terminal fluency, not package management — so treat it as a genuine bonus and don't sacrifice Exercise 6 or 7 to reach it. The timing already budgets slack for environment troubleshooting during Exercise 2.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>Stop clicking icons — start typing commands</h1>
+<aside class="notes">
+Teaching goal: frame why an entire session in the terminal is worth it, and surface environment problems now rather than twenty minutes in.
+Say to the class (verbatim): "Today you stop clicking icons to navigate your computer and start typing commands instead. This feels slower at first — it is not, once it's muscle memory, and every tool you'll use in this course and in most data-analysis jobs assumes you're comfortable in a terminal. We're also writing and running your very first real Python script today. Two things to keep an eye on for yourself: does <code>python3 --version</code> actually work on your machine, and does the terminal open in a sensible starting location? If either is broken, raise your hand now rather than fighting it silently for twenty minutes."
+Do: quickly poll the room — "hands up if <code>python3 --version</code> already works for you, right now, before we start" — this takes 30 seconds and tells you immediately how much environment triage you're likely to be doing during Exercise 2.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 8 min · 0:05–0:13</span>
+<h1>Terminal Warm-Up</h1>
+<aside class="notes">
+Teaching goal: four foundational commands (<code>pwd</code>, <code>ls</code>, <code>mkdir</code>, <code>cd</code>) that every later exercise depends on — students need these to be reflexive, not looked-up, by the end of this block.
+Say to the class (verbatim): "Four commands. <code>pwd</code> tells you where you are. <code>ls</code> tells you what's here. <code>mkdir</code> makes a new folder. <code>cd</code> moves you into one. That's the whole toolkit for today's navigation."
+Live-code it one command at a time, narrating the output each time.
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — idea: platform reference -->
+<section class="s-idea">
+<h3>The four commands — and their Windows equivalents</h3>
+<table class="grid">
+<thead><tr><th>Task</th><th>Mac / Linux</th><th>Windows (PowerShell)</th></tr></thead>
+<tbody>
+<tr><td>Show current location</td><td><code>pwd</code></td><td><code>pwd</code> (or <code>Get-Location</code>)</td></tr>
+<tr><td>List contents</td><td><code>ls</code></td><td><code>ls</code> (or <code>dir</code>)</td></tr>
+<tr><td>Make a folder</td><td><code>mkdir name</code></td><td><code>mkdir name</code></td></tr>
+<tr><td>Enter a folder</td><td><code>cd name</code></td><td><code>cd name</code></td></tr>
+<tr><td>Go up one level</td><td><code>cd ..</code></td><td><code>cd ..</code></td></tr>
+</tbody>
+</table>
+<aside class="notes">Keep this visible if teaching a mixed room. Do not assume Windows students will silently translate <code>pwd</code> on their own — name the equivalents up front. On Windows PowerShell <code>ls</code> is an alias; native is <code>dir</code>. Commands are case-sensitive on Mac/Linux (Windows is more forgiving) — another good cross-platform note.</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="shell" data-fs='{"~/Desktop":{},"~/Documents":{},"~/Downloads":{}}'>cd ~
+pwd
+ls
+mkdir ism2411
+cd ism2411
+pwd</div>
+<p class="expect">A terminal opens in your home folder — the opening <code>cd ~</code> just makes that starting point explicit; in class you are already there. The seeded home folder here shows <code>Desktop  Documents  Downloads</code>; your real machine will list more. <code>mkdir</code> and <code>cd</code> print nothing on success — "no news is good news."</p>
+<aside class="notes">
+Line by line:
+- <code>pwd</code> — "print working directory": the full absolute path of where your terminal currently is. The single most useful debugging command in this whole lab — when anything goes wrong later, <code>pwd</code> is the first thing to run.
+- <code>ls</code> — lists the contents of the current directory. On Windows PowerShell also <code>ls</code> (aliased) or natively <code>dir</code>.
+- <code>mkdir ism2411</code> — creates a new directory named <code>ism2411</code> <em>inside</em> the current directory. No output on success — this trips up beginners who expect confirmation; say "no news is good news" and follow with <code>ls</code> for visual proof if you like.
+- <code>cd ism2411</code> — moves your terminal's current location <em>into</em> the folder you just created. Also no output on success.
+- <code>pwd</code> (second time) — confirms the move; the printed path now ends in <code>/ism2411</code> (or <code>\ism2411</code> on Windows).
+Verified against ism2411/assets/lab-shell.mjs: <code>/Users/student</code> / <code>Desktop  Documents  Downloads</code> / <code>/Users/student/ism2411</code>. The guide writes the final path as <code>/Users/yourname/ism2411</code> — the username is illustrative.
+</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>/Users/student
+Desktop  Documents  Downloads
+/Users/student/ism2411</pre>
+<aside class="notes">The guide's stated Expected output is the final <code>pwd</code>: <code>/Users/yourname/ism2411</code> (or the Windows equivalent, e.g. <code>C:\Users\yourname\ism2411</code>). The emulator prints <code>/Users/student/ism2411</code> — same result, illustrative username. First <code>pwd</code> is home, then the <code>ls</code> listing, then the confirming <code>pwd</code> after <code>cd ism2411</code>.</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Right after <code>mkdir ism2411</code> and <code>cd ism2411</code>, you run <code>ls</code>. What do you see?</p>
+<button data-opt="A">the contents of the parent folder</button>
+<button data-opt="B">nothing — <code>ism2411</code> is empty right after you created it</button>
+<button data-opt="C">an error, because <code>ls</code> needs an argument</button>
+<p class="why" hidden>Nothing, or nearly nothing — <code>ism2411</code> is empty right after creation. This distinguishes <code>ls</code>, which reports on the <em>current</em> directory, from something that would report on the parent.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If I run <code>ls</code> right now, what should I see?" (Nothing, or nearly nothing — <code>ism2411</code> is empty right after creation. This distinguishes <code>ls</code>, which reports on the <em>current</em> directory, from something that would report on the parent.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 11. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>mkdir ism2411</code> a second time by accident (e.g. after already <code>cd</code>-ing into it) — this either errors (<code>File exists</code>) or, depending on OS, creates a <em>nested</em> <code>ism2411/ism2411/</code> folder. If you spot a student inside a doubly-nested folder, have them run <code>pwd</code> and read the output out loud themselves to spot the problem.</p>
+<p>Typing <code>CD</code> or <code>PWD</code> in all caps out of habit — commands are case-sensitive on Mac/Linux terminals (Windows is more forgiving here).</p>
+<p>Confusing <code>mkdir</code> (make a folder) with actually <em>entering</em> it — a student runs <code>mkdir ism2411</code> then immediately tries the next exercise's commands, forgetting they're still in the parent. Watch for this specifically; it cascades into confusion for the rest of the lab.</p>
+</div>
+<aside class="notes">The nested-<code>ism2411/ism2411/</code> case is the memorable one — make the student read their own <code>pwd</code> aloud rather than pointing it out first.</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 5 min · 0:13–0:18</span>
+<h1>Verify Python</h1>
+<aside class="notes">
+Teaching goal: confirm every student's Python installation actually works <em>before</em> they need it for real code — and this is the highest-risk moment in the lab for environment problems surfacing.
+Say to the class (verbatim): "Two commands. If either one fails or shows a version number lower than 3.10, don't try to fix it alone during class — flag it to me right now."
+Do: poll for results. Route any <code>command not found</code> or below-3.10 student to the precourse setup page and office hours; do not debug a from-scratch broken install live in front of the room.
+</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — reference code (cannot run in-browser) -->
+<section class="s-code">
+<h3>Run these in your own terminal</h3>
+<div class="run" data-lang="shell" data-readonly>python3 --version
+pip3 --version</div>
+<p class="expect">Shown for reference — this check can't run in the browser emulator (it queries the Python actually installed on <em>your</em> machine). Run it in your own terminal. Version numbers will differ from the example on the next slide; what matters is that both commands succeed and <code>python3</code> reports 3.10 or higher.</p>
+<aside class="notes">
+Line by line:
+- <code>python3 --version</code> — asks the Python interpreter installed on this machine to report its own version. The explicit <code>3</code> matters: on many systems plain <code>python</code> either doesn't exist or points at an old Python 2 — this course standardizes on <code>python3</code> everywhere to sidestep that trap.
+- <code>pip3 --version</code> — <code>pip</code> is Python's package installer (used again in Stretch B); confirming it's present now means Stretch B doesn't hit a surprise failure later.
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output — versions will vary by machine</h3>
+<pre>Python 3.11.4
+pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)</pre>
+<aside class="notes">This is the guide's illustrative output — the exact numbers vary by machine. Tell the room to actually <em>read</em> the number, not just confirm "something printed": a version below 3.10 reported successfully still means the command <em>worked</em>, so it can slip past a quick glance.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Your <code>python3 --version</code> prints <code>3.9.1</code> — successfully. Is that a problem?</p>
+<button data-opt="A">No — it printed a version, so Python works fine</button>
+<button data-opt="B">Yes, borderline — some syntax used later in the course assumes 3.10+, and a consistent room avoids "works on my machine" debugging</button>
+<button data-opt="C">Yes — <code>3.9.1</code> cannot run any Python script at all</button>
+<p class="why" hidden>Yes, borderline — some f-string format-spec behavior and syntax used later in the course assumes 3.10+; consistency across the whole room's environment also avoids "it works on my machine" debugging later.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If your <code>python3 --version</code> shows <code>3.9.1</code>, is that a problem, and why might a specific version threshold matter for a class?" (Yes, borderline — some f-string format-spec behavior and syntax used later in the course assumes 3.10+; consistency across the whole room's environment also avoids "it works on my machine" debugging later.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p><code>command not found: python3</code> — almost always a PATH problem from an install that didn't add Python to the system PATH, or (on Mac) only the Xcode Command Line Tools' minimal Python stub is present. Do not debug from scratch live; route to the precourse setup page and flag for follow-up.</p>
+<p>A version below 3.10 reported successfully — the command <em>works</em>, so this slips past a quick glance. Tell the room to read the number, not just confirm "something printed."</p>
+<p>Treating <code>pip3</code> and <code>python3</code> as interchangeable — they're two different programs installed together; a 10-second clarification here prevents confusion when Stretch B introduces <code>pip3 install</code>.</p>
+</div>
+<aside class="notes">The PATH failure is the one that eats time — triage and route, don't debug live.</aside>
+</section>
+
+<!-- 17. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 8 min · 0:18–0:26</span>
+<h1>Write <code>hello.py</code></h1>
+<aside class="notes">
+Teaching goal: the complete save-and-run loop — write code in an editor, save it, run it from the terminal — that every remaining lab this semester depends on.
+Say to the class (verbatim): "One line of code, but the <em>process</em> is the point: write it in VS Code, save it, then go back to the terminal and run it. This loop — edit, save, run, read the output — is what you'll do hundreds of times this semester."
+Do, live: in VS Code with the <code>ism2411</code> folder open, create a file named exactly <code>hello.py</code>; type the one line; save (<code>Cmd+S</code> / <code>Ctrl+S</code>) — narrate that explicitly: "If you don't save, the terminal runs whatever was last saved to disk, not what's on your screen. This is the single most common 'my code isn't working' complaint that turns out to be an unsaved file." Then in the terminal confirm you're in the same folder as <code>hello.py</code> (<code>pwd</code>, <code>ls</code>) and run <code>python3 hello.py</code>.
+</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — idea -->
+<section class="s-idea">
+<h3>The idea — <code>print()</code> is how a script speaks</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>print("Hello, ISM2411!")</code> — <code>print()</code> is a built-in function; whatever's inside the parentheses (here, a string in quotes) gets written to the terminal.</p>
+<p>This is the first time this semester it's said explicitly: <code>print()</code> is <em>how</em> a Python script produces visible output. A script with no <code>print()</code> calls can run successfully and show nothing at all — which surprises beginners.</p>
+<p><code>python3 hello.py</code> starts the interpreter and hands it your file to execute, top to bottom.</p>
+</div>
+<aside class="notes">Don't rabbit-hole on "function" — the working definition today is "<code>print()</code> puts text on screen." The save step is the load-bearing habit: the terminal runs the file <em>on disk</em>, not the editor buffer.</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3 (<code>ism2411/hello.py</code>)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 — hello.py ---
+print("Hello, ISM2411!")
+</div>
+<p class="expect">In class this line is typed in VS Code, saved, then run from the terminal with <code>python3 hello.py</code>. Here the Run button executes the same one line directly.</p>
+<aside class="notes">
+Line by line:
+- <code>print("Hello, ISM2411!")</code> — the string in quotes is written to the terminal exactly as written, including the exclamation mark. The quotes mark where the text starts and ends; they are not printed.
+Verified against CPython 3.12.2 (Pyodide 0.26.4 bundles CPython 3.12): stdout is exactly <code>Hello, ISM2411!</code> — matches the guide's Expected output and the paired s-out slide.
+</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Hello, ISM2411!</pre>
+<aside class="notes">Run it live; confirm every student sees exactly this one line. Matches the guide's Expected output for Exercise 3.</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You change the text inside the quotes in <code>hello.py</code> but <em>don't</em> save, then re-run <code>python3 hello.py</code>. What prints?</p>
+<button data-opt="A">the new text you just typed</button>
+<button data-opt="B">the old text — the terminal runs whatever is saved on disk</button>
+<button data-opt="C">a <code>SyntaxError</code> about unsaved changes</button>
+<p class="why" hidden>Nothing changes — the terminal runs whatever's actually saved on disk, which is the old version. Have someone demo this live if there's time; it's a genuinely sticky lesson.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If I edit this file right now, changing the text inside the quotes, but <em>don't</em> save — what happens when I run <code>python3 hello.py</code> again?" (Nothing changes — the terminal runs whatever's actually saved on disk, which is the old version. Have someone demo this live if there's time; it's a genuinely sticky lesson.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>python3 hello.py</code> from the <em>wrong</em> directory — produces <code>can't open file 'hello.py': [Errno 2] No such file or directory</code>. Deliberately <em>not</em> fixed here — it's exactly what Exercise 7 explores. If it happens now, say "hold that thought, we explore exactly this in twenty minutes."</p>
+<p>Typing <code>Print</code> (capital P) — Python is case-sensitive; <code>Print</code> is not a recognized name, producing a <code>NameError</code>. A good low-stakes error to show live if it doesn't happen naturally.</p>
+<p>Forgetting the closing parenthesis or a quote mark — produces a <code>SyntaxError</code>, a preview of Exercise 6's whole point.</p>
+</div>
+<aside class="notes">Both the capital-<code>Print</code> and the missing-paren cases are previews of Exercise 6 — if they happen organically, name them and move on; Exercise 6 makes them the deliberate focus.</aside>
+</section>
+
+<!-- 23. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 6 min · 0:26–0:32</span>
+<h1>Path Practice</h1>
+<aside class="notes">
+Teaching goal: reinforce that <code>cd</code> moves <em>relative to where you currently are</em>, and that <code>pwd</code> is the reliable way to confirm your location rather than guessing.
+Say to the class (verbatim): "Practice moving up and back down without looking at a file browser at all — just <code>cd</code> and <code>pwd</code>, back and forth."
+</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism2411":{"hello.py":"print(\"Hello, ISM2411!\")\n"}}'>cd ~/ism2411
+pwd
+cd ..
+pwd
+cd ism2411
+pwd</div>
+<p class="expect">Starts by returning to the <code>ism2411</code> folder from Exercise 1 (the block seeds it, with Exercise 3's <code>hello.py</code> inside). Then <code>pwd</code> alternates between the <code>ism2411</code> path and its parent as you move up and back down.</p>
+<aside class="notes">
+Line by line:
+- <code>cd ..</code> — <code>..</code> is a special name meaning "the parent of the current directory," identical to the <code>..</code> from Module 01's relative-path exercises. Moves you <em>up</em> one level.
+- <code>cd ism2411</code> — moves back down into <code>ism2411</code>, and this only works because <code>ism2411</code> exists as a subfolder <em>of wherever you currently are</em> (its parent, right after the <code>cd ..</code>). It is not a global shortcut to the <code>ism2411</code> folder from anywhere on the machine.
+Verified against ism2411/assets/lab-shell.mjs: <code>/Users/student/ism2411</code> → <code>/Users/student</code> → <code>/Users/student/ism2411</code>. The guide states "<code>pwd</code> alternates between the <code>ism2411</code> path and its parent path, confirming each move."
+</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>/Users/student/ism2411
+/Users/student
+/Users/student/ism2411</pre>
+<aside class="notes">Three <code>pwd</code> lines: inside <code>ism2411</code>, then its parent after <code>cd ..</code>, then back inside after <code>cd ism2411</code>. Username <code>student</code> is illustrative — the guide writes <code>/Users/yourname/…</code>.</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You're two levels above <code>ism2411</code>. Does one <code>cd</code> get you back in?</p>
+<button data-opt="A">always — <code>cd ism2411</code> works from anywhere on the machine</button>
+<button data-opt="B">it depends on your exact starting point — <code>cd ism2411</code> works from one level up, but from further away you need a longer relative or absolute path</button>
+<button data-opt="C">never — you must always type the full absolute path</button>
+<p class="why" hidden>Depends on the exact starting point — the point is to reason about relative position rather than memorize a fixed command. A reasonable answer names either <code>cd ism2411</code> from one level up, or a longer relative/absolute path from further away.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If I'm two levels above <code>ism2411</code> right now, what single command gets me back in — one <code>cd</code>, or do I need more than one?" (Depends on the exact starting point — the point of the question is to get students reasoning about relative position rather than memorizing a fixed command; a reasonable answer names either <code>cd ism2411</code> from one level up, or a longer relative/absolute path from further away.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>cd ism2411</code> from somewhere that is <em>not</em> its direct parent (e.g. after a second stray <code>cd ..</code>) — produces <code>No such file or directory</code>, since <code>cd</code> without a leading <code>/</code> looks for a subfolder of the <em>current</em> location, not a global search. Contrast this explicitly with Module 01's absolute-vs-relative path vocabulary: <code>ism2411</code> here is a relative reference, and relative references only work from the right starting point.</p>
+</div>
+<aside class="notes">This is the bridge back to Module 01: "relative reference" is the phrase to reuse out loud.</aside>
+</section>
+
+<!-- 28. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 8 min · 0:32–0:40</span>
+<h1>Make a Sub-Project</h1>
+<aside class="notes">
+Teaching goal: combine everything so far — <code>mkdir</code>, <code>cd</code>, writing a file, running it — into one continuous sequence, with a script that's personalized rather than copy-pasted verbatim.
+Say to the class (verbatim): "Same loop as Exercise 3, but nested one level deeper, and this time the script is about you specifically — your name and your major."
+Do, live (using your own name/major): <code>mkdir module02</code>, <code>cd module02</code>; then in VS Code create <code>module02/hello.py</code> with one <code>print()</code> of your name and major; then <code>python3 hello.py</code>.
+Nothing new syntactically from Exercise 3 — the teaching value is entirely in the <em>directory structure</em>: point out there are now <strong>two different files both named <code>hello.py</code></strong>, in two different directories (<code>ism2411/hello.py</code> and <code>ism2411/module02/hello.py</code>), and that this is completely fine, because — callback to Module 01's Appendix B — filenames only need to be unique <em>within</em> a directory, not across the whole filesystem.
+</aside>
+</section>
+
+<!-- 29. EXERCISE 5 — live code (shell part) -->
+<section class="s-code">
+<h3>Live-code — Exercise 5, part 1: make and enter the sub-folder</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism2411":{"hello.py":"print(\"Hello, ISM2411!\")\n"}}'>cd ~/ism2411
+mkdir module02
+cd module02
+pwd</div>
+<p class="expect">One level deeper than Exercise 3: <code>module02</code> is created <em>inside</em> <code>ism2411</code>, and <code>cd module02</code> steps into it. The final <code>pwd</code> ends in <code>/ism2411/module02</code>.</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~/ism2411</code> — return to the course folder from Exercises 1 and 3.
+- <code>mkdir module02</code> — create a sub-folder inside <code>ism2411</code>. No output on success.
+- <code>cd module02</code> — step into it.
+- <code>pwd</code> — confirm you are now inside <code>ism2411/module02</code>.
+Verified against ism2411/assets/lab-shell.mjs: final <code>pwd</code> is <code>/Users/student/ism2411/module02</code>.
+</aside>
+</section>
+
+<!-- 30. EXERCISE 5 — expected output (shell part) -->
+<section class="s-out">
+<h3>Expected output — part 1</h3>
+<pre>/Users/student/ism2411/module02</pre>
+<aside class="notes">The single <code>pwd</code> line, confirming you are one level deeper than Exercise 3. Username illustrative.</aside>
+</section>
+
+<!-- 31. EXERCISE 5 — live code (python part) -->
+<section class="s-code">
+<h3>Live-code — Exercise 5, part 2: <code>module02/hello.py</code></h3>
+<div class="run" data-lang="python">
+# --- Exercise 5 — module02/hello.py (use your own name and major) ---
+print("Alex Chen — Finance major")
+</div>
+<p class="expect">A second file also named <code>hello.py</code>, in a different folder. Students substitute their own name and major; <code>Alex Chen — Finance major</code> is the guide's example. Run from inside <code>module02</code> with <code>python3 hello.py</code>.</p>
+<aside class="notes">
+Line by line:
+- <code>print("Alex Chen — Finance major")</code> — identical in form to Exercise 3; only the string content changed. The em dash is cosmetic — a plain hyphen is equally fine, but keep one consistent style on your own screen.
+Verified against CPython 3.12.2: stdout is exactly <code>Alex Chen — Finance major</code>. This is the "Exercise 5 output" the submission screenshot must show.
+</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — expected output (python part) -->
+<section class="s-out">
+<h3>Expected output — part 2</h3>
+<pre>Alex Chen — Finance major</pre>
+<aside class="notes">With each student's own name/major substituted. Matches the guide's Expected output for Exercise 5. This is one of the two <code>hello.py</code> outputs required in the Canvas screenshot.</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">There are now two files named <code>hello.py</code> in different folders. When you run <code>python3 hello.py</code>, how does Python know which one?</p>
+<button data-opt="A">it runs the one that was edited most recently</button>
+<button data-opt="B">it runs whichever <code>hello.py</code> is in the current working directory when you run the command</button>
+<button data-opt="C">it runs both and prints both outputs</button>
+<p class="why" hidden>It runs whichever <code>hello.py</code> exists in the <em>current working directory</em> at the moment you run the command — there's no ambiguity because you're never running both at once; <code>cd</code> determines which one <code>python3 hello.py</code> finds.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "Both <code>hello.py</code> files print something different when I run <code>python3 hello.py</code> — how does Python know which one to run each time?" (It runs whichever <code>hello.py</code> exists in the <em>current working directory</em> at the moment you run the command — there's no ambiguity because you're never running both at once; <code>cd</code> determines which one <code>python3 hello.py</code> finds.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Editing the <em>original</em> <code>hello.py</code> from Exercise 3 instead of creating a new file inside <code>module02/</code> — check by having students run <code>pwd</code> right before <code>python3 hello.py</code>, confirming they're inside <code>module02</code>, not the parent.</p>
+<p>Using an em dash (<code>—</code>) vs. a plain hyphen (<code>-</code>) inconsistently in their name/major line — purely cosmetic, not worth correcting unless a student asks.</p>
+</div>
+<aside class="notes">The <code>pwd</code>-before-run habit is the fix for the wrong-file edit — it also rehearses Exercise 7.</aside>
+</section>
+
+<!-- 35. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 10 min · 0:40–0:50</span>
+<h1>Deliberate Error Experiment</h1>
+<aside class="notes">
+Teaching goal: the most important exercise in this lab. Reading a traceback carefully — line number, error type, and message — is a skill every single future lab depends on, and this is the first dedicated practice at it.
+Say to the class (verbatim): "You're about to deliberately break your own code and read the error message on purpose. This is not a distraction from real programming — reading error messages <em>is</em> real programming. Every professional developer spends a large fraction of their time doing exactly this."
+Do, live, using the Exercise 3 <code>hello.py</code>: first introduce a typo (<code>print</code> → <code>primt</code>) and run; then the second type of error (remove a closing parenthesis) and run; then fix both and confirm <code>hello.py</code> runs cleanly again — do not skip that last step, ending on a broken file undermines the exercise's confidence-building purpose.
+Explain the difference between the two error types explicitly (verbatim): "<code>NameError</code> means Python understood the <em>structure</em> of your code just fine, but couldn't find something you referred to by name — like calling someone's name in a room and nobody answering. <code>SyntaxError</code> means Python couldn't even understand the <em>grammar</em> of what you wrote — like an incomplete sentence. Different category of problem, different place to look for the fix: a <code>NameError</code> means check spelling and definitions; a <code>SyntaxError</code> means check punctuation — matching quotes, parentheses, colons."
+Every student writes down, for each error: (a) the line number reported, (b) the error type, (c) one sentence on what the message tells them. That written analysis is the graded deliverable for this exercise, not just watching the demo.
+</aside>
+</section>
+
+<!-- 36. EXERCISE 6 — idea -->
+<section class="s-idea">
+<h3>The idea — read a traceback from the bottom up</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Bottom line — the error itself:</strong> the error <em>type</em> (<code>NameError</code>, <code>SyntaxError</code>) and a message explaining what's wrong. Python 3.10+ often appends a helpful guess (<code>Did you mean: 'print'?</code>) — read all the way to the end.</p>
+<p><strong>The line just above, with the <code>^^^^^</code> marker:</strong> shows <em>exactly</em> which part of the line Python choked on.</p>
+<p><strong><code>File "hello.py", line 1, in &lt;module&gt;</code>:</strong> tells you <em>where</em> — this file, this line number. Trivial for one line; the fastest way to find the problem in a 40-line script.</p>
+<p>The first line — <code>Traceback (most recent call last):</code> — is boilerplate. It never contains the actual problem.</p>
+</div>
+<aside class="notes">Beginners read top to bottom and get lost in the preamble. State the bottom-up order explicitly. The <code>Did you mean</code> hint is a real, useful feature, not a fluke.</aside>
+</section>
+
+<!-- 37. EXERCISE 6 — break #1 -->
+<section class="s-code">
+<h3>Break #1 — <code>print</code> misspelled as <code>primt</code></h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 — deliberate break #1 ---
+primt("Hello, ISM2411!")
+</div>
+<p class="expect">In class you edit the saved <code>hello.py</code> and run <code>python3 hello.py</code>. Run it here: it raises a <code>NameError</code>. Read the traceback bottom-up.</p>
+<aside class="notes">
+Walk it bottom up:
+- <code>NameError: name 'primt' is not defined</code> — Python looked for something named <code>primt</code> (expecting a function, since it's followed by parentheses) and found nothing. <code>Did you mean: 'print'?</code> is the 3.10+ helpful guess.
+- the <code>^^^^^</code> line marks the word <code>primt</code> itself.
+- <code>File "hello.py", line 1, in &lt;module&gt;</code> — this file, this line.
+Verified against CPython 3.12.2. The load-bearing last line matches exactly. In Pyodide the file shows as <code>&lt;exec&gt;</code> (or a temp path under CPython) instead of <code>hello.py</code> — not load-bearing.
+</aside>
+</section>
+
+<!-- 38. EXERCISE 6 — break #1 output -->
+<section class="s-out">
+<h3>Break #1 — what it raises</h3>
+<pre>Traceback (most recent call last):
+  File "hello.py", line 1, in &lt;module&gt;
+    primt("Hello, ISM2411!")
+    ^^^^^
+NameError: name 'primt' is not defined. Did you mean: 'print'?</pre>
+<aside class="notes">Verified against CPython 3.12.2 (Pyodide bundles CPython 3.12, so the body and caret markers match). The last line is identical across environments; only the <code>File "…"</code> path differs (<code>&lt;exec&gt;</code> in Pyodide). This is the guide's stated output for the first break.</aside>
+</section>
+
+<!-- 39. EXERCISE 6 — break #2 -->
+<section class="s-code">
+<h3>Break #2 — closing parenthesis removed</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 — deliberate break #2 ---
+print("Hello, ISM2411!"
+</div>
+<p class="expect">A different <em>category</em> of error. Run it: a <code>SyntaxError</code> — Python couldn't parse the grammar at all, so nothing runs.</p>
+<aside class="notes">
+- <code>SyntaxError: '(' was never closed</code> — the grammar is incomplete; Python never even started executing.
+- No <code>Traceback (most recent call last):</code> preamble here — a <code>SyntaxError</code> is caught before execution, so the report starts straight at <code>File "…", line 1</code>.
+- The <code>^</code> points at the unclosed <code>(</code>.
+Verified against CPython 3.12.2. The load-bearing last line <code>SyntaxError: '(' was never closed</code> matches exactly; the <code>File "…"</code> path is <code>&lt;exec&gt;</code> in Pyodide.
+</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — break #2 output -->
+<section class="s-out">
+<h3>Break #2 — what it raises</h3>
+<pre>  File "hello.py", line 1
+    print("Hello, ISM2411!"
+         ^
+SyntaxError: '(' was never closed</pre>
+<aside class="notes">Verified against CPython 3.12.2. Matches the guide's stated output for the second break. Contrast with break #1: <code>NameError</code> = structure fine, name not found (check spelling/definitions); <code>SyntaxError</code> = grammar broken (check punctuation — quotes, parentheses, colons).</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — fixed -->
+<section class="s-code">
+<h3>Repair both — confirm it runs clean</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 — both breaks repaired ---
+print("Hello, ISM2411!")
+</div>
+<p class="expect">Do not skip this step in class — ending on a broken file undermines the exercise's confidence-building purpose. Fix the spelling, restore the <code>)</code>, save, run: back to a clean <code>Hello, ISM2411!</code>.</p>
+<aside class="notes">Verified against CPython 3.12.2: stdout is exactly <code>Hello, ISM2411!</code>, identical to Exercise 3. The point is that a repaired file behaves as if nothing happened — errors are recoverable, not catastrophic.</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — fixed output -->
+<section class="s-out">
+<h3>Expected output — repaired</h3>
+<pre>Hello, ISM2411!</pre>
+<aside class="notes">Same one line as Exercise 3. Confirm every student's file runs clean before moving on.</aside>
+</section>
+
+<!-- 43. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Without running it — <code>pint("hi")</code> instead of <code>print("hi")</code> produces what?</p>
+<button data-opt="A"><code>NameError: name 'pint' is not defined</code> — a misspelled name called as a function</button>
+<button data-opt="B"><code>SyntaxError: invalid syntax</code></button>
+<button data-opt="C">no error — it prints <code>hi</code></button>
+<p class="why" hidden><code>NameError: name 'pint' is not defined</code> — the same category as the <code>primt</code> typo, since it's still a misspelled name being called as a function.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "Without running it — if I write <code>pint("hi")</code> instead of <code>print("hi")</code>, what error type and roughly what message do you expect?" (<code>NameError: name 'pint' is not defined</code> — the same category as the <code>primt</code> typo, since it's still a misspelled name being called as a function.) That parenthetical is the <code>data-answer</code> (A).</aside>
+</section>
+
+<!-- 44. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Panicking at the wall of text and not reading past the first line (<code>Traceback (most recent call last):</code>) — explicitly tell the room that line is boilerplate, always the same, and never contains the actual problem; the useful information is at the <em>bottom</em>.</p>
+<p>Trying to fix the error by guessing / randomly changing code rather than reading the message — reflection question 2 asks students to self-assess this honestly tonight, so name the temptation now, in class.</p>
+</div>
+<aside class="notes">Naming the "randomly change things" instinct out loud now primes a more honest answer on tonight's reflection.</aside>
+</section>
+
+<!-- 45. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 8 min · 0:50–0:58</span>
+<h1>Run from the Wrong Directory</h1>
+<aside class="notes">
+Teaching goal: directly connect "current working directory" to "why my script suddenly can't be found" — resolving the confusion that may have already surfaced organically back in Exercise 3.
+Say to the class (verbatim): "One more directory-awareness exercise, and then we're done with pure terminal mechanics for today. This one explains a failure mode you'll hit constantly if you don't understand it now."
+Do, live, starting from inside <code>module02/</code>: <code>cd ..</code> then <code>python3 hello.py</code>. Because Exercise 3 left a <code>hello.py</code> directly in <code>ism2411/</code> too, this might <em>not</em> error — it may just run the <em>wrong</em> one (Exercise 3's "Hello, ISM2411!" instead of Exercise 5's personalized line). Call that out explicitly as an even sneakier failure mode than a clean error: ask "did anyone get output instead of an error just now — and was it the output you expected?" A wrong-directory mistake doesn't always announce itself with an error — sometimes it just silently runs the wrong file.
+Then run it correctly with a relative path (verbatim framing): <code>python3 module02/hello.py</code> — this argument is itself a <em>relative path</em>, exactly like Module 01's Exercise 5 relative paths. <code>python3</code> doesn't require you to <code>cd</code> into a folder to run a file inside it — you can point directly at the file's path from wherever you currently are.
+</aside>
+</section>
+
+<!-- 46. EXERCISE 7 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 7</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism2411":{"hello.py":"print(\"Hello, ISM2411!\")\n","module02":{"hello.py":"print(\"Alex Chen &#8212; Finance major\")\n"}}}'>cd ~/ism2411/module02
+cd ..
+python3 hello.py
+python3 module02/hello.py</div>
+<p class="expect">Both <code>hello.py</code> files exist (Exercise 3's in <code>ism2411/</code>, Exercise 5's in <code>ism2411/module02/</code>). After <code>cd ..</code> you are in <code>ism2411/</code>, so <code>python3 hello.py</code> silently runs the <em>wrong</em> file — Exercise 3's line, not your personalized one. <code>python3 module02/hello.py</code> reaches into the sub-folder with a relative path and runs the right one.</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~/ism2411/module02</code> then <code>cd ..</code> — puts the shell in <code>ism2411/</code>, one level above <code>module02/</code>.
+- <code>python3 hello.py</code> — looks for <code>hello.py</code> in the <em>current</em> directory (<code>ism2411/</code>) and finds Exercise 3's copy, printing <code>Hello, ISM2411!</code>. The sneaky part: no error, just the wrong output.
+- <code>python3 module02/hello.py</code> — the argument is a relative path: "the <code>hello.py</code> inside the <code>module02</code> folder of wherever I am." Runs Exercise 5's personalized line.
+If Exercise 3's <code>ism2411/hello.py</code> did <em>not</em> exist, the first command would instead give a clean error: <code>python3: can't open file '/Users/yourname/ism2411/hello.py': [Errno 2] No such file or directory</code>.
+Verified through ism2411/assets/lab-shell.mjs with a Pyodide-equivalent Python runner: output is <code>Hello, ISM2411!</code> then <code>Alex Chen — Finance major</code>. The seed encodes the em dash as <code>&amp;#8212;</code> so the <code>data-fs</code> attribute stays plain ASCII.
+</aside>
+</section>
+
+<!-- 47. EXERCISE 7 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Hello, ISM2411!
+Alex Chen — Finance major</pre>
+<aside class="notes">First line: <code>python3 hello.py</code> from <code>ism2411/</code> ran Exercise 3's <code>hello.py</code> — the wrong one, with no error. Second line: <code>python3 module02/hello.py</code> ran Exercise 5's file correctly via a relative path. The guide shows the failing case as <code>python3: can't open file '/Users/yourname/ism2411/hello.py': [Errno 2] No such file or directory</code> for the situation where Exercise 3's copy is absent; here it is present, so it silently runs instead — the guide's "even sneakier failure mode."</aside>
+</section>
+
+<!-- 48. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Your terminal is sitting in <code>ism2411/</code>. Which correctly runs <code>module02/hello.py</code>?</p>
+<button data-opt="A"><code>python3 hello.py</code></button>
+<button data-opt="B"><code>python3 module02/hello.py</code> — or <code>cd module02</code> then <code>python3 hello.py</code></button>
+<button data-opt="C"><code>run module02/hello.py</code></button>
+<p class="why" hidden>Either <code>python3 module02/hello.py</code> directly, or <code>cd module02</code> followed by <code>python3 hello.py</code> — both work, for different reasons, and it's worth having a student articulate why both work rather than just naming them.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "Name two different ways to correctly run <code>module02/hello.py</code> while your terminal is sitting in <code>ism2411/</code>." (Either <code>python3 module02/hello.py</code> directly, or <code>cd module02</code> followed by <code>python3 hello.py</code> — both work, for different reasons, and it's worth having a student articulate why both work rather than just naming them.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 49. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Concluding "the fix is always to <code>cd</code> into the right folder" and missing that a relative path works too, without moving at all — both are valid; make sure the room sees both, since later labs frequently run a script from a fixed location while pointing at files elsewhere.</p>
+<p>Not noticing the silent-wrong-file case — walk the room specifically checking whose output was an error vs. whose was unexpectedly the <em>other</em> <code>hello.py</code>'s text.</p>
+</div>
+<aside class="notes">The silent-wrong-file check is the whole point of the exercise — poll the room explicitly on which result they got.</aside>
+</section>
+
+<!-- 50. STRETCH A — divider -->
+<section class="s-sec">
+<span class="chip">Stretch A · 10 min · 0:58–1:08</span>
+<h1>Multi-Print <code>intro.py</code></h1>
+<aside class="notes">
+Teaching goal: practice multiple <code>print()</code> calls in one script, each with a label — light repetition of Exercise 3/5's save-and-run loop, now with five lines instead of one.
+Say to the class (verbatim): "Five lines this time, each labeled — this is good practice for the exact save/run loop we've been doing all class, just with more content."
+Live-code it, or have students build it independently while you circulate. Run with <code>python3 intro.py</code>.
+</aside>
+</section>
+
+<!-- 51. STRETCH A — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch A (<code>ism2411/intro.py</code>)</h3>
+<div class="run" data-lang="python">
+# --- Stretch A — intro.py ---
+print("Name: Alex Chen")
+print("Major: Finance")
+print("Hometown: Tampa, FL")
+print("Hobby: rock climbing")
+print("Why this course: I want to automate the reporting I do in my internship")
+</div>
+<p class="expect">Five <code>print()</code> calls, one per line, each following the <code>Label: value</code> pattern. Students substitute their own details. Save as <code>intro.py</code> alongside <code>hello.py</code> in <code>ism2411/</code>, then run <code>python3 intro.py</code> from <code>ism2411/</code>.</p>
+<aside class="notes">
+Nothing new syntactically — five independent <code>print()</code> statements execute top to bottom, each producing one line. The teaching value is that a script can now have more than one line of real content.
+Verified against CPython 3.12.2: the five lines print in source order, exactly matching the guide's Expected output and the paired s-out.
+</aside>
+</section>
+
+<!-- 52. STRETCH A — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Name: Alex Chen
+Major: Finance
+Hometown: Tampa, FL
+Hobby: rock climbing
+Why this course: I want to automate the reporting I do in my internship</pre>
+<aside class="notes">Five lines, each following the <code>Label: value</code> pattern, in source order. Matches the guide's Expected output for Stretch A (with each student's own details substituted).</aside>
+</section>
+
+<!-- 53. STRETCH A — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Structurally, how does Stretch A's <code>intro.py</code> differ from Exercise 5's script?</p>
+<button data-opt="A">it reads user input instead of printing</button>
+<button data-opt="B">it has multiple <code>print()</code> calls in one file instead of just one — the first multi-line script this semester</button>
+<button data-opt="C">it uses a different command to run</button>
+<p class="why" hidden>Multiple <code>print()</code> calls in one file instead of one — a small step, but it's the first time this semester a script has more than a single line of real content, foreshadowing every future lab.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "How is this exercise different from Exercise 5, structurally?" (Multiple <code>print()</code> calls in one file instead of one — a small step, but it's the first time this semester a script has more than a single line of real content, foreshadowing every future lab.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 54. STRETCH B — divider -->
+<section class="s-sec">
+<span class="chip">Stretch B · as time allows</span>
+<h1>Install and Test a Package</h1>
+<aside class="notes">
+Frame it as a quick demo rather than full hands-on time if the clock is tight — and don't sacrifice Exercise 6 or 7 to reach it.
+Say to the class (verbatim): "<code>pip3 install</code> downloads and installs a package that isn't part of Python's built-in toolkit — <code>requests</code> is a genuinely popular one for talking to web APIs, and you'll use it later this semester. All we're confirming today is that the install pipeline itself works on your machine before you need it for something real."
+</aside>
+</section>
+
+<!-- 55. STRETCH B — reference code (cannot run in-browser) -->
+<section class="s-code">
+<h3>Reference only — run this on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>pip3 install requests</div>
+<pre><code class="language-python"># test_requests.py
+import requests; print("requests version:", requests.__version__)</code></pre>
+<p class="expect">Neither snippet runs in the browser: <code>pip3</code> installs from the network, and <code>requests</code> is not bundled with the in-page Python. Demo it locally — <code>pip3 install requests</code>, then <code>python3 test_requests.py</code>.</p>
+<aside class="notes">
+- <code>pip3 install requests</code> — downloads and installs the <code>requests</code> package (and its dependencies) from PyPI.
+- <code>import requests; print("requests version:", requests.__version__)</code> — imports the freshly installed package and prints its version, confirming the install worked. Two statements on one line separated by a semicolon.
+The exact version number varies by install date.
+</aside>
+</section>
+
+<!-- 56. STRETCH B — expected output -->
+<section class="s-out">
+<h3>Expected output — exact version varies</h3>
+<pre>requests version: 2.31.0</pre>
+<aside class="notes">The guide's illustrative output; the version number depends on when the package is installed. All we're checking is that the line prints at all — that means the install pipeline works.</aside>
+</section>
+
+<!-- 57. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>Has using only the terminal changed your mental model of where files live?</li>
+<li>Exercise 6's error — was your instinct to read carefully, or to start randomly changing things?</li>
+<li>Would today's exercises run reliably on a collaborator's machine with a different username and folder structure?</li>
+</ul>
+<aside class="notes">
+Strong-answer guidance (from the guide's Wrap-Up):
+1. No wrong answer — a strong response connects back to Module 01's path vocabulary: the terminal makes the directory hierarchy something you actively navigate, rather than something a file browser's icons abstract away.
+2. Encourage total honesty — the "randomly change things" instinct is extremely common and not something to be embarrassed about; the point is noticing it.
+3. A strong answer notices that today's exercises used <em>absolute</em> assumptions in places (a specific folder name, a specific starting location) and starts to intuit why relative paths and portable project structure matter — this previews concerns that resurface when the course covers scripts that read/write files.
+</aside>
+</section>
+
+<!-- 58. WRAP — submission checklist + next module -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li>Screenshot shows Exercise 3's <code>hello.py</code> output (<code>Hello, ISM2411!</code>)</li>
+<li>Screenshot shows Exercise 5's <code>hello.py</code> output (name/major line)</li>
+<li>Screenshot includes <code>python3 --version</code> output</li>
+<li>Submitted to Canvas</li>
+</ul>
+<aside class="notes">Review this on screen together in the last few minutes. Preview Module 03 (verbatim): "Today was almost entirely about the environment around your code — the terminal, the file system, running scripts. Starting next module, we focus entirely on the code itself: variables, types, and formatted output. The save-run-read loop you built today is the loop you'll run for the rest of the semester — it just gets more interesting content inside it."</aside>
+</section>
+
+<!-- 59. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 2</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w02.md (Week 2 facilitation guide). Shell blocks (Exercises 1, 4, 5-part-1, 7) verified against ism2411/assets/lab-shell.mjs; Python blocks (Exercises 3, 5-part-2, 6, Stretch A) verified against CPython 3.12.2 / Pyodide 0.26.4. Exercise 2 and Stretch B are shown as reference-only because they query the local machine / network and cannot run in the browser.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
