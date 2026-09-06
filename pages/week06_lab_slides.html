@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 6 — Sales Loop — Sum, Average, Max</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Module 06 &nbsp;·&nbsp; Unit 2 &nbsp;·&nbsp; Control Flow &amp; Structure</p>
+<h1>Sales Loop — Sum, Average, Max</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Intro — from one value to a data set</span>
+<span class="t-item"><strong>0:05–0:15</strong> Ex 1 — Sum a List</span>
+<span class="t-item"><strong>0:15–0:21</strong> Ex 2 — Average</span>
+<span class="t-item"><strong>0:21–0:29</strong> Ex 3 — Max</span>
+<span class="t-item"><strong>0:29–0:36</strong> Ex 4 — Filtered Count</span>
+<span class="t-item"><strong>0:36–0:46</strong> Ex 5 — <code>break</code> / <code>continue</code></span>
+<span class="t-item"><strong>0:46–0:54</strong> Ex 6 — <code>while</code> Loop Rewrite</span>
+<span class="t-item"><strong>0:54–1:02</strong> Ex 7 — Discount Applied to All Items</span>
+<span class="t-item"><strong>1:02–1:10</strong> Stretch 1 — Running Total Report</span>
+<span class="t-item"><strong>1:10–1:15</strong> Stretch 2 Preview + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along. This is the module where Python stops being "one calculation at a time" and starts processing real <em>data sets</em> — a whole list of sales, not one transaction. The <strong>accumulator pattern</strong> (initialize, loop, update) introduced in Exercise 1 is the single most important idea in the entire lab; every later exercise is a variation of it. If students leave today able to explain, unprompted, why an accumulator needs to be initialized <em>before</em> the loop starts, this lab succeeded — everything else (max-tracking, filtered counting, break/continue) is the same skeleton with small variations.
+Prerequisites: Module 05 — <code>if</code>/<code>elif</code>/<code>else</code>; Modules 01–04 — variables, operators, f-strings. Submission: <code>sales_loop.py</code> to Canvas. Before class: open <code>sales_loop.py</code> empty except the header comment; have the exact shared list ready to paste identically every exercise — <code>sales = [120, 80, 250, 175, 90, 410, 60, 215]</code> — so students build intuition for what each technique does differently on data they already know. Decide in advance how much of Exercise 6 (the <code>while</code> rewrite) to live-code vs. narrate; its tedium <em>is</em> the lesson. All runnable-block output in this deck verified against CPython 3.12.2 (== Pyodide 0.26.4).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>sales_loop.py</code> starts empty except the header comment and the shared <code>sales</code> list; build every exercise live</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 05: <code>if</code>/<code>elif</code>/<code>else</code>; Modules 01–04: variables, operators, f-strings</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch 1 / 2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>sales_loop.py</code> to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week06_lab. Class length 75 minutes, format live code-along. The required exercises and Stretch 1 provide comprehensive coverage; Stretch 2 (nested loops / multiplication table) is a separate topic — loops <em>inside</em> loops — rather than a variation on the accumulator pattern, so it is positioned as optional take-home content. The same list <code>sales = [120, 80, 250, 175, 90, 410, 60, 215]</code> is reused across all seven exercises on purpose.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Write the accumulator pattern from scratch: initialize a variable before the loop, update it inside the loop, use the final value after the loop.</li>
+<li>Explain why <code>total</code> must be initialized to <code>0</code> <em>before</em> the loop, not inside it — and why doing it wrong either crashes or silently resets on every iteration.</li>
+<li>Combine an accumulator with an <code>if</code> check inside the loop body to filter or conditionally update.</li>
+<li>Use <code>break</code> to exit a loop early and <code>continue</code> to skip an iteration, and articulate the difference between the two.</li>
+<li>Convert a <code>for</code> loop into an equivalent <code>while</code> loop, and explain the tradeoffs of each.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 (initialize before, update inside, use after) is the conceptual spine — Exercise 1 establishes it and every later exercise is a variation. Objective 2's "why initialize before, not inside" is the single most important sentence in the lab (worth writing on the board verbatim).</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Intro — one value at a time → a whole data set</td><td>5</td></tr>
+<tr><td>0:05–0:15</td><td>Exercise 1 — Sum a List</td><td>10</td></tr>
+<tr><td>0:15–0:21</td><td>Exercise 2 — Average</td><td>6</td></tr>
+<tr><td>0:21–0:29</td><td>Exercise 3 — Max</td><td>8</td></tr>
+<tr><td>0:29–0:36</td><td>Exercise 4 — Filtered Count</td><td>7</td></tr>
+<tr><td>0:36–0:46</td><td>Exercise 5 — <code>break</code> / <code>continue</code></td><td>10</td></tr>
+<tr><td>0:46–0:54</td><td>Exercise 6 — <code>while</code> Loop Rewrite</td><td>8</td></tr>
+<tr><td>0:54–1:02</td><td>Exercise 7 — Discount Applied to All Items</td><td>8</td></tr>
+<tr><td>1:02–1:10</td><td>Stretch 1 — Running Total Report</td><td>8</td></tr>
+<tr><td>1:10–1:15</td><td>Stretch 2 Preview — Nested Loops + Wrap-Up</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Seven required exercises plus Stretch 1 fill the full 75 minutes at a normal pace. Stretch 2 (nested loops / multiplication table) is framed as a preview/take-home. If a section moves unusually fast, Appendix B has two extra practice items (a second accumulator pass over <code>expenses = [45, 120, 15, 300, 60, 90]</code>; a second <code>break</code>/<code>continue</code> scenario).</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>One value at a time → a whole data set</h1>
+<aside class="notes">
+Teaching goal: frame today's jump — Python stops working with one value at a time and starts processing a whole list, all through one reusable skeleton called the accumulator pattern.
+Say to the class (verbatim): "Every script so far has worked with one value at a time — one cart total, one transaction. Today we process a whole list: eight sales figures, and we compute a sum, an average, and a max — all with the exact same underlying pattern, called the accumulator pattern. Learn that pattern well today and the rest of this lab is just small variations on it."
+Do: open <code>sales_loop.py</code>, type the header and the shared list every exercise will reuse — <code># sales_loop.py</code> / <code># ISM2411 Module 06 Lab — Sales Loop: Sum, Average, Max</code> / <code>sales = [120, 80, 250, 175, 90, 410, 60, 215]</code>.
+Common mistakes: none yet — this is framing.
+Note on the deck: every runnable block below re-declares <code>sales = [120, 80, 250, 175, 90, 410, 60, 215]</code> at the top, because each block runs in its own fresh namespace. In the real <code>sales_loop.py</code> the list is typed once at the top of the file and every exercise reuses it.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 10 min · 0:05–0:15</span>
+<h1>Sum a List</h1>
+<aside class="notes">
+Teaching goal: the accumulator pattern, in its simplest form — this is the exercise to slow all the way down for, since it's the load-bearing idea of the whole lab.
+Say to the class (verbatim): "Three steps, always in this order: initialize a variable before the loop starts, update it on every pass through the loop, use the final value after the loop ends. I want you to say those three words back to me — initialize, update, use — because you're going to apply this exact skeleton six more times today."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+total = 0                  # initialize
+for sale in sales:
+    total += sale           # update
+print(f"Total: ${total}")   # use
+</div>
+<p class="expect">Three steps, always in this order: <strong>initialize</strong> before the loop, <strong>update</strong> inside it, <strong>use</strong> the final value after. Run it — the total is <code>$1400</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>total = 0</code> — <strong>initialize</strong>, before the loop. This has to happen <em>before</em> <code>for sale in sales:</code> starts, not inside it — say explicitly why: if this line were inside the loop body, <code>total</code> would be reset to <code>0</code> on every single pass, and you'd only ever end up with the <em>last</em> sale's value, not a running sum. This is the single most important sentence in this lab — consider writing it on the board verbatim.
+- <code>for sale in sales:</code> — a <code>for</code> loop over a list. <code>sale</code> is a <strong>loop variable</strong>: on the first pass it holds <code>sales[0]</code> (<code>120</code>), on the second <code>sales[1]</code> (<code>80</code>), and so on, automatically, one element at a time, until the list is exhausted. Point out: <code>sale</code> is not a keyword — it's a name <em>you</em> chose and could be <code>x</code>, <code>s</code>, <code>amount</code>; naming it the singular of the list name is a readability habit, not a rule.
+- <code>total += sale</code> — <strong>update</strong>, inside the loop, indented to show it's part of the loop body. <code>+=</code> means "add <code>sale</code> to whatever <code>total</code> already holds, and store the result back in <code>total</code>." Runs eight times, once per element.
+- <code>print(f"Total: ${total}")</code> — <strong>use</strong>, after the loop, <em>not indented</em>. The indentation (back to the left margin, same level as <code>total = 0</code>) is what tells Python it runs <em>once</em>, after the loop finishes, not once per iteration. Indenting it to match the loop body gives eight separate <code>Total: ...</code> lines — a good deliberate demo if you have a spare 30 seconds.
+Common mistakes: initializing <code>total</code> <em>inside</em> the loop (resets to <code>0</code> every pass, final value is just the last element <code>215</code>) — demonstrated on the next slide; forgetting <code>+=</code> and writing <code>total = sale</code> (same failure mode); indenting the final <code>print()</code> into the loop body.
+Check for understanding (guide, verbatim parenthetical): "If <code>sales</code> had 50 items instead of 8, what — if anything — would need to change about this code? (Nothing — the loop automatically runs once per item regardless of list length; this is worth stating explicitly as the payoff of using a loop at all, versus eight individual hardcoded additions.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Total: $1400</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 1 exactly. <code>0 + 120 + 80 + 250 + 175 + 90 + 410 + 60 + 215 = 1400</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>total</code> re-initialized inside the loop</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 (BROKEN: total reset to 0 on every pass) ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+total = 0
+for sale in sales:
+    total = 0        # BUG: this belongs BEFORE the loop, not inside it
+    total += sale
+print(f"Total: ${total}")
+</div>
+<p class="expect">Move the <code>total = 0</code> line <em>inside</em> the loop and run it — the answer is now <code>$215</code>, the last element, not <code>$1400</code>. No crash, just a silently wrong number. This is Exercise 1's central teaching point — worth seeing fail before it's understood as correct.</p>
+<aside class="notes">
+Teaching goal: show the accumulator's single most important rule by breaking it — initialize <em>before</em> the loop, never inside.
+Line-by-line: with <code>total = 0</code> inside the loop body, every pass wipes <code>total</code> back to <code>0</code> and then adds only that pass's <code>sale</code>. After the final pass <code>total</code> holds <code>0 + 215 = 215</code> — just the last element. Output: <code>Total: $215</code>.
+Common mistakes: this <em>is</em> the mistake — demonstrate it live, then move the line back out above <code>for sale in sales:</code> and re-run to get <code>$1400</code>. The same wrong answer also comes from writing <code>total = sale</code> instead of <code>total += sale</code>.
+</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — broken output -->
+<section class="s-out">
+<h3>What the broken version prints</h3>
+<pre>Total: $215</pre>
+<aside class="notes">Verified against CPython 3.12.2. The intended answer is <code>Total: $1400</code>; re-initializing <code>total</code> inside the loop silently produces <code>$215</code> (the last element, <code>sales[-1]</code>) instead. A pure "silent wrong answer" bug — no exception.</aside>
+</section>
+
+<!-- 11. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>sales</code> had 50 items instead of 8, what — if anything — would need to change about this code?</p>
+<button data-opt="A">Nothing — the loop runs once per item regardless of list length</button>
+<button data-opt="B">Add 42 more <code>total += sale</code> lines, one per new item</button>
+<button data-opt="C">Change <code>for sale in sales:</code> to <code>for sale in range(50):</code></button>
+<p class="why" hidden>Nothing — the loop automatically runs once per item regardless of list length; this is worth stating explicitly as the payoff of using a loop at all, versus eight individual hardcoded additions.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Nothing — the loop automatically runs once per item regardless of list length; this is worth stating explicitly as the payoff of using a loop at all, versus eight individual hardcoded additions.)"</aside>
+</section>
+
+<!-- 12. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Initializing <code>total</code> <em>inside</em> the loop — resets to <code>0</code> every pass, so the final value is just the last element, <code>215</code>, not <code>1400</code>. Demonstrate this live; it's the exercise's central teaching point and worth seeing fail before it's understood as correct.</p>
+<p>Forgetting <code>+=</code> and writing <code>total = sale</code> instead — same failure mode, from a different typo. Write it both ways once (<code>total += sale</code> and <code>total = total + sale</code>) so students see <code>+=</code> is shorthand, not new syntax.</p>
+<p>Indenting the final <code>print()</code> to match the loop body — gives eight separate <code>Total: ...</code> lines showing the running total after each addition instead of the true final sum.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1. All three run without crashing — the "silent wrong answer" (or wrong-shape output) category.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 6 min · 0:15–0:21</span>
+<h1>Average</h1>
+<aside class="notes">
+Teaching goal: track a <em>second</em> accumulator (a count) alongside the first, and combine them after the loop — the same skeleton, doubled.
+Say to the class (verbatim): "Average needs two numbers: the total, and how many items there were. We're tracking both inside the same loop, then dividing after the loop ends — not using <code>len()</code> or <code>sum()</code>, on purpose, so the accumulator pattern is doing all the work."
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+total = 0     # initialize
+count = 0     # initialize
+for sale in sales:
+    total += sale   # update
+    count += 1       # update
+average = total / count   # use
+print(f"Total: ${total}")
+print(f"Count: {count}")
+print(f"Average: ${average:.2f}")
+</div>
+<p class="expect">Two accumulators in one loop: <code>total</code> sums values, <code>count</code> counts iterations. The division happens <em>after</em> the loop, using both final values. No <code>len()</code> or <code>sum()</code> — on purpose.</p>
+<aside class="notes">
+Line-by-line:
+- <code>count = 0</code> — a second accumulator, initialized alongside <code>total</code>, before the loop.
+- <code>count += 1</code> — inside the loop, incrementing by exactly <code>1</code> on every pass, regardless of the sale's value — contrast explicitly with <code>total += sale</code>, which adds a <em>different</em> amount each time. <code>count</code> is counting iterations; <code>total</code> is summing values. Two different jobs, same pattern.
+- <code>average = total / count</code> — runs <strong>after</strong> the loop, using both accumulators' final values. It could not run correctly <em>inside</em> the loop, since <code>count</code> and <code>total</code> aren't at their final values until the loop finishes — flag this, since some students will be tempted to compute a "running average" inside the loop out of habit.
+Common mistakes: computing <code>average</code> inside the loop body (eight different intermediate "averages"; the last one coincidentally equals the right answer, hiding that the other seven lines were wrong); dividing by <code>len(sales)</code> instead of <code>count</code> — not wrong output-wise, but it defeats the exercise's stated constraint, and Exercise 6 depends on students being comfortable tracking values manually.
+Check for understanding (guide, verbatim parenthetical): "Why do we need a <em>separate</em> <code>count</code> variable — why can't we just use <code>total</code> for both the sum and the count? (Because they're fundamentally different quantities that happen to both start at <code>0</code> — <code>total</code> needs the actual sale amounts added in, <code>count</code> needs a flat <code>1</code> added in regardless of amount; conflating them would corrupt both.)"
+</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Total: $1400
+Count: 8
+Average: $175.00</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 2 exactly. <code>1400 / 8 = 175.0</code>; <code>{average:.2f}</code> renders <code>175.00</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Why do we need a <em>separate</em> <code>count</code> variable — why can't we just use <code>total</code> for both the sum and the count?</p>
+<button data-opt="A">We could — <code>total</code> already knows how many numbers went into it</button>
+<button data-opt="B">They're different quantities: <code>total</code> needs the sale amounts added in, <code>count</code> needs a flat <code>1</code> each pass</button>
+<button data-opt="C">Python forbids reusing a variable for two purposes</button>
+<p class="why" hidden>Because they're fundamentally different quantities that happen to both start at <code>0</code> — <code>total</code> needs the actual sale amounts added in, <code>count</code> needs a flat <code>1</code> added in regardless of amount; conflating them would corrupt both.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Because they're fundamentally different quantities that happen to both start at <code>0</code> — <code>total</code> needs the actual sale amounts added in, <code>count</code> needs a flat <code>1</code> added in regardless of amount; conflating them would corrupt both.)"</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Computing <code>average</code> inside the loop body — produces eight different intermediate "averages," none of which is the real answer. The <em>last</em> one coincidentally equals <code>total / count</code> at the true final values, so it "looks like it works" if you only check the last printed line — hiding that the other seven were wrong.</p>
+<p>Dividing by <code>len(sales)</code> instead of <code>count</code> — not wrong output-wise, but it defeats the purpose of the exercise, which explicitly asks students to track a count manually. Exercise 6 depends on that comfort with manual tracking.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 8 min · 0:21–0:29</span>
+<h1>Max</h1>
+<aside class="notes">
+Teaching goal: a third accumulator variant — instead of adding on every pass, <em>conditionally replace</em> the tracked value only when a new one is larger.
+Say to the class (verbatim): "Same three-step skeleton, but the update step is different: instead of always adding, we only update when we find something bigger than what we've seen so far."
+</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — the idea -->
+<section class="s-idea">
+<h3>The idea — conditional replace, and why <code>current_max = 0</code> is a shortcut</h3>
+<div class="concept">
+<div class="concept-lbl">Say it once, explicitly</div>
+<p>The update step is now <em>conditional</em>: <code>if sale &gt; current_max:</code> then <code>current_max = sale</code>. On passes where the <code>if</code> is <code>False</code>, nothing happens — unlike the sum, where every pass changed <code>total</code>.</p>
+<p><code>current_max = 0</code> works <em>only because every sale here is positive</em>, so <code>0</code> is guaranteed smaller than any real sale and gets replaced on the first comparison. If the list could contain negatives, a list of all-negative sales would wrongly report a max of <code>0</code>. The robust, general-purpose alternative: initialize to the list's first element, <code>sales[0]</code>.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for the <code>current_max = 0</code> initialization plus its explicit note that <code>sales[0]</code> is the more robust pattern. It is also the first time this semester a conditional sits <em>inside</em> a loop — a structural first that Exercises 4 and 7 lean on harder.</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+current_max = 0                # initialize
+for sale in sales:
+    if sale &gt; current_max:      # compare
+        current_max = sale      # update, conditionally
+print(f"Largest sale: ${current_max}")
+</div>
+<p class="expect">Trace the first three sales by hand: <code>120 &gt; 0</code> → update to <code>120</code>; <code>80 &gt; 120</code> → <code>False</code>, no update; <code>250 &gt; 120</code> → update to <code>250</code>. Final answer: <code>$410</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>current_max = 0</code> — initialized to <code>0</code> here specifically because all sales in this list are positive, so <code>0</code> is guaranteed smaller than any real sale and will always get replaced on the first comparison. Flag as a real limitation: <strong>if the list could contain negative numbers, initializing to <code>0</code> would be wrong</strong> — a list of all-negative sales would incorrectly report a max of <code>0</code>. The safe, general-purpose alternative is to initialize <code>current_max</code> to the list's <em>first element</em> (<code>sales[0]</code>).
+- <code>if sale &gt; current_max:</code> — the comparison step, using Module 05's <code>if</code> syntax, now nested inside a loop for the first time this semester. Call this out as a structural first: a conditional <em>inside</em> a loop, exactly the combination Exercises 4 and 7 lean on harder.
+- <code>current_max = sale</code> — the conditional update: only runs on passes where the <code>if</code> above was <code>True</code>. Walk through the first three sales aloud: <code>120 &gt; 0</code> → update to <code>120</code>; <code>80 &gt; 120</code> → <code>False</code>, no update; <code>250 &gt; 120</code> → update to <code>250</code>.
+Common mistakes: updating <code>current_max</code> unconditionally every pass (forgetting the <code>if</code>, or misindenting so the assignment isn't inside the <code>if</code>) — silently sets <code>current_max</code> to the <em>last</em> element (<code>215</code>) every time; with this list the true max <code>410</code> is not last, so the bug is very visible. Using <code>&gt;=</code> instead of <code>&gt;</code> — harmless here (same answer), but worth a quick "when would it matter?" aside (only if also tracking <em>which</em> index was the max, and ties mattered).
+Check for understanding (guide, verbatim parenthetical): "Using the same skeleton, how would you track the <em>minimum</em> instead of the maximum — what two things change? (Initialize to a very large number, or to <code>sales[0]</code>, instead of <code>0</code>; flip the comparison to <code>&lt;</code>. Getting a student to articulate both changes confirms they understand the pattern's moving parts, not just this one instance of it.)"
+</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Largest sale: $410</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 3 exactly. <code>410</code> is the largest element; the conditional update replaces <code>current_max</code> at <code>120</code>, then <code>250</code>, then <code>410</code>, and never again. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Using the same skeleton, how would you track the <em>minimum</em> instead of the maximum — what two things change?</p>
+<button data-opt="A">Nothing changes — <code>max</code> and <code>min</code> use identical code</button>
+<button data-opt="B">Only the comparison flips to <code>&lt;</code>; the initial value stays <code>0</code></button>
+<button data-opt="C">Initialize to a very large number (or <code>sales[0]</code>) instead of <code>0</code>, and flip the comparison to <code>&lt;</code></button>
+<p class="why" hidden>Initialize to a very large number, or to <code>sales[0]</code>, instead of <code>0</code>; flip the comparison to <code>&lt;</code>. Getting a student to articulate both changes confirms they understand the pattern's moving parts, not just this one instance of it.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Initialize to a very large number, or to <code>sales[0]</code>, instead of <code>0</code>; flip the comparison to <code>&lt;</code>. Getting a student to articulate both changes confirms they understand the pattern's moving parts, not just this one instance of it.)"</aside>
+</section>
+
+<!-- 23. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Updating <code>current_max</code> unconditionally every pass (forgetting the <code>if</code>, or misindenting so the assignment isn't actually inside the <code>if</code> block) — this just sets <code>current_max</code> to the <em>last</em> element every time, silently giving the wrong answer whenever the last element isn't the largest. With this list (last element <code>215</code>, true max <code>410</code>) the bug is very visible live.</p>
+<p>Using <code>&gt;=</code> instead of <code>&gt;</code> — harmless for this exercise (doesn't change the final answer), but worth a quick "why doesn't this matter here, and when might it?" aside: it would only matter if you were also tracking <em>which</em> sale index was the max and cared about ties.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 7 min · 0:29–0:36</span>
+<h1>Filtered Count</h1>
+<aside class="notes">
+Teaching goal: combine <em>two</em> accumulators with a filtering <code>if</code>, directly previewing Exercise 7's structure — this is the exercise that makes the "if inside a loop, with an accumulator" combination feel routine rather than novel.
+Say to the class (verbatim): "Now we're counting <em>and</em> summing, but only for sales that pass a filter — over $100. Notice this uses everything from the last three exercises at once."
+</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — two levels of indentation</h3>
+<div class="concept">
+<div class="concept-lbl">Point at the screen while you say this</div>
+<p><code>if sale &gt; 100:</code> is inside the loop body — <strong>one</strong> level of indent. Both <code>+=</code> lines are inside the <code>if</code> body — <strong>two</strong> levels of indent.</p>
+<p>Get that indentation wrong and the filter either does nothing (both <code>+=</code> lines back at loop level → every sale counted) or excludes everything. Sales at or below $100 are simply skipped for both counters, since neither line inside the <code>if</code> body runs when the condition is <code>False</code>.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Exercise 4, condensed — the double-indentation point is the whole lesson. Both accumulators are initialized before the loop, same as Exercise 2, but this time both updates live one level deeper, inside the <code>if</code>.</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+count_over_100 = 0      # initialize
+total_over_100 = 0      # initialize
+for sale in sales:
+    if sale &gt; 100:        # filter
+        count_over_100 += 1     # update
+        total_over_100 += sale  # update
+print(f"Sales over $100: {count_over_100}")
+print(f"Total of those sales: ${total_over_100}")
+</div>
+<p class="expect">Compare the filtered total <code>$1170</code> against Exercise 1's full-list total <code>$1400</code> — if a student gets <code>$1400</code> here, that's the tell that the <code>total_over_100 += sale</code> line slipped back out to loop level.</p>
+<aside class="notes">
+Line-by-line:
+- Two accumulators initialized before the loop, same as Exercise 2 — but this time <strong>both updates are indented one level deeper</strong>, inside the <code>if</code>, not directly inside the <code>for</code>. Point at this on screen: <code>if sale &gt; 100:</code> is inside the loop body (one level of indent), both <code>+=</code> lines are inside the <code>if</code> body (two levels). Get this indentation wrong and the filter either does nothing or excludes everything.
+- Both accumulators update together, only for sales that pass the filter — sales at or below $100 are simply skipped for both counters, since neither line inside the <code>if</code> body runs when the condition is <code>False</code>. Over $100: <code>120, 250, 175, 410, 215</code> → five sales summing to <code>1170</code>.
+Common mistakes: indenting <code>total_over_100 += sale</code> back out to the loop level — sums <em>every</em> sale regardless of the filter, silently disconnecting it from <code>count_over_100</code> (which stays filtered); a <code>$1400</code> here vs. <code>$1170</code> is the tell. Using <code>&gt;=</code> vs <code>&gt;</code> for the $100 threshold — the lab says "over $100," strictly greater; read boundary wording ("over," "at least," "more than") carefully every time.
+Check for understanding (guide, verbatim parenthetical): "If I wanted the <em>average</em> of just the sales over $100, what one extra line would I add, and where? (<code>average_over_100 = total_over_100 / count_over_100</code>, after the loop ends — reusing Exercise 2's pattern on this exercise's filtered accumulators, confirming the skeletons genuinely compose.)"
+</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Sales over $100: 5
+Total of those sales: $1170</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 4 exactly. Sales strictly over $100: <code>120, 250, 175, 410, 215</code> — five of them, summing to <code>1170</code>. (<code>80, 90, 60</code> are skipped.) Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If I wanted the <em>average</em> of just the sales over $100, what one extra line would I add, and where?</p>
+<button data-opt="A"><code>average_over_100 = total_over_100 / count_over_100</code>, after the loop ends</button>
+<button data-opt="B"><code>average_over_100 = total_over_100 / len(sales)</code>, inside the <code>if</code> block</button>
+<button data-opt="C">You can't — you'd need a third accumulator tracking the average directly</button>
+<p class="why" hidden><code>average_over_100 = total_over_100 / count_over_100</code>, after the loop ends — reusing Exercise 2's pattern on this exercise's filtered accumulators, confirming the skeletons genuinely compose.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>average_over_100 = total_over_100 / count_over_100</code>, after the loop ends — reusing Exercise 2's pattern on this exercise's filtered accumulators, confirming the skeletons genuinely compose.)"</aside>
+</section>
+
+<!-- 29. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Indenting <code>total_over_100 += sale</code> back out to the loop level instead of the <code>if</code> level — this makes it sum <em>every</em> sale regardless of the filter, silently disconnecting it from <code>count_over_100</code>, which correctly stays filtered. A good "the two numbers don't seem to agree" bug for the room to catch by comparing their total against Exercise 1's full-list <code>$1400</code>.</p>
+<p>Using <code>&gt;=</code> vs <code>&gt;</code> for the $100 threshold — check against the lab's stated boundary (<code>over $100</code>, meaning strictly greater), and a reminder that boundary wording ("over," "at least," "more than") should be read carefully every time, since Module 05 already established these distinctions matter.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 30. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 10 min · 0:36–0:46</span>
+<h1><code>break</code> / <code>continue</code></h1>
+<aside class="notes">
+Teaching goal: two new loop-control keywords that change a loop's normal top-to-bottom, every-iteration behavior — <code>continue</code> skips the rest of the <em>current</em> pass, <code>break</code> exits the <em>entire</em> loop immediately.
+Say to the class (verbatim): "So far every loop has run through the whole list, every time. These two keywords change that. <code>continue</code> says 'skip the rest of this one pass, move to the next item.' <code>break</code> says 'stop the loop completely, right now, don't look at any more items.' Very different, easy to confuse — let's build intuition by using both in the same loop."
+</aside>
+</section>
+
+<!-- 31. EXERCISE 5 — the idea -->
+<section class="s-idea">
+<h3>The idea — skip one pass vs. stop the whole loop</h3>
+<div class="concept">
+<div class="concept-lbl">The one contrast that matters</div>
+<p><code>continue</code> does not stop the loop — it only stops the <em>current pass through</em> the loop, jumping straight to the next item. Every line below it is skipped for that pass.</p>
+<p><code>break</code> exits the loop <strong>immediately and completely</strong>. After a <code>break</code> there is no "next iteration" — the remaining items are never looked at.</p>
+</div>
+<aside class="notes">Trace it with the class, sale by sale, since this is the exercise's real payoff: <code>120</code> → passes both checks, prints <code>$120</code>. <code>80</code> → <code>continue</code>, skipped, nothing printed. <code>250</code> → prints <code>$250</code>. <code>175</code> → prints <code>$175</code>. <code>90</code> → <code>continue</code>, skipped. <code>410</code> → triggers <code>break</code>, prints the alert, <strong>loop ends here</strong> — the remaining sales (<code>60</code>, <code>215</code>) are never even looked at.</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5</h3>
+<div class="run" data-lang="python">
+# --- Exercise 5 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+for sale in sales:
+    if sale &lt;= 100:
+        continue                                        # skip small sales
+    if sale &gt; 400:
+        print(f"Alert: outlier found — ${sale}. Stopping.")
+        break                                            # stop entirely
+    print(f"${sale}")
+</div>
+<p class="expect">The output has exactly <strong>four</strong> lines, not more. After <code>410</code> triggers <code>break</code>, the loop is finished — <code>60</code> and <code>215</code> are never examined. Ask someone to explain out loud why.</p>
+<aside class="notes">
+Line-by-line:
+- <code>if sale &lt;= 100: continue</code> — for any sale of $100 or less, <code>continue</code> immediately jumps to the <em>next</em> iteration, skipping every line below it for this pass — specifically <code>print(f"${sale}")</code> never runs for these values. <code>continue</code> does not stop the loop, it only stops the <em>current pass through</em> it.
+- <code>if sale &gt; 400: ... break</code> — for any sale over $400, print the alert, then <code>break</code> — this exits the loop <strong>immediately and completely</strong>; no further sales are examined at all, even ones that would also be over $100 or under $400. The crucial contrast with <code>continue</code>: after a <code>break</code>, the loop is entirely finished; there's no "next iteration."
+- <code>print(f"${sale}")</code> — the fallback: only reached by sales that are <em>both</em> over $100 (didn't trigger <code>continue</code>) <em>and</em> not over $400 (didn't trigger <code>break</code>).
+Hand-trace: <code>120</code> → prints <code>$120</code>. <code>80</code> → <code>continue</code>. <code>250</code> → <code>$250</code>. <code>175</code> → <code>$175</code>. <code>90</code> → <code>continue</code>. <code>410</code> → <code>break</code>, prints the alert, loop ends — <code>60</code>, <code>215</code> never looked at.
+Common mistakes: expecting the loop to continue after <code>break</code>, printing <code>60</code> and <code>215</code> too — the single most common misconception; confirm the output has exactly four lines. Confusing which keyword does which — walk them through re-tracing by hand rather than just naming the correct keyword. Placing the <code>continue</code> check <em>after</em> the <code>break</code> check — with this data, order changes nothing (the two conditions, <code>sale &lt;= 100</code> and <code>sale &gt; 400</code>, can never both be true for one value); contrast with Module 05 Exercise 1's discount tiers, where order <em>did</em> matter.
+Check for understanding (guide, verbatim parenthetical): "If I removed the <code>break</code> entirely, keeping only the <code>continue</code>, what would the output be for the full list? (<code>$120</code>, <code>$250</code>, <code>$175</code>, <code>$410</code>, <code>$215</code> — every sale over $100 gets printed now, including <code>$410</code> and <code>$215</code>, since nothing stops the loop early anymore; only the <code>&lt;= 100</code> sales are still skipped.)"
+</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>$120
+$250
+$175
+Alert: outlier found — $410. Stopping.</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 5 exactly — four lines. <code>80</code> and <code>90</code> hit <code>continue</code>; <code>410</code> hits <code>break</code> after printing the alert (em dash matching the string literal); <code>60</code> and <code>215</code> are never reached. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If I removed the <code>break</code> entirely, keeping only the <code>continue</code>, what would the output be for the full list?</p>
+<button data-opt="A"><code>$120</code>, <code>$250</code>, <code>$175</code> — the same first three lines, then nothing</button>
+<button data-opt="B"><code>$120</code>, <code>$250</code>, <code>$175</code>, <code>$410</code>, <code>$215</code> — every sale over $100</button>
+<button data-opt="C">All eight sales, one per line</button>
+<p class="why" hidden><code>$120</code>, <code>$250</code>, <code>$175</code>, <code>$410</code>, <code>$215</code> — every sale over $100 gets printed now, including <code>$410</code> and <code>$215</code>, since nothing stops the loop early anymore; only the <code>&lt;= 100</code> sales are still skipped.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>$120</code>, <code>$250</code>, <code>$175</code>, <code>$410</code>, <code>$215</code> — every sale over $100 gets printed now, including <code>$410</code> and <code>$215</code>, since nothing stops the loop early anymore; only the <code>&lt;= 100</code> sales are still skipped.)"</aside>
+</section>
+
+<!-- 35. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Expecting the loop to continue after <code>break</code>, printing <code>60</code> and <code>215</code> too — the single most common misconception. Explicitly confirm with the room that the output has exactly four lines, not more, and ask someone to explain out loud why <code>60</code> and <code>215</code> never appear.</p>
+<p>Confusing which keyword does which — a genuinely common mix-up; if a student swaps them, walk them through re-tracing by hand rather than just naming the correct keyword, since the tracing is what builds real understanding.</p>
+<p>Placing the <code>continue</code> check <em>after</em> the <code>break</code> check — with this data, swapping the order changes nothing (the two conditions can never both be true for one value), but ask the room whether order matters here and why, contrasting with Module 05 Exercise 1's discount tiers, where order <em>did</em> matter.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 36. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 8 min · 0:46–0:54</span>
+<h1><code>while</code> Loop Rewrite</h1>
+<aside class="notes">
+Teaching goal: re-implement Exercise 1's sum using a <code>while</code> loop and a manually managed index — direct, felt comparison of the two loop styles, including the tedium of manual index management that <code>for</code> loops hide.
+Say to the class (verbatim): "Same sum as Exercise 1, same final answer — but built with a <code>while</code> loop instead of a <code>for</code> loop. You're going to feel the difference immediately: <code>while</code> doesn't know how to walk through a list on its own. You have to manage the position yourself, with an index variable."
+</aside>
+</section>
+
+<!-- 37. EXERCISE 6 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>while</code> makes you do by hand what <code>for</code> does for free</h3>
+<div class="concept">
+<div class="concept-lbl">Two things you now have to manage yourself</div>
+<p>An <strong>index</strong> — <code>i = 0</code>, initialized before the loop, a running position counter. And an <strong>explicit increment</strong> — <code>i += 1</code> inside the loop body. A <code>for sale in sales:</code> loop handles both automatically.</p>
+<p><code>i += 1</code> is the line students most often forget — and forgetting it causes an <strong>infinite loop</strong>: <code>i</code> never grows, <code>i &lt; len(sales)</code> stays <code>True</code> forever, the program hangs. Interrupt with <code>Ctrl+C</code>, then point at the missing line.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Exercise 6, condensed. The tedium of manual index management <em>is</em> the lesson — this is intentionally the most tedious exercise in the lab. Don't feel obligated to type every line slowly if the room is already following the accumulator pattern well.</aside>
+</section>
+
+<!-- 38. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+total = 0        # initialize
+i = 0            # initialize the index
+while i &lt; len(sales):
+    total += sales[i]   # update, using the index to look up the value
+    i += 1               # update the index — THIS LINE IS ESSENTIAL
+print(f"Total: ${total}")
+</div>
+<p class="expect">Same final answer as Exercise 1 — <code>$1400</code> — but built the hard way. <code>len(sales)</code> is <code>8</code>; the loop runs for <code>i = 0, 1, ..., 7</code> and stops the moment <code>i</code> reaches <code>8</code>, since <code>8 &lt; 8</code> is <code>False</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>i = 0</code> — a second thing to initialize now: not just the accumulator, but also an <strong>index</strong>, a running position counter starting at the list's first valid position, <code>0</code>.
+- <code>while i &lt; len(sales):</code> — the loop continues as long as this condition stays <code>True</code>. <code>len(sales)</code> is <code>8</code>; the loop runs for <code>i = 0, 1, 2, ..., 7</code> and stops the moment <code>i</code> reaches <code>8</code>, since <code>8 &lt; 8</code> is <code>False</code>.
+- <code>total += sales[i]</code> — unlike the <code>for</code> loop's <code>sale</code> variable (which directly <em>held</em> each value), here we manually <strong>look up</strong> the value at position <code>i</code> using <code>sales[i]</code> — genuinely more work, and worth naming as such.
+- <code>i += 1</code> — <strong>the line students most often forget</strong>, and forgetting it causes an infinite loop: if <code>i</code> never increases, <code>i &lt; len(sales)</code> stays <code>True</code> forever and the program hangs. If it happens live, show how to interrupt it (<code>Ctrl+C</code>), then point at the missing line.
+Have students add a one-line comment answering the exercise's required question: which version — this <code>while</code> loop or Exercise 1's <code>for</code> loop — they'd use in production, and why. Model a strong answer: "The <code>for</code> loop is shorter, and it's impossible to forget to increment — there's no separate index to manage. I'd use <code>while</code> only when I don't know in advance how many times I need to loop (e.g., 'keep asking the user for input until they type quit'), which isn't the situation here."
+Common mistakes: forgetting <code>i += 1</code> (infinite loop); off-by-one from <code>i &lt;= len(sales)</code> instead of <code>i &lt; len(sales)</code> — attempts <code>sales[8]</code>, which doesn't exist (valid indices <code>0</code>–<code>7</code>), raising <code>IndexError: list index out of range</code>. Good moment to connect back to Module 01's "reading an unfamiliar error" skill — have a student read the message and identify what it says.
+Check for understanding (guide, verbatim parenthetical): "What are the <em>minimum</em> two things a <code>while</code> loop needs that a <code>for sale in sales:</code> loop gets for free? (An explicitly initialized index variable, and an explicit increment step inside the loop body — a <code>for</code> loop over a list handles both automatically.)"
+</aside>
+</section>
+
+<!-- 39. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output (identical to Exercise 1)</h3>
+<pre>Total: $1400</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 6 exactly — deliberately identical to Exercise 1, which is the entire point of the comparison. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>i &lt;= len(sales)</code> walks off the end</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 (BROKEN: off-by-one in the while condition) ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+total = 0
+i = 0
+while i &lt;= len(sales):
+    total += sales[i]
+    i += 1
+print(f"Total: ${total}")
+</div>
+<p class="expect">Change <code>&lt;</code> to <code>&lt;=</code> and run it. On the pass where <code>i</code> is <code>8</code>, <code>sales[8]</code> doesn't exist (valid indices are <code>0</code>–<code>7</code>) — Python raises <code>IndexError: list index out of range</code>. Have a student read the error aloud and say what it's telling them.</p>
+<aside class="notes">
+Teaching goal: connect back to Module 01's "reading an unfamiliar error" skill using a real exception.
+Line-by-line: <code>while i &lt;= len(sales):</code> lets the loop run one extra time, at <code>i = 8</code>. <code>sales[8]</code> is out of range for an 8-element list (last valid index is <code>7</code>), so <code>total += sales[i]</code> raises <code>IndexError: list index out of range</code>. The loop never reaches the <code>print</code>.
+Common mistakes: this <em>is</em> the mistake — fix it back to <code>i &lt; len(sales)</code> and re-run to get <code>$1400</code>. The other classic Exercise 6 failure is forgetting <code>i += 1</code> entirely, which hangs the program (infinite loop) rather than raising.
+</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — broken output -->
+<section class="s-out">
+<h3>What the broken version raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 6, in &lt;module&gt;
+    total += sales[i]
+             ~~~~~^^^
+IndexError: list index out of range</pre>
+<aside class="notes">Verified against CPython 3.12.2 (Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match). The file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path on a real machine, and the line number depends on how many blank/comment lines precede the loop — neither is load-bearing. The load-bearing last line is identical: <code>IndexError: list index out of range</code>. Make a student read it, not you.</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">What are the <em>minimum</em> two things a <code>while</code> loop needs that a <code>for sale in sales:</code> loop gets for free?</p>
+<button data-opt="A">A <code>break</code> statement and a <code>continue</code> statement</button>
+<button data-opt="B">A call to <code>len()</code> and a call to <code>range()</code></button>
+<button data-opt="C">An explicitly initialized index variable, and an explicit increment step inside the loop body</button>
+<p class="why" hidden>An explicitly initialized index variable, and an explicit increment step inside the loop body — a <code>for</code> loop over a list handles both automatically.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(An explicitly initialized index variable, and an explicit increment step inside the loop body — a <code>for</code> loop over a list handles both automatically.)"</aside>
+</section>
+
+<!-- 43. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>i += 1</code>, causing an infinite loop — if <code>i</code> never increases, <code>i &lt; len(sales)</code> stays <code>True</code> forever and the program hangs. If it happens live, show <code>Ctrl+C</code> to interrupt, then point at the missing line as the cause.</p>
+<p>Off-by-one errors from an incorrect condition (e.g. <code>i &lt;= len(sales)</code> instead of <code>i &lt; len(sales)</code>) — this attempts to access <code>sales[8]</code>, which doesn't exist (valid indices are <code>0</code> through <code>7</code>), raising <code>IndexError: list index out of range</code>. Good moment to connect back to Module 01's "reading an unfamiliar error" skill.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 44. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 8 min · 0:54–1:02</span>
+<h1>Discount Applied to All Items</h1>
+<aside class="notes">
+Teaching goal: reuse Module 05's tiered-discount <code>if</code>/<code>elif</code>/<code>else</code> logic <em>inside</em> a loop, applying it independently to every element in a list — the exercise that most directly bridges last week's conditionals with this week's loops.
+Say to the class (verbatim): "Last module's tiered discount logic, but instead of running it once for one cart total, we run it once <em>per sale</em> in this list — eight independent discount decisions, one per pass through the loop."
+</aside>
+</section>
+
+<!-- 45. EXERCISE 7 — the idea -->
+<section class="s-idea">
+<h3>The idea — recomputed every pass, and where <code>print()</code> belongs</h3>
+<div class="concept">
+<div class="concept-lbl">Two structural points</div>
+<p>The whole <code>if</code>/<code>elif</code>/<code>else</code> block is <em>inside</em> the loop, so it runs fresh from scratch on every pass, deciding a new <code>discount</code> for each <code>sale</code>. Unlike the accumulators in Exercises 1–4, <code>discount</code> is <strong>not</strong> carried between iterations — it has no memory of the previous sale.</p>
+<p>The <code>print()</code> is <em>inside</em> the loop too — one line of output per sale. Contrast with Exercises 1–4, where <code>print()</code> ran <em>once</em>, after the loop, on an accumulated value. "Inside the loop (one line per item)" vs. "after it (one summary line)" is a real design decision every loop-based script will require.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Exercise 7, condensed. The "does this <code>print()</code> belong inside the loop or after it?" question is genuinely important and worth naming explicitly — both are valid patterns.</aside>
+</section>
+
+<!-- 46. EXERCISE 7 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 7</h3>
+<div class="run" data-lang="python">
+# --- Exercise 7 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+for sale in sales:
+    if sale &gt;= 200:
+        discount = 0.10
+    elif sale &gt;= 100:
+        discount = 0.05
+    else:
+        discount = 0
+    discounted_price = sale * (1 - discount)
+    print(f"${sale} → {discount*100:.0f}% discount → ${discounted_price:.2f}")
+</div>
+<p class="expect">Eight independent discount decisions, one per pass — <code>discount</code> is recomputed from scratch every iteration, not carried over. The guide shows only the first two lines; the full output has all eight, in list order.</p>
+<aside class="notes">
+Line-by-line:
+- The entire <code>if</code>/<code>elif</code>/<code>else</code> block is now <strong>inside</strong> the <code>for</code> loop, indented one level — it runs fresh, from scratch, on every single pass, independently deciding a new <code>discount</code> value for each <code>sale</code>. Unlike the accumulators in Exercises 1–4, <code>discount</code> is <em>not</em> carried over between iterations — it's recomputed every time, with no memory of the previous sale's discount.
+- <code>discounted_price = sale * (1 - discount)</code> — Module 04/05's discount formula, applied per-item inside the loop.
+- The <code>print(...)</code> line runs on every pass too, giving one line of output per sale — contrast with Exercises 1–4, where <code>print()</code> ran <em>once</em>, after the loop, on an accumulated final value. <strong>Does this <code>print()</code> belong inside the loop (one line per item) or after it (one summary line)?</strong> — both are valid patterns, and choosing correctly is a real design decision every future loop-based script will require.
+Common mistakes: writing the <code>if</code>/<code>elif</code>/<code>else</code> block <em>outside</em> the loop by mistake (unindented) — computes <code>discount</code> once, using <code>sale</code>'s <em>last</em> value (<code>215</code>) after the loop finished — a <code>SyntaxError</code>-free but structurally broken script. Reusing a <code>discount</code> name that collides with an accumulator from an earlier exercise still in the same file — once Exercise 6 or 7 begins, think of this file as several logically separate scripts sharing one file.
+Check for understanding (guide, verbatim parenthetical): "How many separate <code>if</code>/<code>elif</code>/<code>else</code> <em>decisions</em> does this script make in total when it runs? (Eight — one fresh decision per sale, not one decision applied to all of them. Confirming this count is a good check that the 'runs fresh every iteration' idea actually landed.)"
+</aside>
+</section>
+
+<!-- 47. EXERCISE 7 — expected output -->
+<section class="s-out">
+<h3>Expected output (all eight lines)</h3>
+<pre>$120 → 5% discount → $114.00
+$80 → 0% discount → $80.00
+$250 → 10% discount → $225.00
+$175 → 5% discount → $166.25
+$90 → 0% discount → $90.00
+$410 → 10% discount → $369.00
+$60 → 0% discount → $60.00
+$215 → 10% discount → $193.50</pre>
+<aside class="notes">The guide prints only the first two lines ("<code>$120 → 5% discount → $114.00</code>" / "<code>$80 → 0% discount → $80.00</code>") and states "Full output has eight lines, one per sale in the original list, in order." All eight are shown here and match a real <code>python3</code> run. Note <code>{discount*100:.0f}</code> renders <code>5</code> / <code>0</code> / <code>10</code> even though <code>0.05*100</code> is <code>5.000000000000001</code> internally. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 48. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">How many separate <code>if</code>/<code>elif</code>/<code>else</code> <em>decisions</em> does this script make in total when it runs?</p>
+<button data-opt="A">One — the decision is made once and applied to all eight sales</button>
+<button data-opt="B">Eight — one fresh decision per sale</button>
+<button data-opt="C">Three — one per branch (<code>if</code>, <code>elif</code>, <code>else</code>)</button>
+<p class="why" hidden>Eight — one fresh decision per sale, not one decision applied to all of them. Confirming this count is a good check that the "runs fresh every iteration" idea actually landed.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Eight — one fresh decision per sale, not one decision applied to all of them. Confirming this count is a good check that the 'runs fresh every iteration' idea actually landed.)"</aside>
+</section>
+
+<!-- 49. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing the <code>if</code>/<code>elif</code>/<code>else</code> block <em>outside</em> the loop by mistake (unindented) — this computes a <code>discount</code> once, using whatever <code>sale</code> happened to hold after the loop finished (its <em>last</em> value, <code>215</code>), and then applies that same single discount to nothing further, since the loop already ended — a <code>SyntaxError</code>-free but structurally broken script, worth tracing through carefully if it happens.</p>
+<p>Reusing a <code>discount</code> variable name that collides with an accumulator from an earlier exercise still in the same file — a good moment to reinforce that once Exercise 6 or 7 begins, this file should really be thought of as several logically separate scripts sharing one file, and variable names from one exercise's block can silently leak into the next.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 50. STRETCH 1 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 · 8 min · 1:02–1:10</span>
+<h1>Running Total Report</h1>
+<aside class="notes">
+Teaching goal: a bank-statement-style running total — print the accumulator's value <em>during</em> the loop, at every step, not just at the end — plus a genuinely interesting discussion point about what "count how many times it crossed $500" even means for strictly increasing data.
+Say to the class (verbatim): "One more accumulator variation: print the running total after <em>every single</em> transaction, like a bank statement, instead of only printing the final sum once at the end."
+</aside>
+</section>
+
+<!-- 51. STRETCH 1 — the idea -->
+<section class="s-idea">
+<h3>The idea — a flag is a new accumulator shape</h3>
+<div class="concept">
+<div class="concept-lbl">What's new here</div>
+<p><code>running_total += sale</code> then immediately <code>print(...)</code> <em>inside</em> the loop — the printed value updates on every pass, unlike Exercise 1 where the total was revealed once at the end.</p>
+<p><code>crossed_500</code> is a <strong>flag</strong>: a boolean that starts <code>False</code> and flips to <code>True</code> the first (and only the first) time the total exceeds $500. Not a running sum or a count of values — a one-time "has this happened yet" tracker. Because every sale is positive, <code>running_total</code> only ever goes up, so it can cross $500 exactly once — <code>crossings</code> will always be <code>1</code> for this dataset.</p>
+</div>
+<aside class="notes">Worth raising as an explicit discussion point: since every sale is positive, <code>running_total</code> is monotonically increasing. Ask the room: "under what circumstances could this count be something other than 1?" (If the list contained negative values — refunds/returns — the running total could dip back below $500 after crossing, then cross again. With all-positive data the flag guard is still good practice, but the "count" is a bit of a red herring on this dataset — a good moment for honest critique of an exercise's design.)</aside>
+</section>
+
+<!-- 52. STRETCH 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 1</h3>
+<div class="run" data-lang="python">
+# --- Stretch 1 ---
+sales = [120, 80, 250, 175, 90, 410, 60, 215]
+running_total = 0
+crossed_500 = False
+crossings = 0
+
+for sale in sales:
+    running_total += sale
+    print(f"${sale} -> running total: ${running_total}")
+    if running_total &gt; 500 and not crossed_500:
+        crossings += 1
+        crossed_500 = True
+
+print(f"Number of transactions that first pushed the running total above $500: {crossings}")
+</div>
+<p class="expect">Without the <code>not crossed_500</code> guard, <code>crossings</code> would increment on <em>every</em> pass after the total first crosses $500 (five of the eight passes), reporting <code>5</code> instead of <code>1</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>running_total += sale</code> then immediately <code>print(...)</code> — <strong>inside the loop</strong>, so the printed value updates on every single pass, unlike Exercise 1 where the total was only revealed once, at the very end.
+- <code>crossed_500 = False</code> — a <strong>flag</strong> variable: a boolean that starts <code>False</code> and gets set to <code>True</code> the first time (and only the first time) the running total exceeds $500. A new accumulator <em>shape</em> — not a running sum or count of values, but a one-time "has this happened yet" tracker.
+- <code>if running_total &gt; 500 and not crossed_500:</code> — combines a numeric check with the flag, using <code>and not</code> (Module 05's Exercise 6 pattern) so this only fires once — without the <code>not crossed_500</code> guard, <code>crossings</code> would increment on <em>every remaining pass</em> once the total first crosses $500, since <code>running_total &gt; 500</code> stays <code>True</code> for every sale after that point.
+- Discussion point: every sale is positive, so <code>running_total</code> is monotonically increasing — it can only cross $500 exactly once, which is why <code>crossings</code> always reports <code>1</code> here. Ask: "under what circumstances could this count be something other than 1?" (Negative values — refunds/returns — let the total dip back below $500 and cross again.)
+Common mistakes: omitting the <code>crossed_500</code> flag and just counting every pass where <code>running_total &gt; 500</code> — overcounts badly (five of the eight passes have a running total over $500, so <code>crossings</code> would report <code>5</code> instead of <code>1</code>).
+Check for understanding (guide, verbatim parenthetical): "Which specific sale caused the running total to first cross $500? ... it's the <strong>fourth</strong> sale, <code>$175</code>, that pushes the running total over $500, from <code>$450</code> to <code>$625</code>."
+</aside>
+</section>
+
+<!-- 53. STRETCH 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>$120 -> running total: $120
+$80 -> running total: $200
+$250 -> running total: $450
+$175 -> running total: $625
+$90 -> running total: $715
+$410 -> running total: $1125
+$60 -> running total: $1185
+$215 -> running total: $1400
+Number of transactions that first pushed the running total above $500: 1</pre>
+<aside class="notes">Matches the guide's Expected output for Stretch 1 exactly. The running total crosses $500 on the fourth sale (<code>$175</code>, <code>$450 → $625</code>); the flag guard means <code>crossings</code> stays <code>1</code> even though five later passes also have <code>running_total &gt; 500</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 54. STRETCH 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Which specific sale caused the running total to first cross $500? (Trace it, don't guess.)</p>
+<button data-opt="A">The third sale, <code>$250</code> — it takes the total from <code>$200</code> to <code>$450</code></button>
+<button data-opt="B">The sixth sale, <code>$410</code> — the biggest single sale in the list</button>
+<button data-opt="C">The fourth sale, <code>$175</code> — it takes the total from <code>$450</code> to <code>$625</code></button>
+<p class="why" hidden>Trace it: <code>$120→$120</code>, <code>$80→$200</code>, <code>$250→$450</code>, <code>$175→$625</code> — it's the fourth sale, <code>$175</code>, that pushes the running total over $500, from <code>$450</code> to <code>$625</code>. An easy one to get wrong by guessing instead of tracing.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "Have the room trace it together rather than eyeballing it: <code>$120→$120</code>, <code>$80→$200</code>, <code>$250→$450</code>, <code>$175→$625</code> — it's the <strong>fourth</strong> sale, <code>$175</code>, that pushes the running total over $500, from <code>$450</code> to <code>$625</code>."</aside>
+</section>
+
+<!-- 55. STRETCH 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Omitting the <code>crossed_500</code> flag entirely and just counting every pass where <code>running_total &gt; 500</code> — this overcounts badly (five of the eight passes have a running total over $500, so <code>crossings</code> would incorrectly report <code>5</code> instead of <code>1</code>), a good concrete illustration of why the flag is necessary.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Stretch 1.</aside>
+</section>
+
+<!-- 56. STRETCH 2 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 2 Preview · 1:10–1:15</span>
+<h1>Nested Loops — preview / take-home</h1>
+<aside class="notes">
+Frame as a quick preview if time is short — this is a separate topic (loops <em>inside</em> loops) rather than a variation on the accumulator pattern, so it's optional take-home content.
+Say to the class (verbatim): "One loop inside another — a nested loop. Classic first example: a multiplication table. For every row <code>i</code> from 1 to 5, and for every column <code>j</code> from 1 to 5, print <code>i × j</code>. That's 25 total multiplications from just two short loops."
+State the business extension verbally even without coding it: "swap the multiplication table for 5 products × 3 quantity tiers, and you have a full price list generated by the exact same nested-loop shape — the answer key has the working version if you want to explore it before next class."
+</aside>
+</section>
+
+<!-- 57. STRETCH 2 — the idea -->
+<section class="s-idea">
+<h3>The idea — a loop inside a loop</h3>
+<div class="concept">
+<div class="concept-lbl">Read the shape</div>
+<p>The outer loop runs once per <strong>row</strong> (<code>i</code> from 1 to 5). For each row, the inner loop runs completely — once per <strong>column</strong> (<code>j</code> from 1 to 5) — before the outer loop moves on. 5 × 5 = 25 inner iterations total.</p>
+<p><code>row += f"{i*j:4}"</code> builds one row as a string (the <code>:4</code> pads each number to 4 characters so columns line up), and <code>print(row)</code> — <em>outside</em> the inner loop, <em>inside</em> the outer — emits it once per row.</p>
+</div>
+<aside class="notes">Business-relevant extension, stated verbally: swap the multiplication table for 5 products × 3 quantity tiers and the same nested-loop shape generates a full price list. Appendix A has the working price-list version. This whole segment is optional take-home — a separate topic from the accumulator pattern.</aside>
+</section>
+
+<!-- 58. STRETCH 2 — live code -->
+<section class="s-code">
+<h3>Live demo (if time allows) — Stretch 2</h3>
+<div class="run" data-lang="python">
+for i in range(1, 6):
+    row = ""
+    for j in range(1, 6):
+        row += f"{i*j:4}"
+    print(row)
+</div>
+<p class="expect">Five rows, five columns, right-aligned in 4-character fields. The inner loop finishes entirely for each value of <code>i</code> before <code>print(row)</code> runs and the outer loop advances.</p>
+<aside class="notes">
+Line-by-line:
+- <code>for i in range(1, 6):</code> — the outer loop, <code>i</code> taking <code>1, 2, 3, 4, 5</code> (<code>range(1, 6)</code> stops before <code>6</code>).
+- <code>row = ""</code> — reset the row string at the start of each outer pass (an accumulator, re-initialized once per row — same "initialize before the loop that updates it" rule as Exercise 1).
+- <code>for j in range(1, 6):</code> — the inner loop, running fully (<code>j = 1..5</code>) for every single value of <code>i</code>.
+- <code>row += f"{i*j:4}"</code> — append <code>i*j</code> formatted into a 4-wide field so columns align.
+- <code>print(row)</code> — outside the inner loop, inside the outer: one printed line per row.
+Common mistakes: putting <code>print(row)</code> inside the inner loop (prints a partial row 25 times); forgetting to reset <code>row = ""</code> each outer pass (every row keeps growing).
+No "Check for understanding" in the guide for this segment — the quiz is omitted here, matching the lighter treatment stretch/preview segments get.
+</aside>
+</section>
+
+<!-- 59. STRETCH 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>   1   2   3   4   5
+   2   4   6   8  10
+   3   6   9  12  15
+   4   8  12  16  20
+   5  10  15  20  25</pre>
+<aside class="notes">Matches the guide's Stretch 2 demo code exactly (each cell right-aligned in a 4-character field via <code>f"{i*j:4}"</code>). Verified against CPython 3.12.2. The guide's Appendix A also has a price-list variant using the same nested shape — take-home only.</aside>
+</section>
+
+<!-- 60. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>Explain the accumulator pattern as if to a classmate who missed lecture.</li>
+<li><code>while</code> loop vs <code>for</code> loop — code length and tradeoffs.</li>
+<li>A real dataset from your major, with a loop-based summary statistic — what's in the list, what gets accumulated, what gets printed at the end.</li>
+</ul>
+<aside class="notes">
+Strong-answer guidance (guide):
+1. A strong answer names all three steps explicitly (initialize before, update inside, use after) and explains <em>why</em> each matters, not just what each does — specifically, why initializing before the loop and using after the loop are both required for correctness, not just style.
+2. Expect students to note the <code>while</code> version needed an explicit index and increment, and is more error-prone (infinite loops, off-by-one) — but is also more flexible for situations where you don't know the loop count in advance.
+3. Push for specificity: what's in the list, what gets accumulated, what gets printed at the end. "I'd use a loop for my finance internship" is not a complete answer; "a list of daily stock closing prices, accumulating a running total to compute a monthly average" is.
+</aside>
+</section>
+
+<!-- 61. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>sales_loop.py</code></li>
+<li>Contains Exercises 1–7, each clearly separated</li>
+<li>Uses the accumulator pattern correctly (initialize before, update inside, use after) throughout</li>
+<li><code>break</code>/<code>continue</code> used correctly in Exercise 5</li>
+<li>Script runs top to bottom with no errors</li>
+</ul>
+<aside class="notes">Review the checklist together. Preview Module 07 (verbatim): "Every exercise today repeated a very similar block of code — declare some variables, loop, accumulate. Next module introduces functions, which let you package that logic up once and reuse it by name, instead of retyping it every time you need it."</aside>
+</section>
+
+<!-- 62. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 6</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w06.md (Week 6 facilitation guide — "Sales Loop — Sum, Average, Max"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
