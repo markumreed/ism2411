@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 5 — Tiered Discount Calculator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 5 &nbsp;·&nbsp; Module 05 &nbsp;·&nbsp; Unit 1 &nbsp;·&nbsp; Foundations</p>
+<h1>Tiered Discount Calculator</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Intro</span>
+<span class="t-item"><strong>0:05–0:15</strong> Ex 1 — Discount Tiers</span>
+<span class="t-item"><strong>0:15–0:21</strong> Ex 2 — Approval Flag</span>
+<span class="t-item"><strong>0:21–0:29</strong> Ex 3 — Combine with <code>and</code></span>
+<span class="t-item"><strong>0:29–0:37</strong> Ex 4 — Refactor Nested <code>if</code></span>
+<span class="t-item"><strong>0:37–0:45</strong> Ex 5 — Anomaly Flagging</span>
+<span class="t-item"><strong>0:45–0:53</strong> Ex 6 — <code>or</code> and <code>not</code></span>
+<span class="t-item"><strong>0:53–1:05</strong> Stretch 1 — Pricing Engine</span>
+<span class="t-item"><strong>1:05–1:15</strong> Stretch 2 + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along. Every module up to this point produced a boolean (<code>is_premium</code>, <code>product_a_wins</code>) and then just <em>printed</em> it. This is the module where booleans finally start controlling what the program <em>does</em> — <code>if</code>/<code>elif</code>/<code>else</code> branching. This is arguably the single most important control-flow concept in the entire course: nearly every remaining module depends on students being fluent with conditionals, and the most common real bug category from here forward is "the wrong branch ran" or "no branch ran when one should have." Budget real time for tracing execution by hand (Exercise 1's reflection question asks for exactly this) — it is the actual skill, more than typing the syntax correctly.
+Prerequisites: Modules 01–04 — variables, types, f-strings, arithmetic/comparison/logical operators. Submission: <code>discount.py</code> to Canvas. Guide uses <code>total = 250</code> throughout for consistency with the lab page's own expected output. All runnable-block output in this deck verified against CPython 3.12.2 (== Pyodide 0.26.4).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>discount.py</code> starts empty except for the header comment; build every exercise live</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Modules 01–04: variables, types, f-strings, arithmetic / comparison / logical operators</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required) + Stretch 1 / 2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>discount.py</code> to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week05_lab. Class length 75 minutes, format live code-along. Six required exercises plus Stretch 1 provide comprehensive coverage; Stretch 2 (tax brackets) is intentionally positioned as a preview/take-home rather than full live-coded content, since marginal taxation is genuinely tricky to build correctly in real time. Before class: work through Stretch 2 yourself; decide test values in advance — this guide uses <code>total = 250</code> throughout so students aren't recomputing a new mental model each exercise.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Write a correct <code>if</code>/<code>elif</code>/<code>else</code> chain and explain why <strong>only one branch ever runs</strong>, even when a later condition would also technically be true.</li>
+<li>Trace a value through a conditional chain by hand, stating out loud which branch it lands in and why.</li>
+<li>Combine two conditions with <code>and</code> inside a single <code>if</code>, and distinguish that from two separate, independent <code>if</code> statements.</li>
+<li>Refactor a nested <code>if</code> into a flat one using <code>and</code>, and explain why the flat version is easier to read and test.</li>
+<li>Use <code>or</code> and <code>not</code> to express "either/or" and "unless" business rules.</li>
+</ul>
+<aside class="notes">The verbs are lifted verbatim from the guide's Learning Objectives. Objective 1 (only one branch runs, checked top to bottom) is the conceptual spine — Exercise 1 establishes it, and every later exercise either reinforces it or deliberately contrasts with it (Stretch 1 is the case where independent <code>if</code>s are <em>correct</em> and <code>elif</code> would be the bug).</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Intro — booleans finally control what runs</td><td>5</td></tr>
+<tr><td>0:05–0:15</td><td>Exercise 1 — Discount Tiers</td><td>10</td></tr>
+<tr><td>0:15–0:21</td><td>Exercise 2 — Approval Flag</td><td>6</td></tr>
+<tr><td>0:21–0:29</td><td>Exercise 3 — Combine Conditions with <code>and</code></td><td>8</td></tr>
+<tr><td>0:29–0:37</td><td>Exercise 4 — Refactor a Nested <code>if</code></td><td>8</td></tr>
+<tr><td>0:37–0:45</td><td>Exercise 5 — Anomaly Flagging</td><td>8</td></tr>
+<tr><td>0:45–0:53</td><td>Exercise 6 — Boolean Logic: <code>or</code> and <code>not</code></td><td>8</td></tr>
+<tr><td>0:53–1:05</td><td>Stretch 1 — Full Pricing Engine</td><td>12</td></tr>
+<tr><td>1:05–1:15</td><td>Stretch 2 Preview — Tax Brackets + Wrap-Up</td><td>10</td></tr>
+</tbody>
+</table>
+<aside class="notes">Six required exercises plus Stretch 1 fill the full 75 minutes at a normal pace. Stretch 2 is framed as a preview/take-home, not full live-coded content. If a section moves unusually fast, Appendix B has two extra practice items (shipping-cost tiers; one more <code>and</code>/<code>or</code>/<code>not</code> combination).</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>Booleans finally control what runs</h1>
+<aside class="notes">
+Teaching goal: frame the single biggest jump in what students' programs can do so far — a boolean now <em>decides which block of code runs</em>, and in a chain of <code>elif</code>s exactly one branch runs.
+Say to the class (verbatim): "Every module so far has computed a <code>True</code> or <code>False</code> and then just printed it. Today, for the first time, that boolean actually <em>does</em> something — it decides which block of code runs. This is <code>if</code>/<code>elif</code>/<code>else</code>, and it's the single biggest jump in what your programs can do so far. Watch closely for one specific idea: in a chain of <code>elif</code>s, exactly <strong>one</strong> branch runs, even if a later condition would also be true. That's not obvious the first time you see it, and it's the source of most conditional bugs."
+Do: open <code>discount.py</code>, type the header — <code># discount.py</code> / <code># ISM2411 Module 05 Lab — Tiered Discount Calculator</code>.
+Common mistakes: none yet — this is framing.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 10 min · 0:05–0:15</span>
+<h1>Discount Tiers</h1>
+<aside class="notes">
+Teaching goal: the core <code>if</code>/<code>elif</code>/<code>else</code> pattern, and the crucial "only one branch runs, checked top to bottom" rule.
+Say to the class (verbatim): "A cart total maps to a discount tier: 15% off at $500 or more, 10% at $200 or more, 5% at $100 or more, otherwise nothing. Notice the tiers are checked from <em>highest to lowest</em> — that ordering is not an accident, and I want you to predict what breaks if we reverse it."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python" data-stdin="250">
+# --- Exercise 1 ---
+total = float(input("Enter cart total: $"))
+
+if total &gt;= 500:
+    discount = 0.15
+elif total &gt;= 200:
+    discount = 0.10
+elif total &gt;= 100:
+    discount = 0.05
+else:
+    discount = 0
+
+final = total * (1 - discount)
+print(f"Discount: {discount*100:.0f}%")
+print(f"Final price: ${final:.2f}")
+</div>
+<p class="expect">Stdin is seeded with <code>250</code> — the guide's standard test value. Run it, then re-run with <code>600</code> and <code>50</code> in the stdin box and have the room predict each output first.</p>
+<aside class="notes">
+Line-by-line:
+- <code>if total &gt;= 500:</code> — the first condition checked. If a student's cart total is, say, <code>600</code>, this is <code>True</code>, and Python runs the indented block right below it (<code>discount = 0.15</code>) and then <strong>skips every remaining <code>elif</code>/<code>else</code> in the chain entirely</strong> — it does not go on to check whether <code>total &gt;= 200</code> is <em>also</em> true (it is, but it's never even evaluated).
+- <code>elif total &gt;= 200:</code> — "else if": only checked if the <code>if</code> above was <code>False</code>. This is the line to slow down on: if <code>total = 250</code>, the first check (<code>&gt;= 500</code>) is <code>False</code>, so Python moves to this line, finds <code>250 &gt;= 200</code> is <code>True</code>, sets <code>discount = 0.10</code>, and stops — the <code>&gt;= 100</code> check below never runs, even though <code>250 &gt;= 100</code> is also technically true.
+- <code>elif total &gt;= 100:</code> — same pattern, one tier lower.
+- <code>else:</code> — the catch-all: runs only if every condition above was <code>False</code>. No condition needed here — <code>else</code> means "everything else."
+- <code>final = total * (1 - discount)</code> — same discounted-price formula pattern as Module 04, now driven by a <code>discount</code> value chosen dynamically instead of hardcoded.
+- The indentation itself is not cosmetic — say this explicitly: <strong>the colon and the indented block are what tell Python which lines belong to which branch.</strong> A student whose editor auto-indents inconsistently will hit real, confusing errors; worth a 15-second aside now, since indentation-sensitive syntax is new today.
+Check for understanding (guide, verbatim parenthetical): "For <code>total = 500</code> exactly — right at a tier boundary — which discount applies, and why? (15%, because <code>&gt;=</code> includes the boundary value itself; this is worth testing explicitly since boundary conditions are a classic source of off-by-one-style bugs.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output (stdin <code>250</code>)</h3>
+<pre>Enter cart total: $250
+Discount: 10%
+Final price: $225.00</pre>
+<aside class="notes">The first line is the echoed prompt + seeded stdin answer as it renders in the Pyodide input box; under a headless <code>python3</code> pipe the prompt has no trailing newline and the answer is not echoed — not load-bearing. The load-bearing lines are the last two: <code>Discount: 10%</code> / <code>Final price: $225.00</code>, which match the guide's "Run it with <code>total = 250</code>. Expected output" exactly. Re-runs: <code>600</code> &rarr; <code>Discount: 15%</code> / <code>Final price: $510.00</code>; <code>50</code> &rarr; <code>Discount: 0%</code> / <code>Final price: $50.00</code>.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — four separate <code>if</code>s instead of <code>elif</code></h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 (BROKEN: four independent if statements, not if/elif/else) ---
+total = 600
+
+if total &gt;= 500:
+    discount = 0.15
+if total &gt;= 200:
+    discount = 0.10
+if total &gt;= 100:
+    discount = 0.05
+if total &lt; 100:
+    discount = 0
+
+final = total * (1 - discount)
+print(f"Discount: {discount*100:.0f}%")
+print(f"Final price: ${final:.2f}")
+</div>
+<p class="expect">Write four independent <code>if</code>s, run with <code>total = 600</code>, and let the room see the wrong output — <strong>5%, not 15%</strong>. This single demonstration does more for understanding <code>elif</code> than any amount of explanation.</p>
+<aside class="notes">
+Teaching goal: show the single most consequential mistake in the whole lab — it <em>looks</em> like it should work but silently doesn't.
+Line-by-line: with <code>total = 600</code>, all three of <code>total &gt;= 500</code>, <code>total &gt;= 200</code>, and <code>total &gt;= 100</code> are <code>True</code>, so all three <code>discount = ...</code> lines run in sequence, and <code>discount</code> ends up holding the <em>last</em> one checked (<code>0.05</code>), not the intended <code>0.15</code>. Output: <code>Discount: 5%</code> / <code>Final price: $570.00</code>.
+Common mistakes: this <em>is</em> the mistake — deliberately show it live, then fix it back to <code>if</code>/<code>elif</code>/<code>elif</code>/<code>else</code> and re-run. Related: ordering the tiers low-to-high instead of high-to-low — with <code>total = 600</code> and tiers checked <code>&gt;= 100</code> first, the <code>elif</code> chain stops at the 5% tier, never reaching 15% at all. Ask the room to explain why order matters, given what they just learned about <code>elif</code> short-circuiting.
+</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — broken output -->
+<section class="s-out">
+<h3>What the broken version prints</h3>
+<pre>Discount: 5%
+Final price: $570.00</pre>
+<aside class="notes">Verified against CPython 3.12.2. The intended answer for <code>total = 600</code> is <code>Discount: 15%</code> / <code>Final price: $510.00</code>; the four-separate-<code>if</code> version silently produces <code>5%</code> / <code>$570.00</code> instead, because the last true <code>if</code> (<code>total &gt;= 100</code>) overwrites <code>discount</code> last. No crash — a pure "silent wrong answer" bug.</aside>
+</section>
+
+<!-- 11. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">For <code>total = 500</code> exactly — right at a tier boundary — which discount applies, and why?</p>
+<button data-opt="A">10% — the <code>&gt;= 500</code> tier needs a total <em>above</em> 500</button>
+<button data-opt="B">15% — <code>&gt;=</code> includes the boundary value itself</button>
+<button data-opt="C">It depends which <code>if</code> was written first</button>
+<p class="why" hidden>15%, because <code>&gt;=</code> includes the boundary value itself. This is worth testing explicitly since boundary conditions are a classic source of off-by-one-style bugs.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(15%, because <code>&gt;=</code> includes the boundary value itself; this is worth testing explicitly since boundary conditions are a classic source of off-by-one-style bugs.)"</aside>
+</section>
+
+<!-- 12. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing four separate <code>if</code> statements instead of <code>if</code>/<code>elif</code>/<code>elif</code>/<code>else</code> — the single most consequential mistake in the whole lab, because it <em>looks</em> like it should work but silently doesn't. With <code>total = 600</code>, all three conditions are <code>True</code>, so <code>discount</code> ends up holding the last one checked (<code>0.05</code>), not <code>0.15</code>. Demonstrate it live.</p>
+<p>Ordering the tiers low-to-high instead of high-to-low — with <code>total = 600</code> and <code>&gt;= 100</code> checked first, the <code>elif</code> chain stops at the 5% tier and never reaches the 15% tier. Have the room explain why order matters, given <code>elif</code> short-circuiting.</p>
+</div>
+<aside class="notes">Both mistakes run without crashing — the "silent wrong answer" category. The four-separate-<code>if</code> demo does more for understanding <code>elif</code> than any explanation.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 6 min · 0:15–0:21</span>
+<h1>Approval Flag</h1>
+<aside class="notes">
+Teaching goal: a second, independent <code>if</code>/<code>else</code> decision, based on a value computed by the first one — reinforcing that conditionals can chain across multiple decisions, not just within one <code>elif</code> block.
+Say to the class (verbatim): "Second, separate decision: does this order need manager approval? Notice this is a brand new <code>if</code>/<code>else</code>, not another <code>elif</code> glued onto the first one — it's checking something completely different."
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 ---
+final = 637.50   # continues from Exercise 1's script
+
+if final &gt; 1000:
+    status = "manager_approval_required"
+else:
+    status = "auto_approved"
+
+print(f"Status: {status}")
+</div>
+<p class="expect">The guide runs this with <code>final = 637.50</code>, continuing from Exercise 1. (Exercise 1 with <code>total = 250</code> actually leaves <code>final = 225.00</code> — either value is well under the 1000 boundary, so the status is the same.)</p>
+<aside class="notes">
+Line-by-line:
+- <code>if final &gt; 1000:</code> — this uses <code>final</code>, the value <em>computed</em> by Exercise 1's block, not user input directly — point out explicitly that this is a fresh, independent <code>if</code>/<code>else</code>, evaluating a different question about the same underlying transaction. Each <code>.run</code> block here starts fresh, so <code>final</code> is re-seeded at the top; in the real <code>discount.py</code> it is already in scope from Exercise 1.
+- Two branches only (<code>if</code>/<code>else</code>, no <code>elif</code>) — since there are only two possible outcomes here, not three or four, there's no need for <code>elif</code> at all. Say explicitly: <strong>use exactly as many branches as there are genuinely distinct outcomes</strong> — two outcomes means <code>if</code>/<code>else</code>, three or more means <code>elif</code> chains.
+- Guide disclosure: the guide's stated continuation value is <code>final = 637.50</code>; Exercise 1's own arithmetic for <code>total = 250</code> gives <code>225.00</code>. Both are &lt; 1000, so <code>status = "auto_approved"</code> either way, matching the guide's Expected output.
+Common mistakes: writing <code>elif</code> here instead of a fresh <code>if</code>, mistakenly trying to chain it onto Exercise 1's block — this either causes a <code>SyntaxError</code> (if the previous block already had an <code>else</code>, since <code>elif</code>/<code>else</code> cannot follow another <code>else</code>) or silently attaches this check to the wrong logical group.
+Check for understanding (guide, verbatim parenthetical): "What value of <code>final</code> is the exact boundary between the two statuses, and which side does it fall on? (<code>1000.00</code> itself is <code>auto_approved</code>, since the condition is strictly <code>&gt; 1000</code>, not <code>&gt;=</code> — a nice contrast with Exercise 1's <code>&gt;=</code> tiers, worth naming as a deliberate difference to read carefully.)"
+</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Status: auto_approved</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 2 exactly. <code>637.50 &gt; 1000</code> is <code>False</code>, so the <code>else</code> branch sets <code>status = "auto_approved"</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">What value of <code>final</code> is the exact boundary between the two statuses, and which side does it fall on?</p>
+<button data-opt="A"><code>1000.00</code> itself is <code>auto_approved</code> — the condition is strictly <code>&gt; 1000</code></button>
+<button data-opt="B"><code>1000.00</code> itself is <code>manager_approval_required</code> — <code>&gt;</code> includes the boundary</button>
+<button data-opt="C">There is no single boundary value</button>
+<p class="why" hidden><code>1000.00</code> itself is <code>auto_approved</code>, since the condition is strictly <code>&gt; 1000</code>, not <code>&gt;=</code> — a nice contrast with Exercise 1's <code>&gt;=</code> tiers, worth naming as a deliberate difference to read carefully.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>1000.00</code> itself is <code>auto_approved</code>, since the condition is strictly <code>&gt; 1000</code>, not <code>&gt;=</code> — a nice contrast with Exercise 1's <code>&gt;=</code> tiers, worth naming as a deliberate difference to read carefully.)"</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>elif</code> here instead of a fresh <code>if</code>, mistakenly trying to chain it onto Exercise 1's block — this either causes a <code>SyntaxError</code> (<code>elif</code>/<code>else</code> cannot follow another <code>else</code>) or silently attaches this check to the wrong logical group. Flag explicitly: this is a <strong>new decision about a new question</strong>, not a continuation of the discount-tier decision.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 8 min · 0:21–0:29</span>
+<h1>Combine Conditions with <code>and</code></h1>
+<aside class="notes">
+Teaching goal: put two conditions inside a <em>single</em> <code>if</code> using <code>and</code>, and connect this directly back to Module 04's <code>and</code> truth-table work — now controlling a branch instead of just producing a printed boolean.
+Say to the class (verbatim): "South-region orders get an extra 2% off, but only on top of an existing tier discount — not as a replacement, not for everyone. Two conditions, joined with <code>and</code>, inside one <code>if</code>."
+</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>and</code> gating a branch, <code>+=</code> stacking on top</h3>
+<div class="concept">
+<div class="concept-lbl">Say it once, explicitly</div>
+<p><code>if region == "South" and total &gt;= 100:</code> — both conditions must be <code>True</code> for the block to run. "Is the region South, <em>and</em>, is the total at least $100 — both, or neither branch runs."</p>
+<p><code>discount += 0.02</code> is shorthand for <code>discount = discount + 0.02</code>. It <strong>adds to</strong> whatever <code>discount</code> was already set to by Exercise 1's tier logic — "on top of," not "instead of." This line depends on <code>discount</code> already existing with a tier value in it.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for the <code>and</code> condition plus its explicit note on <code>+=</code> as accumulation. Order matters: this exercise's code runs <em>after</em> Exercise 1's tier block has already set <code>discount</code>.</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — live code (South) -->
+<section class="s-code">
+<h3>Live-code — Exercise 3 (<code>region = "South"</code>)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 (continues Exercise 1: total = 250 sets discount = 0.10) ---
+total = 250
+discount = 0.10
+
+region = "South"   # for live testing; normally: input("Region: ")
+
+if region == "South" and total &gt;= 100:
+    discount += 0.02
+    print("Region bonus applied: additional 2% off")
+
+final = total * (1 - discount)
+print(f"Final discount: {discount*100:.0f}%")
+print(f"Final price: ${final:.2f}")
+</div>
+<p class="expect">Continuing from Exercise 1's 10% tier for <code>total = 250</code>. <code>region</code> is hardcoded here for live testing; the submitted script uses <code>input("Region: ")</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>if region == "South" and total &gt;= 100:</code> — both conditions must be <code>True</code> for this block to run, exactly the <code>and</code> truth table from Module 04, now gating a branch instead of just being printed.
+- <code>discount += 0.02</code> — <code>+=</code> is shorthand for <code>discount = discount + 0.02</code>; this <strong>adds to</strong> whatever <code>discount</code> was already set to by Exercise 1's tier logic, rather than replacing it — say this explicitly, since it's the entire point of "on top of," not "instead of."
+- This exercise's code runs <em>after</em> Exercise 1's tier block has already set <code>discount</code> — order matters: this line depends on <code>discount</code> already existing with a tier value in it. In the deck the two values are re-seeded at the top so the block is standalone.
+Common mistakes: writing this as two separate/nested <code>if</code> statements instead of one combined condition — not wrong, exactly (same result), but it's a deliberate setup for Exercise 4; if you see it, say "hold that thought." Also testing only with <code>region = "South"</code> — have the room also try <code>region = "North"</code> and confirm the bonus line does <em>not</em> print.
+Check for understanding (guide, verbatim parenthetical): "If <code>total = 50</code> and <code>region = 'South'</code>, does the bonus apply? (No — <code>total &gt;= 100</code> is <code>False</code>, so <code>and</code> makes the whole condition <code>False</code> regardless of region; a low-cart South order gets no discount at all under Exercise 1's tiers, so there's nothing to bonus on top of.)"
+</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — expected output (South) -->
+<section class="s-out">
+<h3>Expected output (<code>region = "South"</code>)</h3>
+<pre>Region bonus applied: additional 2% off
+Final discount: 12%
+Final price: $220.00</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 3 (continuing from Exercise 1's 10% tier). <code>discount = 0.10 + 0.02 = 0.12</code>; <code>final = 250 * (1 - 0.12) = 220.00</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — live code (North) -->
+<section class="s-code">
+<h3>Live-code — Exercise 3 (<code>region = "North"</code> — bonus must NOT print)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 (same script, region = "North") ---
+total = 250
+discount = 0.10
+
+region = "North"
+
+if region == "South" and total &gt;= 100:
+    discount += 0.02
+    print("Region bonus applied: additional 2% off")
+
+final = total * (1 - discount)
+print(f"Final discount: {discount*100:.0f}%")
+print(f"Final price: ${final:.2f}")
+</div>
+<p class="expect">Run this immediately after the South version so the <code>and</code> is visibly doing real work in both directions — the bonus line is gone and the discount stays at the tier's 10%.</p>
+<aside class="notes">
+<code>region == "South"</code> is <code>False</code>, so <code>and</code> short-circuits and the whole condition is <code>False</code> — the block is skipped entirely, the "Region bonus applied" line never prints, and <code>discount</code> stays at Exercise 1's <code>0.10</code>. This is the "test in both directions" step the guide asks for.
+</aside>
+</section>
+
+<!-- 23. EXERCISE 3 — expected output (North) -->
+<section class="s-out">
+<h3>Expected output (<code>region = "North"</code>)</h3>
+<pre>Final discount: 10%
+Final price: $225.00</pre>
+<aside class="notes">Verified against CPython 3.12.2. No "Region bonus applied" line — the <code>if</code> block was skipped. <code>discount</code> stays <code>0.10</code>; <code>final = 250 * 0.90 = 225.00</code>, identical to Exercise 1's result for <code>total = 250</code>.</aside>
+</section>
+
+<!-- 24. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>total = 50</code> and <code>region = 'South'</code>, does the bonus apply?</p>
+<button data-opt="A">Yes — the region is South, and that's the condition that matters</button>
+<button data-opt="B">No — <code>total &gt;= 100</code> is <code>False</code>, so <code>and</code> makes the whole condition <code>False</code></button>
+<button data-opt="C">It raises an error because <code>discount</code> was never set</button>
+<p class="why" hidden>No — <code>total &gt;= 100</code> is <code>False</code>, so <code>and</code> makes the whole condition <code>False</code> regardless of region; a low-cart South order gets no discount at all under Exercise 1's tiers, so there's nothing to bonus on top of.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(No — <code>total &gt;= 100</code> is <code>False</code>, so <code>and</code> makes the whole condition <code>False</code> regardless of region; a low-cart South order gets no discount at all under Exercise 1's tiers, so there's nothing to bonus on top of.)"</aside>
+</section>
+
+<!-- 25. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing this as two separate <code>if</code> statements (<code>if region == "South":</code> then a nested <code>if total &gt;= 100:</code>) instead of one combined condition — not wrong, exactly (same result), but this is a deliberate setup for Exercise 4. If you see it, say "hold that thought" rather than correcting it.</p>
+<p>Testing only with <code>region = "South"</code> and never with a different region — have the room also try <code>region = "North"</code> live and confirm the bonus line does <em>not</em> print, so the <code>and</code> is doing real, visibly-testable work in both directions.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 8 min · 0:29–0:37</span>
+<h1>Refactor a Nested <code>if</code></h1>
+<aside class="notes">
+Teaching goal: directly compare a nested <code>if</code> chain to the flat, <code>and</code>-combined version from Exercise 3 — this is a genuine software-engineering lesson, not just a syntax exercise.
+Say to the class (verbatim): "Here's a nested version of a similar rule — three levels of <code>if</code>, each one inside the last. Your job: rewrite it as one flat <code>if</code> with <code>and</code>, then explain in a comment why the flat version is better."
+</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — same behavior, better structure</h3>
+<div class="concept">
+<div class="concept-lbl">State this first, before "why is it better"</div>
+<p>Both versions produce <strong>identical behavior</strong>. Refactoring doesn't change what a program does, only how readable/maintainable it is.</p>
+<p>Three levels of nested <code>if</code> and one flat <code>if</code> with two <code>and</code>s are logically equivalent <em>here specifically</em> because each nested level has exactly one condition and no accompanying <code>elif</code>/<code>else</code> — a simple "everything must be true" shape. That equivalence is not automatic in every nested-<code>if</code> situation.</p>
+</div>
+<aside class="notes">The required comment explaining the "why" is the actual graded deliverable, not just the refactored code. A strong comment names <strong>readability</strong> (one line vs. three nested levels) and <strong>testability</strong> (one flat condition can be reasoned about directly, vs. three levels each needing separate consideration).</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — nested starting point (static) -->
+<section class="s-code">
+<h3>The nested starting point — rewrite this</h3>
+<pre><code class="language-python"># Nested version — rewrite this
+if region == "South":
+    if total &gt; 100:
+        if customer_type == "wholesale":
+            extra_discount = 0.03</code></pre>
+<p class="expect">Shown for reference — three levels of indentation, and you have to track all three to find the single line that actually runs. No output; nothing to Run.</p>
+<aside class="notes">
+From the lab page. This is the "before" — a real branching <em>shape</em> only in appearance; logically it is just "all three conditions must be true." Line-by-line: <code>region == "South"</code> gates an inner block; inside it <code>total &gt; 100</code> gates another; inside that <code>customer_type == "wholesale"</code> gates the one assignment. Testing it means constructing test cases for each level separately.
+</aside>
+</section>
+
+<!-- 29. EXERCISE 4 — flat refactor (static) -->
+<section class="s-code">
+<h3>Live-code the refactor — one flat <code>if</code></h3>
+<pre><code class="language-python"># --- Exercise 4 ---
+if region == "South" and total &gt; 100 and customer_type == "wholesale":
+    extra_discount = 0.03
+    # Flat version reads as one sentence: "South, AND over $100, AND
+    # wholesale — all three, or none." The nested version makes you
+    # track three separate levels of indentation to find the single
+    # line that actually runs, and testing it means constructing test
+    # cases for each level separately rather than reasoning about one
+    # combined condition at once.</code></pre>
+<p class="expect">No <code>print()</code> here, so there is no Run button and no paired output slide — a refactor with no side effect produces nothing to show. The <strong>comment</strong> is the graded deliverable.</p>
+<aside class="notes">
+Line-by-line:
+- <code>and</code> chains left to right, and — just like the two-condition version in Exercise 3 — <strong>all three</strong> conditions must be <code>True</code> for the line to run.
+- The required comment explaining the "why" — this is the actual graded deliverable, not just the refactored code. A strong comment names <strong>readability</strong> (one line vs. three nested levels) and <strong>testability</strong> (one flat condition can be reasoned about directly, vs. three levels each needing separate consideration).
+- Sanity-checked under CPython 3.12.2 with <code>region = "South"</code>, <code>total = 250</code>, <code>customer_type = "wholesale"</code> in scope: the flat <code>if</code> runs without error and sets <code>extra_discount = 0.03</code>, identical to the nested version. It is presented as static code because it prints nothing.
+Common mistakes: refactoring correctly but writing a comment that just restates <em>what</em> the code does rather than <em>why</em> the flat version is better — redirect: "what does flat code make easier that nested code makes harder?" Also introducing a subtle behavior change while refactoring — e.g. using <code>or</code> instead of <code>and</code>, which changes "all three required" to "any one is enough." If this happens, test both versions against the <em>same</em> input and compare outputs directly.
+Check for understanding (guide, verbatim parenthetical): "At what point does nesting become genuinely necessary instead of just a style choice — when would flat <code>and</code> <em>not</em> be a valid substitute for nested <code>if</code>s? (When different levels need <em>different</em> <code>elif</code>/<code>else</code> branches — e.g., if wholesale customers get one treatment and retail customers get a completely different one at the innermost level, that's a real branching structure that flat <code>and</code> alone can't express; nesting isn't inherently wrong, it's just usually avoidable when every level shares the same simple 'all must be true' shape.)"
+</aside>
+</section>
+
+<!-- 30. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">When would flat <code>and</code> <em>not</em> be a valid substitute for nested <code>if</code>s?</p>
+<button data-opt="A">Never — flat <code>and</code> can always replace nested <code>if</code>s</button>
+<button data-opt="B">Whenever there are more than two conditions</button>
+<button data-opt="C">When different levels need <em>different</em> <code>elif</code>/<code>else</code> branches</button>
+<p class="why" hidden>When different levels need <em>different</em> <code>elif</code>/<code>else</code> branches — e.g., if wholesale customers get one treatment and retail customers get a completely different one at the innermost level, that's a real branching structure that flat <code>and</code> alone can't express. Nesting isn't inherently wrong, it's just usually avoidable when every level shares the same simple "all must be true" shape.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(When different levels need <em>different</em> <code>elif</code>/<code>else</code> branches — e.g., if wholesale customers get one treatment and retail customers get a completely different one at the innermost level, that's a real branching structure that flat <code>and</code> alone can't express; nesting isn't inherently wrong, it's just usually avoidable when every level shares the same simple 'all must be true' shape.)"</aside>
+</section>
+
+<!-- 31. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Refactoring correctly but writing a comment that just restates <em>what</em> the code does rather than <em>why</em> the flat version is better — redirect explicitly: "what does flat code make easier that nested code makes harder?"</p>
+<p>Introducing a subtle behavior change while refactoring — e.g. using <code>or</code> instead of <code>and</code> by mistake, which changes "all three required" to "any one is enough." If this happens, have the student test both the original nested version and their refactor against the <em>same</em> input and compare outputs directly, rather than just re-reading the code.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 8 min · 0:37–0:45</span>
+<h1>Anomaly Flagging</h1>
+<aside class="notes">
+Teaching goal: a three-way classification using <code>if</code>/<code>elif</code>/<code>else</code> on a <em>different</em> kind of business logic (fraud/anomaly detection) than the discount tiers, to confirm the pattern generalizes rather than being tied to pricing specifically.
+Say to the class (verbatim): "Different scenario, same tool. A transaction amount gets classified into one of three categories — this time the interesting boundary is at the <em>bottom</em> as well as the top."
+</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — live code (-50) -->
+<section class="s-code">
+<h3>Live-code — Exercise 5 (<code>amount = -50</code>)</h3>
+<div class="run" data-lang="python" data-stdin="-50">
+# --- Exercise 5 ---
+amount = float(input("Transaction amount: $"))
+
+if amount &lt;= 0:
+    print("SUSPICIOUS")
+elif amount &gt;= 10000:
+    print("LARGE — REVIEW REQUIRED")
+else:
+    print("NORMAL")
+</div>
+<p class="expect">Stdin seeded with <code>-50</code>. Re-run with <code>500</code> and <code>15000</code> on the next two slides — the guide tests all three.</p>
+<aside class="notes">
+Line-by-line:
+- <code>if amount &lt;= 0:</code> — checked <em>first</em>, deliberately, even though it's conceptually the "low" end and "LARGE" is the "high" end — order in an <code>elif</code> chain is about which check happens first, not about a value's conceptual position on a number line. Ask the room: "would this still work correctly if I checked the <code>&gt;= 10000</code> condition first instead?" (Yes — these two conditions can't both be true for the same <code>amount</code>, so order between them doesn't matter here, unlike Exercise 1's tiers, where order was essential.)
+- <code>elif amount &gt;= 10000:</code> — the upper boundary.
+- <code>else:</code> — catches everything between, exclusive of both boundaries: <code>0 &lt; amount &lt; 10000</code>.
+This contrast is worth drawing out explicitly: <strong>order matters in an <code>elif</code> chain exactly when a value could satisfy more than one condition</strong> — Exercise 1's tiers overlapped, this exercise's conditions don't.
+Check for understanding (guide, verbatim parenthetical): "What does this print for <code>amount = 9999.99</code>, and what's the largest amount that still prints <code>NORMAL</code>? (<code>NORMAL</code> — and the boundary is anything strictly less than <code>10000</code>, i.e., <code>9999.99...</code> up to but not including <code>10000</code> itself, since the LARGE check uses <code>&gt;=</code>.)"
+</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — expected output (-50) -->
+<section class="s-out">
+<h3>Expected output (<code>amount = -50</code>)</h3>
+<pre>Transaction amount: $-50
+SUSPICIOUS</pre>
+<aside class="notes">The first line is the echoed prompt + seeded stdin in the Pyodide box; under a headless <code>python3</code> pipe the prompt has no trailing newline and the answer is not echoed — not load-bearing. Load-bearing line: <code>SUSPICIOUS</code>. The guide states this run as the table row "<code>-50    -&gt; SUSPICIOUS</code>" — the arrow-table is the guide's readability formatting; the script itself prints only the bare word. <code>-50 &lt;= 0</code> is <code>True</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 35. EXERCISE 5 — live code (500) -->
+<section class="s-code">
+<h3>Live-code — Exercise 5 (<code>amount = 500</code>)</h3>
+<div class="run" data-lang="python" data-stdin="500">
+# --- Exercise 5 ---
+amount = float(input("Transaction amount: $"))
+
+if amount &lt;= 0:
+    print("SUSPICIOUS")
+elif amount &gt;= 10000:
+    print("LARGE — REVIEW REQUIRED")
+else:
+    print("NORMAL")
+</div>
+<p class="expect">Stdin seeded with <code>500</code> — a mid-range amount that satisfies neither boundary, so it falls through to <code>else</code>.</p>
+<aside class="notes"><code>500 &lt;= 0</code> is <code>False</code>; <code>500 &gt;= 10000</code> is <code>False</code>; so the <code>else</code> branch runs and prints <code>NORMAL</code>. Guide table row: "<code>500    -&gt; NORMAL</code>".</aside>
+</section>
+
+<!-- 36. EXERCISE 5 — expected output (500) -->
+<section class="s-out">
+<h3>Expected output (<code>amount = 500</code>)</h3>
+<pre>Transaction amount: $500
+NORMAL</pre>
+<aside class="notes">Load-bearing line: <code>NORMAL</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 37. EXERCISE 5 — live code (15000) -->
+<section class="s-code">
+<h3>Live-code — Exercise 5 (<code>amount = 15000</code>)</h3>
+<div class="run" data-lang="python" data-stdin="15000">
+# --- Exercise 5 ---
+amount = float(input("Transaction amount: $"))
+
+if amount &lt;= 0:
+    print("SUSPICIOUS")
+elif amount &gt;= 10000:
+    print("LARGE — REVIEW REQUIRED")
+else:
+    print("NORMAL")
+</div>
+<p class="expect">Stdin seeded with <code>15000</code>. First check <code>&lt;= 0</code> fails, second check <code>&gt;= 10000</code> is <code>True</code>.</p>
+<aside class="notes"><code>15000 &lt;= 0</code> is <code>False</code>; <code>15000 &gt;= 10000</code> is <code>True</code>, so the <code>elif</code> block runs and prints <code>LARGE — REVIEW REQUIRED</code>. Guide table row: "<code>15000  -&gt; LARGE — REVIEW REQUIRED</code>".</aside>
+</section>
+
+<!-- 38. EXERCISE 5 — expected output (15000) -->
+<section class="s-out">
+<h3>Expected output (<code>amount = 15000</code>)</h3>
+<pre>Transaction amount: $15000
+LARGE — REVIEW REQUIRED</pre>
+<aside class="notes">Load-bearing line: <code>LARGE — REVIEW REQUIRED</code> (em dash, matching the string literal in the source). Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 39. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">What does this print for <code>amount = 9999.99</code>, and what's the largest amount that still prints <code>NORMAL</code>?</p>
+<button data-opt="A"><code>NORMAL</code> — the boundary is anything strictly less than <code>10000</code></button>
+<button data-opt="B"><code>LARGE — REVIEW REQUIRED</code> — <code>9999.99</code> rounds up</button>
+<button data-opt="C"><code>NORMAL</code> — and <code>10000</code> itself also prints <code>NORMAL</code></button>
+<p class="why" hidden><code>NORMAL</code> — and the boundary is anything strictly less than <code>10000</code>, i.e., <code>9999.99...</code> up to but not including <code>10000</code> itself, since the LARGE check uses <code>&gt;=</code>.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>NORMAL</code> — and the boundary is anything strictly less than <code>10000</code>, i.e., <code>9999.99...</code> up to but not including <code>10000</code> itself, since the LARGE check uses <code>&gt;=</code>.)"</aside>
+</section>
+
+<!-- 40. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using <code>&lt;</code> instead of <code>&lt;=</code> for the suspicious check, which would let <code>amount = 0</code> fall through to <code>NORMAL</code> — ask the room to test <code>amount = 0</code> specifically and confirm it lands where the spec (<code>$0 or negative</code>) says it should. (Verified: with <code>&lt;=</code>, <code>amount = 0</code> prints <code>SUSPICIOUS</code>.)</p>
+<p>Writing the <code>&gt;= 10000</code> check first and the <code>&lt;= 0</code> check second — this particular exercise happens to still work either order, but have a student explain <em>why</em> it still works here when it didn't in Exercise 1, to confirm the distinction actually landed.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5. The order-independence here (conditions can't both be true) versus Exercise 1's order-dependence (overlapping tiers) is the key contrast.</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 8 min · 0:45–0:53</span>
+<h1>Boolean Logic: <code>or</code> and <code>not</code></h1>
+<aside class="notes">
+Teaching goal: express an "either/or" rule with <code>or</code>, and an exclusion rule with <code>not</code> — the two operators from Module 04's truth tables that Exercise 3 didn't need yet.
+Say to the class (verbatim): "VIP upgrade: spent more than $2000 this year, OR placed more than 10 orders — either one qualifies, not both required. Then a second rule: excluded if they have any outstanding balance, using <code>not</code>."
+</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>or</code> grants, <code>not</code> vetoes, parentheses decide</h3>
+<div class="concept">
+<div class="concept-lbl">Read the whole line as one sentence</div>
+<p>"Qualifies on spending <strong>or</strong> order count, <strong>and</strong> does <strong>not</strong> have an outstanding balance." <code>or</code> is <code>True</code> if <em>either</em> side is true; <code>not</code> flips a boolean.</p>
+<p>The parentheses around <code>(total_spent &gt; 2000 or orders_placed &gt; 10)</code> are <strong>required</strong>: <code>and</code> binds tighter than <code>or</code> in Python, so without them the expression groups as <code>total_spent &gt; 2000 or (orders_placed &gt; 10 and not (...))</code> — a different, wrong rule. Same precedence trap flagged since Module 04's Stretch B.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Exercise 6, condensed. The parenthesis point connects back explicitly to Module 04's precedence-trap lesson.</aside>
+</section>
+
+<!-- 43. EXERCISE 6 — live code (balance 0) -->
+<section class="s-code">
+<h3>Live-code — Exercise 6 (<code>outstanding_balance = 0</code>)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 ---
+total_spent = 2200
+orders_placed = 3
+outstanding_balance = 0
+
+vip = (total_spent &gt; 2000 or orders_placed &gt; 10) and not (outstanding_balance &gt; 0)
+print(f"VIP upgrade: {vip}")
+</div>
+<p class="expect">Values hardcoded for live testing; the submitted script collects them with <code>input()</code>. A customer with <code>total_spent = 2200</code> and <code>orders_placed = 3</code> still qualifies — the spending condition alone is enough.</p>
+<aside class="notes">
+Line-by-line:
+- <code>(total_spent &gt; 2000 or orders_placed &gt; 10)</code> — <code>or</code> returns <code>True</code> if <strong>either</strong> side is <code>True</code> (or both) — contrast explicitly with Exercise 3/4's <code>and</code>, which required <strong>all</strong> sides true. Here, a customer with <code>total_spent = 2200</code> and <code>orders_placed = 3</code> still qualifies, because the spending condition alone is enough.
+- <code>not (outstanding_balance &gt; 0)</code> — <code>not</code> flips a boolean: if <code>outstanding_balance &gt; 0</code> is <code>True</code> (they owe money), <code>not</code> makes it <code>False</code>, and the whole <code>and</code> clause becomes <code>False</code>, disqualifying an otherwise-qualifying customer.
+- The parentheses around the <code>or</code> clause are required for order-of-operations: <code>and</code> binds tighter than <code>or</code> in Python, so without them this would group as <code>total_spent &gt; 2000 or (orders_placed &gt; 10 and not (...))</code> — a different, wrong rule. Connect back to Module 04's Stretch B precedence trap.
+Check for understanding (guide, verbatim parenthetical): "Name a customer (spending, orders, balance) who qualifies on orders alone, not spending, and confirm the balance rule still applies to them the same way. (E.g., <code>total_spent = 100</code>, <code>orders_placed = 15</code>, <code>outstanding_balance = 0</code> &rarr; VIP <code>True</code>; same customer with <code>outstanding_balance = 50</code> &rarr; <code>False</code>. The point is confirming <code>not (...)</code> applies uniformly regardless of <em>which</em> side of the <code>or</code> qualified them.)"
+</aside>
+</section>
+
+<!-- 44. EXERCISE 6 — expected output (balance 0) -->
+<section class="s-out">
+<h3>Expected output (<code>outstanding_balance = 0</code>)</h3>
+<pre>VIP upgrade: True</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 6. <code>(2200 &gt; 2000 or 3 &gt; 10)</code> is <code>(True or False)</code> = <code>True</code>; <code>not (0 &gt; 0)</code> is <code>not False</code> = <code>True</code>; <code>True and True</code> = <code>True</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 45. EXERCISE 6 — live code (balance 50) -->
+<section class="s-code">
+<h3>Live-code — Exercise 6 (<code>outstanding_balance = 50</code>)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 (outstanding_balance now 50) ---
+total_spent = 2200
+orders_placed = 3
+outstanding_balance = 50
+
+vip = (total_spent &gt; 2000 or orders_placed &gt; 10) and not (outstanding_balance &gt; 0)
+print(f"VIP upgrade: {vip}")
+</div>
+<p class="expect">Change <code>outstanding_balance</code> to <code>50</code> and re-run — output flips to <code>False</code>, even though the spending/orders condition alone is still <code>True</code>. This is the entire point of the exercise.</p>
+<aside class="notes">
+<code>(2200 &gt; 2000 or 3 &gt; 10)</code> is still <code>True</code>, but <code>not (50 &gt; 0)</code> is <code>not True</code> = <code>False</code>, so <code>True and False</code> = <code>False</code>. "or" grants eligibility, but "not (balance)" can still veto it.
+</aside>
+</section>
+
+<!-- 46. EXERCISE 6 — expected output (balance 50) -->
+<section class="s-out">
+<h3>Expected output (<code>outstanding_balance = 50</code>)</h3>
+<pre>VIP upgrade: False</pre>
+<aside class="notes">Verified against CPython 3.12.2. The <code>or</code> clause is unchanged and still <code>True</code>; the <code>not (outstanding_balance &gt; 0)</code> veto is what flips the result.</aside>
+</section>
+
+<!-- 47. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Name a customer who qualifies on orders alone, not spending — and confirm the balance rule still applies.</p>
+<button data-opt="A"><code>total_spent = 100</code>, <code>orders_placed = 15</code>, <code>balance = 0</code> &rarr; <code>True</code>; same customer with <code>balance = 50</code> &rarr; <code>False</code></button>
+<button data-opt="B"><code>total_spent = 100</code>, <code>orders_placed = 15</code> &rarr; <code>False</code>, because spending is under $2000</button>
+<button data-opt="C">The balance rule only applies to customers who qualified on spending</button>
+<p class="why" hidden>E.g., <code>total_spent = 100</code>, <code>orders_placed = 15</code>, <code>outstanding_balance = 0</code> &rarr; VIP <code>True</code>; same customer with <code>outstanding_balance = 50</code> &rarr; <code>False</code>. The point is confirming <code>not (...)</code> applies uniformly regardless of <em>which</em> side of the <code>or</code> qualified them.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(E.g., <code>total_spent = 100</code>, <code>orders_placed = 15</code>, <code>outstanding_balance = 0</code> &rarr; VIP <code>True</code>; same customer with <code>outstanding_balance = 50</code> &rarr; <code>False</code>. The point is confirming <code>not (...)</code> applies uniformly regardless of <em>which</em> side of the <code>or</code> qualified them.)" Verified both cases under CPython 3.12.2.</aside>
+</section>
+
+<!-- 48. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Omitting the parentheses around the <code>or</code> clause, producing the precedence bug — <code>and</code> binds tighter than <code>or</code>. Test with <code>total_spent = 2200</code>, <code>orders_placed = 3</code>, <code>outstanding_balance = 50</code>: the buggy version incorrectly reports <code>True</code>, because <code>or</code>'s left side alone (<code>total_spent &gt; 2000</code>) short-circuits the whole expression to <code>True</code> under the wrong grouping, ignoring the balance entirely.</p>
+<p>Writing <code>outstanding_balance == False</code> or similar instead of a numeric comparison — <code>outstanding_balance</code> is a dollar amount, not a boolean, so the comparison needs to be <code>&gt; 0</code>, not an equality check against <code>True</code>/<code>False</code>.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 49. STRETCH 1 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 · 12 min · 0:53–1:05</span>
+<h1>Full Pricing Engine</h1>
+<aside class="notes">
+Teaching goal: combine every rule from Exercises 1–3 into one script that also layers in two new discounts (wholesale, first-order), with a printed breakdown of each step — the closest this lab gets to a realistic, complete business script.
+Say to the class (verbatim): "Everything from today, combined, plus two new rules, applied in a specific order, with a full breakdown printed at the end — like a receipt showing exactly how the final price was reached."
+</aside>
+</section>
+
+<!-- 50. STRETCH 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 1</h3>
+<div class="run" data-lang="python">
+# --- Stretch 1 ---
+cart_total = 600
+region = "South"
+customer_type = "wholesale"
+first_order = True
+
+breakdown = []
+
+if cart_total &gt;= 500:
+    discount = 0.15
+elif cart_total &gt;= 200:
+    discount = 0.10
+elif cart_total &gt;= 100:
+    discount = 0.05
+else:
+    discount = 0
+breakdown.append(f"Tier discount: {discount*100:.0f}%")
+
+if region == "South":
+    discount += 0.02
+    breakdown.append("Regional bonus (South): +2%")
+
+if customer_type == "wholesale":
+    discount += 0.05
+    breakdown.append("Wholesale extra: +5%")
+
+if first_order:
+    discount += 0.03
+    breakdown.append("First-order welcome discount: +3%")
+
+final = cart_total * (1 - discount)
+breakdown.append(f"Total discount: {discount*100:.0f}%")
+breakdown.append(f"Final price: ${final:.2f}")
+
+for line in breakdown:
+    print(line)
+</div>
+<p class="expect">Three separate <code>if</code>s follow the tier block — <strong>not <code>elif</code>s</strong> — because a single order can qualify for all three bonuses at once, unlike Exercise 1's mutually-exclusive tiers. If your section hasn't covered <code>for</code> loops yet, replace the loop with explicit <code>print(breakdown[0])</code>, <code>print(breakdown[1])</code>, etc.</p>
+<aside class="notes">
+Line-by-line (highlighting what's new relative to Exercises 1–3):
+- <code>breakdown = []</code> — an empty list that will collect one string per applied rule, so the final printout shows every step, not just the end result. This one accumulates messages and prints them all at the end — a small preview of the accumulator pattern coming in Module 06.
+- The tier <code>if</code>/<code>elif</code>/<code>else</code> block is identical to Exercise 1, with one addition: <code>breakdown.append(...)</code> records which tier applied.
+- Three separate <code>if</code> blocks follow — South bonus, wholesale extra, first-order discount — <strong>note these are three independent <code>if</code>s, not <code>elif</code>s</strong>, because a single order can qualify for <em>all three</em> simultaneously. Mutually exclusive outcomes need <code>elif</code>; independently-stackable bonuses need separate <code>if</code>s.
+- <code>for line in breakdown: print(line)</code> — a <code>for</code> loop over the list, printing each recorded line in order. If <code>for</code> loops aren't in scope, replace with explicit indexed prints or <code>print(breakdown)</code>.
+Common mistakes: writing the three bonus rules as <code>elif</code> instead of independent <code>if</code>s — this silently caps the order at receiving only <em>one</em> bonus even when it qualifies for several. This is the exercise's central "gotcha," directly extending Exercise 1's lesson to a case where the <em>opposite</em> choice is now correct. Also applying the bonuses in a different order — mathematically this particular script produces the same total regardless of order (<code>+=</code> is commutative), but say explicitly that this is a coincidence of this specific additive formula, not a general rule.
+Check for understanding (guide, verbatim parenthetical): "If this customer were <em>not</em> on their first order, which line disappears from the breakdown, and does the final price change? (The 'First-order welcome discount: +3%' line disappears, <code>discount</code> becomes <code>22%</code> instead of <code>25%</code>, and the final price increases from <code>$450.00</code> to <code>$468.00</code> — a good quick mental-math check that the room is actually tracking the accumulation, not just pattern-matching the output.)"
+</aside>
+</section>
+
+<!-- 51. STRETCH 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Tier discount: 15%
+Regional bonus (South): +2%
+Wholesale extra: +5%
+First-order welcome discount: +3%
+Total discount: 25%
+Final price: $450.00</pre>
+<aside class="notes">Matches the guide's Expected output for Stretch 1 exactly. <code>discount = 0.15 + 0.02 + 0.05 + 0.03 = 0.25</code>; <code>final = 600 * (1 - 0.25) = 450.00</code>. (Floating-point accumulation lands at <code>0.25000000000000006</code> internally, but <code>{discount*100:.0f}</code> renders <code>25</code> and <code>{final:.2f}</code> renders <code>450.00</code>.) Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 52. STRETCH 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If this customer were <em>not</em> on their first order, which line disappears, and does the final price change?</p>
+<button data-opt="A">The "First-order" line disappears, but the final price stays <code>$450.00</code></button>
+<button data-opt="B">The "First-order welcome discount: +3%" line disappears; discount becomes <code>22%</code> and the price rises to <code>$468.00</code></button>
+<button data-opt="C">Nothing changes — the bonuses are independent</button>
+<p class="why" hidden>The "First-order welcome discount: +3%" line disappears, <code>discount</code> becomes <code>22%</code> instead of <code>25%</code>, and the final price increases from <code>$450.00</code> to <code>$468.00</code> — a good quick mental-math check that the room is actually tracking the accumulation, not just pattern-matching the output.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(The 'First-order welcome discount: +3%' line disappears, <code>discount</code> becomes <code>22%</code> instead of <code>25%</code>, and the final price increases from <code>$450.00</code> to <code>$468.00</code> — a good quick mental-math check that the room is actually tracking the accumulation, not just pattern-matching the output.)" Verified: <code>600 * (1 - 0.22) = 468.00</code> under CPython 3.12.2.</aside>
+</section>
+
+<!-- 53. STRETCH 2 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 2 Preview · 1:05–1:15</span>
+<h1>Tax Brackets — preview / take-home</h1>
+<aside class="notes">
+Frame this as a preview/take-home rather than full live-coded content — marginal taxation is genuinely easy to get subtly wrong live, and rewarding to work through carefully rather than rushed.
+Say to the class (verbatim): "One more example of tiered logic, from a completely different domain: federal income tax brackets. The trick is that this is <strong>marginal</strong> taxation — each bracket only taxes the income that falls <em>within</em> that bracket, not your whole income at that bracket's rate. Someone earning $60,000 does not pay 22% tax on all $60,000 — only the portion above $47,150 is taxed at 22%; the portion from $11,600 to $47,150 is taxed at 12%; the first $11,600 is taxed at 10%."
+If you do walk through it live, the answer key in Appendix A has a verified, working version; the key teaching moment is that a naive "if income is in the 22% bracket, multiply the <em>whole</em> income by 22%" approach is wrong and worth explicitly contrasting against the correct marginal calculation.
+</aside>
+</section>
+
+<!-- 54. STRETCH 2 — the idea -->
+<section class="s-idea">
+<h3>The idea — marginal, not flat</h3>
+<div class="concept">
+<div class="concept-lbl">Why the naive version is wrong</div>
+<p>Naive (wrong): "income is in the 22% bracket, so tax = income &times; 0.22." Correct (marginal): each bracket taxes <em>only the slice of income inside it</em>. The code peels income off the top bracket first, taxes that slice, then drops <code>remaining</code> down to the next bracket ceiling and repeats.</p>
+</div>
+<aside class="notes">This is the guide's Stretch 2 framing. Marginal taxation is the "genuinely tricky to build correctly in real time" logic the Session Snapshot warns about — hence preview/take-home, not live-code.</aside>
+</section>
+
+<!-- 55. STRETCH 2 — code (readonly) -->
+<section class="s-code">
+<h3>Answer key — Stretch 2 (verified, single filer, 2024 simplified brackets)</h3>
+<div class="run" data-lang="python" data-readonly>
+income = 60000
+
+tax = 0
+remaining = income
+
+if remaining &gt; 47150:
+    tax += (min(remaining, 100525) - 47150) * 0.22
+    remaining = 47150
+
+if remaining &gt; 11600:
+    tax += (remaining - 11600) * 0.12
+    remaining = 11600
+
+tax += remaining * 0.10
+
+print(f"Tax owed on ${income:,.2f}: ${tax:,.2f}")
+</div>
+<p class="expect">Shown read-only (code + Run + output) — this is take-home material, not a live-coded block. Two independent <code>if</code>s peel the top brackets; whatever is left is taxed at the base 10% rate.</p>
+<aside class="notes">
+Line-by-line:
+- <code>remaining = income</code> — a running "income not yet taxed" counter.
+- <code>if remaining &gt; 47150:</code> — if any income is above the 22% bracket floor, tax the slice between $47,150 and either the 24% floor ($100,525) or the person's actual income, whichever is lower — hence <code>min(remaining, 100525)</code>. Then set <code>remaining = 47150</code> so the next check only sees income at or below that ceiling.
+- <code>if remaining &gt; 11600:</code> — tax the slice from $11,600 up to $47,150 at 12%, then drop <code>remaining</code> to $11,600.
+- <code>tax += remaining * 0.10</code> — everything left (the first $11,600, or less) is taxed at 10%.
+- These are independent <code>if</code>s, not <code>elif</code>s, because a high earner's income passes through <em>every</em> bracket — same "stackable, not mutually exclusive" structure as Stretch 1's bonuses.
+Verified results (guide): income <code>$10,000</code> &rarr; tax <code>$1,000.00</code>; income <code>$30,000</code> &rarr; tax <code>$3,368.00</code>; income <code>$60,000</code> &rarr; tax <code>$8,253.00</code>. All three reproduced under CPython 3.12.2.
+Common mistakes: the naive flat-rate approach (multiply whole income by the top bracket's rate); forgetting the <code>min(remaining, 100525)</code> cap so a very high income over-taxes the 22% band.
+</aside>
+</section>
+
+<!-- 56. STRETCH 2 — expected output -->
+<section class="s-out">
+<h3>Expected output (<code>income = 60000</code>)</h3>
+<pre>Tax owed on $60,000.00: $8,253.00</pre>
+<aside class="notes">Matches the guide's verified result for <code>$60,000</code> exactly. Other verified checks: <code>$10,000</code> &rarr; <code>$1,000.00</code>; <code>$30,000</code> &rarr; <code>$3,368.00</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 57. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>Trace <code>order_total = 350</code> through the discount tier logic, without looking at code.</li>
+<li><code>if total &gt; 100 and total &lt; 500:</code> vs. two separate <code>if</code> statements — how do they differ?</li>
+<li>Real-world tiered systems (tax brackets, shipping fees, insurance) — name one with actual thresholds.</li>
+</ul>
+<aside class="notes">
+Strong-answer guidance (guide):
+1. A strong answer narrates it as a story: "$350 is not $500 or more, so skip that branch. It IS $200 or more, so <code>discount = 0.10</code>, and Python stops checking — it never looks at the <code>$100</code> tier even though $350 also qualifies for that." Model this narration style explicitly if students struggle to articulate it.
+2. The key distinction: <code>and</code> requires <strong>both</strong> true for the code inside to run at all; two separate <code>if</code>s would run <strong>each</strong> block independently whenever its own condition is true. Push for a concrete example where they'd actually diverge (e.g., two separate <code>if</code>s each printing something — you'd get up to <em>two</em> print statements, never possible with the single combined condition, which produces at most one outcome).
+3. Encourage a specific example with actual thresholds if the student can recall one; the point is recognizing <code>elif</code>-shaped structure in the wild, which is genuinely everywhere once you start looking.
+</aside>
+</section>
+
+<!-- 58. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>discount.py</code></li>
+<li>Contains Exercises 1–6, each clearly separated (matching the <code># --- Exercise N ---</code> convention from prior modules)</li>
+<li><code>if</code>/<code>elif</code>/<code>else</code> used correctly for mutually exclusive tiers; separate <code>if</code>s used for independently-stackable bonuses</li>
+<li>Script runs top to bottom with no errors given valid input</li>
+</ul>
+<aside class="notes">Review the checklist together. Preview Module 06 (verbatim): "Today's scripts all handled <em>one</em> transaction at a time. Next module, you'll process a whole <em>list</em> of sales with a <code>for</code> loop — and Stretch 1's <code>breakdown.append(...)</code> pattern you just saw is a direct preview of the accumulator pattern that's coming."</aside>
+</section>
+
+<!-- 59. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 5</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w05.md (Week 5 facilitation guide — "Tiered Discount Calculator"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
