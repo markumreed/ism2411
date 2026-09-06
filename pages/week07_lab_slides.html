@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 7 — Functions + Debug First, Then Ask</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 7 &nbsp;·&nbsp; Module 07 &nbsp;·&nbsp; Unit 2 &nbsp;·&nbsp; Control Flow &amp; Structure</p>
+<h1>Functions + Debug First, Then Ask</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Intro — package logic once</span>
+<span class="t-item"><strong>0:04–0:10</strong> Ex 1 — <code>calculate_tax</code></span>
+<span class="t-item"><strong>0:10–0:18</strong> Ex 2 — <code>apply_discount</code></span>
+<span class="t-item"><strong>0:18–0:26</strong> Ex 3 — Compose Them</span>
+<span class="t-item"><strong>0:26–0:34</strong> Ex 4 — Loop + Function</span>
+<span class="t-item"><strong>0:34–0:54</strong> Ex 5 — Debug First, Then Ask</span>
+<span class="t-item"><strong>0:54–1:02</strong> Ex 6 — Scope Experiment</span>
+<span class="t-item"><strong>1:02–1:10</strong> Stretch 1 — Summarize a List</span>
+<span class="t-item"><strong>1:10–1:15</strong> Stretch 2 Preview + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along, with one structured 20-minute debugging-protocol block (Exercise 5) run individually/in pairs on a timer. Two genuinely distinct teaching goals live in this one lab. The first half (Exercises 1–4, 6) is standard technical content: <code>def</code>, parameters, <code>return</code>, and scope — the single biggest new syntax jump since <code>if</code>/<code>elif</code>/<code>else</code>. The second half (Exercise 5) is an <strong>AI-literacy exercise</strong>, not a programming exercise — a structured protocol for debugging <em>before</em> reaching for an AI assistant, and for using AI narrowly (to explain an error, not to hand over a fix) when you do reach for it. Run Exercise 5 on an actual timer, out loud, since its four steps are the entire point — a rushed or skipped version of it defeats the exercise.
+Prerequisites: Modules 05–06 — <code>if</code>/<code>elif</code>/<code>else</code>, <code>for</code>/<code>while</code> loops, the accumulator pattern. Submission: <code>functions.py</code> + the Canvas reflection. Before class: open <code>functions.py</code>, empty except the header comment; prepare <code>broken_sales.py</code> for Exercise 5 (verified three-bug version in Appendix B — one <code>SyntaxError</code>, one silent logic bug, one <code>IndexError</code>); have a real timer visible for Exercise 5's four five-minute steps; decide and state your AI-tool-access policy for Exercise 5's "AI Explainer" step. Student-facing lab page: markumreed.github.io/ism2411 — week07_lab. Every runnable block in this deck runs in its own fresh Pyodide namespace, so each block re-defines every function it needs; in the real <code>functions.py</code> each function is typed once and reused. All runnable-block output verified against CPython 3.12.2 (== Pyodide 0.26.4).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, with one structured 20-minute debugging-protocol block (Exercise 5) run individually/in pairs on a timer</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Modules 05–06: <code>if</code>/<code>elif</code>/<code>else</code>, <code>for</code>/<code>while</code> loops, the accumulator pattern</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>functions.py</code> + the Canvas reflection</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Class length 75 minutes. Exercise 5 covers debugging habit formation — do not compress it; it's arguably the most important exercise of the semester for long-term skill development. Six required exercises plus Exercise 5's full 20-minute protocol and Stretch 1 already fill the full 75 minutes at a normal pace. Appendix C has extra practice (one more composed function; a second scope trace raising <code>UnboundLocalError</code>) only if the class finishes early.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Define a function with <code>def</code>, including parameters and a <code>return</code> statement, and explain the difference between a function <em>returning</em> a value and merely <em>printing</em> one.</li>
+<li>Call one function from inside another (composition), and trace the flow of a value through a short chain of function calls.</li>
+<li>Use a <code>for</code> loop to call the same function repeatedly over a list of inputs.</li>
+<li>Explain local vs. global scope: why a variable assigned inside a function doesn't affect a same-named variable outside it.</li>
+<li>Apply a disciplined, four-step debugging protocol — solo trace, narrowly-scoped AI question, self-written fix, debrief — before defaulting to "ask AI to fix it."</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1's <code>return</code>-vs-<code>print</code> distinction is the conceptual spine of Exercises 1–4 — a function that returns a value can be reused in a calculation; one that only prints cannot. Objective 5 is the entire point of Exercise 5 and is independent of any single Python concept.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Intro — package logic once, give it a name</td><td>4</td></tr>
+<tr><td>0:04–0:10</td><td>Exercise 1 — <code>calculate_tax</code></td><td>6</td></tr>
+<tr><td>0:10–0:18</td><td>Exercise 2 — <code>apply_discount</code></td><td>8</td></tr>
+<tr><td>0:18–0:26</td><td>Exercise 3 — Compose Them</td><td>8</td></tr>
+<tr><td>0:26–0:34</td><td>Exercise 4 — Loop + Function</td><td>8</td></tr>
+<tr><td>0:34–0:54</td><td>Exercise 5 — Debug First, Then Ask (four timed 5-min steps)</td><td>20</td></tr>
+<tr><td>0:54–1:02</td><td>Exercise 6 — Scope Experiment</td><td>8</td></tr>
+<tr><td>1:02–1:10</td><td>Stretch 1 — Summarize a List with a Function</td><td>8</td></tr>
+<tr><td>1:10–1:15</td><td>Stretch 2 Preview — Default Parameters + Wrap-Up</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Exercise 5 covers debugging habit formation — do not compress it; it's arguably the most important exercise of the semester for long-term skill development. Its four steps run on an actual timer, out loud. If a section moves unusually fast, Appendix C has two extra practice items (a <code>shipping_cost</code> / <code>order_total_with_shipping</code> composed pair; a second scope trace that raises <code>UnboundLocalError</code>).</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Package logic once, give it a name</h1>
+<aside class="notes">
+Teaching goal: frame today's two halves — packaging repeated logic into a named, reusable function (Exercises 1–4, 6), and a structured protocol for debugging your own code before asking an AI to fix it (Exercise 5). Both halves matter equally.
+Say to the class (verbatim): "Every module so far, when you needed the same logic twice — like the discount tiers you wrote in Modules 5 and 6 — you retyped it, or copy-pasted it. Today you learn to package logic up <em>once</em>, give it a name, and call it by that name as many times as you want. That's a function. And the second half of today is different from anything we've done — a structured protocol for debugging your own code <em>before</em> asking an AI to fix it for you. Both halves matter equally today."
+Do: open <code>functions.py</code>, type the header — <code># functions.py</code> / <code># ISM2411 Module 07 Lab — Functions + Debug First, Then Ask</code>.
+Common mistakes: none yet — this is framing.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 6 min · 0:04–0:10</span>
+<h1><code>calculate_tax</code></h1>
+<aside class="notes">
+Teaching goal: the absolute minimum function — <code>def</code>, parameters, <code>return</code> — and the crucial distinction between a function that <em>returns</em> a value and one that merely prints.
+Say to the class (verbatim): "Simplest possible function: takes a price and a rate, returns the tax. One line of logic — but the <em>syntax</em> around that one line is entirely new today."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 ---
+def calculate_tax(price, rate):
+    return price * rate
+
+print(f"Tax on $100 at 7%: ${calculate_tax(100, 0.07):.2f}")
+print(f"Tax on $250 at 8%: ${calculate_tax(250, 0.08):.2f}")
+</div>
+<p class="expect">Type it unchanged and Run. The function never calls <code>print()</code> itself — it hands a number <em>back</em>, and the caller (the <code>print(f"...")</code> line) decides to display it.</p>
+<aside class="notes">
+Line-by-line:
+- <code>def calculate_tax(price, rate):</code> — <code>def</code> begins a function definition. <code>calculate_tax</code> is the name you're choosing — same naming rules as variables. <code>(price, rate)</code> are <strong>parameters</strong>: named placeholders for values the function expects to receive when called; they don't hold any actual value yet, they're just names the function body will refer to. The colon and the indented block below it work exactly like <code>if</code> and <code>for</code> — indentation marks what's "inside" the function.
+- <code>return price * rate</code> — <strong>this is the line that makes it a function that produces a usable value</strong>, rather than one that just prints. <code>return</code> hands a value back to whatever called the function, and immediately ends the function's execution — say explicitly: <strong>nothing runs after a <code>return</code> statement inside the same function call.</strong>
+- <code>calculate_tax(100, 0.07)</code> — a <strong>call</strong>: the function actually runs now, with <code>price</code> bound to <code>100</code> and <code>rate</code> bound to <code>0.07</code> for the duration of this call only. The <code>return</code>ed value (<code>7.0</code>) is what this expression evaluates to — it slots directly into the f-string's <code>{...}</code>, formatted with <code>:.2f</code>.
+- The distinction to land explicitly: <code>calculate_tax</code> never calls <code>print()</code> itself — it hands a number back. It's the <em>caller</em> that decides to display it. A function that returns a value can be <em>reused</em> in a calculation (like Exercise 3 is about to do); a function that only prints cannot — you can't do math with what <code>print()</code> "gives back" (technically <code>None</code>).
+Common mistakes: writing <code>print(price * rate)</code> inside the function instead of <code>return price * rate</code> — runs without error, looks right if you run it once, but hands back <code>None</code> to any code trying to use the result (demonstrated on the next slides); forgetting the parentheses when <em>calling</em> (writing <code>calculate_tax</code> instead of <code>calculate_tax(100, 0.07)</code>) — no error, but refers to the function object itself and prints <code>&lt;function calculate_tax at 0x...&gt;</code>.
+Check for understanding (guide, verbatim parenthetical): "If I call <code>calculate_tax(250, 0.08)</code> five times in a row in my script, how many times do I have to write the formula <code>price * rate</code>? (Once — inside the function definition. This is the entire value proposition of a function, worth stating explicitly as the payoff for the new syntax overhead.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Tax on $100 at 7%: $7.00
+Tax on $250 at 8%: $20.00</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 1 exactly. <code>calculate_tax(100, 0.07)</code> returns <code>7.000000000000001</code> internally (float precision), but <code>:.2f</code> renders it as <code>7.00</code>; <code>calculate_tax(250, 0.08)</code> returns <code>20.0</code> → <code>20.00</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>print</code> inside the function instead of <code>return</code></h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 (BROKEN: print instead of return) ---
+def calculate_tax(price, rate):
+    print(price * rate)
+
+print(calculate_tax(100, 0.07) + 5)
+</div>
+<p class="expect">Replace <code>return</code> with <code>print</code>, then try to do math with the result: <code>calculate_tax(100, 0.07) + 5</code>. It prints the tax once, then raises a <code>TypeError</code> — a preview of exactly the kind of bug the <code>return</code>-vs-<code>print</code> distinction prevents.</p>
+<aside class="notes">
+Teaching goal: show why <code>return</code> matters by breaking it — a function that only prints hands back <code>None</code>, which is unusable in any further calculation.
+Line-by-line: <code>calculate_tax</code> now <code>print</code>s <code>price * rate</code> and returns nothing (implicitly <code>None</code>). So <code>calculate_tax(100, 0.07)</code> displays <code>7.000000000000001</code> as a side effect but the expression itself evaluates to <code>None</code>; <code>None + 5</code> is undefined, so Python raises <code>TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</code>.
+Common mistakes: this <em>is</em> the mistake the guide flags — worth showing live for 10 seconds so students see the resulting <code>TypeError</code> before it's abstract. The stray <code>7.000000000000001</code> above the traceback is float precision (<code>100 * 0.07</code> can't be represented exactly in binary), not part of the bug.
+</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — broken output -->
+<section class="s-out">
+<h3>What the broken version raises</h3>
+<pre>7.000000000000001
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 5, in &lt;module&gt;
+    print(calculate_tax(100, 0.07) + 5)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</pre>
+<aside class="notes">Verified against CPython 3.12.2. Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match; the file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path on a real machine, and the exact line number depends on preceding blank/comment lines — neither is load-bearing. The load-bearing last line is identical: <code>TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</code>. The first line, <code>7.000000000000001</code>, is the function's <code>print()</code> side effect (raw float precision — <code>:.2f</code> would have shown <code>7.00</code>).</aside>
+</section>
+
+<!-- 11. EXERCISE 1 — fixed pass -->
+<section class="s-code">
+<h3>Fixed — <code>return</code>, so the result is a usable number</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 (fixed: return, not print) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+print(calculate_tax(100, 0.07) + 5)
+</div>
+<p class="expect">One word changed — <code>print</code> back to <code>return</code> — and now <code>calculate_tax(100, 0.07)</code> evaluates to a number you can add <code>5</code> to.</p>
+<aside class="notes">
+Line-by-line: <code>return price * rate</code> makes the call <code>calculate_tax(100, 0.07)</code> evaluate to <code>7.000000000000001</code>; <code>7.000000000000001 + 5</code> happens to collapse back to exactly <code>12.0</code> under floating-point rounding, so <code>print(...)</code> shows <code>12.0</code>. The point is not the specific number — it's that a <code>return</code>ing function's result slots straight into further arithmetic, which is the whole basis of Exercise 3's composition.
+Common mistakes: none new — this is the corrected form.
+</aside>
+</section>
+
+<!-- 12. EXERCISE 1 — fixed output -->
+<section class="s-out">
+<h3>Expected output (fixed)</h3>
+<pre>12.0</pre>
+<aside class="notes">Verified against CPython 3.12.2. <code>calculate_tax(100, 0.07)</code> returns <code>7.000000000000001</code>; adding <code>5</code> gives exactly <code>12.0</code> (the tiny error rounds away when the magnitude grows). Contrast with the broken version, which raised <code>TypeError</code> because the call evaluated to <code>None</code>.</aside>
+</section>
+
+<!-- 13. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If I call <code>calculate_tax(250, 0.08)</code> five times in a row in my script, how many times do I have to write the formula <code>price * rate</code>?</p>
+<button data-opt="A">Five — once per call</button>
+<button data-opt="B">Once — inside the function definition</button>
+<button data-opt="C">Zero — Python infers the formula from the function name</button>
+<p class="why" hidden>Once — inside the function definition. This is the entire value proposition of a function, worth stating explicitly as the payoff for the new syntax overhead.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Once — inside the function definition. This is the entire value proposition of a function, worth stating explicitly as the payoff for the new syntax overhead.)"</aside>
+</section>
+
+<!-- 14. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>print(price * rate)</code> inside the function instead of <code>return price * rate</code> — runs without error, and even <em>looks</em> right if you only run it once, but the function then hands back <code>None</code> to any code trying to use its result, which breaks Exercise 3's composition immediately. Demonstrate live: <code>calculate_tax(100, 0.07) + 5</code> raises <code>TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</code>.</p>
+<p>Forgetting the parentheses when <em>calling</em> the function (writing <code>calculate_tax</code> instead of <code>calculate_tax(100, 0.07)</code>) — this doesn't error, but refers to the function <em>object itself</em>, not a call to it, and prints something like <code>&lt;function calculate_tax at 0x...&gt;</code> instead of a number.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1. The first is the load-bearing one — it is exactly the bug the <code>return</code>-vs-<code>print</code> distinction exists to prevent, and Exercise 3 depends on <code>calculate_tax</code> returning a real number.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 8 min · 0:10–0:18</span>
+<h1><code>apply_discount</code></h1>
+<aside class="notes">
+Teaching goal: a function whose body contains a full <code>if</code>/<code>elif</code>/<code>else</code> chain (Module 05's logic, now packaged) — confirms functions can contain any code students already know how to write, not just a single expression.
+Say to the class (verbatim): "Functions aren't limited to one line. This one has a whole discount-tier decision inside it — the exact <code>if</code>/<code>elif</code>/<code>else</code> shape from Module 05, just packaged with a name and parameters now."
+</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 ---
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+for tier in ["gold", "silver", "bronze", "none"]:
+    print(f"{tier}: ${apply_discount(200, tier):.2f}")
+</div>
+<p class="expect">All four branches lead to the <strong>same single</strong> <code>return</code> line, placed <em>after</em> the whole <code>if</code>/<code>elif</code>/<code>else</code> chain at the function's top indentation level — not one <code>return</code> per branch.</p>
+<aside class="notes">
+Line-by-line:
+- The <code>if</code>/<code>elif</code>/<code>else</code> block is entirely inside the function body — every line indented one level under <code>def</code>, and the <code>if</code>/<code>elif</code> bodies indented a second level under that, exactly the nested-indentation pattern from Module 06's Exercise 4.
+- <code>return price * (1 - discount)</code> — placed <em>after</em> the entire chain, at the function's top indentation level (not inside any branch): <strong>all four branches lead to the same single <code>return</code> line</strong>. Ask the room: "would it work just as well to put <code>return price * (1 - discount)</code> inside each of the four branches instead, four separate times?" (Yes, functionally — but one <code>return</code> after the decision is made is less repetitive and keeps the "what does this function give back" logic in one place, a real readability win as functions grow.)
+- <code>for tier in [...]:</code> calls <code>apply_discount</code> four times, once per tier name — direct rehearsal of Module 06's "loop + function-shaped logic" pattern, now with an actual function being called.
+Common mistakes: indenting <code>return</code> one level too deep (inside the <code>else</code> block only) — every tier <em>except</em> <code>"none"</code> then returns <code>None</code>; misspelling a tier string (e.g. <code>"Gold"</code>) — case-sensitive comparison silently falls through to <code>else</code> and returns the undiscounted price.
+Check for understanding (guide, verbatim parenthetical): "What does <code>apply_discount(200, "platinum")</code> return — a tier that doesn't exist in the function at all? (<code>$200.00</code> — the full, undiscounted price, since <code>"platinum"</code> matches none of the <code>if</code>/<code>elif</code> conditions and falls through to <code>else</code>. No error, no warning — worth stating explicitly as a real design tradeoff.)"
+</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>gold: $170.00
+silver: $180.00
+bronze: $190.00
+none: $200.00</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 2 exactly. <code>200 × (1 − 0.15) = 170</code>; <code>× (1 − 0.10) = 180</code>; <code>× (1 − 0.05) = 190</code>; <code>"none"</code> falls through to <code>else</code>, <code>discount = 0</code>, <code>200 × 1 = 200</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 18. EXERCISE 2 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>return</code> indented inside the <code>else</code> only</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 (BROKEN: return indented inside else only) ---
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+        return price * (1 - discount)
+
+for tier in ["gold", "silver", "bronze", "none"]:
+    print(f"{tier}: ${apply_discount(200, tier):.2f}")
+</div>
+<p class="expect">Indent <code>return</code> one level too deep, so only the <code>else</code> branch reaches it. Only <code>"none"</code> gets a real price back; the other three branches fall off the end of the function and return <code>None</code>.</p>
+<aside class="notes">
+Teaching goal: show what "only one branch reaches the <code>return</code>" does — three of four calls hand back <code>None</code>.
+Line-by-line: <code>return price * (1 - discount)</code> now sits inside the <code>else</code> block, so <code>"gold"</code>, <code>"silver"</code>, and <code>"bronze"</code> each set <code>discount</code> and then fall off the end of the function with nothing returned → <code>None</code>. On the first iteration (<code>"gold"</code>), <code>f"${None:.2f}"</code> can't format <code>None</code>, so Python raises <code>TypeError: unsupported format string passed to NoneType.__format__</code> before any line prints.
+The guide describes this failure as "three <code>None</code>s, one correct price" — that is what a plain <code>print(tier, apply_discount(200, tier))</code> (no <code>:.2f</code>) shows: <code>gold None</code> / <code>silver None</code> / <code>bronze None</code> / <code>none 200</code>. With the <code>:.2f</code> format spec still in the line (as in the real Exercise 2), formatting the first <code>None</code> raises the <code>TypeError</code> shown on the next slide. Either way the bug is identical: three branches never reach a <code>return</code>.
+Common mistakes: this <em>is</em> the mistake — fix it by moving <code>return</code> back out to the function's top indentation level (slide 16).
+</aside>
+</section>
+
+<!-- 19. EXERCISE 2 — broken output -->
+<section class="s-out">
+<h3>What the broken version raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 14, in &lt;module&gt;
+    print(f"{tier}: ${apply_discount(200, tier):.2f}")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported format string passed to NoneType.__format__</pre>
+<aside class="notes">Verified against CPython 3.12.2. The <code>&lt;exec&gt;</code> path and line number are not load-bearing (see Exercise 1's note). The load-bearing last line is <code>TypeError: unsupported format string passed to NoneType.__format__</code> — raised on the first iteration (<code>"gold"</code>), because <code>apply_discount</code> returned <code>None</code> and <code>{None:.2f}</code> is undefined. Without the <code>:.2f</code> spec the same bug instead prints <code>gold None</code> / <code>silver None</code> / <code>bronze None</code> / <code>none 200</code> — the "three <code>None</code>s, one correct price" the guide describes.</aside>
+</section>
+
+<!-- 20. EXERCISE 2 — fixed pass -->
+<section class="s-code">
+<h3>Fixed — one <code>return</code> after the whole chain</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 (fixed) ---
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+for tier in ["gold", "silver", "bronze", "none"]:
+    print(f"{tier}: ${apply_discount(200, tier):.2f}")
+</div>
+<p class="expect"><code>return</code> is back at the function's top indentation level — every branch flows into it, and all four tiers return a real discounted price.</p>
+<aside class="notes">
+Line-by-line: identical to slide 16 — the only change from the broken version is that <code>return price * (1 - discount)</code> is dedented one level so it sits after the whole <code>if</code>/<code>elif</code>/<code>else</code> chain rather than inside the <code>else</code> branch. Now all four calls reach the <code>return</code> and hand back a number.
+Common mistakes: none new — this is the corrected form.
+</aside>
+</section>
+
+<!-- 21. EXERCISE 2 — fixed output -->
+<section class="s-out">
+<h3>Expected output (fixed)</h3>
+<pre>gold: $170.00
+silver: $180.00
+bronze: $190.00
+none: $200.00</pre>
+<aside class="notes">Identical to slide 17 — the fixed function is the real Exercise 2. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 22. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">What does <code>apply_discount(200, "platinum")</code> return — a tier that doesn't exist in the function at all?</p>
+<button data-opt="A">A <code>KeyError</code> — <code>"platinum"</code> isn't a known tier</button>
+<button data-opt="B"><code>None</code> — no branch matches</button>
+<button data-opt="C"><code>$200.00</code> — the full, undiscounted price</button>
+<p class="why" hidden><code>$200.00</code> — the full, undiscounted price, since <code>"platinum"</code> matches none of the <code>if</code>/<code>elif</code> conditions and falls through to <code>else</code>. No error, no warning — worth stating explicitly as a real design tradeoff: this function silently treats <em>any</em> unrecognized tier as "no discount."</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>$200.00</code> — the full, undiscounted price, since <code>"platinum"</code> matches none of the <code>if</code>/<code>elif</code> conditions and falls through to <code>else</code>. No error, no warning — worth stating explicitly as a real design tradeoff: this function silently treats <em>any</em> unrecognized tier as "no discount," which may or may not be the desired behavior for unexpected input.)"</aside>
+</section>
+
+<!-- 23. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Indenting <code>return</code> one level too deep (inside the <code>else</code> block only) — every tier <em>except</em> <code>"none"</code> returns <code>None</code> instead of a discounted price, since only the <code>else</code> branch actually reaches a <code>return</code> statement; the other three branches fall off the end of the function with nothing returned.</p>
+<p>Misspelling a tier string (e.g. <code>"Gold"</code> with a capital G) when calling — string comparison is case-sensitive, so <code>"Gold" == "gold"</code> is <code>False</code>, silently falling through to the <code>else</code> branch and returning the undiscounted price with no error at all. Squarely in the "silent wrong answer" category this course keeps returning to.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 24. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 8 min · 0:18–0:26</span>
+<h1>Compose Them</h1>
+<aside class="notes">
+Teaching goal: call one function from inside the body of another — <strong>composition</strong> — and see directly why Exercise 1's choice of <code>return</code> over <code>print</code> was essential to making this possible at all.
+Say to the class (verbatim): "This is the payoff for using <code>return</code> instead of <code>print</code> in both functions so far — we're about to feed one function's output directly into another, which is only possible because each one hands back a usable value."
+Live-code in two stages: first manually, then wrapped in a third function.
+</aside>
+</section>
+
+<!-- 25. EXERCISE 3 — the idea -->
+<section class="s-idea">
+<h3>The idea — one function's return value becomes another's input</h3>
+<div class="concept">
+<div class="concept-lbl">Say it once, explicitly</div>
+<p>Composition is genuinely one of the more abstract ideas in the whole course so far. <code>final_price</code> doesn't duplicate any discount or tax logic itself — it <strong>delegates</strong> both jobs to <code>apply_discount</code> and <code>calculate_tax</code> and combines the results.</p>
+<p>Tax is computed on the <em>discounted</em> price (<code>$170.00</code>), not the original <code>$200</code> — that's the actual business logic being modeled, not just a syntax point. It's fine if the room takes a moment to track all three functions at once.</p>
+</div>
+<aside class="notes">This card is the guide's framing for Exercise 3's "Line-by-line explanation" — composition made explicit, and the note that if this feels like a lot of layers, that's worth naming out loud. Stage 1 does the composition by hand with intermediate variables; stage 2 wraps the exact same two calls inside a third function's definition.</aside>
+</section>
+
+<!-- 26. EXERCISE 3 — stage 1 -->
+<section class="s-code">
+<h3>Live-code — Exercise 3 (stage 1: manual composition)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 (stage 1: manual composition) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+after_discount = apply_discount(200, "gold")
+after_tax = after_discount + calculate_tax(after_discount, 0.07)
+print(f"After gold discount: ${after_discount:.2f}")
+print(f"After tax: ${after_tax:.2f}")
+</div>
+<p class="expect">This block re-defines <code>calculate_tax</code> and <code>apply_discount</code> because each runnable block runs in its own fresh namespace. In the real <code>functions.py</code> they were typed once, in Exercises 1–2.</p>
+<aside class="notes">
+Line-by-line:
+- <code>after_discount = apply_discount(200, "gold")</code> — Exercise 2's function, called and its return value stored in a variable, exactly like calling any built-in function (<code>float()</code>, <code>type()</code>) — there's no special syntax difference between calling a function you wrote and one Python provides.
+- <code>calculate_tax(after_discount, 0.07)</code> — note this passes <code>after_discount</code> (the <em>discounted</em> price, <code>$170.00</code>), not the original <code>$200</code> — tax is computed on the discounted amount, which is worth stating as the actual business logic being modeled, not just a syntax point.
+Common mistakes: passing the <em>original</em> price (<code>200</code>) instead of the discounted price into <code>calculate_tax</code> — computes tax on the wrong base, <code>$14.00</code> instead of <code>$11.90</code>, final total <code>$184.00</code> instead of <code>$181.90</code> (demonstrated on the next slides).
+Check for understanding is on slide 34.
+</aside>
+</section>
+
+<!-- 27. EXERCISE 3 — stage 1 output -->
+<section class="s-out">
+<h3>Expected output — stage 1</h3>
+<pre>After gold discount: $170.00
+After tax: $181.90</pre>
+<aside class="notes">Matches the first two lines of the guide's Expected output for Exercise 3. <code>apply_discount(200, "gold") = 200 × 0.85 = 170.0</code>; <code>calculate_tax(170.0, 0.07) = 11.9</code>; <code>170.0 + 11.9 = 181.9</code> → <code>$181.90</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 28. EXERCISE 3 — stage 2 -->
+<section class="s-code">
+<h3>Live-code — Exercise 3 (stage 2: wrap it in a third function)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 (stage 2: wrap it in a third function) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+def final_price(price, tier, tax_rate):
+    discounted = apply_discount(price, tier)
+    return discounted + calculate_tax(discounted, tax_rate)
+
+print(f'final_price(200, "gold", 0.07) = ${final_price(200, "gold", 0.07):.2f}')
+</div>
+<p class="expect">A <strong>new</strong> function whose entire body is two calls to the <em>other</em> two functions, chained. One function's return value (<code>discounted</code>) becomes the input to a second function call, inside a third function's own definition.</p>
+<aside class="notes">
+Line-by-line:
+- <code>def final_price(price, tier, tax_rate):</code> — a <strong>new</strong> function whose entire body is two calls to the <em>other</em> two functions, chained together. This is composition made explicit: <code>final_price</code> doesn't duplicate any discount or tax logic itself — it delegates both jobs out and combines the results.
+- <code>discounted = apply_discount(price, tier)</code> then <code>return discounted + calculate_tax(discounted, tax_rate)</code> — one function's return value (<code>discounted</code>) becomes the input to a second function call, inside a third function's own definition. If this feels like a lot of layers, that's worth naming explicitly: composition is genuinely one of the more abstract ideas in the whole course so far.
+Common mistakes: defining <code>final_price</code> but forgetting it depends on <code>apply_discount</code> and <code>calculate_tax</code> already being defined <em>earlier in the file</em> — reordering the script so <code>final_price</code> is called before those two are defined gives a <code>NameError</code>. Python reads top to bottom; "define before you call" is the practical rule for this lab's straightforward script.
+Check for understanding is on slide 34.
+</aside>
+</section>
+
+<!-- 29. EXERCISE 3 — stage 2 output -->
+<section class="s-out">
+<h3>Expected output — stage 2</h3>
+<pre>final_price(200, "gold", 0.07) = $181.90</pre>
+<aside class="notes">Matches the third line of the guide's Expected output for Exercise 3. <code>final_price(200, "gold", 0.07)</code>: <code>discounted = 170.0</code>, then <code>170.0 + calculate_tax(170.0, 0.07) = 170.0 + 11.9 = 181.9</code> → <code>$181.90</code>. Same answer as stage 1's manual version, which is the whole point. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 30. EXERCISE 3 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — tax computed on the <em>original</em> price</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 (BROKEN: tax computed on the ORIGINAL price) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+def final_price(price, tier, tax_rate):
+    discounted = apply_discount(price, tier)
+    return discounted + calculate_tax(price, tax_rate)
+
+print(f'final_price(200, "gold", 0.07) = ${final_price(200, "gold", 0.07):.2f}')
+</div>
+<p class="expect">Pass <code>price</code> (the original <code>200</code>) into <code>calculate_tax</code> instead of <code>discounted</code>. No error — just a wrong number. Sanity-check it: does <code>$184.00</code> look right for a $200 order at a 15% discount plus 7% tax?</p>
+<aside class="notes">
+Teaching goal: a "does this number look plausible?" check — the bug produces no exception, only a silently wrong total.
+Line-by-line: <code>return discounted + calculate_tax(price, tax_rate)</code> taxes the <em>undiscounted</em> <code>200</code>: <code>calculate_tax(200, 0.07) = 14.0</code>, so <code>final_price = 170.0 + 14.0 = 184.0</code> → <code>$184.00</code>, versus the correct <code>$181.90</code> (tax on the discounted <code>170.0</code> is <code>11.90</code>).
+Common mistakes: this <em>is</em> the mistake the guide flags for Exercise 3 — ask the room to sanity-check the final answer against the two inputs before accepting it. Fix: pass <code>discounted</code>, not <code>price</code>, into <code>calculate_tax</code> (slide 32).
+</aside>
+</section>
+
+<!-- 31. EXERCISE 3 — broken output -->
+<section class="s-out">
+<h3>What the broken version prints</h3>
+<pre>final_price(200, "gold", 0.07) = $184.00</pre>
+<aside class="notes">Verified against CPython 3.12.2. A pure "silent wrong answer" — no exception. The intended answer is <code>$181.90</code>; taxing the original <code>$200</code> instead of the discounted <code>$170</code> adds <code>$14.00</code> of tax instead of <code>$11.90</code>, inflating the total by <code>$2.10</code>.</aside>
+</section>
+
+<!-- 32. EXERCISE 3 — fixed pass -->
+<section class="s-code">
+<h3>Fixed — tax on the discounted price</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 (fixed: tax on the discounted price) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+def final_price(price, tier, tax_rate):
+    discounted = apply_discount(price, tier)
+    return discounted + calculate_tax(discounted, tax_rate)
+
+print(f'final_price(200, "gold", 0.07) = ${final_price(200, "gold", 0.07):.2f}')
+</div>
+<p class="expect">One argument changed — <code>calculate_tax(discounted, tax_rate)</code>, not <code>calculate_tax(price, tax_rate)</code> — and the total is back to the correct <code>$181.90</code>.</p>
+<aside class="notes">
+Line-by-line: identical to stage 2 (slide 28). The single change from the broken version: <code>calculate_tax(discounted, tax_rate)</code> passes the discounted <code>170.0</code>, so tax is <code>11.90</code> and the total is <code>181.90</code>.
+Common mistakes: none new — this is the corrected form and the real Exercise 3.
+</aside>
+</section>
+
+<!-- 33. EXERCISE 3 — fixed output -->
+<section class="s-out">
+<h3>Expected output (fixed)</h3>
+<pre>final_price(200, "gold", 0.07) = $181.90</pre>
+<aside class="notes">Identical to slide 29 — matches the guide's Expected output for Exercise 3. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 34. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">How many separate function <em>calls</em> happen when I run <code>final_price(200, "gold", 0.07)</code> once — counting calls inside calls?</p>
+<button data-opt="A">One — just <code>final_price</code> itself</button>
+<button data-opt="B">Two — <code>final_price</code> and <code>apply_discount</code></button>
+<button data-opt="C">Three — <code>final_price</code>, plus its calls to <code>apply_discount</code> and <code>calculate_tax</code></button>
+<p class="why" hidden>Three: <code>final_price</code> itself, plus its own call to <code>apply_discount</code>, plus its own call to <code>calculate_tax</code> — getting a student to count all three, not just the outer one, confirms they're tracking the composition correctly.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Three: <code>final_price</code> itself, plus its own call to <code>apply_discount</code>, plus its own call to <code>calculate_tax</code> — getting a student to count all three, not just the outer one, confirms they're tracking the composition correctly.)"</aside>
+</section>
+
+<!-- 35. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Passing the <em>original</em> price (<code>200</code>) instead of the discounted price (<code>170.00</code>) into <code>calculate_tax</code> — computes tax on the wrong base amount, producing <code>$14.00</code> tax instead of <code>$11.90</code>, and a final total of <code>$184.00</code> instead of the correct <code>$181.90</code>. A good "does this number look plausible" check.</p>
+<p>Defining <code>final_price</code> but forgetting that it depends on <code>apply_discount</code> and <code>calculate_tax</code> already being defined <em>earlier in the file</em> — if a student reorders their script and calls <code>final_price</code> before those two are defined, they'll get a <code>NameError</code>. Python reads and defines things top to bottom.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 36. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 8 min · 0:26–0:34</span>
+<h1>Loop + Function</h1>
+<aside class="notes">
+Teaching goal: call <code>final_price</code> repeatedly over a list of <code>(price, tier)</code> pairs — Module 06's loop skills combined with today's functions, producing a genuine multi-row report from very little code.
+Say to the class (verbatim): "Four orders, four different price/tier combinations — one loop, one function call inside it, and a complete report."
+</aside>
+</section>
+
+<!-- 37. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+def final_price(price, tier, tax_rate):
+    discounted = apply_discount(price, tier)
+    return discounted + calculate_tax(discounted, tax_rate)
+
+orders = [(200, "gold"), (150, "silver"), (80, "bronze"), (500, "none")]
+for price, tier in orders:
+    total = final_price(price, tier, 0.07)
+    print(f"Price: ${price} | Tier: {tier} | Final: ${total:.2f}")
+</div>
+<p class="expect"><code>orders</code> is a list of <strong>tuples</strong> — the first time this semester a list holds anything other than plain numbers or strings. <code>for price, tier in orders:</code> <strong>unpacks</strong> each tuple into two variables in one step.</p>
+<aside class="notes">
+Line-by-line:
+- <code>orders = [(200, "gold"), (150, "silver"), (80, "bronze"), (500, "none")]</code> — a list of <strong>tuples</strong>, each holding two related values (a price and a tier) as one unit. First time this semester a list holds anything other than plain numbers or strings — flag it as "a list of records," where each record bundles multiple related fields.
+- <code>for price, tier in orders:</code> — this <strong>unpacks</strong> each tuple as the loop pulls it out, in one step: on the first pass, <code>price</code> is <code>200</code> and <code>tier</code> is <code>"gold"</code>, both bound at once from the first tuple. Contrast with Module 06's <code>for sale in sales:</code>, which bound one variable per pass — this binds two, because each element is itself a two-part tuple.
+- <code>total = final_price(price, tier, 0.07)</code> — Exercise 3's composed function, called once per order, with the tax rate fixed at <code>0.07</code> for every order.
+Common mistakes: writing <code>for order in orders:</code> then using <code>order[0]</code> / <code>order[1]</code> instead of the cleaner unpacked form; forgetting <code>final_price</code> needs all three arguments — <code>final_price(price, tier)</code> alone raises <code>TypeError: final_price() missing 1 required positional argument: 'tax_rate'</code> (demonstrated next).
+Check for understanding (guide, verbatim parenthetical): "If I wanted a different tax rate for a specific order — say the <code>'none'</code> tier order should be taxed at 9% instead of 7% — what's the smallest change to make? (Replace the fixed <code>0.07</code> with a per-order value — e.g., make <code>orders</code> a list of three-element tuples <code>(price, tier, tax_rate)</code> instead of two, and unpack all three in the loop.)"
+</aside>
+</section>
+
+<!-- 38. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Price: $200 | Tier: gold | Final: $181.90
+Price: $150 | Tier: silver | Final: $144.45
+Price: $80 | Tier: bronze | Final: $81.32
+Price: $500 | Tier: none | Final: $535.00</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 4 exactly. <code>200/gold → 170 + 11.90 = 181.90</code>; <code>150/silver → 135 + 9.45 = 144.45</code>; <code>80/bronze → 76 + 5.32 = 81.32</code>; <code>500/none → 500 + 35.00 = 535.00</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 39. EXERCISE 4 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>final_price</code> called with only two arguments</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 (BROKEN: final_price called without tax_rate) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+def final_price(price, tier, tax_rate):
+    discounted = apply_discount(price, tier)
+    return discounted + calculate_tax(discounted, tax_rate)
+
+orders = [(200, "gold"), (150, "silver"), (80, "bronze"), (500, "none")]
+for price, tier in orders:
+    total = final_price(price, tier)
+    print(f"Price: ${price} | Tier: {tier} | Final: ${total:.2f}")
+</div>
+<p class="expect">Drop the <code>0.07</code> argument. <code>final_price</code> needs all three of <code>price</code>, <code>tier</code>, <em>and</em> <code>tax_rate</code> — Python raises a very readable <code>TypeError</code> naming the missing one.</p>
+<aside class="notes">
+Teaching goal: read a clear, specific error message together — Python names exactly which argument is missing.
+Line-by-line: <code>final_price(price, tier)</code> supplies two of the three required positional parameters; <code>tax_rate</code> has no default, so the call fails before the body runs, on the first iteration, with <code>TypeError: final_price() missing 1 required positional argument: 'tax_rate'</code>.
+Common mistakes: this <em>is</em> the mistake the guide flags for Exercise 4 — read the message aloud together; it's a good, very readable one. Fix: pass the tax rate, <code>final_price(price, tier, 0.07)</code> (slide 41).
+</aside>
+</section>
+
+<!-- 40. EXERCISE 4 — broken output -->
+<section class="s-out">
+<h3>What the broken version raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 22, in &lt;module&gt;
+    total = final_price(price, tier)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: final_price() missing 1 required positional argument: 'tax_rate'</pre>
+<aside class="notes">Verified against CPython 3.12.2. The <code>&lt;exec&gt;</code> path and line number are not load-bearing (see Exercise 1's note). The load-bearing last line is identical: <code>TypeError: final_price() missing 1 required positional argument: 'tax_rate'</code> — raised on the first iteration, before <code>final_price</code>'s body runs.</aside>
+</section>
+
+<!-- 41. EXERCISE 4 — fixed pass -->
+<section class="s-code">
+<h3>Fixed — all three arguments supplied</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 (fixed) ---
+def calculate_tax(price, rate):
+    return price * rate
+
+def apply_discount(price, tier):
+    if tier == "gold":
+        discount = 0.15
+    elif tier == "silver":
+        discount = 0.10
+    elif tier == "bronze":
+        discount = 0.05
+    else:
+        discount = 0
+    return price * (1 - discount)
+
+def final_price(price, tier, tax_rate):
+    discounted = apply_discount(price, tier)
+    return discounted + calculate_tax(discounted, tax_rate)
+
+orders = [(200, "gold"), (150, "silver"), (80, "bronze"), (500, "none")]
+for price, tier in orders:
+    total = final_price(price, tier, 0.07)
+    print(f"Price: ${price} | Tier: {tier} | Final: ${total:.2f}")
+</div>
+<p class="expect">The <code>0.07</code> tax rate is back as the third argument — every call now has all three parameters and the report prints.</p>
+<aside class="notes">
+Line-by-line: identical to slide 37 — the only change from the broken version is that <code>final_price(price, tier, 0.07)</code> supplies the third required argument.
+Common mistakes: none new — this is the corrected form and the real Exercise 4.
+</aside>
+</section>
+
+<!-- 42. EXERCISE 4 — fixed output -->
+<section class="s-out">
+<h3>Expected output (fixed)</h3>
+<pre>Price: $200 | Tier: gold | Final: $181.90
+Price: $150 | Tier: silver | Final: $144.45
+Price: $80 | Tier: bronze | Final: $81.32
+Price: $500 | Tier: none | Final: $535.00</pre>
+<aside class="notes">Identical to slide 38 — matches the guide's Expected output for Exercise 4. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 43. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You want the <code>'none'</code>-tier order taxed at 9% instead of 7%. What's the smallest change to make?</p>
+<button data-opt="A">Add an <code>if tier == "none":</code> branch inside <code>calculate_tax</code></button>
+<button data-opt="B">Make <code>orders</code> a list of three-element tuples <code>(price, tier, tax_rate)</code> and unpack all three in the loop</button>
+<button data-opt="C">Nothing — <code>final_price</code> already varies the rate per tier</button>
+<p class="why" hidden>Replace the fixed <code>0.07</code> with a per-order value — e.g., make <code>orders</code> a list of three-element tuples <code>(price, tier, tax_rate)</code> instead of two, and unpack all three in the loop. Proposing this extension confirms you understand the loop-plus-function structure well enough to extend it, not just read it.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Replace the fixed <code>0.07</code> with a per-order value — e.g., make <code>orders</code> a list of three-element tuples <code>(price, tier, tax_rate)</code> instead of two, and unpack all three in the loop. Getting a student to propose this extension confirms they understand the loop-plus-function structure well enough to extend it, not just read it.)"</aside>
+</section>
+
+<!-- 44. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>for order in orders:</code> (a single loop variable) and then trying to use <code>order[0]</code> / <code>order[1]</code> instead of the cleaner unpacked <code>price, tier</code> form — not wrong, but a good moment to show both side by side and let the room see why the unpacked version reads more clearly.</p>
+<p>Forgetting that <code>final_price</code> needs all three arguments (<code>price</code>, <code>tier</code>, <em>and</em> <code>tax_rate</code>) — a student who writes <code>final_price(price, tier)</code> alone gets a <code>TypeError: final_price() missing 1 required positional argument: 'tax_rate'</code>, a good, very readable error message worth reading aloud together if it comes up.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 45. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 20 min · 0:34–0:54</span>
+<h1>Debug First, Then Ask</h1>
+<aside class="notes">
+Teaching goal: a structured, four-step debugging discipline — solo tracing, then a narrowly-scoped AI question, then a self-written fix, then a class debrief. This is the lab's most important exercise for long-term habits, independent of any single Python concept. It is an <strong>AI-literacy exercise, not a programming exercise</strong>. Run it on an actual timer, out loud — a rushed or skipped version defeats the exercise.
+Say to the class, before starting the timer (verbatim): "This is different from everything else today. You're going to debug a broken file called <code>broken_sales.py</code> in four timed, five-minute steps. The goal isn't just fixing the bugs — it's building the <em>habit</em> of debugging methodically before reaching for an AI tool, and using AI narrowly and honestly when you do reach for it. I will call time at each five-minute mark — don't rush ahead to the next step early, and don't fall behind either."
+Distribute or project <code>broken_sales.py</code> (verified three-bug version in Appendix B — one <code>SyntaxError</code>, one silent logic bug, one <code>IndexError</code>, deliberately spanning three different bug categories).
+</aside>
+</section>
+
+<!-- 46. EXERCISE 5 — the four steps -->
+<section class="s-idea">
+<h3>The idea — four timed five-minute steps</h3>
+<div class="concept">
+<div class="concept-lbl">Run each on the timer, out loud</div>
+<p><strong>Step 1 — Solo Debug (5 min).</strong> Alone. Add <code>print()</code> statements to trace values. Read the whole traceback, start to finish. Explain the suspect section out loud to a rubber duck. Write down what you think each bug is <em>before</em> you fix anything.</p>
+<p><strong>Step 2 — AI Explainer (5 min).</strong> Paste <em>only the error message</em> into an AI assistant — not your code. Ask "what does this error mean?" Do <em>not</em> ask it to fix your code.</p>
+<p><strong>Step 3 — Fix It Yourself (5 min).</strong> Use the AI's explanation as a guide, not a script. Write your fix, in your own words, as a comment — <em>before</em> you implement it. Then implement it and confirm the file runs.</p>
+<p><strong>Step 4 — Class Debrief (5 min).</strong> Share what you found. Did the AI's explanation match what the bug actually turned out to be?</p>
+</div>
+<aside class="notes">
+Step 1 — Say to the class (verbatim): "Five minutes, alone. Add <code>print()</code> statements to trace variable values. Read whatever traceback you get, carefully, start to finish. Then — genuinely — explain the suspect section out loud to a rubber duck, your water bottle, your phone, anything patient. Write down what you think each bug is <em>before</em> you fix anything." This is <strong>rubber duck debugging</strong>, from <em>The Pragmatic Programmer</em> (Hunt &amp; Thomas, 1999) — name the source. Circulate to catch students fixing before writing a diagnosis. Expect the whole room to hit the <code>SyntaxError</code> (missing colon) first — the file won't run at all until it's fixed.
+Step 2 — Say to the class (verbatim): "Now, paste <em>only the error message</em> into an AI assistant — not your code, just the error text. Ask 'what does this error mean?' Do not ask it to fix your code. This step is about understanding the error category, not outsourcing the fix." The "message only, not the code" constraint is the entire pedagogical point — it forces a general answer, not a patched version of this file. State your own AI-tool policy explicitly here.
+Step 3 — Say to the class (verbatim): "Use the AI's explanation as a guide, not a script. Write your fix, in your own words, as a comment — before you actually implement it. Then implement it and confirm the file runs correctly." The comment-before-implementation requirement is a forcing function: a student who can't articulate the fix probably doesn't understand it yet. By now most students hit the logic bug (<code>$90</code> instead of <code>$715</code>) and possibly the <code>IndexError</code>.
+Step 4 — Say to the class (verbatim): "Share what you found. Did the AI's explanation match what the bug actually turned out to be?" Cold-call 2–3 students, asking each to name <strong>which of the three bugs</strong> (syntax, logic, or runtime/index). Good whole-room question: "for which bug was the AI's explanation most useful, and for which was your own tracing more useful?" Thesis to name explicitly: <strong>AI is well-suited to explaining error messages you don't understand; it is not a substitute for the sanity-checking instinct that catches errors nothing ever raised.</strong>
+</aside>
+</section>
+
+<!-- 47. EXERCISE 5 — broken file as distributed -->
+<section class="s-code">
+<h3><code>broken_sales.py</code> — as distributed to students</h3>
+<div class="run" data-lang="python">
+# broken_sales.py - trace and diagnose before fixing anything.
+sales = [120, 80, 250, 175, 90]
+
+total = 0
+for sale in sales:
+    total = sale
+print(f"Total: ${total}")
+
+count = 0
+for sale in sales
+    count += 1
+print(f"Count: {count}")
+
+i = 0
+while i &lt;= len(sales):
+    print(sales[i])
+    i += 1
+</div>
+<p class="expect">Three bugs, three categories: one <code>SyntaxError</code>, one silent logic bug, one <code>IndexError</code>. Python parses the <em>entire file</em> before running any of it, so <strong>nothing runs at all</strong> until the <code>SyntaxError</code> is fixed.</p>
+<aside class="notes">
+Teaching goal: establish that a <code>SyntaxError</code> blocks the whole file from parsing — the forced first discovery for every student.
+Line-by-line of the three bugs:
+- <strong>Bug 1 (<code>SyntaxError</code>, blocks everything):</strong> <code>for sale in sales</code> on the <code>count</code> block is missing its trailing colon → <code>SyntaxError: expected ':'</code>. Because Python parses the whole file first, nothing above or below runs until this is fixed.
+- <strong>Bug 2 (silent logic bug, no error):</strong> <code>total = sale</code> inside the first loop should be <code>total += sale</code>. Once Bug 1 is fixed the script runs and prints <code>Total: $90</code> — plausible-looking but simply wrong (correct sum is <code>$715</code>). Nothing signals a problem; catch it only by sanity-checking the number.
+- <strong>Bug 3 (<code>IndexError</code>, off-by-one):</strong> <code>while i &lt;= len(sales):</code> should be <code>while i &lt; len(sales):</code>. <code>len(sales)</code> is <code>5</code>, valid indices are <code>0</code>–<code>4</code>; <code>&lt;=</code> lets the loop attempt <code>sales[5]</code>, raising <code>IndexError: list index out of range</code>.
+Common mistakes: trying to fix bugs before writing a written diagnosis; pasting the whole file into the AI instead of just the error text.
+</aside>
+</section>
+
+<!-- 48. EXERCISE 5 — SyntaxError output -->
+<section class="s-out">
+<h3>Bug 1 — what it raises (blocks the whole file)</h3>
+<pre>  File "&lt;exec&gt;", line 11
+    for sale in sales
+                     ^
+SyntaxError: expected ':'</pre>
+<aside class="notes">Verified against CPython 3.12.2 — <code>SyntaxError: expected ':'</code> from the missing colon on the <code>count</code> block's <code>for</code> line. The <code>&lt;exec&gt;</code> path and the line number are not load-bearing (they depend on how the file is run and on preceding blank/comment lines); the load-bearing content is the caret under the end of <code>for sale in sales</code> and the final <code>SyntaxError: expected ':'</code>. No other output appears — the file never starts executing.</aside>
+</section>
+
+<!-- 49. EXERCISE 5 — bug 1 fixed -->
+<section class="s-code">
+<h3>Bug 1 fixed — colon added; bugs 2 and 3 remain</h3>
+<div class="run" data-lang="python">
+# broken_sales.py - bug 1 (missing colon) fixed; bugs 2 and 3 remain.
+sales = [120, 80, 250, 175, 90]
+
+total = 0
+for sale in sales:
+    total = sale
+print(f"Total: ${total}")
+
+count = 0
+for sale in sales:
+    count += 1
+print(f"Count: {count}")
+
+i = 0
+while i &lt;= len(sales):
+    print(sales[i])
+    i += 1
+</div>
+<p class="expect">Now the file parses and runs — but two bugs are still live. It prints a wrong total (<code>$90</code>, no error), the right count (<code>5</code>), the five sale values, then crashes with an <code>IndexError</code>.</p>
+<aside class="notes">
+Teaching goal: with the syntax fixed, the file runs far enough to expose the other two bugs — one silent, one an exception.
+Line-by-line: <code>total = sale</code> (Bug 2) overwrites <code>total</code> every pass, so after the loop <code>total</code> holds only the last sale, <code>90</code> → <code>Total: $90</code> (no error). The <code>count</code> loop is correct → <code>Count: 5</code>. The <code>while i &lt;= len(sales):</code> loop (Bug 3) prints <code>sales[0..4]</code> then attempts <code>sales[5]</code> and raises <code>IndexError: list index out of range</code>.
+Common mistakes: assuming "it runs now, so it's fixed" — Bug 2 never raises; the <code>$90</code> total has to be caught by a human sanity check.
+</aside>
+</section>
+
+<!-- 50. EXERCISE 5 — bug 1 fixed output -->
+<section class="s-out">
+<h3>After Bug 1 — wrong total, then an <code>IndexError</code></h3>
+<pre>Total: $90
+Count: 5
+120
+80
+250
+175
+90
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 16, in &lt;module&gt;
+    print(sales[i])
+          ~~~~~^^^
+IndexError: list index out of range</pre>
+<aside class="notes">Verified against CPython 3.12.2. <code>Total: $90</code> is Bug 2's silent wrong answer (correct is <code>$715</code>) — no exception. <code>Count: 5</code> is correct. The five values print, then <code>sales[5]</code> raises <code>IndexError: list index out of range</code> (Bug 3). The <code>&lt;exec&gt;</code> path and line number are not load-bearing; the final <code>IndexError: list index out of range</code> is.</aside>
+</section>
+
+<!-- 51. EXERCISE 5 — the silent bug -->
+<section class="s-idea">
+<h3>Bug 2 — the one no error will ever catch</h3>
+<div class="concept">
+<div class="concept-lbl">The exercise's real thesis</div>
+<p><code>total = sale</code> should be <code>total += sale</code>. Once the syntax is fixed the script runs cleanly and prints <code>Total: $90</code> — plausible-looking output that is simply wrong (the correct sum is <code>$715</code>). Nothing about the program signals a problem.</p>
+<p>This is the bug most students catch only by sanity-checking the number against a rough mental estimate — "$90 doesn't look like a sum of five positive numbers." AI is well-suited to explaining error messages you don't understand; it is <strong>not</strong> a substitute for the sanity-checking instinct that catches errors nothing ever raised.</p>
+</div>
+<aside class="notes">This card is the guide's Bug 2 description plus Step 4's closing thesis, verbatim in substance. If time allows in the debrief, ask: "which bug would you have found fastest <em>without</em> any AI step at all?" Most rooms say the logic bug, since noticing "$90 doesn't look like a sum of five positive numbers" is a human sanity-check, not something an error message would have caught.</aside>
+</section>
+
+<!-- 52. EXERCISE 5 — bugs 1+2 fixed -->
+<section class="s-code">
+<h3>Bugs 1 and 2 fixed — <code>total += sale</code>; bug 3 (off-by-one) remains</h3>
+<div class="run" data-lang="python">
+# broken_sales.py - bugs 1 and 2 fixed; bug 3 (off-by-one) remains.
+sales = [120, 80, 250, 175, 90]
+
+total = 0
+for sale in sales:
+    total += sale
+print(f"Total: ${total}")
+
+count = 0
+for sale in sales:
+    count += 1
+print(f"Count: {count}")
+
+i = 0
+while i &lt;= len(sales):
+    print(sales[i])
+    i += 1
+</div>
+<p class="expect"><code>total += sale</code> makes the total correct — <code>$715</code> now. The <code>IndexError</code> from the <code>&lt;=</code> in the <code>while</code> condition is still there.</p>
+<aside class="notes">
+Teaching goal: isolate Bug 3 — with the total corrected, the only thing left is the off-by-one in the <code>while</code> condition.
+Line-by-line: <code>total += sale</code> accumulates: <code>120 + 80 + 250 + 175 + 90 = 715</code> → <code>Total: $715</code>. <code>Count: 5</code> unchanged. <code>while i &lt;= len(sales):</code> still runs one pass too many and raises <code>IndexError: list index out of range</code> on <code>sales[5]</code>.
+Common mistakes: fixing <code>total</code> but stopping there because "the number looks right now" — the file still crashes on the <code>while</code> loop.
+</aside>
+</section>
+
+<!-- 53. EXERCISE 5 — bugs 1+2 fixed output -->
+<section class="s-out">
+<h3>After Bugs 1 and 2 — total correct, <code>IndexError</code> still there</h3>
+<pre>Total: $715
+Count: 5
+120
+80
+250
+175
+90
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 16, in &lt;module&gt;
+    print(sales[i])
+          ~~~~~^^^
+IndexError: list index out of range</pre>
+<aside class="notes">Verified against CPython 3.12.2. <code>Total: $715</code> is now the correct sum. <code>Count: 5</code> correct. The five values print, then <code>sales[5]</code> raises <code>IndexError: list index out of range</code> (Bug 3, still unfixed). The <code>&lt;exec&gt;</code> path and line number are not load-bearing; the final <code>IndexError: list index out of range</code> is.</aside>
+</section>
+
+<!-- 54. EXERCISE 5 — fully fixed -->
+<section class="s-code">
+<h3>Fully corrected — <code>while i &lt; len(sales):</code></h3>
+<div class="run" data-lang="python">
+# broken_sales.py - fixed
+sales = [120, 80, 250, 175, 90]
+
+total = 0
+for sale in sales:
+    total += sale
+print(f"Total: ${total}")
+
+count = 0
+for sale in sales:
+    count += 1
+print(f"Count: {count}")
+
+i = 0
+while i &lt; len(sales):
+    print(sales[i])
+    i += 1
+</div>
+<p class="expect">All three bugs fixed: colon added, <code>total += sale</code>, and <code>&lt;=</code> changed to <code>&lt;</code>. Valid indices are <code>0</code>–<code>4</code>, and <code>i &lt; len(sales)</code> stops the loop the moment <code>i</code> reaches <code>5</code>.</p>
+<aside class="notes">
+Line-by-line: <code>while i &lt; len(sales):</code> runs for <code>i = 0, 1, 2, 3, 4</code> and stops when <code>5 &lt; 5</code> is <code>False</code>, so <code>sales[5]</code> is never attempted. Combined with the earlier two fixes, the file runs top to bottom with no errors.
+Common mistakes: none new — this is the fully corrected version from Appendix B.
+</aside>
+</section>
+
+<!-- 55. EXERCISE 5 — fully fixed output -->
+<section class="s-out">
+<h3>Verified output of the fixed version</h3>
+<pre>Total: $715
+Count: 5
+120
+80
+250
+175
+90</pre>
+<aside class="notes">Matches the guide's "Verified output of the fixed version" for Appendix B exactly: <code>Total: $715</code>, <code>Count: 5</code>, then the five sale values printed one per line. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 56. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Of the three bugs, which one would you most likely catch <em>only</em> by sanity-checking the output against a rough mental estimate?</p>
+<button data-opt="A">The <code>SyntaxError</code> — the missing colon</button>
+<button data-opt="B">The silent logic bug — <code>total = sale</code> printing <code>$90</code> instead of <code>$715</code></button>
+<button data-opt="C">The <code>IndexError</code> — the off-by-one in the <code>while</code> condition</button>
+<p class="why" hidden>The silent logic bug. As the guide puts it: "This is the bug most students should catch only by sanity-checking the number against a rough mental estimate, not from any error message." The other two announce themselves with a traceback; this one prints a plausible-looking wrong number and says nothing.</p>
+</div>
+<aside class="notes">Exercise 5 has no "Check for understanding" parenthetical in the guide (it is a timed AI-literacy protocol, not a code walkthrough). Per rollout convention, this knowledge check is drawn from a verbatim same-segment line: "This is the bug most students should catch only by sanity-checking the number against a rough mental estimate, not from any error message." It reinforces the debrief's categorization skill (syntax / logic / runtime-index).</aside>
+</section>
+
+<!-- 57. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common facilitation pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Students who try to fix bugs immediately without writing down a diagnosis first — the written diagnosis-before-fix requirement is what makes Step 1 teach something rather than being five minutes of trial and error.</p>
+<p>Students pasting their whole file into the AI out of habit in Step 2 — redirect them to the message-only version. The "paste only the error message, not the code" constraint is the entire pedagogical point of that step.</p>
+<p>Skipping straight to editing code in Step 3 without writing the fix as a comment in their own words first — a student who can't articulate the fix probably doesn't understand it yet, even if they know which line to change.</p>
+</div>
+<aside class="notes">From Exercise 5's per-step Facilitation notes. Also: if a student is still stuck purely on the syntax error by Step 3, that's useful information — do a quick individual check-in rather than a whole-class pause.</aside>
+</section>
+
+<!-- 58. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 8 min · 0:54–1:02</span>
+<h1>Scope Experiment</h1>
+<aside class="notes">
+Teaching goal: local vs. global scope — a genuinely surprising result the first time you see it, and essential for understanding why functions don't accidentally corrupt variables outside themselves.
+Say to the class (verbatim): "Predict the output of this before I run it — write down your three guesses."
+Live-code it only after collecting predictions. Have every student write, in their own words, a one-sentence explanation of scope as a comment in their file — this is the exercise's actual required deliverable.
+</aside>
+</section>
+
+<!-- 59. EXERCISE 6 — the idea -->
+<section class="s-idea">
+<h3>The idea — two <code>x</code>s that briefly exist at once</h3>
+<div class="concept">
+<div class="concept-lbl">Say this twice, differently</div>
+<p>Assigning to <code>x</code> inside <code>double_it()</code> creates a <strong>brand new, separate local variable</strong>, also named <code>x</code>, that exists <em>only</em> inside this function call and only for its duration. It does <strong>not</strong> modify the global <code>x</code>.</p>
+<p>"There are now two <code>x</code>s that both exist briefly at the same time — a global one worth <code>100</code>, and a local one worth <code>999</code> — and the function has no way to see or touch the global one once it's created its own local <code>x</code>." When the function returns, the local <code>x</code> is destroyed; the global <code>x</code> was never touched.</p>
+</div>
+<aside class="notes">This card is the guide's "Line-by-line explanation, in the order the room needs to reconcile with their predictions." Curious-student nuance (truthful one-sentence answer if asked, but intentionally outside this exercise's required scope): a function <em>reading</em> a global variable without reassigning it genuinely can see the global value directly — it's specifically <em>assignment</em> inside a function that creates a new local variable instead of modifying the global one.</aside>
+</section>
+
+<!-- 60. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6 (after collecting predictions)</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 ---
+x = 100   # global variable
+
+def double_it():
+    x = 999   # local variable — different from global x!
+    return x * 2
+
+print(x)             # what prints here?
+print(double_it())   # what prints here?
+print(x)              # has x changed?
+</div>
+<p class="expect">Three guesses first. The third <code>print(x)</code> is the one most students predict wrong — they expect <code>999</code>, assuming the function "changed" the global variable.</p>
+<aside class="notes">
+Line-by-line, in the order the room needs to reconcile with their predictions:
+- <code>x = 100</code> — a <strong>global</strong> variable: defined outside any function, at the top level of the script.
+- <code>print(x)</code> (first) — straightforwardly prints <code>100</code>, the global value. No surprises yet.
+- Inside <code>double_it()</code>, <code>x = 999</code> — creates a <strong>brand new, separate local variable</strong>, also named <code>x</code>, that exists <em>only</em> inside this function call. Assigning to <code>x</code> inside a function does not modify the global <code>x</code>.
+- <code>return x * 2</code> — inside the function, <code>x</code> unambiguously refers to the <em>local</em> <code>999</code> (Python always looks for the nearest, most local version of a name first), so this returns <code>1998</code>.
+- <code>print(x)</code> (third) — back at the global level, the local <code>x</code> no longer exists — it was destroyed the moment the function returned. The global <code>x</code> was never touched, so this prints <code>100</code> again, unchanged.
+Common mistakes: predicting the third <code>print(x)</code> shows <code>999</code> — the single most common misconception this exercise exists to correct; if most of the room predicted this, spend extra time on the "two separate <code>x</code>s" framing. Also: confusing this with a function <em>reading</em> a global (which is fine) — it's specifically <em>assignment</em> inside a function that creates a new local.
+Check for understanding (guide, verbatim parenthetical): "If I renamed the local variable inside <code>double_it()</code> from <code>x</code> to something else, like <code>y</code>, would the function's behavior change at all? (No — <code>double_it()</code> would still work identically, since it never actually needed to reference the global <code>x</code>; the naming collision in the original version was deliberately confusing on purpose, to make the scope lesson vivid, not because the function requires that specific name.)"
+</aside>
+</section>
+
+<!-- 61. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>100
+1998
+100</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 6 exactly. First <code>print(x)</code> → global <code>100</code>. <code>print(double_it())</code> → the local <code>x</code> is <code>999</code>, <code>999 * 2 = 1998</code>. Third <code>print(x)</code> → global <code>x</code> still <code>100</code>, untouched by the function. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 62. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If I renamed the local variable inside <code>double_it()</code> from <code>x</code> to <code>y</code>, would the function's behavior change at all?</p>
+<button data-opt="A">No — it never needed to reference the global <code>x</code>; the name collision was deliberately confusing on purpose</button>
+<button data-opt="B">Yes — <code>return y * 2</code> would raise <code>NameError</code></button>
+<button data-opt="C">Yes — the third <code>print(x)</code> would then show <code>999</code></button>
+<p class="why" hidden>No — <code>double_it()</code> would still work identically, since it never actually needed to reference the global <code>x</code>; the naming collision in the original version was deliberately confusing on purpose, to make the scope lesson vivid, not because the function requires that specific name.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(No — <code>double_it()</code> would still work identically, since it never actually needed to reference the global <code>x</code>; the naming collision in the original version was deliberately confusing on purpose, to make the scope lesson vivid, not because the function requires that specific name.)"</aside>
+</section>
+
+<!-- 63. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Predicting the third <code>print(x)</code> will show <code>999</code>, assuming the function "changed" the global variable — this is the single most common misconception this exercise exists to correct; if most of the room predicted this, spend extra time on the "two separate <code>x</code>s" framing rather than moving on quickly.</p>
+<p>Confusing this with the <em>opposite</em>, equally real situation: a function <em>reading</em> a global variable (without reassigning it) genuinely can see the global value directly. Reading is fine; it's specifically <em>assignment</em> inside a function that creates a new local variable instead of modifying the global one. Intentionally outside this exercise's required scope, but worth a truthful one-sentence answer if asked.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6. The required deliverable: every student writes a one-sentence, own-words explanation of scope as a comment in their file.</aside>
+</section>
+
+<!-- 64. STRETCH 1 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 · 8 min · 1:02–1:10</span>
+<h1>Summarize a List with a Function</h1>
+<aside class="notes">
+Teaching goal: package Module 06's entire accumulator-pattern lab into a single reusable function that returns a <strong>dictionary</strong> — a new data structure, holding several named results from one function call.
+Say to the class (verbatim): "Everything from last module's sum/count/average/max exercises, wrapped into one function that returns all four results — plus a minimum — bundled together in a dictionary."
+</aside>
+</section>
+
+<!-- 65. STRETCH 1 — the idea -->
+<section class="s-idea">
+<h3>The idea — one loop, several accumulators, a dictionary out</h3>
+<div class="concept">
+<div class="concept-lbl">Two firsts this semester</div>
+<p><code>current_max</code> and <code>current_min</code> are initialized to the list's <strong>first actual element</strong> (<code>sales_list[0]</code>), not a hardcoded <code>0</code> — the "more robust" version promised back in Module 06, genuinely correct even for a list with negative numbers.</p>
+<p>The function returns a <strong>dictionary literal</strong>: curly braces, <code>"key": value</code> pairs. First time this semester a function returns something other than a single number or string — a small bundle of <em>named</em> results the caller accesses by key.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Stretch 1, condensed. The loop body runs all four accumulator updates (<code>total</code>, <code>count</code>, <code>current_max</code>, <code>current_min</code>) together in one pass — that's the exercise's real point. <code>for key, value in result.items():</code> uses the same unpacking idea as Exercise 4's <code>for price, tier in orders:</code>.</aside>
+</section>
+
+<!-- 66. STRETCH 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 1</h3>
+<div class="run" data-lang="python">
+# --- Stretch 1 ---
+def summarize(sales_list):
+    total = 0
+    count = 0
+    current_max = sales_list[0]
+    current_min = sales_list[0]
+    for sale in sales_list:
+        total += sale
+        count += 1
+        if sale &gt; current_max:
+            current_max = sale
+        if sale &lt; current_min:
+            current_min = sale
+    return {
+        "total": total,
+        "count": count,
+        "average": total / count,
+        "max": current_max,
+        "min": current_min,
+    }
+
+result = summarize([120, 80, 250, 175, 90, 410, 60, 215])
+for key, value in result.items():
+    print(f"{key}: {value}")
+</div>
+<p class="expect">One loop maintains four accumulators at once. <code>.items()</code> hands back each key/value pair together, unpacked into two loop variables in one step.</p>
+<aside class="notes">
+Line-by-line:
+- <code>current_max = sales_list[0]</code> and <code>current_min = sales_list[0]</code> — initialized to the list's <strong>first actual element</strong>, not a hardcoded <code>0</code> — recall Module 06 Exercise 3's flagged limitation: initializing to <code>0</code> breaks if the list could contain values below zero. This function is genuinely correct for any list, including one with negatives — the "more robust" version promised back in Module 06.
+- The loop body runs all four accumulator updates (<code>total</code>, <code>count</code>, <code>current_max</code>, <code>current_min</code>) together, in one pass — one loop can maintain several accumulators simultaneously.
+- <code>return {"total": total, "count": count, ...}</code> — a <strong>dictionary literal</strong>: curly braces, <code>"key": value</code> pairs separated by commas. First time this semester a function returns something other than a single number or string — a small bundle of <em>named</em> results the caller accesses by key.
+- <code>for key, value in result.items():</code> — <code>.items()</code> gives back each key/value pair together, unpacked into two loop variables in one step, the same unpacking idea as Exercise 4's <code>for price, tier in orders:</code>.
+Common mistakes: initializing <code>current_max</code>/<code>current_min</code> to <code>0</code> out of habit rather than <code>sales_list[0]</code> — harmless for this all-positive dataset but the exact limitation flagged in Module 06; removing a comma <em>between</em> two dictionary entries by mistake — a real <code>SyntaxError</code> (a trailing comma after the last entry is fine, optional).
+Check for understanding (guide, verbatim parenthetical): "If I call <code>summarize([])</code> — an empty list — what happens? (<code>sales_list[0]</code> raises <code>IndexError: list index out of range</code>, since there's no first element to initialize <code>current_max</code>/<code>current_min</code> from — a good moment to note that this function, while more robust than Module 06's original, still isn't bulletproof against every possible input.)"
+</aside>
+</section>
+
+<!-- 67. STRETCH 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>total: 1400
+count: 8
+average: 175.0
+max: 410
+min: 60</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Stretch 1 exactly. <code>120+80+250+175+90+410+60+215 = 1400</code>; <code>8</code> items; <code>1400 / 8 = 175.0</code> (a bare <code>print</code>, so <code>175.0</code>, not <code>175.00</code>); <code>max</code> <code>410</code>, <code>min</code> <code>60</code>. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 68. STRETCH 1 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>summarize([])</code> on an empty list</h3>
+<div class="run" data-lang="python">
+# --- Stretch 1 (BROKEN: empty list has no first element) ---
+def summarize(sales_list):
+    total = 0
+    count = 0
+    current_max = sales_list[0]
+    current_min = sales_list[0]
+    for sale in sales_list:
+        total += sale
+        count += 1
+        if sale &gt; current_max:
+            current_max = sale
+        if sale &lt; current_min:
+            current_min = sale
+    return {"total": total, "count": count, "average": total / count,
+            "max": current_max, "min": current_min}
+
+result = summarize([])
+print(result)
+</div>
+<p class="expect">Call <code>summarize([])</code>. There's no first element to initialize <code>current_max</code>/<code>current_min</code> from, so <code>sales_list[0]</code> raises <code>IndexError</code> — the function is more robust than Module 06's original, but still not bulletproof.</p>
+<aside class="notes">
+Teaching goal: the guide's check-for-understanding, shown live — even the "robust" version has an unhandled edge.
+Line-by-line: <code>current_max = sales_list[0]</code> executes before the loop; for an empty list there is no index <code>0</code>, so it raises <code>IndexError: list index out of range</code> immediately, inside <code>summarize</code>. Handling an empty list gracefully would need an explicit check at the top of the function.
+Common mistakes: this is the guide's CFU, not a student error per se — a "what would you add?" discussion prompt if time allows.
+</aside>
+</section>
+
+<!-- 69. STRETCH 1 — broken output -->
+<section class="s-out">
+<h3>What <code>summarize([])</code> raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 17, in &lt;module&gt;
+    result = summarize([])
+             ^^^^^^^^^^^^^
+  File "&lt;exec&gt;", line 5, in summarize
+    current_max = sales_list[0]
+                  ~~~~~~~~~~^^^
+IndexError: list index out of range</pre>
+<aside class="notes">Verified against CPython 3.12.2. The <code>&lt;exec&gt;</code> paths and line numbers are not load-bearing; the load-bearing content is the two-frame traceback (call site → inside <code>summarize</code> at <code>current_max = sales_list[0]</code>) and the final <code>IndexError: list index out of range</code>, exactly as the guide's Stretch 1 check-for-understanding parenthetical states.</aside>
+</section>
+
+<!-- 70. STRETCH 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If I call <code>summarize([])</code> — an empty list — what happens?</p>
+<button data-opt="A">It returns a dictionary with every value <code>0</code></button>
+<button data-opt="B"><code>sales_list[0]</code> raises <code>IndexError: list index out of range</code></button>
+<button data-opt="C">The <code>for</code> loop never runs, so <code>average</code> is <code>None</code></button>
+<p class="why" hidden><code>sales_list[0]</code> raises <code>IndexError: list index out of range</code>, since there's no first element to initialize <code>current_max</code>/<code>current_min</code> from — a good moment to note that this function, while more robust than Module 06's original, still isn't bulletproof against every possible input; handling an empty list gracefully would need an explicit check.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>sales_list[0]</code> raises <code>IndexError: list index out of range</code>, since there's no first element to initialize <code>current_max</code>/<code>current_min</code> from — a good moment to note that this function, while more robust than Module 06's original, still isn't bulletproof against every possible input; handling an empty list gracefully would need an explicit check, which is a good "what would you add" discussion prompt if time allows.)"</aside>
+</section>
+
+<!-- 71. STRETCH 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Initializing <code>current_max</code>/<code>current_min</code> to <code>0</code> out of habit from Module 06's original version, rather than <code>sales_list[0]</code> — harmless for this specific all-positive dataset, but worth pointing out explicitly as the exact limitation flagged back in Module 06, now finally worth fixing properly since this function is meant to be reusable on data the author doesn't control in advance.</p>
+<p>Forgetting the trailing comma after the last dictionary entry — actually valid Python (a trailing comma is optional, not required), but if a student <em>removes</em> a comma between two entries by mistake instead, that's a real <code>SyntaxError</code> worth reading together if it comes up.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Stretch 1.</aside>
+</section>
+
+<!-- 72. STRETCH 2 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 2 Preview · as time allows</span>
+<h1>Default Parameters</h1>
+<aside class="notes">
+Frame as a quick demo if time is short.
+Two things worth saying explicitly if you demo this live:
+- <code>rate=0.07</code> in the parameter list gives <code>rate</code> a <strong>default value</strong>, used only when the caller doesn't supply one — <code>calculate_tax(100)</code> uses <code>0.07</code> automatically; <code>calculate_tax(100, 0.1)</code> overrides it with <code>0.1</code>.
+- A genuinely worthwhile "gotcha" if you have two spare minutes: <code>print(calculate_tax(100))</code> shows <code>7.000000000000001</code>, not exactly <code>7.0</code> — a real floating-point precision quirk (<code>100 * 0.07</code> cannot be represented exactly in binary floating point), not a bug. Demonstrate <code>100 * 0.07 == 7.0</code> directly and show it evaluates to <code>False</code> — a useful real-world caveat about comparing floats for exact equality.
+- The triple-quoted string immediately under <code>def</code> is a <strong>docstring</strong> — a description of what the function does, callable later with <code>help(calculate_tax)</code> or visible in most editors' hover tooltips. Genuinely how professional Python code documents functions, not a classroom-only convention.
+</aside>
+</section>
+
+<!-- 73. STRETCH 2 — live code -->
+<section class="s-code">
+<h3>Live demo (if time allows) — Stretch 2</h3>
+<div class="run" data-lang="python">
+def calculate_tax(price, rate=0.07):
+    """Return the tax owed on a price at a given rate (default 7%)."""
+    return price * rate
+
+print(calculate_tax(100))        # uses the default rate
+print(calculate_tax(100, 0.1))   # overrides it
+</div>
+<p class="expect"><code>calculate_tax(100)</code> supplies no rate, so <code>rate</code> falls back to its default <code>0.07</code>; <code>calculate_tax(100, 0.1)</code> passes <code>0.1</code> and overrides the default.</p>
+<aside class="notes">
+Line-by-line:
+- <code>def calculate_tax(price, rate=0.07):</code> — <code>rate=0.07</code> gives <code>rate</code> a <strong>default value</strong>, used only when the caller doesn't supply one.
+- The triple-quoted string is a <strong>docstring</strong> — callable with <code>help(calculate_tax)</code>, visible in editor tooltips; how professional Python documents functions.
+- <code>return price * rate</code> — <code>calculate_tax(100)</code> → <code>100 * 0.07</code> → <code>7.000000000000001</code> (raw float precision — <em>not</em> a bug); <code>calculate_tax(100, 0.1)</code> → <code>100 * 0.1</code> → <code>10.0</code>.
+Common mistakes: none flagged — this is a preview. If you have two spare minutes, show <code>100 * 0.07 == 7.0</code> evaluates to <code>False</code> as a floats-and-exact-equality caveat.
+No "Check for understanding" in the guide for this preview segment — the quiz is omitted here, matching the lighter treatment stretch/preview segments get.
+</aside>
+</section>
+
+<!-- 74. STRETCH 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>7.000000000000001
+10.0</pre>
+<aside class="notes">Matches the guide's Appendix A answer-key comments for Stretch 2: <code>print(calculate_tax(100))</code> → <code>7.000000000000001</code> ("float precision, not a bug"); <code>print(calculate_tax(100, 0.1))</code> → <code>10.0</code>. These are bare <code>print()</code>s of raw float results — no <code>:.2f</code> rounding is applied, which is exactly the guide's floating-point-precision teaching point. Verified against CPython 3.12.2.</aside>
+</section>
+
+<!-- 75. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>Which bug did you spot first in Exercise 5, and how?</li>
+<li>Explain <code>apply_discount(price, tier)</code> without looking at the code — could a colleague use it without reading the body?</li>
+<li>AI disclosure comment, and whether it built or shortcut understanding.</li>
+</ul>
+<aside class="notes">
+Strong-answer guidance (guide):
+1. Encourage total honesty; there's no "right" order to have found the three bugs in, and the point is building self-awareness about debugging instincts, not demonstrating a particular skill level.
+2. A strong answer describes the function's <em>interface</em> (what it takes in, what it returns) without describing its internal <code>if</code>/<code>elif</code> logic at all — the real, professional skill of writing functions with clear enough names and behavior that colleagues don't need to read the implementation.
+3. There's no wrong answer, but push for genuine reflection rather than a rote "AI helped me learn" — a strong answer names something specific (e.g., "the AI's explanation of the <code>IndexError</code> made me understand why <code>&lt;=</code> was wrong in a way the traceback alone hadn't," or conversely, "I asked for a fix directly on the logic bug and didn't actually understand why my original code was wrong before pasting in a replacement").
+</aside>
+</section>
+
+<!-- 76. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>functions.py</code></li>
+<li>Contains all six required exercises' functions and calls</li>
+<li>Every function uses <code>return</code>, not <code>print</code>, for its actual result (except where a script-level <code>print()</code> is displaying that result)</li>
+<li>Exercise 6's scope explanation is written as a comment, in your own words</li>
+<li>Canvas reflection submitted alongside the file</li>
+</ul>
+<aside class="notes">Review the checklist together. Preview Module 08 (verbatim): "Today you wrote genuinely substantial code — six functions' worth. Next module has zero new Python syntax; instead, you learn Git and GitHub, the version-control workflow every remaining assignment this semester will use to submit your work, and that most software teams use professionally."</aside>
+</section>
+
+<!-- 77. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 7</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w07.md (Week 7 facilitation guide — "Functions + Debug First, Then Ask"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
