@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 8 — Your First GitHub Submission</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 8 &nbsp;·&nbsp; Module 08 &nbsp;·&nbsp; Unit 2 &nbsp;·&nbsp; Control Flow &amp; Structure</p>
+<h1>Your First GitHub Submission</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Intro — the three-step cycle</span>
+<span class="t-item"><strong>0:05–0:15</strong> Ex 1 — Create the Account</span>
+<span class="t-item"><strong>0:15–0:25</strong> Ex 2 — New Repo</span>
+<span class="t-item"><strong>0:25–0:35</strong> Ex 3 — Add a <code>.gitignore</code></span>
+<span class="t-item"><strong>0:35–0:43</strong> Ex 4 — Add Module 7 Work</span>
+<span class="t-item"><strong>0:43–0:51</strong> Ex 5 — Write a README</span>
+<span class="t-item"><strong>0:51–0:59</strong> Ex 6 — Three Commits</span>
+<span class="t-item"><strong>0:59–1:07</strong> Stretch 1 — Back-fill Earlier Modules</span>
+<span class="t-item"><strong>1:07–1:15</strong> Wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live terminal/browser code-along — no new Python syntax today; the "code" is Git commands and Markdown. This is the second-highest-variance lab of the semester to run, after Module 02, for the same underlying reason: real accounts, real network access, real external services (github.com) are now on the critical path, not just each student's local machine. Authentication issues, two-factor setup friction, and the first-ever <code>git push</code> failing for an unexpected reason are all normal here — budget real slack. The actual Git concepts (stage, commit, push, log) are genuinely simple; the friction is almost entirely in the tooling and account setup, not the ideas.
+Prerequisites: Module 02 terminal fluency; a <code>functions.py</code> file from Module 07 to add to the new repo. Submission: the URL to the student's GitHub repo, submitted to Canvas.
+<strong>This deck cannot run <code>git</code> / <code>gh</code> anywhere.</strong> Every git command sequence is shown as a static, read-only block with a paired "illustrative result" slide — students run these on their own machines. No block on this deck executes in the browser.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live terminal/browser code-along — no new Python syntax today; the "code" is Git commands and Markdown</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 02 terminal fluency; a <code>functions.py</code> file from Module 07 to add to the new repo</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v">The URL to the student's GitHub repo, submitted to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week08_lab. If account creation happens live for several students, expect Exercise 1 to run long; treat Stretch exercises as the first items to compress or cut, not Exercises 2–6, which establish the workflow all remaining labs depend on. Before class: confirm <code>git</code> is installed and configured on your demo machine (<code>git config --global user.name</code> / <code>user.email</code> set); decide your authentication strategy for <code>git push</code> in advance (personal access token or SSH keys — GitHub no longer accepts a plain password over HTTPS) and standardize one method for the whole room; have your own example repo ready to demo the full sequence end to end.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Create a GitHub repository, clone it locally, and explain the relationship between the local folder and the remote repo on github.com.</li>
+<li>Explain what a <code>.gitignore</code> file does and why certain files (compiled bytecode, OS metadata, editor settings) should never be tracked.</li>
+<li>Execute the stage → commit → push cycle (<code>git add</code>, <code>git commit -m "..."</code>, <code>git push</code>) and describe what each of the three steps actually does.</li>
+<li>Write a clear, descriptive commit message for a single, coherent change — not a vague "update stuff" message covering several unrelated edits.</li>
+<li>Read <code>git log --oneline</code> output and connect it to what's visible on github.com.</li>
+</ul>
+<aside class="notes">The verbs are taken verbatim from the guide's Learning Objectives. Objective 3 (the stage → commit → push cycle) is the spine of the whole session — every exercise from Exercise 3 on returns to it. Write the three-step cycle on the board, large, and leave it visible all class: <code>git add</code> → <code>git commit -m "..."</code> → <code>git push</code>.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Intro — Git &amp; GitHub; the three-step cycle</td><td>5</td></tr>
+<tr><td>0:05–0:15</td><td>Exercise 1 — Create the Account</td><td>10</td></tr>
+<tr><td>0:15–0:25</td><td>Exercise 2 — New Repo (create + clone)</td><td>10</td></tr>
+<tr><td>0:25–0:35</td><td>Exercise 3 — Add a <code>.gitignore</code> (first commit cycle)</td><td>10</td></tr>
+<tr><td>0:35–0:43</td><td>Exercise 4 — Add Module 7 Work</td><td>8</td></tr>
+<tr><td>0:43–0:51</td><td>Exercise 5 — Write a README</td><td>8</td></tr>
+<tr><td>0:51–0:59</td><td>Exercise 6 — Three Commits (read <code>git log</code>)</td><td>8</td></tr>
+<tr><td>0:59–1:07</td><td>Stretch 1 — Back-fill Earlier Modules</td><td>8</td></tr>
+<tr><td>1:07–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>8</td></tr>
+</tbody>
+</table>
+<aside class="notes">Six required exercises plus Stretch 1 fill the full 75 minutes at a normal pace, including realistic account-setup and authentication friction. Stretch 2 (simulate a bug and roll back) is a preview / quick demo "as time allows" — one sentence of framing is worth more than a full live demo if time is tight. If Exercise 1 runs long because of live account creation, compress or cut the Stretch exercises first — never Exercises 2–6.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>Git tracks history · GitHub hosts a copy</h1>
+<aside class="notes">
+Teaching goal: frame why an entire session on Git/GitHub is worth it, and put the one cycle that every remaining assignment reuses on the board before touching a command.
+Say to the class (verbatim): "Zero new Python today. Instead, you're learning the tool that every remaining assignment this semester — and very likely every software job you'll ever have — uses to save and submit work: Git and GitHub. Git is the tool that tracks changes to your files over time, on your own machine. GitHub is a website that hosts a copy of that history, so you (and eventually collaborators, and me, for grading) can see it. Today you set up the exact workflow you'll repeat, with almost no variation, for the rest of the semester: stage a change, commit it with a message explaining what you did, push it to GitHub."
+Do (verbatim): "Write the three-step cycle on the board, large, and leave it visible all class: <code>git add</code> → <code>git commit -m "..."</code> → <code>git push</code>. Every exercise from here returns to this cycle."
+Note for this deck: <code>git</code>, <code>gh</code>, <code>git clone</code>, <code>git push</code> cannot run in a browser. Every command block here is read-only and paired with an illustrative result slide — students run them in their own terminal.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 10 min · 0:05–0:15</span>
+<h1>Create the Account</h1>
+<aside class="notes">
+Teaching goal: a professional, durable GitHub account and username — this is infrastructure students will reuse for the rest of their careers, not just this course.
+Say to the class (verbatim): "If you already have a GitHub account from a previous class or project, you can use it — skip ahead. If not: create one at github.com, using your USF email. Pick your username carefully — this is going to show up on your portfolio, potentially to future employers. <code>jsmith2024coursework</code> is a worse choice than <code>jane-smith-dev</code> or just your real name if it's available."
+Do: walk through account creation once on the projector, narrating each step, then let the room work independently while you circulate.
+Common student mistakes to watch for: using a personal, informal email instead of checking whether their USF email offers GitHub education benefits (worth a one-sentence mention, not required for this course); setting 2FA with SMS to a phone number they're likely to change soon — recommend an authenticator app instead, which isn't tied to a phone number.
+Check for understanding (guide): "Have each student navigate to their own profile page (<code>github.com/yourusername</code>) and confirm it loads with their chosen username visible — a simple visual verification, matching the lab page's own 'VERIFICATION' note." This CFU has no Q&amp;A parenthetical, so the paired quiz uses the R-conv-3 fallback: its answer is a verbatim same-segment line — "navigate to their own profile page (<code>github.com/yourusername</code>) and confirm it loads with their chosen username visible."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — idea -->
+<section class="s-idea">
+<h3>The idea — what each setup step actually does</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Username choice</strong> — this becomes part of every repo URL you create (<code>github.com/yourusername/reponame</code>) and cannot be trivially changed later without breaking old links — worth the extra thirty seconds of thought this deserves.</p>
+<p><strong>Enabling two-factor authentication (2FA)</strong> — GitHub increasingly requires this for anything beyond read-only access; setting it up now, calmly, in class, avoids being blocked later at a less convenient moment (like the night an assignment is due). Recommend an authenticator app (not SMS) if your students' phones support it — more reliable and it's what GitHub itself recommends.</p>
+</div>
+<aside class="notes">Line-by-line from the guide's "what each setup step actually does": the username is in every repo URL and is painful to change later; 2FA via an authenticator app (not SMS) is what GitHub recommends and avoids a bad-timing lockout. There is no terminal command in this exercise — it is entirely in the browser on github.com — so there is no code block or expected-output slide for Exercise 1.</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">How do you confirm your new GitHub account is set up correctly?</p>
+<button data-opt="A">Check your inbox for a welcome email from GitHub</button>
+<button data-opt="B">Run <code>git --version</code> in the terminal</button>
+<button data-opt="C">Navigate to <code>github.com/yourusername</code> and confirm your profile page loads with your chosen username visible</button>
+<p class="why" hidden>Navigate to your own profile page (<code>github.com/yourusername</code>) and confirm it loads with your chosen username visible — a simple visual verification, matching the lab page's own "VERIFICATION" note.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "Have each student navigate to their own profile page (<code>github.com/yourusername</code>) and confirm it loads with their chosen username visible." The guide gives no Q&amp;A parenthetical for this CFU, so per R-conv-3 the <code>data-answer</code> (C) is drawn verbatim from that same-segment instruction line. A welcome email (A) does not confirm the username is claimed and public; <code>git --version</code> (B) checks local Git, not the account.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using a personal, informal email instead of checking whether their USF email offers any GitHub education benefits (free access to certain paid features, relevant for students who go on to use GitHub Pro/Copilot benefits) — not required for this course, but worth a one-sentence mention.</p>
+<p>Setting 2FA with SMS to a phone number they're likely to change soon (e.g. a temporary or family member's number) — a good moment to recommend an authenticator app instead, which isn't tied to a phone number.</p>
+</div>
+<aside class="notes">Neither mistake blocks the lab today, but both create a future lockout or a missed benefit. The authenticator-app recommendation is the one to state out loud to the whole room.</aside>
+</section>
+
+<!-- 10. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 10 min · 0:15–0:25</span>
+<h1>New Repo — create on GitHub, then clone</h1>
+<aside class="notes">
+Teaching goal: create a repository on GitHub, then <code>clone</code> it — bring a working copy down to the local machine — and understand that these are two distinct, connected things: a remote copy (on GitHub's servers) and a local copy (on the student's own machine).
+Say to the class (verbatim): "A repository — 'repo' for short — is a project folder that Git is tracking the history of. We're creating this one on GitHub's website first, then pulling a copy down to your machine. From this point on, every assignment this semester lives inside this one repo, in its own dated or numbered folder."
+Do, live, in the browser: click <strong>New repository</strong>. Name it exactly <code>ism2411</code>. Set visibility to <strong>Public</strong> (say why: a public repo is visible on your portfolio and to anyone with the link — appropriate for coursework; contrast briefly with <em>private</em> repos, appropriate for a client's proprietary code). Check <strong>Add a README</strong>. Click <strong>Create repository</strong>. Then, live, in the terminal, run the clone sequence on the next slide.
+Check for understanding (guide): "What's the difference between the repo that now exists on github.com and the folder that now exists on your own machine?" (They're two separate copies of the same content, connected by the "remote" link <code>git clone</code> set up — changes made locally don't appear on GitHub until explicitly pushed, and this two-copies-in-sync mental model is the foundation for everything else today.)
+</aside>
+</section>
+
+<!-- 11. EXERCISE 2 — idea -->
+<section class="s-idea">
+<h3>The idea — one command, two things at once</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>git clone</code> downloads a full copy of the repo (including its entire history — even though there's only one commit so far, the automatic README-creation commit) to a new folder on your machine.</p>
+<p>Point out explicitly: this single command does <strong>two things at once</strong> — it creates the local folder <em>and</em> sets up the connection back to GitHub (called a <strong>remote</strong>) that <code>git push</code> will use later.</p>
+</div>
+<aside class="notes">The "remote" is the load-bearing new word. Local folder and remote repo are two separate copies of the same content; the remote link is what keeps them able to sync. Changes made locally do not appear on GitHub until explicitly pushed.</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — read-only code -->
+<section class="s-code">
+<h3>Run in your own terminal — Exercise 2 (clone)</h3>
+<div class="run" data-lang="shell" data-readonly>git clone https://github.com/YOURUSERNAME/ism2411.git
+cd ism2411
+git status</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (the browser has no Git and no network access to github.com). Replace <code>YOURUSERNAME</code> with your actual username. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line (guide):
+- <code>git clone https://github.com/YOURUSERNAME/ism2411.git</code> — downloads a full copy of the repo (including its entire history, even though there's only one commit so far — the automatic README-creation commit) to a new folder named <code>ism2411</code> in your current location. This single command does two things at once — creates the local folder <em>and</em> sets up the connection back to GitHub (the <strong>remote</strong>) that <code>git push</code> will use later.
+- <code>cd ism2411</code> — Module 02's navigation skill, moving into the newly cloned folder.
+- <code>git status</code> — reports on the current state of the repo: which files are tracked, changed, staged, etc. Right after a clean clone, this should report "nothing to commit, working tree clean" — a good baseline to recognize, since students will run <code>git status</code> constantly from here forward to orient themselves.
+This block is read-only: <code>git</code> and network calls to github.com cannot run in the browser emulator.
+</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — illustrative result -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>$ git clone https://github.com/YOURUSERNAME/ism2411.git
+Cloning into 'ism2411'...
+$ cd ism2411
+$ git status
+nothing to commit, working tree clean</pre>
+<aside class="notes">The guide states verbatim only the <code>git status</code> result: "Right after a clean clone, this should report 'nothing to commit, working tree clean'." The <code>Cloning into 'ism2411'...</code> line is Git's standard output shown for realism — disclosed here as not being quoted from the guide. Transcript verbosity is deliberately minimal and uniform across every commit/status transcript in this deck (no <code>On branch main</code> / <code>Your branch is up to date</code> preamble). Not run in the browser: <code>git</code> is unavailable and github.com is unreachable from the emulator.</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">What's the difference between the repo on github.com and the folder that now exists on your machine?</p>
+<button data-opt="A">Two separate copies of the same content, connected by the "remote" link <code>git clone</code> set up — local changes don't appear on GitHub until pushed</button>
+<button data-opt="B">They're the same thing — GitHub shows a live view of your local folder</button>
+<button data-opt="C">The GitHub copy is a backup that syncs itself automatically every few minutes</button>
+<p class="why" hidden>They're two separate copies of the same content, connected by the "remote" link <code>git clone</code> set up — changes made locally don't appear on GitHub until explicitly pushed. This two-copies-in-sync mental model is the foundation for everything else today.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "What's the difference between the repo that now exists on github.com and the folder that now exists on your own machine?" (They're two separate copies of the same content, connected by the "remote" link <code>git clone</code> set up — changes made locally don't appear on GitHub until explicitly pushed, and this two-copies-in-sync mental model is the foundation for everything else today.) That parenthetical is the <code>data-answer</code> (A).</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>git clone</code> from inside an already-existing <code>ism2411</code> folder from an earlier module (Module 01's project folder!) — this creates confusing nested folders (<code>ism2411/ism2411/</code>) rather than an error. Have the room run <code>pwd</code> before cloning to confirm they're somewhere sensible — perhaps a dedicated <code>~/repos/</code> or <code>~/GitHub/</code> location.</p>
+<p>Typing the clone URL with the placeholder text still in it (<code>YOURUSERNAME</code> literally, not replaced) — produces a <code>fatal: repository not found</code> error; a good, low-stakes error to read together if it happens.</p>
+<p>Not being logged into GitHub in the browser when clicking "New repository" (landing on a sign-in page instead) — usually resolves itself, but worth a quick visual double-check.</p>
+</div>
+<aside class="notes">The nested-<code>ism2411/ism2411/</code> case is the memorable one — a <code>pwd</code> before <code>git clone</code> is the fix, same habit as Module 02.</aside>
+</section>
+
+<!-- 16. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 10 min · 0:25–0:35</span>
+<h1>Add a <code>.gitignore</code> — the first commit cycle</h1>
+<aside class="notes">
+Teaching goal: understand what a <code>.gitignore</code> file does and why — and get the full stage → commit → push cycle under students' fingers for the very first time, on the lowest-stakes possible file.
+Say to the class (verbatim): "Before we add any real code, one housekeeping file: <code>.gitignore</code>. This tells Git which files to <em>never</em> track — things that are personal to your machine, or auto-generated junk that shouldn't be part of the project's real history."
+Do: create <code>.gitignore</code> in the repo root (in VS Code or any editor) with the content on the next slide, then run the stage → commit → push cycle. Go slowly on the cycle — it is the cycle every remaining exercise today reuses.
+Check for understanding (guide): "What's the difference between <code>git commit</code> and <code>git push</code> — could I do one without the other, and what would that look like?" (<code>commit</code> records history locally; <code>push</code> uploads it. Yes, you could commit many times locally and push them all together later in one <code>git push</code> — worth demonstrating conceptually, even without doing it live here, since Exercise 6 will have students make exactly three separate commits before a final check.)
+</aside>
+</section>
+
+<!-- 17. EXERCISE 3 — idea -->
+<section class="s-idea">
+<h3>The idea — <code>.gitignore</code> just says "don't track these"</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Python section</strong> (<code>__pycache__/</code>, <code>*.pyc</code>) — Python auto-generates compiled bytecode as a performance optimization; regenerated on any machine, pure clutter in a shared repo.</p>
+<p><strong>OS section</strong> (<code>.DS_Store</code> on Mac, <code>Thumbs.db</code> on Windows) — hidden files the operating system creates to remember folder view settings; different on every machine, so tracking them creates constant meaningless diffs.</p>
+<p><strong>Editors section</strong> (<code>.vscode/</code>, <code>.idea/</code>) — personal editor configuration; useful to <em>you</em>, not to a classmate or grader.</p>
+<p><strong>The general principle:</strong> <code>.gitignore</code> doesn't delete these files or stop them from existing on your machine — it just tells Git "don't track changes to these," so they never get staged, committed, or pushed, keeping the repo's real history focused on files that actually matter.</p>
+</div>
+<aside class="notes">Explain the categories, not every individual line. The general principle is the sentence to say verbatim: <code>.gitignore</code> does not delete or hide anything locally — it only keeps listed files out of staging/commits/pushes.</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — the file to create -->
+<section class="s-code">
+<h3>The file to create — <code>.gitignore</code> (repo root)</h3>
+<pre># Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/</pre>
+<p class="expect">Not code that runs — a plain text file you create in your editor at the repo root, then stage/commit/push on the next slide. Content is verbatim from the guide.</p>
+<aside class="notes">This is a static file listing, not a runnable block. Each line is a pattern: a trailing <code>/</code> means "a directory"; <code>*</code> is a wildcard. The three comment headers (<code># Python</code>, <code># OS</code>, <code># Editors</code>) are just human-readable section labels — Git ignores lines starting with <code>#</code>.</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — how .gitignore behaves -->
+<section class="s-out">
+<h3>Illustrative result — what <code>.gitignore</code> does</h3>
+<pre>.gitignore does NOT delete these files or stop them
+existing on your machine. It tells Git "don't track
+changes to these," so they never get staged, committed,
+or pushed — keeping the repo's real history focused on
+files that actually matter.</pre>
+<aside class="notes">Reproduced verbatim from the guide's "general principle to state explicitly" for Exercise 3. There is no terminal output for creating the file itself — the observable effect is that ignored files (e.g. a <code>__pycache__/</code> folder) never appear in <code>git status</code> as trackable, which Stretch 1 uses as a live check.</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — read-only code (cycle) -->
+<section class="s-code">
+<h3>Run in your own terminal — Exercise 3 (first commit cycle)</h3>
+<div class="run" data-lang="shell" data-readonly>git add .gitignore
+git commit -m "add .gitignore for Python and OS files"
+git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. This is the stage → commit → push cycle every remaining exercise reuses. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line (guide) — go slowly, this is the cycle every remaining exercise today reuses:
+- <code>git add .gitignore</code> — <strong>stages</strong> the file: tells Git "include this file's current state in the <em>next</em> commit I make." Staging is a genuinely separate step from committing — you can stage several files across several <code>git add</code> commands before committing them all together as one coherent unit.
+- <code>git commit -m "add .gitignore for Python and OS files"</code> — takes everything currently staged and permanently records it as a new point in the repo's history, labeled with the message after <code>-m</code>. This is a <strong>local</strong> operation — the commit exists only on the student's own machine, not yet on GitHub.
+- <code>git push</code> — uploads any local commits that GitHub doesn't have yet, up to the remote repo. This is the step that actually makes the change visible on github.com. A student who forgets this step will have a perfectly good local commit that a grader looking at their GitHub page will never see — a real, common submission failure mode to watch for all semester.
+Read-only: <code>git</code> cannot run in the browser.
+</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — illustrative result -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>$ git add .gitignore
+$ git commit -m "add .gitignore for Python and OS files"
+[main 9d4e1a0] add .gitignore for Python and OS files
+ 1 file changed, 14 insertions(+)
+$ git push
+To https://github.com/YOURUSERNAME/ism2411.git
+   e0f1a2b..9d4e1a0  main -> main</pre>
+<aside class="notes">The guide shows no literal terminal transcript for the add/commit/push cycle; the lines above are Git's standard output shown for realism (the short hash <code>9d4e1a0</code> matches the guide's illustrative <code>git log</code> in Exercise 6; the <code>.gitignore</code> file is 14 lines). The <code>To …/main -&gt; main</code> line is the push confirmation — it shows <code>git push</code> is <em>not</em> silent like <code>git add</code>, and is how students confirm the push actually landed on GitHub. What the guide states verbatim: the commit "exists only on the student's own machine, not yet on GitHub" until <code>git push</code> "uploads any local commits that GitHub doesn't have yet". Verify together (guide, verbatim): "visit the repo on github.com and confirm the <code>.gitignore</code> file and its commit message are visible." Not run here — <code>git</code> is unavailable in the browser.</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">What's the difference between <code>git commit</code> and <code>git push</code> — could you do one without the other?</p>
+<button data-opt="A">They're synonyms — either one saves your work to GitHub</button>
+<button data-opt="B"><code>commit</code> records history locally; <code>push</code> uploads it — and yes, you can commit many times locally, then push them all together later in one <code>git push</code></button>
+<button data-opt="C"><code>push</code> has to run before <code>commit</code></button>
+<p class="why" hidden><code>commit</code> records history locally; <code>push</code> uploads it. Yes, you could commit many times locally and push them all together later in one <code>git push</code> — Exercise 6 has students make exactly three separate commits before a final check.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "What's the difference between <code>git commit</code> and <code>git push</code> — could I do one without the other, and what would that look like?" (<code>commit</code> records history locally; <code>push</code> uploads it. Yes, you could commit many times locally and push them all together later in one <code>git push</code> — worth demonstrating conceptually, even without doing it live here, since Exercise 6 will have students make exactly three separate commits before a final check.) That parenthetical is the <code>data-answer</code> (B).</aside>
+</section>
+
+<!-- 23. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>git commit</code> without <code>-m</code> (or without a message at all) — this opens a text editor (often Vim, unfamiliar and genuinely confusing to a beginner) waiting for commit-message input. Help the student either type a message and save-and-quit (<code>:wq</code> in Vim specifically — worth writing on the board as an emergency escape hatch) or <code>Ctrl+C</code> out and re-run with <code>-m "..."</code>.</p>
+<p>Forgetting <code>git push</code> entirely and assuming the commit alone finished the job — the most consequential mistake in this whole exercise, since it silently leaves work invisible on GitHub with no error at all. Make "did you push?" your default first question for the rest of the semester.</p>
+<p>Authentication failure on <code>git push</code> (password rejected) — GitHub requires a personal access token or SSH key, not a plain account password, over HTTPS. Resolve using whichever single method you standardized on, rather than improvising a second method mid-class for one student.</p>
+</div>
+<aside class="notes">The forgotten-<code>push</code> case is the one to hammer — no error, just silently missing work on GitHub. The authentication failure is the single most common blocker in this entire lab.</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 8 min · 0:35–0:43</span>
+<h1>Add Module 7 Work</h1>
+<aside class="notes">
+Teaching goal: add a real, previously-written file (Module 07's <code>functions.py</code>) into an organized subfolder, and repeat the stage → commit → push cycle on genuinely meaningful content this time.
+Say to the class (verbatim): "Same three-step cycle as Exercise 3, but now with actual coursework — your functions from last module, organized into a <code>week07/</code> folder. This folder-per-module structure is what your README will describe in a minute, and it's what every remaining module's submission will follow."
+Do, live: run the sequence on the next slide, substituting each student's own path for <code>functions.py</code>.
+Check for understanding (guide): "If I run <code>git status</code> right now, immediately after the <code>git push</code> completed successfully, what should it report?" ("nothing to commit, working tree clean" again — same baseline as right after the clone, confirming everything local is now fully reflected on GitHub, with nothing pending.)
+</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — read-only code -->
+<section class="s-code">
+<h3>Run in your own terminal — Exercise 4 (Module 7 work)</h3>
+<div class="run" data-lang="shell" data-readonly>mkdir week07
+cp /path/to/your/functions.py week07/
+git status
+git add week07/
+git commit -m "add module 7 functions: calculate_tax, apply_discount, final_price"
+git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. Substitute your own real path for <code>functions.py</code> — this is the one command in this lab that's genuinely different for every student. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line (guide):
+- <code>mkdir week07</code> — a new subfolder inside the repo, matching the module number. This naming convention (<code>week07</code>, not <code>Week 7</code> or <code>functions_folder</code>) matters for consistency across the whole semester's submissions, and for the README you write in Exercise 5.
+- <code>cp /path/to/your/functions.py week07/</code> — copies the actual file from wherever it currently lives into this new location. Have students substitute their own actual path — double-check this as you circulate.
+- <code>git status</code> — run <strong>before</strong> <code>git add</code>, deliberately, to see the new <code>week07/</code> folder listed as "untracked" — Git doesn't automatically track new files just because they exist; you have to explicitly <code>add</code> them. Contrast with <code>.gitignore</code>'d files, which <code>git status</code> won't even mention.
+- <code>git add week07/</code> — stages the <em>entire folder</em> at once (everything inside it), rather than naming the file individually.
+- The commit message names the specific functions added, not just "add week 7" — model this as the standard: a commit message should tell a reader, without opening the file, roughly <em>what changed</em>.
+Read-only: neither <code>git</code> nor a real filesystem <code>cp</code> against the student's Module 07 folder runs in the browser.
+</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — illustrative result -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>$ git status
+Untracked files:
+	week07/
+
+$ git add week07/
+$ git commit -m "add module 7 functions: calculate_tax, apply_discount, final_price"
+[main a3f1b2c] add module 7 functions: calculate_tax, apply_discount, final_price
+ 1 file changed, 20 insertions(+)
+$ git push
+To https://github.com/YOURUSERNAME/ism2411.git
+   9d4e1a0..a3f1b2c  main -> main
+$ git status
+nothing to commit, working tree clean</pre>
+<aside class="notes">Guide-sourced facts, quoted: <code>git status</code> before <code>git add</code> shows "the new <code>week07/</code> folder listed as 'untracked'"; the CFU answer is that <code>git status</code> immediately after a successful <code>push</code> reports "nothing to commit, working tree clean". The commit summary line, the <code>To …/main -&gt; main</code> push confirmation, and the short hash <code>a3f1b2c</code> (matching Exercise 6's illustrative <code>git log</code>) are Git's standard output shown for realism; the push line shows <code>git push</code> is <em>not</em> silent and is how the landing is confirmed. Verify together (guide, verbatim): "visit <code>github.com/YOURUSERNAME/ism2411</code> and confirm the <code>week07/</code> folder and this commit message are both visible." Not run here.</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Immediately after <code>git push</code> completes successfully, what does <code>git status</code> report?</p>
+<button data-opt="A">"Your branch is ahead of 'origin/main' by 1 commit"</button>
+<button data-opt="B">"nothing to commit, working tree clean"</button>
+<button data-opt="C">"Untracked files: week07/"</button>
+<p class="why" hidden>"nothing to commit, working tree clean" again — same baseline as right after the clone, confirming everything local is now fully reflected on GitHub, with nothing pending.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If I run <code>git status</code> right now, immediately after the <code>git push</code> completed successfully, what should it report?" ("nothing to commit, working tree clean" again — same baseline as right after the clone, confirming everything local is now fully reflected on GitHub, with nothing pending.) That parenthetical is the <code>data-answer</code> (B). "Ahead by 1 commit" (A) would mean the push had <em>not</em> happened yet; "Untracked files" (C) was the state before <code>git add</code>.</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Copying the file but forgetting to <code>cd</code> back into the <code>ism2411</code> repo folder first, accidentally creating <code>week07/</code> somewhere else entirely — a <code>pwd</code> check before starting, same habit from Module 02, resolves this quickly.</p>
+<p>Running <code>git add .</code> (the whole current directory) instead of <code>git add week07/</code> — not wrong in this specific case, but worth flagging as a habit to be careful with: <code>git add .</code> stages <em>everything</em> in the current directory, including files a student might not have meant to include yet, which becomes a real risk once a repo has more going on in it.</p>
+</div>
+<aside class="notes">The <code>pwd</code>-before-you-start habit carries straight over from Module 02. Name the <code>git add .</code> vs <code>git add week07/</code> distinction now, before a later repo makes an accidental over-stage costly.</aside>
+</section>
+
+<!-- 29. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 8 min · 0:43–0:51</span>
+<h1>Write a README</h1>
+<aside class="notes">
+Teaching goal: Markdown syntax (headings, bold, bullet lists) in a genuinely functional context — a README is the first thing anyone (a grader, a future employer, a collaborator) sees when visiting a repo, and GitHub renders it automatically on the repo's front page.
+Say to the class (verbatim): "The README is your repo's front door — GitHub automatically displays it, formatted, right on the main page. We're writing it in Markdown, a lightweight formatting language you've actually already seen — every lab guide and reading in this course is written in it."
+Do, live: edit <code>README.md</code> with the content on the next slide, then commit and push it reusing the exact cycle from Exercises 3–4.
+Check for understanding (guide): "If I add a fifth module folder next week, what exactly do I need to update in this README to keep it accurate?" (Add one more bullet line under <code>## Modules</code> — get a student to notice this file needs ongoing maintenance as the semester progresses, not just a one-time setup; this directly previews Exercise 6/Stretch 1's back-filling work.)
+</aside>
+</section>
+
+<!-- 30. EXERCISE 5 — the file to create -->
+<section class="s-code">
+<h3>The file to create — <code>README.md</code></h3>
+<pre><code class="language-markdown"># ISM2411 — Python for Business
+
+**Name:** Your Name Here
+**Semester:** Fall 2025
+**Instructor:** [Course Instructor]
+
+## About This Repo
+
+This repository contains my weekly lab submissions for ISM2411.
+Each folder corresponds to one module.
+
+## Modules
+
+- `week05/` — Conditionals: tiered discount calculator
+- `week06/` — Loops: sales report with sum, average, max
+- `week07/` — Functions: calculate_tax, apply_discount
+- `week08/` — Git: first GitHub submission
+
+## How to Run
+
+Each script is standalone. Open a terminal and run:
+```
+python week07/functions.py
+```
+</code></pre>
+<p class="expect">Not code that runs — a Markdown file you create in your editor. Content is verbatim from the guide. How GitHub renders it on the next slide.</p>
+<aside class="notes">
+Line-by-line of the Markdown syntax (guide):
+- <code># ISM2411 — Python for Business</code> — a single <code>#</code> at the start of a line makes a top-level heading (renders large and bold on GitHub).
+- <code>## About This Repo</code>, <code>## Modules</code>, <code>## How to Run</code> — <code>##</code> (two hashes) makes a second-level heading; say explicitly: more <code>#</code> characters means a <em>smaller</em> heading, which surprises some students expecting the opposite.
+- <code>**Name:**</code> — double asterisks around text make it <strong>bold</strong> when rendered; the colon and following text stay normal weight.
+- <code>- `week05/` — ...</code> — a leading <code>- </code> (dash, space) makes a bullet list item; the backticks around <code>week05/</code> render it in a monospace code font.
+- The triple-backtick fenced block for "How to Run" — same syntax this course's own lab guides use; renders as a distinct, monospaced, often syntax-highlighted block on GitHub.
+Static file, not a runnable block.
+</aside>
+</section>
+
+<!-- 31. EXERCISE 5 — how GitHub renders it -->
+<section class="s-out">
+<h3>Illustrative result — how GitHub renders it</h3>
+<pre>GitHub automatically displays README.md, formatted, right
+on the main page — it is the first thing a grader, a future
+employer, or a collaborator sees when visiting the repo.
+
+Headings render large; **bold** renders bold; "- " lines
+render as bullets; the ``` fenced block renders as a
+monospaced code box.</pre>
+<aside class="notes">First paragraph is the guide's statement, verbatim in substance: "a README is the first thing anyone (a grader, a future employer, a collaborator) sees when visiting a repo, and GitHub renders it automatically on the repo's front page" / "GitHub automatically displays it, formatted, right on the main page." No terminal output — the observable result is the rendered front page on github.com.</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — read-only code (cycle) -->
+<section class="s-code">
+<h3>Run in your own terminal — Exercise 5 (commit the README)</h3>
+<div class="run" data-lang="shell" data-readonly>git add README.md
+git commit -m "add README with module listing and run instructions"
+git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. The exact same cycle as Exercises 3–4. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line (guide) — identical cycle to Exercise 3:
+- <code>git add README.md</code> — stages the README for the next commit.
+- <code>git commit -m "add README with module listing and run instructions"</code> — records it locally with a message that names what the file is and what it contains.
+- <code>git push</code> — uploads the commit so it appears on github.com and the rendered README shows on the repo's front page.
+Read-only: <code>git</code> cannot run in the browser.
+</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — illustrative result -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>$ git add README.md
+$ git commit -m "add README with module listing and run instructions"
+[main f7c2b3e] add README with module listing and run instructions
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+$ git push
+To https://github.com/YOURUSERNAME/ism2411.git
+   a3f1b2c..f7c2b3e  main -> main</pre>
+<aside class="notes">The guide shows no literal transcript for this cycle; the commit summary line, the <code>To …/main -&gt; main</code> push confirmation, and the short hash <code>f7c2b3e</code> (matching Exercise 6's illustrative <code>git log</code>) are Git's standard output shown for realism. The <code>1 deletion(-)</code> reflects that <code>README.md</code> already exists — it was created by "Add a README" when the repo was made on GitHub (Exercise 2), so this commit <em>replaces</em> that one-line stub rather than adding a brand-new file. The push line shows <code>git push</code> is <em>not</em> silent and is how the landing is confirmed. Guide-stated effect: after the push, "GitHub automatically displays it, formatted, right on the main page." Not run here.</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">You add a fifth module folder next week. What exactly do you update in this README to keep it accurate?</p>
+<button data-opt="A">Nothing — GitHub regenerates the README automatically from your folders</button>
+<button data-opt="B">Rewrite the whole <code>## How to Run</code> section</button>
+<button data-opt="C">Add one more bullet line under <code>## Modules</code></button>
+<p class="why" hidden>Add one more bullet line under <code>## Modules</code> — this file needs ongoing maintenance as the semester progresses, not just a one-time setup. This directly previews Exercise 6 / Stretch 1's back-filling work.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "If I add a fifth module folder next week, what exactly do I need to update in this README to keep it accurate?" (Add one more bullet line under <code>## Modules</code> — get a student to notice this file needs ongoing maintenance as the semester progresses, not just a one-time setup; this directly previews Exercise 6/Stretch 1's back-filling work.) That parenthetical is the <code>data-answer</code> (C).</aside>
+</section>
+
+<!-- 35. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting the blank line between a heading and the paragraph below it, or between list items and surrounding text — Markdown is sometimes forgiving about this, sometimes not, and inconsistent spacing is the most common cause of a README that "looks wrong" on GitHub without any error message at all. If a student's rendering looks off, have them view the <em>raw</em> file (a toggle GitHub provides) side by side with the rendered version.</p>
+<p>Using single asterisks (<code>*bold*</code>) expecting bold — single asterisks render as <em>italic</em>, not bold; double asterisks (<code>**bold**</code>) are required for bold. A quick, easy mix-up worth naming explicitly.</p>
+</div>
+<aside class="notes">Both mistakes produce a "looks wrong, no error" result — the raw-vs-rendered toggle on GitHub is the debugging tool to point students at.</aside>
+</section>
+
+<!-- 36. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 8 min · 0:51–0:59</span>
+<h1>Three Commits — read <code>git log --oneline</code></h1>
+<aside class="notes">
+Teaching goal: confirm the whole session's work by reading <code>git log --oneline</code> — and reinforce that "three separate, coherent commits" is a deliberate discipline, not an accident of how the exercises happened to be structured.
+Say to the class (verbatim): "You've actually already made three separate commits today, without necessarily thinking of it as a deliberate count — the <code>.gitignore</code>, the Module 7 folder, and the README. Let's confirm that with one command, and talk about why 'three separate commits' is better than 'one giant commit for everything.'"
+Say explicitly, since this is the exercise's real point (verbatim): "Notice these are three separate, single-purpose commits, each describing one coherent change — not one commit called 'update stuff' covering all three at once. If you were hiring someone and looked at their commit history, which would tell you more about how carefully they work?" This is a direct rehearsal of tonight's first reflection question — ask it now, out loud.
+Check for understanding (guide): "The default branch on GitHub is often called <code>main</code> these days, though older repos or certain local Git configurations may default to <code>master</code> — does this distinction affect anything you did in this lab?" (Not for this exercise specifically, but it's worth surfacing as an example of a small inconsistency students may encounter and should recognize rather than be thrown by — different repos, different defaults, same underlying Git concepts.)
+</aside>
+</section>
+
+<!-- 37. EXERCISE 6 — read-only code -->
+<section class="s-code">
+<h3>Run in your own terminal — Exercise 6 (verify history)</h3>
+<div class="run" data-lang="shell" data-readonly>git log --oneline</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. Illustrative output on the next slide — your commit hashes will differ, and that's expected.</p>
+<aside class="notes">
+Line by line (guide):
+- <code>git log</code> — shows the repo's full commit history, most recent first.
+- <code>--oneline</code> — condenses each commit to a single line (a short hash plus the message), instead of the full multi-line default view (which also shows author, date, and full message) — a much more scannable format for a quick check like this.
+Read-only: <code>git</code> cannot run in the browser.
+</aside>
+</section>
+
+<!-- 38. EXERCISE 6 — illustrative result (VERBATIM) -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price
+9d4e1a0 add .gitignore for Python and OS files
+f7c2b3e add README with module listing and run instructions</pre>
+<aside class="notes">Reproduced verbatim from the guide's "Expected output shape" for Exercise 6 (guide lines 322–324). The guide's own caveat, verbatim: "exact commit hashes will differ per student — that's expected and fine, hashes are unique to each commit's content and timing." Three separate, single-purpose commits — not one "update stuff" commit. Verify on github.com too (guide): visit the repo's commit history page and confirm all three appear there as well, matching the local <code>git log</code> — reinforcing the "local and remote should match after a successful push" model from Exercise 2. Not run here — <code>git</code> is unavailable in the browser.</aside>
+</section>
+
+<!-- 39. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Some repos default to a <code>main</code> branch, others to <code>master</code>. Did that distinction affect anything you did in this lab?</p>
+<button data-opt="A">No — not for this exercise specifically; it's a small inconsistency to recognize, not be thrown by — different repos, different defaults, same underlying Git concepts</button>
+<button data-opt="B">Yes — the lab only works on a <code>master</code> branch</button>
+<button data-opt="C">Yes — you must rename <code>master</code> to <code>main</code> before you can push</button>
+<p class="why" hidden>Not for this exercise specifically, but it's worth surfacing as an example of a small inconsistency students may encounter and should recognize rather than be thrown by — different repos, different defaults, same underlying Git concepts.</p>
+</div>
+<aside class="notes">Check for understanding (guide): "The default branch on GitHub is often called <code>main</code> these days, though older repos or certain local Git configurations may default to <code>master</code> — does this distinction affect anything you did in this lab?" (Not for this exercise specifically, but it's worth surfacing as an example of a small inconsistency students may encounter and should recognize rather than be thrown by — different repos, different defaults, same underlying Git concepts.) That parenthetical is the <code>data-answer</code> (A).</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Having fewer than three distinct commits because two exercises got accidentally combined into one <code>git add</code>/<code>git commit</code> cycle — not a disaster, but a good moment to ask the student to articulate, after the fact, what the "ideal" commit boundaries would have been.</p>
+<p>Confusing the <em>order</em> <code>git log</code> displays commits in — most recent commit at the <strong>top</strong> — with the order they were made in. If a student expects chronological top-to-bottom (oldest first), clarify explicitly that <code>git log</code>'s default and near-universal convention is newest-first.</p>
+</div>
+<aside class="notes">Recognizing good commit granularity is a skill independent of whether it was followed perfectly today — so the fewer-than-three-commits case is a teaching moment, not a failure. Newest-first ordering is the other point to state plainly.</aside>
+</section>
+
+<!-- 41. STRETCH 1 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 · 8 min · 0:59–1:07</span>
+<h1>Back-fill Earlier Modules</h1>
+<aside class="notes">
+Teaching goal: repeat the full add-a-module cycle independently, twice, without step-by-step guidance — the real test of whether the workflow actually transferred, not just whether students could follow along live.
+Say to the class (verbatim): "Now do Exercise 4's process again, on your own, twice — once for Module 5's <code>discount.py</code>, once for Module 6's <code>sales_loop.py</code>. Separate commits for each, not one combined commit for both. Then update the README's module list."
+Facilitation notes (guide): circulate and check specifically for <strong>commit granularity</strong> — a student who does <code>git add week05/ week06/</code> and commits both in one shot has technically completed the task but missed the actual point. "Can you undo that and do it as two separate commits instead?" is a fine, low-stakes correction. The README update is easy to forget entirely — worth an explicit reminder mid-exercise, since a README that lists Modules 7–8 but not 5–6 is a subtle but real inconsistency a careful grader would notice.
+Check for understanding: the guide gives no Q&amp;A parenthetical here, so the paired quiz uses the R-conv-3 fallback — its answer is the verbatim same-segment line "Separate commits for each, not one combined commit for both."
+</aside>
+</section>
+
+<!-- 42. STRETCH 1 — read-only code -->
+<section class="s-code">
+<h3>Run in your own terminal — Stretch 1 (repeat per module)</h3>
+<div class="run" data-lang="shell" data-readonly>mkdir week05
+cp /path/to/your/discount.py week05/
+git add week05/
+git commit -m "add module 5 discount tier calculator"
+git push
+
+mkdir week06
+cp /path/to/your/sales_loop.py week06/
+git add week06/
+git commit -m "add module 6 sales loop: sum, average, max"
+git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. Two independent runs of Exercise 4's cycle — a separate commit for each module, then update the README's module list. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line (guide, Appendix A): the same <code>mkdir</code> → <code>cp</code> → <code>git add</code> → <code>git commit</code> → <code>git push</code> cycle as Exercise 4, run once for <code>week05/</code> (<code>discount.py</code>, "add module 5 discount tier calculator") and once for <code>week06/</code> (<code>sales_loop.py</code>, "add module 6 sales loop: sum, average, max"). The two commits stay separate — <code>git add week05/ week06/</code> followed by a single commit misses the point of the exercise. After both, add two more bullet lines under <code>## Modules</code> in the README and commit that too.
+Read-only: <code>git</code> cannot run in the browser.
+</aside>
+</section>
+
+<!-- 43. STRETCH 1 — illustrative result -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>$ git log --oneline
+b8e2c19 add module 6 sales loop: sum, average, max
+7a1f4d3 add module 5 discount tier calculator
+a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price
+9d4e1a0 add .gitignore for Python and OS files
+f7c2b3e add README with module listing and run instructions</pre>
+<aside class="notes">Guide, verbatim: "<code>git log --oneline</code> should now show five total commits (the original three plus two more), and the README should list all modules covered so far." The commit messages "add module 5 discount tier calculator" and "add module 6 sales loop: sum, average, max" are verbatim from the guide's Appendix A. Short hashes are illustrative — students' will differ. Common student mistake to watch for (guide): copying <code>discount.py</code>/<code>sales_loop.py</code> from their original folders but also dragging along an old <code>__pycache__/</code> folder — a good live check that Exercise 3's <code>.gitignore</code> is doing its job: those files should <em>not</em> show up as trackable in <code>git status</code>. Not run here.</aside>
+</section>
+
+<!-- 44. STRETCH 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">In Stretch 1, how should the two new modules be committed?</p>
+<button data-opt="A">One combined commit for <code>week05/</code> and <code>week06/</code> together</button>
+<button data-opt="B">No commit until the README is updated to list both</button>
+<button data-opt="C">Separate commits for each — not one combined commit for both</button>
+<p class="why" hidden>Separate commits for each, not one combined commit for both. A student who does <code>git add week05/ week06/</code> and commits both in one shot has technically completed the task but missed the actual point — practicing the discipline of separate, coherent commits.</p>
+</div>
+<aside class="notes">The guide gives no Q&amp;A parenthetical for a Stretch 1 CFU, so per R-conv-3 the <code>data-answer</code> (C) is a verbatim same-segment line: "Separate commits for each, not one combined commit for both." The guide reinforces it in the facilitation notes: combining both into one <code>git add</code>/commit "has technically completed the task but missed the actual point."</aside>
+</section>
+
+<!-- 45. STRETCH 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Copying <code>discount.py</code>/<code>sales_loop.py</code> from their original Module 05/06 project folders but accidentally also copying unrelated files alongside them (like an old <code>__pycache__/</code> folder) — a good live check that <code>.gitignore</code> from Exercise 3 is actually doing its job: those files should <em>not</em> show up as trackable in <code>git status</code>, even if physically present in the folder.</p>
+<p>Forgetting the README update entirely — a README that lists Modules 7–8 but not 5–6 is a subtle but real inconsistency a careful grader (or a future employer) would notice. Give an explicit reminder mid-exercise.</p>
+</div>
+<aside class="notes">The <code>__pycache__/</code> check is the satisfying payoff of Exercise 3 — ignored files staying invisible in <code>git status</code> proves the ignore rules work. The forgotten README update is the quiet one to prompt for.</aside>
+</section>
+
+<!-- 46. STRETCH 2 — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 2 · preview · as time allows</span>
+<h1>Simulate a Bug and Roll Back</h1>
+<aside class="notes">
+Frame as a quick demo if time is short — it's genuinely one of the more valuable "why Git matters" moments in the whole lab.
+One sentence of framing, said out loud, is worth more than a full live demo here if time is tight (verbatim): "This is the entire reason version control exists: your mistake is never actually lost, and neither is the fix. <code>git revert</code> creates a <em>new</em> commit that undoes a previous one — the broken version stays visible in history (which is honest and often useful later), but the working code is restored. Confirm with <code>git log --oneline</code> afterward: you'll see <em>both</em> the 'introduce bug' commit and a new 'Revert ...' commit, not a history with the bug simply erased." If you demo it live, verify with the class that the file's content is genuinely restored by re-running the script, not just trusting the command succeeded silently.
+Guide, verified with a scratch repo: <code>git revert HEAD</code> (with no other flags) opens an editor for the revert commit's message — <code>git revert --no-edit HEAD</code> skips that prompt and accepts Git's auto-generated "Revert '...'" message, a fine option to mention if a student gets stuck in an unfamiliar editor prompt (the same Vim-escape guidance from Exercise 3 applies here too).
+</aside>
+</section>
+
+<!-- 47. STRETCH 2 — read-only code -->
+<section class="s-code">
+<h3>Run in your own terminal — Stretch 2 (simulate a bug, then roll back)</h3>
+<div class="run" data-lang="shell" data-readonly># Deliberately break something
+git add functions.py
+git commit -m "introduce bug for rollback exercise"
+git push
+
+# Then restore the working version
+git revert HEAD
+git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. <code>git revert HEAD</code> opens an editor for the revert message; <code>git revert --no-edit HEAD</code> skips that prompt. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line (guide):
+- <code>git add functions.py</code> / <code>git commit -m "introduce bug for rollback exercise"</code> / <code>git push</code> — deliberately record and publish a broken version.
+- <code>git revert HEAD</code> — creates a <em>new</em> commit that undoes the previous one (<code>HEAD</code>). The broken version stays visible in history; the working code is restored. With no flags it opens an editor for the revert commit's message; <code>git revert --no-edit HEAD</code> accepts Git's auto-generated "Revert '...'" message.
+- <code>git push</code> — publishes the revert so github.com matches the restored local state.
+Read-only: <code>git</code> cannot run in the browser.
+</aside>
+</section>
+
+<!-- 48. STRETCH 2 — illustrative result -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>$ git revert HEAD
+$ git push
+To https://github.com/YOURUSERNAME/ism2411.git
+   1a2b3c4..c4d5e6f  main -> main
+$ git log --oneline
+c4d5e6f Revert "introduce bug for rollback exercise"
+1a2b3c4 introduce bug for rollback exercise
+b8e2c19 add module 6 sales loop: sum, average, max
+7a1f4d3 add module 5 discount tier calculator
+a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price</pre>
+<aside class="notes">Guide, verbatim: "you'll see <em>both</em> the 'introduce bug' commit and a new 'Revert ...' commit, not a history with the bug simply erased." The commit message "introduce bug for rollback exercise" is verbatim from the guide (Appendix A). Short hashes and the <code>To …/main -&gt; main</code> push confirmation are illustrative Git output shown for realism (the push line shows <code>git push</code> is not silent). If demoed live, the guide says to verify the file's content is genuinely restored by re-running the script, not just trusting the command succeeded silently. Not run here — <code>git</code> is unavailable in the browser.</aside>
+</section>
+
+<!-- 49. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li><code>git log --oneline</code> output, and what it would tell a hiring manager.</li>
+<li>How Git changes your approach to editing a working script.</li>
+<li>One machine/workflow-specific <code>.gitignore</code> addition of your own.</li>
+</ul>
+<aside class="notes">
+Review the reflection questions out loud (guide's Wrap-Up):
+1. <code>git log --oneline</code> output and what it would tell a hiring manager — already rehearsed during Exercise 6's live discussion; use this moment to have a student restate it in their own words.
+2. How Git changes your approach to editing a working script — a strong answer names something like: "I'm less afraid to try something risky now, because I know I can always get back to the last commit" — the psychological safety of version control is a real, substantive point, not just a process one.
+3. One machine/workflow-specific <code>.gitignore</code> addition — encourage something genuinely personal to their setup (a specific editor's config folder, a virtual environment folder like <code>venv/</code>, a personal notes file they keep in the project folder) rather than just repeating an entry already in the starter template.
+</aside>
+</section>
+
+<!-- 50. WRAP — submission checklist + next module -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li>Repo is named <code>ism2411</code>, set to Public</li>
+<li><code>.gitignore</code> committed and pushed</li>
+<li><code>week07/</code> folder with <code>functions.py</code> committed and pushed</li>
+<li><code>README.md</code> with title, name, semester, description, and module list committed and pushed</li>
+<li>At least three separate, descriptively-messaged commits visible in <code>git log --oneline</code> and on github.com</li>
+<li>Repo URL submitted to Canvas</li>
+</ul>
+<aside class="notes">Review this on screen together in the last few minutes. Preview Module 09 (verbatim): "Module 9 is the midterm — no new lab content, but the Git workflow you built today is exactly what you'll use to submit it, and every remaining assignment for the rest of the semester." Extra practice if the class finishes early (Appendix B): a fourth, deliberately small commit (add one README bullet, commit it on its own); or <code>git show</code> with no arguments to read the most recent commit's diff (<code>+</code> lines added, <code>-</code> lines removed).</aside>
+</section>
+
+<!-- 51. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 8</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w08.md (Week 8 facilitation guide). This is a Git/GitHub workflow lab: <code>git</code>, <code>gh</code>, <code>git clone</code>, <code>git push</code> cannot run in a browser, so every command block is a static read-only block paired with an "illustrative result" slide carrying the guide's stated output — students run every command on their own machine. No block on this deck executes in the browser; Exercise 6's illustrative <code>git log --oneline</code> block is reproduced verbatim from the guide (lines 322–324).</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
