@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 10 — Inventory List Manager</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; Module 10 &nbsp;·&nbsp; Unit 3 &nbsp;·&nbsp; Data Structures</p>
+<h1>Inventory List Manager</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Intro — one variable, a whole collection</span>
+<span class="t-item"><strong>0:04–0:10</strong> Ex 1 — Build the List</span>
+<span class="t-item"><strong>0:10–0:19</strong> Ex 2 — Index Practice</span>
+<span class="t-item"><strong>0:19–0:27</strong> Ex 3 — Slicing</span>
+<span class="t-item"><strong>0:27–0:35</strong> Ex 4 — Modify in Place</span>
+<span class="t-item"><strong>0:35–0:45</strong> Ex 5 — Tuple Comparison</span>
+<span class="t-item"><strong>0:45–0:52</strong> Ex 6 — Average with Built-ins</span>
+<span class="t-item"><strong>0:52–1:00</strong> Ex 7 — Build a New List</span>
+<span class="t-item"><strong>1:00–1:08</strong> Ex 8 — Filter Above Threshold</span>
+<span class="t-item"><strong>1:08–1:15</strong> Stretch + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along. Module 9 was the midterm; this is the first lab of Unit 3, and it opens a genuinely new topic — data structures. Everything before this unit processed values one at a time or accumulated a single running number; this module is about a single variable holding an entire <em>collection</em>, and about the specific tools (indexing, slicing, list methods) for reaching into that collection. Two ideas deserve the most protected time: <strong>zero-based indexing</strong> (Exercise 2) and the <strong>mutable-vs-immutable</strong> distinction between lists and tuples (Exercise 5) — both are genuinely non-obvious the first time, and both cause real bugs for the rest of the semester if they don't land solidly today.
+Prerequisites: Modules 05–08 — conditionals, loops, functions, Git/GitHub (this module's submission goes through GitHub). Submission: <code>inventory.py</code> via GitHub (<code>week10/</code> folder), repo URL to Canvas. Before class: open <code>inventory.py</code> empty except the header comment; have the exact starting list ready to type identically every time — <code>inventory = ["pen", "notebook", "stapler", "tape", "marker"]</code> — five items, used across Exercises 1–4 so index/slice results are consistent; pre-draw a numbered box diagram of the five-item list showing positive indices 0–4 and negative indices -5 to -1 simultaneously. All runnable-block output in this deck verified against CPython 3.12 (== Pyodide 0.26.4).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>inventory.py</code> starts empty except the header comment; build every exercise live</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Modules 05–08: conditionals, loops, functions, Git/GitHub (this module's submission goes through GitHub)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>inventory.py</code> via GitHub (<code>week10/</code> folder), repo URL submitted to Canvas — reflection answered as a comment at the top of the file</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week10_lab. Class length 75 minutes, format live code-along. The required exercises comfortably fill available time; the Stretch challenge is positioned as a closing preview since it's primarily Module 07 function skills applied to this module's list operations rather than new material. Confirm students already have a working GitHub repo from Module 08, since this module's submission format changes (GitHub, not a bare Canvas file upload) — a quick reminder at the start avoids surprise at the end.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Create a list, and access elements by positive index (from the front) and negative index (from the back), without off-by-one errors.</li>
+<li>Use slice notation (<code>[start:stop]</code>, <code>[start:]</code>, <code>[:stop]</code>, <code>[::step]</code>) to extract a sub-portion of a list.</li>
+<li>Modify a list in place with <code>.append()</code>, <code>.remove()</code>, and <code>.sort()</code>, and explain why these methods don't need to <code>return</code> a new list.</li>
+<li>Explain why tuples are immutable, and catch the <code>TypeError</code> that results from trying to change one.</li>
+<li>Build a new list from an existing one using the accumulator pattern (<code>.append()</code> inside a loop), including a filtered version.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objectives 1 (zero-based / negative indexing) and 4 (mutable vs immutable) are the two ideas to protect the most time for — both genuinely non-obvious the first time, and both a source of real bugs for the rest of the semester if they don't land solidly today.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Intro — one variable holds a whole collection</td><td>4</td></tr>
+<tr><td>0:04–0:10</td><td>Exercise 1 — Build the List</td><td>6</td></tr>
+<tr><td>0:10–0:19</td><td>Exercise 2 — Index Practice</td><td>9</td></tr>
+<tr><td>0:19–0:27</td><td>Exercise 3 — Slicing</td><td>8</td></tr>
+<tr><td>0:27–0:35</td><td>Exercise 4 — Modify in Place</td><td>8</td></tr>
+<tr><td>0:35–0:45</td><td>Exercise 5 — Tuple Comparison</td><td>10</td></tr>
+<tr><td>0:45–0:52</td><td>Exercise 6 — Average of a List of Sales</td><td>7</td></tr>
+<tr><td>0:52–1:00</td><td>Exercise 7 — Accumulator Pattern: Build a New List</td><td>8</td></tr>
+<tr><td>1:00–1:08</td><td>Exercise 8 — Filter Above Threshold</td><td>8</td></tr>
+<tr><td>1:08–1:15</td><td>Stretch — <code>inventory_report</code> function + Wrap-Up</td><td>7</td></tr>
+</tbody>
+</table>
+<aside class="notes">The required exercises comfortably fill available time. The Stretch challenge is positioned as a closing preview since it's primarily Module 07 review (writing a function, calling it more than once with different inputs) applied to this module's new list vocabulary, not new material. Appendix B has two extra practice items (a second indexing/slicing round on <code>colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]</code>; a second filtered-list build on <code>temps = [58, 72, 91, 45, 88, 63, 95, 70]</code>) if a section moves unusually fast.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>One variable holds a whole collection</h1>
+<aside class="notes">
+Teaching goal: frame today's jump — every variable so far held one value; today one variable holds an entire collection, and this module is about the tools for reaching into it.
+Say to the class (verbatim): "Every variable you've used until now held one value — one price, one total, one customer name. Today, one variable holds a whole <em>collection</em>: a list. This opens up indexing (reaching into a specific position), slicing (pulling out a sub-portion), and a handful of methods for changing a list in place. Watch closely for one specific, non-obvious idea: Python counts starting at zero, not one. It genuinely trips up almost everyone the first time."
+Do: open <code>inventory.py</code>, type the header — <code># inventory.py</code> / <code># ISM2411 Module 10 Lab — Inventory List Manager</code>.
+Common mistakes: none yet — this is framing.
+Note on the deck: every runnable block below re-declares the starting list <code>inventory = ["pen", "notebook", "stapler", "tape", "marker"]</code> at the top, because each block runs in its own fresh namespace. In the real <code>inventory.py</code> the list is typed once and Exercises 1–4 reuse it (and Exercise 4's mutations carry forward within that one file).
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 6 min · 0:04–0:10</span>
+<h1>Build the List</h1>
+<aside class="notes">
+Teaching goal: list literal syntax, and <code>len()</code> as the standard way to ask "how many."
+Say to the class (verbatim): "Square brackets, comma-separated values — that's a list. Five strings, one variable."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python">
+# --- Exercise 1 ---
+inventory = ["pen", "notebook", "stapler", "tape", "marker"]
+print(inventory)
+print(len(inventory))
+</div>
+<p class="expect">Square brackets and commas make a list; <code>print(inventory)</code> shows it exactly as typed, with brackets and quotes; <code>len(inventory)</code> is the same <code>len()</code> from Module 06's <code>while</code>-loop exercise, now counting list elements.</p>
+<aside class="notes">
+Line-by-line:
+- <code>inventory = ["pen", "notebook", "stapler", "tape", "marker"]</code> — square brackets <code>[...]</code> create a <strong>list</strong>; each element is a separate string, comma-separated, in a specific order Python remembers and preserves — say explicitly: <strong>order matters and is preserved</strong>. This is what makes indexing (next exercise) meaningful at all.
+- <code>print(inventory)</code> — printing a list shows it with square brackets and quotes around each string, exactly as it was typed — Python's default way of displaying a list's structure, not something students need to format themselves.
+- <code>len(inventory)</code> — the same <code>len()</code> function from Module 06's <code>while</code>-loop exercise (<code>len(sales)</code>), now counting list elements instead of bounding a loop — worth connecting explicitly to that prior use.
+Common mistakes: using parentheses <code>(...)</code> instead of square brackets — creates a tuple (Exercise 5), a structurally different object, not an error; forgetting commas between items — a <code>SyntaxError</code>, or in some cases silent string concatenation (<code>"pen" "notebook"</code> becomes <code>"pennotebook"</code>). Demo the concatenation only if a student stumbles into it.
+Check for understanding (guide, verbatim parenthetical): "If I added a sixth item, what would <code>len(inventory)</code> report — and would I need to change anything else in this code for it to be correct? (<code>6</code>, and no — nothing else needs to change; <code>len()</code> always reflects the list's current size automatically, which is worth naming as the payoff for using it instead of a hardcoded count.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>['pen', 'notebook', 'stapler', 'tape', 'marker']
+5</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 1 exactly. Two lines: the list printed with its brackets and single-quoted strings, then its length. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If I added a sixth item to <code>inventory</code>, what would <code>len(inventory)</code> report — and would any other line need to change?</p>
+<button data-opt="A"><code>5</code> — <code>len()</code> was fixed when the list was first created</button>
+<button data-opt="B"><code>6</code>, and nothing else changes — <code>len()</code> always reflects the list's current size</button>
+<button data-opt="C"><code>6</code>, but you'd also have to update a hardcoded count elsewhere in the code</button>
+<p class="why" hidden><code>6</code>, and no — nothing else needs to change; <code>len()</code> always reflects the list's current size automatically, which is worth naming as the payoff for using it instead of a hardcoded count.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>6</code>, and no — nothing else needs to change; <code>len()</code> always reflects the list's current size automatically, which is worth naming as the payoff for using it instead of a hardcoded count.)"</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using parentheses <code>(...)</code> instead of square brackets <code>[...]</code> — this creates a different thing entirely (a tuple, which Exercise 5 covers), not an error, but a structurally different object. A brief "hold that thought, we'll see why this matters in Exercise 5" is enough if it comes up now.</p>
+<p>Forgetting commas between items — produces a <code>SyntaxError</code>, or in some cases silently concatenates two adjacent string literals into one (<code>"pen" "notebook"</code> becomes <code>"pennotebook"</code>, a genuinely obscure Python behavior) — worth a quick live demo only if a student stumbles into it naturally, not worth introducing proactively.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1.</aside>
+</section>
+
+<!-- 11. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 9 min · 0:10–0:19</span>
+<h1>Index Practice</h1>
+<aside class="notes">
+Teaching goal: zero-based positive indexing, negative indexing from the end, and computing a "middle" position from <code>len()</code> rather than hardcoding it — the single most important non-obvious idea in this lab.
+Say to the class (verbatim): "This is the idea I most want you to leave today with, cold: Python lists are indexed starting at zero. The first item is at position 0, not 1. I want you to say that out loud with me once: 'the first item is at index zero.'"
+</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — the idea -->
+<section class="s-idea">
+<h3>The idea — both index systems on the same five items</h3>
+<div class="concept">
+<div class="concept-lbl">Point to the board diagram from your setup checklist</div>
+<pre> index:    0        1          2         3       4
+ value:  "pen"  "notebook"  "stapler"  "tape"  "marker"
+ neg idx: -5       -4         -3        -2       -1</pre>
+<p>The <strong>first</strong> item is <code>inventory[0]</code>, not <code>inventory[1]</code>. <code>inventory[-1]</code> is the <strong>last</strong> item, counting backward — no need to compute <code>len(inventory) - 1</code>. Valid indices for this five-item list are only <code>0</code> through <code>4</code> (and <code>-5</code> through <code>-1</code>).</p>
+</div>
+<aside class="notes">This is the pre-drawn numbered box diagram from the Setup Checklist — positive indices 0–4 and negative indices -5 to -1 mapped onto the same five items. The guide: "this single visual does more for Exercise 2 than any amount of verbal explanation." Have the class say "the first item is at index zero" out loud once.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 ---
+inventory = ["pen", "notebook", "stapler", "tape", "marker"]
+print(inventory[0])
+print(inventory[-1])
+mid = len(inventory) // 2
+print(inventory[mid])
+</div>
+<p class="expect"><code>inventory[0]</code> is <code>pen</code> (first, index 0 — <em>not</em> 1); <code>inventory[-1]</code> is <code>marker</code> (last); <code>mid = len(inventory) // 2</code> is <code>5 // 2 = 2</code>, so <code>inventory[2]</code> is <code>stapler</code> — deliberately <em>not</em> hardcoded as <code>inventory[2]</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>inventory[0]</code> — the <strong>first</strong> item, at index <code>0</code>. Say explicitly, again: not index <code>1</code> — the single most common source of off-by-one bugs for the rest of the semester, worth over-emphasizing now.
+- <code>inventory[-1]</code> — <strong>negative indexing</strong>: <code>-1</code> means "the last item," counting backward from the end. Say explicitly that it avoids needing to compute <code>len(inventory) - 1</code> just to reach the last element, which is what you'd have to do in many other languages.
+- <code>mid = len(inventory) // 2</code> — <strong>floor division</strong> from Module 04/05, doing real work: for a 5-item list, <code>5 // 2</code> is <code>2</code>, and <code>inventory[2]</code> is <code>"stapler"</code>, the true middle of an odd-length list. Deliberately <em>not</em> hardcoded as <code>inventory[2]</code> — if the list's length changes later this line still finds the middle, while a hardcoded <code>2</code> would silently become wrong.
+Common mistakes: writing <code>inventory[1]</code> expecting the first item (have the student recount using the board diagram themselves); writing <code>inventory[5]</code> expecting the last item — raises <code>IndexError</code> (next slide); hardcoding <code>inventory[2]</code> for the middle instead of computing it from <code>len()</code>.
+Check for understanding (guide, verbatim parenthetical): "For a list with 7 items, what index is the true middle, and what expression computes it without hardcoding? (<code>7 // 2 = 3</code>, so <code>inventory[3]</code> — get a student to compute this live, not just state the formula, to confirm the reasoning transfers to a different length.)"
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>pen
+marker
+stapler</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 2 exactly. <code>inventory[0]</code> → <code>pen</code>; <code>inventory[-1]</code> → <code>marker</code>; <code>mid = 5 // 2 = 2</code>, <code>inventory[2]</code> → <code>stapler</code>. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>inventory[5]</code> walks off the end</h3>
+<div class="run" data-lang="python">
+# --- Exercise 2 (BROKEN: index 5 is out of range for a 5-item list) ---
+inventory = ["pen", "notebook", "stapler", "tape", "marker"]
+print(inventory[5])
+</div>
+<p class="expect">There are five items, so the natural (non-zero-based) instinct is that the last one is at index <code>5</code>. Run it — <code>IndexError: list index out of range</code>. Valid indices are only <code>0</code> through <code>4</code>. The guide asks you to demonstrate this one live specifically.</p>
+<aside class="notes">
+Teaching goal: make the off-by-one concrete with a real exception — the guide says this is "a very natural mistake to make from ordinary (non-zero-based) counting habits" and is "worth demonstrating live specifically."
+Line-by-line: <code>inventory[5]</code> asks for the element at position 5, but the five elements occupy positions 0, 1, 2, 3, 4. Python raises <code>IndexError: list index out of range</code>; nothing is printed. Fix it to <code>inventory[4]</code> or <code>inventory[-1]</code> to get <code>marker</code>.
+Common mistakes: this <em>is</em> the mistake — after showing it, have a student recount on the board diagram themselves rather than just correcting the number.
+</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — broken output -->
+<section class="s-out">
+<h3>What the broken version raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 3, in &lt;module&gt;
+    print(inventory[5])
+          ~~~~~~~~~^^^
+IndexError: list index out of range</pre>
+<aside class="notes">Verified against CPython 3.12 (Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match). The file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path on a real machine, and the line number depends on preceding lines — neither is load-bearing. The load-bearing last line is identical: <code>IndexError: list index out of range</code>. Have a student read it aloud.</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">For a list with 7 items, what index is the true middle, and what expression computes it without hardcoding?</p>
+<button data-opt="A">Index <code>4</code>, computed as <code>len(inventory) // 2 + 1</code></button>
+<button data-opt="B">Index <code>3</code>, but only if you write <code>inventory[3]</code> literally</button>
+<button data-opt="C">Index <code>3</code>, computed as <code>len(inventory) // 2</code> (<code>7 // 2</code> is <code>3</code>)</button>
+<p class="why" hidden><code>7 // 2 = 3</code>, so <code>inventory[3]</code> — get a student to compute this live, not just state the formula, to confirm the reasoning transfers to a different length.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>7 // 2 = 3</code>, so <code>inventory[3]</code> — get a student to compute this live, not just state the formula, to confirm the reasoning transfers to a different length.)"</aside>
+</section>
+
+<!-- 18. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>inventory[1]</code> expecting the first item — the most common mistake in this entire lab. Don't just correct the number; have the student recount using the board diagram themselves.</p>
+<p>Writing <code>inventory[5]</code> expecting the last item (since there are 5 items) — raises <code>IndexError: list index out of range</code>, since valid indices for a 5-item list are only <code>0</code> through <code>4</code>. Demonstrate this live.</p>
+<p>Hardcoding <code>inventory[2]</code> for the "middle" instead of computing it from <code>len()</code> — same output for this specific 5-item list, but defeats the point. Ask "what happens to this line if I later add a sixth item?" to make the fragility concrete.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 8 min · 0:19–0:27</span>
+<h1>Slicing</h1>
+<aside class="notes">
+Teaching goal: slice notation for extracting a sub-portion of a list — <code>[start:stop]</code>, open-ended slices, and step slices — building directly on Exercise 2's indexing.
+Say to the class (verbatim): "Indexing gets you one item. Slicing gets you a <em>range</em> of items — a new, smaller list, cut out of the original. Three flavors today."
+</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3</h3>
+<div class="run" data-lang="python">
+# --- Exercise 3 ---
+inventory = ["pen", "notebook", "stapler", "tape", "marker"]
+print(inventory[:3])
+print(inventory[-2:])
+print(inventory[::2])
+</div>
+<p class="expect"><code>[:3]</code> = "everything up to, but not including, index 3" → indices 0, 1, 2 (stop is <em>exclusive</em>). <code>[-2:]</code> = second-to-last through the end. <code>[::2]</code> = every second element from index 0 → indices 0, 2, 4.</p>
+<aside class="notes">
+Line-by-line:
+- <code>inventory[:3]</code> — no <code>start</code> (defaults to the beginning), <code>stop</code> of <code>3</code>: <strong>"everything up to, but not including, index 3."</strong> Slow down here: the <code>stop</code> value is <em>exclusive</em> — <code>[:3]</code> gives indices <code>0, 1, 2</code>, three items total, not including whatever's at index <code>3</code>. This "stop is exclusive" rule is consistent with <code>range()</code> and is worth naming as a general Python convention, not a one-off quirk of slicing.
+- <code>inventory[-2:]</code> — no <code>stop</code> (defaults to the end), <code>start</code> of <code>-2</code>: "starting from the second-to-last item, go to the end" — combines negative indexing with open-ended slicing.
+- <code>inventory[::2]</code> — <strong>step slicing</strong>: two colons, "no explicit start, no explicit stop, but a step of 2" — take every second element, starting from index <code>0</code>. Walk through the indices: <code>0, 2, 4</code> → <code>"pen"</code>, <code>"stapler"</code>, <code>"marker"</code>.
+Common mistakes: expecting <code>inventory[:3]</code> to include the item at index <code>3</code> (<code>"tape"</code>) — have the room count the returned list's length (<code>3</code>) against the slice's <code>stop</code> value (<code>3</code>): <strong>the stop number equals the count of items you get when starting from index 0</strong>. Confusing <code>[::2]</code> (step slicing) with <code>[:2]</code> (first two elements) — write both side by side if it surfaces.
+Check for understanding (guide, verbatim parenthetical): "Without running it, what does <code>inventory[1:4]</code> return? (Indices <code>1, 2, 3</code> → <code>['notebook', 'stapler', 'tape']</code> — three items, again matching the 'count = stop − start' shortcut from above, now with an explicit start.)"
+</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>['pen', 'notebook', 'stapler']
+['tape', 'marker']
+['pen', 'stapler', 'marker']</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 3 exactly. <code>[:3]</code> → first three items; <code>[-2:]</code> → last two; <code>[::2]</code> → indices 0, 2, 4. Each slice returns a new, smaller list. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Without running it, what does <code>inventory[1:4]</code> return?</p>
+<button data-opt="A"><code>['notebook', 'stapler', 'tape']</code> — indices 1, 2, 3 (stop 4 is exclusive)</button>
+<button data-opt="B"><code>['notebook', 'stapler', 'tape', 'marker']</code> — indices 1 through 4</button>
+<button data-opt="C"><code>['pen', 'notebook', 'stapler']</code> — the first three items</button>
+<p class="why" hidden>Indices <code>1, 2, 3</code> → <code>['notebook', 'stapler', 'tape']</code> — three items, again matching the "count = stop − start" shortcut from above, now with an explicit start.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Indices <code>1, 2, 3</code> → <code>['notebook', 'stapler', 'tape']</code> — three items, again matching the 'count = stop − start' shortcut from above, now with an explicit start.)"</aside>
+</section>
+
+<!-- 23. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Expecting <code>inventory[:3]</code> to include the item at index <code>3</code> (<code>"tape"</code>) — the exclusive-stop rule is genuinely the most common slicing mistake. Have the room count the returned list's length (<code>3</code> items) against the slice's <code>stop</code> value (<code>3</code>) to notice the pattern: <strong>the stop number equals the count of items you get when starting from index 0</strong>.</p>
+<p>Confusing <code>[::2]</code> (step slicing, every second element) with <code>[:2]</code> (a plain slice, first two elements) — visually similar, semantically very different; write both side by side if this confusion surfaces.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 8 min · 0:27–0:35</span>
+<h1>Modify in Place</h1>
+<aside class="notes">
+Teaching goal: list methods that change the list <strong>in place</strong> — <code>.append()</code>, <code>.remove()</code>, <code>.sort()</code> — and the crucial fact that these methods don't <code>return</code> a new list; they mutate the original.
+Say to the class (verbatim): "Three methods that change the list itself, permanently, right where it lives in memory — not by giving you back a new, separate list. Print after every single step so you can watch the same variable change shape three times in a row."
+</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — mutate the target, hand back nothing useful</h3>
+<div class="concept">
+<div class="concept-lbl">Say it once, explicitly</div>
+<p><code>inventory.append("envelope")</code>, <strong>not</strong> <code>inventory = inventory.append("envelope")</code>. <code>.append()</code> returns <code>None</code>, so assigning its result back to <code>inventory</code> would <em>destroy</em> the list, replacing it with <code>None</code>.</p>
+<p>Not every method works like Module 07's pure functions. Some — like these three — modify their target and hand nothing useful back. <code>.remove()</code> takes a <em>value</em> to search for and delete, not an index. <code>.sort()</code> reorders in place, same "modifies, doesn't return a new list" behavior.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Exercise 4, condensed. The <code>inventory = inventory.append(...)</code> trap is worth demonstrating live as a deliberate broken example (next-but-one slide), since it's a very natural instinct coming from Module 07's "functions return values" lesson.</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 ---
+inventory = ["pen", "notebook", "stapler", "tape", "marker"]
+inventory.append("envelope")
+print(inventory)
+
+inventory.remove("tape")
+print(inventory)
+
+inventory.sort()
+print(inventory)
+</div>
+<p class="expect">Print after every step and watch the same variable change shape three times: <code>.append("envelope")</code> adds to the end; <code>.remove("tape")</code> deletes the first item matching that <em>value</em>; <code>.sort()</code> reorders alphabetically in place.</p>
+<aside class="notes">
+Line-by-line:
+- <code>inventory.append("envelope")</code> — adds <code>"envelope"</code> to the <strong>end</strong> of the list, in place. Note the syntax: <code>inventory.append(...)</code>, not <code>inventory = inventory.append(...)</code> — the second form is a real trap: <code>.append()</code> returns <code>None</code>, so assigning its result back would destroy the list, replacing it with <code>None</code>. Demonstrate live (next slide).
+- <code>inventory.remove("tape")</code> — removes the <em>first</em> item matching the given value (not a position) — contrast explicitly with indexing: <code>.remove()</code> takes a <em>value</em> to search for and delete, not an index to remove by position.
+- <code>inventory.sort()</code> — sorts the list alphabetically (for strings) <strong>in place</strong>, same "modifies, doesn't return a new list" behavior as <code>.append()</code>.
+Common mistakes: <code>inventory = inventory.append("envelope")</code> (list becomes <code>None</code>); <code>inventory.remove(0)</code> expecting to remove "the item at index 0" — searches for the <em>value</em> <code>0</code>, raising <code>ValueError: list.remove(x): x not in list</code>; expecting <code>.sort()</code> to work on a list mixing <code>str</code> and <code>int</code> — raises <code>TypeError</code>.
+Check for understanding (guide, verbatim parenthetical): "After these three operations, if I ran <code>inventory.append("envelope")</code> a <em>second</em> time, what would the list contain? (Two <code>"envelope"</code> entries — lists don't automatically prevent duplicates; <code>.append()</code> always adds, regardless of what's already there. Worth confirming this explicitly, since some students assume list-like structures behave like a mathematical set.)"
+</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output (three separate prints, one per step)</h3>
+<pre>['pen', 'notebook', 'stapler', 'tape', 'marker', 'envelope']
+['pen', 'notebook', 'stapler', 'marker', 'envelope']
+['envelope', 'marker', 'notebook', 'pen', 'stapler']</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 4 exactly. After <code>.append()</code> the list has six items; after <code>.remove("tape")</code>, five (tape gone from the middle); after <code>.sort()</code>, the same five re-ordered alphabetically. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — assigning <code>.append()</code>'s return value</h3>
+<div class="run" data-lang="python">
+# --- Exercise 4 (BROKEN: .append() returns None, so this destroys the list) ---
+inventory = ["pen", "notebook", "stapler", "tape", "marker"]
+inventory = inventory.append("envelope")
+print(inventory)
+</div>
+<p class="expect">A very natural instinct from Module 07's "functions return values" lesson. Run it — <code>print(inventory)</code> shows <code>None</code>. The entire list has vanished, because <code>.append()</code> handed back <code>None</code> and we stored that over the list. No crash — a silent, alarming data loss.</p>
+<aside class="notes">
+Teaching goal: land the "not every method returns something useful" point by breaking the list on purpose. The guide: "a student who does this will find their entire list has vanished on the next <code>print()</code>, which is alarming enough to be a genuinely memorable lesson."
+Line-by-line: <code>inventory.append("envelope")</code> mutates the list <em>and</em> evaluates to <code>None</code>. <code>inventory = ...</code> then rebinds <code>inventory</code> to that <code>None</code>, discarding the (now six-item) list. <code>print(inventory)</code> outputs <code>None</code>. Fix: drop the <code>inventory =</code> and just call <code>inventory.append("envelope")</code>.
+Common mistakes: this <em>is</em> the mistake — show it, then fix it and re-run Exercise 4's correct version.
+</aside>
+</section>
+
+<!-- 29. EXERCISE 4 — broken output -->
+<section class="s-out">
+<h3>What the broken version prints</h3>
+<pre>None</pre>
+<aside class="notes">Verified against CPython 3.12 — no exception, just the single line <code>None</code>. The intended result after a correct <code>.append()</code> is a six-item list; assigning the method's return value silently replaces the list with <code>None</code>. A pure "silent wrong result" bug — and a destructive one.</aside>
+</section>
+
+<!-- 30. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">After the three operations, if you ran <code>inventory.append("envelope")</code> a <em>second</em> time, what would the list contain?</p>
+<button data-opt="A">One <code>"envelope"</code> — <code>.append()</code> skips values already in the list</button>
+<button data-opt="B">Two <code>"envelope"</code> entries — lists don't prevent duplicates; <code>.append()</code> always adds</button>
+<button data-opt="C">A <code>ValueError</code> — you can't append a value that's already present</button>
+<p class="why" hidden>Two <code>"envelope"</code> entries — lists don't automatically prevent duplicates; <code>.append()</code> always adds, regardless of what's already there. Worth confirming this explicitly, since some students assume list-like structures behave like a mathematical set.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Two <code>"envelope"</code> entries — lists don't automatically prevent duplicates; <code>.append()</code> always adds, regardless of what's already there. Worth confirming this explicitly, since some students assume list-like structures behave like a mathematical set.)"</aside>
+</section>
+
+<!-- 31. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>inventory = inventory.append("envelope")</code> — demonstrate the <code>None</code> result live; a student who does this will find their entire list has vanished on the next <code>print()</code>, alarming enough to be a genuinely memorable lesson.</p>
+<p>Trying <code>inventory.remove(0)</code> expecting to remove "the item at index 0" — this instead searches for the <em>value</em> <code>0</code> in the list (not present, since it's a list of strings), raising <code>ValueError: list.remove(x): x not in list</code>. Contrast with a hypothetical <code>del inventory[0]</code> (removes by position) if a curious student asks.</p>
+<p>Expecting <code>.sort()</code> to work on a list containing a mix of types (e.g. a stray number) — raises <code>TypeError</code>, since Python can't order <code>str</code> against <code>int</code>. Not something to demo unless it comes up, but worth knowing as a quick answer.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 10 min · 0:35–0:45</span>
+<h1>Tuple Comparison</h1>
+<aside class="notes">
+Teaching goal: the mutable-vs-immutable distinction between lists and tuples — genuinely the second-most-important idea in this lab, and directly tied to <code>try</code>/<code>except</code>, a new syntax pattern for gracefully handling an error instead of letting the program crash.
+Say to the class (verbatim): "Everything so far has been a list — changeable, or 'mutable.' Now, a tuple: parentheses instead of square brackets, and fundamentally <em>unchangeable</em> once created — 'immutable.' We're going to try to break that rule on purpose, catch the resulting error gracefully instead of crashing, and think about why immutability is actually a <em>feature</em>, not a limitation, for something like GPS coordinates."
+</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>try</code>/<code>except</code> is new syntax today</h3>
+<div class="concept">
+<div class="concept-lbl">A different relationship with errors</div>
+<p>A tuple is created with parentheses <code>(...)</code> and, once created, its contents cannot be changed, added to, or removed from.</p>
+<p><code>try:</code> marks code that <em>might</em> raise an error; if it does, instead of crashing, Python jumps to the matching <code>except</code> block. This is the first time this semester an error is deliberately <em>anticipated and handled</em> rather than treated purely as a bug to fix. <code>except TypeError as e:</code> — the <code>as e</code> captures the exception object so its message can be printed.</p>
+</div>
+<aside class="notes">The guide flags this as the second-most-important idea in the lab. Say explicitly: sometimes an error is an expected, normal possibility your program should gracefully respond to, not always a mistake to eliminate. "Immutable" is a genuinely new vocabulary word this module — and it means only that <em>reassignment</em> of an element is disallowed; tuples can still be read, accessed, and printed freely.</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5</h3>
+<div class="run" data-lang="python">
+# --- Exercise 5 ---
+coords = (40.7128, -74.0060)   # New York City
+
+try:
+    coords[0] = 99
+except TypeError as e:
+    print(f"TypeError caught: {e}")
+    print("Tuples are immutable — useful for coordinates because a "
+          "location's latitude/longitude shouldn't be accidentally "
+          "reassignable partway through a program.")
+
+print(coords)
+</div>
+<p class="expect">The assignment <code>coords[0] = 99</code> raises <code>TypeError: 'tuple' object does not support item assignment</code>; the <code>except</code> block catches it, prints the message, and the program keeps running. The final <code>print(coords)</code> confirms the tuple is unchanged.</p>
+<aside class="notes">
+Line-by-line:
+- <code>coords = (40.7128, -74.0060)</code> — parentheses <code>(...)</code>, not square brackets, create a <strong>tuple</strong> — syntactically similar to a list, but with a fundamentally different guarantee: once created, its contents cannot be changed, added to, or removed from.
+- <code>try:</code> / <code>except TypeError as e:</code> — <strong>new syntax today.</strong> <code>try</code> marks a block that <em>might</em> raise an error; if it does, Python jumps to the matching <code>except</code> block instead of crashing. First time this semester an error is deliberately anticipated and handled.
+- <code>coords[0] = 99</code> — attempting to reassign the first element, exactly like a list assignment would allow — but tuples don't support this at all, regardless of index, raising <code>TypeError: 'tuple' object does not support item assignment</code>.
+- <code>except TypeError as e:</code> — <code>as e</code> captures the actual exception object, so <code>print(f"TypeError caught: {e}")</code> shows the <em>exact</em> error text without crashing.
+- The explanation printed inside the <code>except</code> block is the exercise's actual required deliverable — a real conceptual point: <strong>coordinates are a natural fit for tuples because a location's latitude and longitude are conceptually a fixed pair that shouldn't drift or be partially edited</strong>; immutability turns an accidental modification into a loud, catchable error instead of a silent, corrupted location.
+- <code>print(coords)</code> after the <code>try</code>/<code>except</code> — confirms the tuple is genuinely unchanged, since the assignment inside <code>try</code> never took effect. Note the printed tuple shows <code>-74.006</code>, not <code>-74.0060</code> — Python drops the trailing zero when displaying the float (they are the exact same numeric value); a ten-second aside if a sharp student notices.
+Common mistakes: omitting <code>try</code>/<code>except</code> and running <code>coords[0] = 99</code> directly (program crashes with an unhandled <code>TypeError</code> and stops — run it both ways side by side); a bare <code>except:</code> with no type (works, but catching <em>all</em> errors can hide real bugs — catch the specific <code>TypeError</code>); confusing "immutable" with "can't be printed / read" — only <em>reassignment</em> of an element is disallowed.
+Check for understanding (guide, verbatim parenthetical): "If tuples can't be changed, why not just always use lists for everything, and skip tuples entirely? (A good answer names at least one of: immutability as a safety guarantee against accidental modification, e.g. for something that should behave like a fixed record; or the fact that tuples signal <em>intent</em> — 'this collection of values is meant to stay fixed' — to anyone reading the code later, which lists don't communicate.)"
+</aside>
+</section>
+
+<!-- 35. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>TypeError caught: 'tuple' object does not support item assignment
+Tuples are immutable — useful for coordinates because a location's latitude/longitude shouldn't be accidentally reassignable partway through a program.
+(40.7128, -74.006)</pre>
+<aside class="notes">Verified against a real <code>python3</code> run. The second <code>print()</code> emits its whole message on <strong>one line</strong> — Python concatenates the three adjacent string literals with no newlines. The guide's PDF wraps that line across three rows for page width; the on-screen and terminal output is a single line, shown here as it really appears. Line 3: the tuple is unchanged, and displays as <code>(40.7128, -74.006)</code> — Python drops the trailing zero of <code>-74.0060</code> since <code>74.0060</code> and <code>74.006</code> are the same value.</aside>
+</section>
+
+<!-- 36. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If tuples can't be changed, why not just always use lists and skip tuples entirely?</p>
+<button data-opt="A">You should — tuples are an obsolete version of lists with no real purpose left</button>
+<button data-opt="B">Because tuples run measurably faster for every operation, which always matters</button>
+<button data-opt="C">Immutability is a safety guarantee against accidental modification, and a tuple signals <em>intent</em> — "this is meant to stay fixed" — in a way a list doesn't</button>
+<p class="why" hidden>A good answer names at least one of: immutability as a safety guarantee against accidental modification, e.g. for something that should behave like a fixed record; or the fact that tuples signal <em>intent</em> — "this collection of values is meant to stay fixed" — to anyone reading the code later, which lists don't communicate.</p>
+</div>
+<aside class="notes">The guide's Check for understanding here is open-ended ("A good answer names at least one of…"), not a single-value Q&amp;A. The keyed option C is drawn verbatim from the guide's parenthetical — both named reasons (safety guarantee; signals intent). Guide parenthetical: "(A good answer names at least one of: immutability as a safety guarantee against accidental modification, e.g. for something that should behave like a fixed record; or the fact that tuples signal <em>intent</em> — 'this collection of values is meant to stay fixed' — to anyone reading the code later, which lists don't communicate.)"</aside>
+</section>
+
+<!-- 37. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Omitting the <code>try</code>/<code>except</code> entirely and just running <code>coords[0] = 99</code> directly — the program crashes with an unhandled <code>TypeError</code> and stops. Run it both ways side by side so the room sees exactly what <code>try</code>/<code>except</code> buys: the program <em>continues running</em> past the error.</p>
+<p>Catching a broader exception type than needed (e.g. a bare <code>except:</code>) — works here, but catching <em>any and all</em> errors indiscriminately can hide real bugs; catching the specific expected type (<code>TypeError</code>) is the more disciplined habit.</p>
+<p>Confusing "immutable" with "can't be printed" or "can't be read" — tuples can still be read/accessed/printed freely; only <em>reassignment</em> of an element is disallowed. State this explicitly, since "immutable" is a genuinely new vocabulary word this module.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 38. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 7 min · 0:45–0:52</span>
+<h1>Average of a List of Sales</h1>
+<aside class="notes">
+Teaching goal: Python's built-in <code>sum()</code>, <code>max()</code>, and <code>min()</code> functions — directly contrasted with Module 06's manually-built accumulator versions of the exact same computations.
+Say to the class (verbatim): "Remember Module 6, where you built sum, max, and min by hand with a loop and an accumulator? Python has built-in functions that do all of that in one call. I want you to genuinely notice both how much shorter this is, <em>and</em> why it was still worth learning to build them by hand first."
+</aside>
+</section>
+
+<!-- 39. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6</h3>
+<div class="run" data-lang="python">
+# --- Exercise 6 ---
+sales = [100, 250, 75, 480, 200]
+
+total = sum(sales)
+count = len(sales)
+average = total / count
+
+print(f"Total: {total} | Average: {average} | Best: {max(sales)} | Worst: {min(sales)}")
+</div>
+<p class="expect"><code>sum(sales)</code> replaces Module 06's entire <code>total = 0; for sale in sales: total += sale</code> loop with one call; <code>max()</code>/<code>min()</code> do the same for the hand-built max/min-tracking loops. Note <code>average</code> prints as <code>221.0</code> — bare <code>print</code>, no currency format spec.</p>
+<aside class="notes">
+Line-by-line:
+- <code>sum(sales)</code> — Module 06 Exercise 1's entire accumulator loop, replaced by a single built-in call. This is the exact computation students built by hand with <code>total = 0; for sale in sales: total += sale</code> — now one function call, because summing a list is common enough that Python provides it directly.
+- <code>max(sales)</code> / <code>min(sales)</code> — same relationship to Module 06 Exercise 3's hand-built max-tracking loop (<code>current_max = 0; for sale in sales: if sale &gt; current_max: current_max = sale</code>).
+- The point worth making explicitly (since some students will ask "why did we do it the hard way first?"): understanding <em>how</em> <code>sum()</code>/<code>max()</code>/<code>min()</code> work internally — because you built the equivalent loop by hand — means you're not just trusting a black box, and you already know the pattern to reach for when no built-in covers exactly what you need (like Exercise 7).
+Common mistakes: calling <code>sum</code>/<code>max</code>/<code>min</code> without parentheses or on the wrong variable — low-risk this late in the semester, but a quick visual check as you circulate; not noticing <code>average</code> prints as <code>221.0</code>, not <code>$221.00</code> — this exercise's output doesn't use currency formatting; if a student adds <code>${average:.2f}</code>, that's "good instinct, not required here," not a correction.
+Check for understanding (guide, verbatim parenthetical): "If <code>sales</code> had a negative number in it (say, a returned/refunded day), would <code>min()</code> still work correctly, and would today's Exercise 2 initialization pattern (<code>current_max = 0</code>) have? (<code>min()</code>/<code>max()</code> on the built-in functions handle negative numbers correctly with no special handling needed — a good callback to Module 06's flagged limitation of initializing a hand-built accumulator to <code>0</code>, which <em>would</em> break with negative values; built-ins don't have that limitation because they don't need an initial guess at all.)"
+</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Total: 1105 | Average: 221.0 | Best: 480 | Worst: 75</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 6 exactly. <code>sum([100, 250, 75, 480, 200]) = 1105</code>; <code>1105 / 5 = 221.0</code> (bare <code>print</code> shows the raw float <code>221.0</code>, not <code>$221.00</code> — the guide's output uses no format spec here, disclosed on-slide in the "expect" note); <code>max</code> is <code>480</code>, <code>min</code> is <code>75</code>. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>sales</code> contained a negative number (a refunded day), would <code>min()</code> still work — and would a hand-built accumulator initialized to <code>current_max = 0</code> have?</p>
+<button data-opt="A"><code>min()</code>/<code>max()</code> handle negatives correctly with no special handling; a hand-built accumulator seeded at <code>0</code> would break — the built-ins need no initial guess at all</button>
+<button data-opt="B">Neither works with negatives — you'd have to filter the negative values out first</button>
+<button data-opt="C">Both work identically — <code>0</code> is a safe starting point in every case</button>
+<p class="why" hidden><code>min()</code>/<code>max()</code> on the built-in functions handle negative numbers correctly with no special handling needed — a good callback to Module 06's flagged limitation of initializing a hand-built accumulator to <code>0</code>, which <em>would</em> break with negative values; built-ins don't have that limitation because they don't need an initial guess at all.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>min()</code>/<code>max()</code> on the built-in functions handle negative numbers correctly with no special handling needed — a good callback to Module 06's flagged limitation of initializing a hand-built accumulator to <code>0</code>, which <em>would</em> break with negative values; built-ins don't have that limitation because they don't need an initial guess at all.)"</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Calling <code>sum</code> or <code>max</code>/<code>min</code> without parentheses, or on the wrong variable — low-risk mistakes at this point in the semester, but worth a quick visual check as you circulate.</p>
+<p>Not noticing that <code>average</code> here prints as <code>221.0</code>, not <code>$221.00</code> — this exercise's expected output doesn't use currency formatting. If a student adds <code>${average:.2f}</code> on their own initiative, that's not wrong, just beyond what's asked — a quick "good instinct, not required here" rather than a correction.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 43. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 8 min · 0:52–1:00</span>
+<h1>Accumulator Pattern: Build a New List</h1>
+<aside class="notes">
+Teaching goal: use <code>.append()</code> inside a loop to build an entirely new list from an existing one — a new <em>shape</em> of accumulator pattern: instead of accumulating into a single number, accumulate into a growing list.
+Say to the class (verbatim): "New variation on the accumulator pattern from Module 6: instead of building up one number, we're building up an entire new list, one <code>.append()</code> at a time."
+</aside>
+</section>
+
+<!-- 44. EXERCISE 7 — the idea -->
+<section class="s-idea">
+<h3>The idea — the empty starting value matches the shape you're building</h3>
+<div class="concept">
+<div class="concept-lbl">Two points</div>
+<p><code>discounted = []</code> is <strong>initialize</strong>, exactly like Module 06's <code>total = 0</code> — but the "empty" starting value is an empty list, not zero. A running number starts at <code>0</code>; a growing list starts at <code>[]</code>.</p>
+<p><code>round(price * 0.9, 2)</code> — <code>round()</code> is new here and actually changes the <em>stored</em> numeric value (unlike an f-string format spec, which only affects display), which matters because this value is going into a list. The original <code>prices</code> list is left completely untouched — a deliberate choice: you likely need both the original and the discounted price.</p>
+</div>
+<aside class="notes">This card is the guide's line-by-line for Exercise 7, condensed. Contrast with Exercise 4's <code>.append()</code>/<code>.remove()</code>/<code>.sort()</code>, all of which <em>did</em> modify their list in place. Ask the room: "why keep the original <code>prices</code> list intact rather than overwriting it?" (You likely need both — the original price for a receipt or comparison, the discounted price for the actual charge; overwriting would destroy information you still need.)</aside>
+</section>
+
+<!-- 45. EXERCISE 7 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 7</h3>
+<div class="run" data-lang="python">
+# --- Exercise 7 ---
+prices = [9.99, 14.99, 4.99, 24.99, 1.99]
+discounted = []                       # initialize — an empty list this time
+for price in prices:
+    discounted.append(round(price * 0.9, 2))   # update — grow the list
+
+print(prices)
+print(discounted)
+</div>
+<p class="expect">Five <code>.append()</code> calls, one per item in <code>prices</code>. <code>discounted</code> starts at <code>[]</code> and grows; <code>prices</code> is never modified. <code>round(..., 2)</code> keeps each discounted value to two decimals — without it you'd get floating-point noise (next slide).</p>
+<aside class="notes">
+Line-by-line:
+- <code>discounted = []</code> — <strong>initialize</strong>, exactly like Module 06's <code>total = 0</code>, but here the "empty" starting value is an empty list, not zero — the <em>shape</em> of what you initialize should match the shape of what you're building.
+- <code>discounted.append(round(price * 0.9, 2))</code> — <strong>update</strong>, inside the loop: for each <code>price</code>, compute the 10%-off value (<code>price * 0.9</code>), round it to 2 decimal places with the built-in <code>round()</code>, and append the result onto the end of <code>discounted</code>. <code>round()</code> is new here: it's not an f-string format spec (which only affects <em>display</em>) — <code>round()</code> actually changes the <em>stored</em> numeric value, which matters because this value is going into a list.
+- The original <code>prices</code> list is completely untouched by this loop — a deliberate design choice, building a <em>new</em> list rather than modifying <code>prices</code> in place; contrast with Exercise 4. Ask: "why keep the original intact?" (You likely need both — original for a receipt/comparison, discounted for the actual charge.)
+Common mistakes: forgetting <code>round(..., 2)</code> — raw floating-point produces ugly long decimals (run it live, next slide); trying to modify <code>prices</code> in the loop instead of appending to a separate list — needs index-based iteration and destroys the original data; initializing <code>discounted</code> <em>inside</em> the loop — resets to <code>[]</code> every pass, ending with only the last item's discounted price.
+Check for understanding (guide, verbatim parenthetical): "How many times does <code>.append()</code> get called in total when this loop finishes, and how do you know? (Five times — once per item in <code>prices</code>, since the loop runs once per element and <code>.append()</code> is called unconditionally on every pass, with no filtering <code>if</code> involved yet — that's coming next, in Exercise 8.)"
+</aside>
+</section>
+
+<!-- 46. EXERCISE 7 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>[9.99, 14.99, 4.99, 24.99, 1.99]
+[8.99, 13.49, 4.49, 22.49, 1.79]</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 7 exactly. First line: <code>prices</code>, unchanged. Second line: <code>discounted</code>, each value <code>round(price * 0.9, 2)</code> — <code>9.99→8.99</code>, <code>14.99→13.49</code>, <code>4.99→4.49</code>, <code>24.99→22.49</code>, <code>1.99→1.79</code>. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 47. EXERCISE 7 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — no <code>round()</code></h3>
+<div class="run" data-lang="python">
+# --- Exercise 7 (BROKEN: no round() — raw floating-point noise) ---
+prices = [9.99, 14.99, 4.99, 24.99, 1.99]
+discounted = []
+for price in prices:
+    discounted.append(price * 0.9)
+
+print(prices)
+print(discounted)
+</div>
+<p class="expect">Drop the <code>round(..., 2)</code> and run it. Some values come out clean, but <code>4.99 * 0.9</code> lands as <code>4.4910000000000005</code> — floating-point arithmetic can't represent these decimals exactly. This is why <code>round()</code> is needed here, not just told to include it.</p>
+<aside class="notes">
+Teaching goal: show <em>why</em> <code>round()</code> is required by removing it and letting the room see the floating-point noise. The guide: "run this live without <code>round()</code> to show the room exactly why it's needed here, not just told to include it."
+Line-by-line: <code>discounted.append(price * 0.9)</code> stores the raw product with no rounding. <code>9.99 * 0.9</code>, <code>14.99 * 0.9</code>, <code>24.99 * 0.9</code>, and <code>1.99 * 0.9</code> happen to print cleanly, but <code>4.99 * 0.9</code> shows its binary-floating-point representation as <code>4.4910000000000005</code>. Add <code>round(..., 2)</code> back to get the clean list.
+Common mistakes: this <em>is</em> the mistake. The guide cites <code>4.99 * 0.9</code> as <code>4.4909999999999997</code> — an <em>illustrative</em> value for the general phenomenon; the exact noisy digits depend on the surrounding arithmetic, and a real <code>python3</code> run of this block yields <code>4.4910000000000005</code>. The teaching point (raw floats are ugly; round before storing) is unchanged. Disclosed here per the rounding-vs-raw-output convention.
+</aside>
+</section>
+
+<!-- 48. EXERCISE 7 — broken output -->
+<section class="s-out">
+<h3>What the broken version prints</h3>
+<pre>[9.99, 14.99, 4.99, 24.99, 1.99]
+[8.991, 13.491, 4.4910000000000005, 22.491, 1.791]</pre>
+<aside class="notes">Verified against a real <code>python3</code> run — no exception, just an ugly list. Without <code>round()</code>, the third element (<code>4.99 * 0.9</code>) exposes floating-point representation error as <code>4.4910000000000005</code>. The guide's prose cites <code>4.4909999999999997</code> as the illustrative form of the same phenomenon; the s-out shows the real raw output of this exact block. Adding <code>round(x, 2)</code> back produces <code>[8.99, 13.49, 4.49, 22.49, 1.79]</code>.</aside>
+</section>
+
+<!-- 49. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">How many times does <code>.append()</code> get called in total when this loop finishes, and how do you know?</p>
+<button data-opt="A">Once — <code>.append()</code> adds the whole list in a single call</button>
+<button data-opt="B">Four times — once per item after the first</button>
+<button data-opt="C">Five times — once per item in <code>prices</code>, called unconditionally on every pass</button>
+<p class="why" hidden>Five times — once per item in <code>prices</code>, since the loop runs once per element and <code>.append()</code> is called unconditionally on every pass, with no filtering <code>if</code> involved yet — that's coming next, in Exercise 8.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Five times — once per item in <code>prices</code>, since the loop runs once per element and <code>.append()</code> is called unconditionally on every pass, with no filtering <code>if</code> involved yet — that's coming next, in Exercise 8.)"</aside>
+</section>
+
+<!-- 50. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>round(..., 2)</code> — without it, floating-point arithmetic can produce ugly, long decimal values rather than a clean two-decimal number; run this live without <code>round()</code> to show the room exactly why it's needed here.</p>
+<p>Trying to build the new list by directly modifying <code>prices</code> in the loop (e.g. <code>prices[i] = ...</code>) instead of appending to a separate <code>discounted</code> list — this needs index-based iteration (not covered by this exercise's simple <code>for price in prices:</code> pattern) and destroys the original data the exercise explicitly asks to preserve.</p>
+<p>Initializing <code>discounted</code> inside the loop instead of before it — same category of mistake as Module 06's central lesson: this resets <code>discounted</code> to <code>[]</code> on every pass, ending with a list containing only the <em>last</em> item's discounted price.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 51. EXERCISE 8 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 8 · 8 min · 1:00–1:08</span>
+<h1>Filter Above Threshold</h1>
+<aside class="notes">
+Teaching goal: combine Exercise 7's "build a new list" pattern with a filtering <code>if</code> — the list-building equivalent of Module 06 Exercise 4's filtered accumulator, now producing a genuinely new, shorter list instead of just a count and a total.
+Say to the class (verbatim): "Same 'build a new list' pattern as Exercise 7, but now with a filter — only sales days over $300 make it into the new list at all."
+</aside>
+</section>
+
+<!-- 52. EXERCISE 8 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 8</h3>
+<div class="run" data-lang="python">
+# --- Exercise 8 ---
+sales = [340, 127, 589, 204, 467, 88, 731, 315, 62, 490]
+high_sales = []                    # initialize
+for sale in sales:
+    if sale &gt; 300:                  # filter
+        high_sales.append(sale)     # update, conditionally
+
+print(high_sales)
+print(len(high_sales))
+print(sum(high_sales) / len(high_sales))
+</div>
+<p class="expect">The <code>.append()</code> is now <em>inside</em> an <code>if</code> — double indentation, exactly like Module 06 Exercise 4. <code>high_sales</code> is a genuinely separate, real list at the end (not a filtered "view"). The last line reuses Exercise 6's <code>sum()</code>/<code>len()</code> on the filtered list.</p>
+<aside class="notes">
+Line-by-line:
+- <code>high_sales = []</code> — initialize, same pattern as Exercise 7.
+- <code>if sale &gt; 300: high_sales.append(sale)</code> — the <code>.append()</code> is now <strong>inside an <code>if</code></strong>, exactly like Module 06 Exercise 4's <code>count_over_100 += 1</code> was nested inside a filter — the same double-indentation to watch for: the <code>if</code> is one level inside the loop, <code>.append()</code> is a second level inside the <code>if</code>.
+- <code>sum(high_sales) / len(high_sales)</code> — reuses Exercise 6's built-in functions, now operating on the <em>filtered</em> list rather than the original — a good moment to confirm the room understands <code>high_sales</code> is a genuinely separate, real list at this point, not just a filtered "view" of <code>sales</code>.
+Common mistakes: using <code>&gt;=</code> instead of <code>&gt;</code> for the $300 threshold — the spec says "exceeded 300," strictly greater; no sale exactly equals 300 in this dataset, so it wouldn't change today's output, but flag that it <em>would</em> matter with different data. Appending <code>True</code>/<code>False</code> (the result of the comparison) instead of <code>sale</code> — e.g. <code>high_sales.append(sale &gt; 300)</code> — produces a list of booleans; eyeballing <code>[True, True, True, ...]</code> should look obviously wrong.
+Check for understanding (guide, verbatim parenthetical): "How is this exercise structurally identical to Module 6 Exercise 4's filtered count, and how is it genuinely different? (Identical: both use an accumulator initialized before a loop, updated conditionally inside an <code>if</code>. Different: Module 06 Exercise 4 accumulated a <em>count</em> and a <em>running total</em> — two numbers; this exercise accumulates an entire <em>new list</em> of the qualifying values themselves, which is strictly more information — from a resulting list you can always compute a count or total afterward, but from just a count and total you can't reconstruct which specific values contributed.)"
+</aside>
+</section>
+
+<!-- 53. EXERCISE 8 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>[340, 589, 467, 731, 315, 490]
+6
+488.6666666666667</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 8 exactly. Sales strictly over 300: <code>340, 589, 467, 731, 315, 490</code> — six of them. <code>sum = 2932</code>; <code>2932 / 6 = 488.6666666666667</code> (bare <code>print</code>, raw float, no format spec — as the guide shows it). <code>127, 204, 88, 62</code> are filtered out. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 54. EXERCISE 8 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">How is this exercise structurally identical to Module 6 Exercise 4's filtered count — and how is it genuinely different?</p>
+<button data-opt="A">Identical in every way; the only difference is the variable names</button>
+<button data-opt="B">Identical: an accumulator initialized before the loop, updated conditionally inside an <code>if</code>. Different: Module 6 accumulated two numbers (a count and a total); this builds an entire new list of the qualifying values</button>
+<button data-opt="C">Completely different — this one uses no accumulator and no <code>if</code></button>
+<p class="why" hidden>Identical: both use an accumulator initialized before a loop, updated conditionally inside an <code>if</code>. Different: Module 06 Exercise 4 accumulated a <em>count</em> and a <em>running total</em> — two numbers; this exercise accumulates an entire <em>new list</em> of the qualifying values themselves, which is strictly more information — from a resulting list you can always compute a count or total afterward, but from just a count and total you can't reconstruct which specific values contributed.</p>
+</div>
+<aside class="notes">The guide's Check for understanding here is a compare/contrast prompt, not a single-value Q&amp;A. The keyed option B is drawn verbatim from the guide's parenthetical (the "Identical: … Different: …" structure). Guide parenthetical: "(Identical: both use an accumulator initialized before a loop, updated conditionally inside an <code>if</code>. Different: Module 06 Exercise 4 accumulated a <em>count</em> and a <em>running total</em> — two numbers; this exercise accumulates an entire <em>new list</em> of the qualifying values themselves, which is strictly more information — from a resulting list you can always compute a count or total afterward, but from just a count and total you can't reconstruct which specific values contributed.)"</aside>
+</section>
+
+<!-- 55. EXERCISE 8 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using <code>&gt;=</code> instead of <code>&gt;</code> for the $300 threshold — the lab's spec says "exceeded 300," meaning strictly greater. No sale exactly equal to <code>300</code> exists in this dataset, so this particular mistake wouldn't change today's output — but flag that it <em>would</em> matter with different data, echoing Module 05's emphasis on reading boundary language carefully.</p>
+<p>Appending <code>True</code>/<code>False</code> (the result of the comparison) instead of <code>sale</code> (the actual value) — e.g. <code>high_sales.append(sale &gt; 300)</code> — produces a list of booleans instead of sale amounts; eyeballing <code>[True, True, True, ...]</code> should look obviously wrong against the exercise's stated goal.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
+</section>
+
+<!-- 56. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:08–1:15 · as time allows</span>
+<h1><code>inventory_report</code> function</h1>
+<aside class="notes">
+Frame as a quick preview/demo if time is short — this is primarily Module 07 review (writing a function, calling it more than once with different inputs) applied to this module's new list vocabulary, not new material.
+Say to the class: "One function that takes any list of items and prints a small report — count, alphabetical first and last, sorted copy. Then we call it twice, on two different lists, to prove it isn't hardcoded to the <code>inventory</code> from earlier."
+</aside>
+</section>
+
+<!-- 57. STRETCH — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>sorted()</code> the function vs <code>.sort()</code> the method</h3>
+<div class="concept">
+<div class="concept-lbl">Two things worth saying if you demo this live</div>
+<p><code>min(items)</code> / <code>max(items)</code> on a list of <strong>strings</strong> return the alphabetically first/last item, not a numeric minimum/maximum — a nice generalization of Exercise 6's numeric <code>min()</code>/<code>max()</code>: these work on any type that can be meaningfully ordered.</p>
+<p><code>sorted(items)</code> (a <strong>function</strong>) returns a <em>new</em>, sorted list and leaves the original untouched; Exercise 4's <code>.sort()</code> (a <strong>method</strong>) modifies the original in place and returns nothing.</p>
+</div>
+<aside class="notes">The guide's two "worth saying explicitly" points for the Stretch. Calling <code>inventory_report</code> a second time, on a completely different list, is what confirms the function genuinely generalizes rather than being hardcoded to the specific <code>inventory</code> list from earlier in the file. No "Check for understanding" in the guide for this segment — quiz omitted, matching the lighter treatment stretch segments get (as the Week 6 pilot does for its Stretch 2).</aside>
+</section>
+
+<!-- 58. STRETCH — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch</h3>
+<div class="run" data-lang="python">
+# --- Stretch ---
+inventory = ["envelope", "marker", "notebook", "pen", "stapler"]
+
+def inventory_report(items):
+    print(f"Count: {len(items)}")
+    print(f"First (alphabetically): {min(items)}")
+    print(f"Last (alphabetically): {max(items)}")
+    print(f"Sorted: {sorted(items)}")
+
+inventory_report(inventory)
+inventory_report(["zebra", "apple", "mango"])
+</div>
+<p class="expect">This block re-declares <code>inventory</code> as the sorted five-item list Exercise 4 ended with (each <code>.run</code> block starts fresh). The function is called twice — once on <code>inventory</code>, once on a brand-new three-item list — to show it generalizes.</p>
+<aside class="notes">
+Line-by-line:
+- <code>inventory = ["envelope", "marker", "notebook", "pen", "stapler"]</code> — re-declared here because each <code>.run</code> block runs in its own fresh namespace; this is the list Exercise 4 produced after <code>.append()</code> / <code>.remove()</code> / <code>.sort()</code>. In the real <code>inventory.py</code> the name still refers to that mutated list from earlier in the file.
+- <code>def inventory_report(items):</code> — Module 07 function definition; <code>items</code> is the parameter, so the body works on whatever list is passed in.
+- <code>print(f"Count: {len(items)}")</code> — <code>len()</code> from Exercise 1.
+- <code>min(items)</code> / <code>max(items)</code> — on a list of <strong>strings</strong>, these return the alphabetically first/last item, not a numeric min/max — these functions work on any type that can be meaningfully compared/ordered, strings included.
+- <code>sorted(items)</code> — a <strong>function</strong>, called as <code>sorted(items)</code>: returns a <em>new</em>, sorted list and leaves the original untouched, unlike Exercise 4's <code>.sort()</code> <strong>method</strong> which modifies in place and returns nothing.
+- <code>inventory_report(inventory)</code> then <code>inventory_report(["zebra", "apple", "mango"])</code> — calling it a second time, on a completely different list, is what confirms the function genuinely generalizes rather than being hardcoded.
+Common mistakes: confusing <code>sorted(items)</code> (function, new list) with <code>items.sort()</code> (method, in place); expecting <code>min</code>/<code>max</code> on strings to error because "they're not numbers."
+No "Check for understanding" in the guide for this segment.
+</aside>
+</section>
+
+<!-- 59. STRETCH — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Count: 5
+First (alphabetically): envelope
+Last (alphabetically): stapler
+Sorted: ['envelope', 'marker', 'notebook', 'pen', 'stapler']
+Count: 3
+First (alphabetically): apple
+Last (alphabetically): zebra
+Sorted: ['apple', 'mango', 'zebra']</pre>
+<aside class="notes">Verified against a real <code>python3</code> run. First four lines: the report for the five-item <code>inventory</code> (already alphabetical, so <code>sorted()</code> matches). Last four lines: the report for <code>["zebra", "apple", "mango"]</code> — <code>min</code> is <code>apple</code>, <code>max</code> is <code>zebra</code>, and <code>sorted()</code> returns <code>['apple', 'mango', 'zebra']</code> without mutating the argument. The guide's Appendix A shows the same Stretch code. Verified against CPython 3.12.</aside>
+</section>
+
+<!-- 60. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>Most surprising thing about how lists work — no wrong answer.</li>
+<li>A real business situation where a list would have saved time vs. Excel — which repeated manual task, what would the list have contained, what operation (filtering, sorting, summing) would have replaced manual work.</li>
+</ul>
+<aside class="notes">
+These are answered as a comment at the top of the file, per this lab's submission format — different from prior modules' end-of-script reflection placement, worth noting explicitly.
+Strong-answer guidance (guide):
+1. <em>Most surprising thing about how lists work</em> — no wrong answer; common genuine surprises include zero-based indexing, negative indexing, or the fact that <code>.append()</code>/<code>.sort()</code> modify in place rather than returning a new list.
+2. <em>A real business situation where a list would have saved time vs. Excel</em> — push for specificity: which repeated manual task, what would the list have contained, and what operation (filtering, sorting, summing) would have replaced manual work.
+</aside>
+</section>
+
+<!-- 61. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>inventory.py</code></li>
+<li>Contains Exercises 1–8, each clearly separated</li>
+<li>Reflection comment at the top of the file, answering both questions</li>
+<li>Pushed to GitHub inside a <code>week10/</code> folder</li>
+<li>Repo URL submitted to Canvas</li>
+</ul>
+<aside class="notes">Review the checklist together. Preview Module 11 (verbatim): "Lists gave you an ordered collection, reached by position. Next module, dictionaries give you a collection reached by <em>name</em> — a customer's data organized as <code>name</code>, <code>email</code>, <code>tier</code>, not position <code>0</code>, <code>1</code>, <code>2</code>. This is the structure behind every real CRM and analytics system you'll ever touch professionally."</aside>
+</section>
+
+<!-- 62. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 10</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w10.md (Week 10 facilitation guide — "Inventory List Manager"). All runnable-block output verified against CPython 3.12 / Pyodide 0.26.4.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
