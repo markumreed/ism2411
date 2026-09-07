@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 13 — First DataFrame — Retail Sales Explorer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 13 &nbsp;·&nbsp; Module 13 &nbsp;·&nbsp; Unit 4 &nbsp;·&nbsp; Data Analysis with pandas</p>
+<h1>First DataFrame — Retail Sales Explorer</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Intro — meet pandas</span>
+<span class="t-item"><strong>0:04–0:12</strong> Ex 1 — Load It</span>
+<span class="t-item"><strong>0:12–0:20</strong> Ex 2 — Filter by Region</span>
+<span class="t-item"><strong>0:20–0:27</strong> Ex 3 — Top 5 by Revenue</span>
+<span class="t-item"><strong>0:27–0:36</strong> Ex 4 — Two-Condition Filter</span>
+<span class="t-item"><strong>0:36–0:44</strong> Ex 5 — A New Column</span>
+<span class="t-item"><strong>0:44–0:51</strong> Ex 6 — Unique Values</span>
+<span class="t-item"><strong>0:51–0:57</strong> Ex 7 — Select Columns</span>
+<span class="t-item"><strong>0:57–1:02</strong> Ex 8 — Save</span>
+<span class="t-item"><strong>1:02–1:15</strong> Stretch 1/2 + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Teaching goal (session): this is the first lab of Unit 4 and the first time students meet <code>pandas</code> — a library purpose-built for tabular, spreadsheet-shaped data. The lab page framing, worth repeating verbatim: this is "the foundation for every subsequent lab and the capstone." Everything from here to the end of the semester builds on today's DataFrame vocabulary — <code>.head()</code>, boolean filtering, <code>.sort_values()</code>, new columns, <code>.unique()</code>/<code>.value_counts()</code>. Two ideas deserve the most protected time: the <strong>boolean filter mental model</strong> (Exercise 2 — a filter is a same-length column of <code>True</code>/<code>False</code>, not a search) and the <strong><code>&amp;</code>/parentheses requirement</strong> (Exercise 4), a real, common source of genuinely confusing errors if not addressed head-on.
+75-minute session, live code-along. Prerequisites: Module 12 (CSV files, the general read-transform-write shape); Modules 10–11 (lists, dictionaries, boolean logic). Submission: <code>explore.py</code> (or <code>explore.ipynb</code>) via GitHub in a <code>module13/</code> folder, URL to Canvas.
+Deck note: this is a <strong>DATA WEEK</strong>. Every runnable block carries <code>data-packages="pandas"</code> — the first Run on the page pays a one-time multi-MB download to bring pandas (and its numpy dependency) into Pyodide; later Runs reuse it. Each <code>.run</code> block executes in its OWN fresh Pyodide namespace, so every block first re-generates <code>data/retail_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(42)</code>, fully reproducible) and rebuilds <code>df</code>, then runs the guide's actual lab code. In the real <code>explore.py</code> the course-provided <code>data/retail_sales.csv</code> is placed once by hand and every exercise reads it. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / numpy 1.26.4 — the exact versions Pyodide 0.26.4 bundles.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>explore.py</code> built exercise by exercise; <code>data/retail_sales.csv</code> provided by the course (Appendix B's seeded generator stands in for instructor rehearsal)</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 12: CSV files, the general read-transform-write shape; Modules 10–11: lists, dictionaries, boolean logic</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>explore.py</code> (or <code>explore.ipynb</code>) via GitHub in a <code>module13/</code> folder, URL to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week13_lab. Class length 75 minutes, format live code-along. The required exercises fill most of available time; both Stretch challenges are positioned as previews since Stretch 1 explicitly depends on <code>groupby</code>, a later-module concept. Confirm <code>pandas</code> is installed on the demo machine before class (first <code>import pandas</code> of the semester — budget two minutes for <code>pip install pandas</code> if needed) and that students have a working GitHub repo ready for a new <code>module13/</code> folder.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Load a CSV into a DataFrame with <code>pd.read_csv()</code> and inspect its shape, columns, and dtypes.</li>
+<li>Explain what a boolean filter (<code>df[df['region'] == 'South']</code>) actually does — construct a column of <code>True</code>/<code>False</code>, then keep only the <code>True</code> rows.</li>
+<li>Combine two conditions with <code>&amp;</code>, and explain why both parentheses and <code>&amp;</code> (not <code>and</code>) are required, not stylistic.</li>
+<li>Create a new column from existing ones with a single vectorized assignment, with no loop.</li>
+<li>Use <code>.unique()</code> and <code>.value_counts()</code> to understand what values live in a column and how often.</li>
+<li>Save a DataFrame back to CSV with <code>.to_csv()</code>.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Protect the most time for objective 2 (the boolean-filter mental model, Exercise 2) and objective 3 (the <code>&amp;</code>/parentheses requirement, Exercise 4) — the guide flags both as the highest-value, most-confused ideas in the lab. Objective 4 (a new column with one vectorized line, no loop) is the direct contrast with Module 12's row-by-row processing.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Intro — every module in Unit 3 used loops; today, pandas</td><td>4</td></tr>
+<tr><td>0:04–0:12</td><td>Exercise 1 — Load It</td><td>8</td></tr>
+<tr><td>0:12–0:20</td><td>Exercise 2 — Filter by Region</td><td>8</td></tr>
+<tr><td>0:20–0:27</td><td>Exercise 3 — Top 5 by Revenue</td><td>7</td></tr>
+<tr><td>0:27–0:36</td><td>Exercise 4 — Two-Condition Filter</td><td>9</td></tr>
+<tr><td>0:36–0:44</td><td>Exercise 5 — A New Column</td><td>8</td></tr>
+<tr><td>0:44–0:51</td><td>Exercise 6 — Unique Values</td><td>7</td></tr>
+<tr><td>0:51–0:57</td><td>Exercise 7 — Select Columns</td><td>6</td></tr>
+<tr><td>0:57–1:02</td><td>Exercise 8 — Save</td><td>5</td></tr>
+<tr><td>1:02–1:10</td><td>Stretch 1 &amp; 2 Preview (as time allows)</td><td>8</td></tr>
+<tr><td>1:10–1:15</td><td>Wrap-Up — reflection + submission + Module 14 preview</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">The required exercises fill most of available time at a normal code-along pace. Both Stretch challenges are framed as previews — Stretch 1 explicitly uses <code>groupby</code> (a Module 15 concept); Stretch 2 is fully within today's toolkit and worth doing live if time allows. Appendix C has two extra-practice items (a third single-condition filter cross-checked against <code>.value_counts()</code>; a two-condition filter on different columns) if a section moves unusually fast. Wrap-Up runs in the last ~5 minutes: three reflection questions + the submission checklist + the Module 14 (missing data / cleaning) preview.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Every module in Unit 3 used loops. Today: pandas.</h1>
+<aside class="notes">
+Teaching goal: frame today's jump — a library purpose-built for tabular, spreadsheet-shaped data, where a full loop and an accumulator from Module 12 collapses into a single line. This is the tool for the rest of the semester, including the capstone.
+Say to the class (verbatim): "Every module in Unit 3 processed data with lists, dictionaries, and hand-written loops. Today we meet <code>pandas</code> — a library purpose-built for exactly this kind of tabular, spreadsheet-shaped data. A lot of what took a full loop and an accumulator in Module 12 collapses into a single line today. This is the tool you'll use for the rest of the semester, including the capstone — get comfortable with today's vocabulary."
+Do: open <code>explore.py</code>, type the header — <code># explore.py</code> / <code># ISM2411 Module 13 Lab — First DataFrame: Retail Sales Explorer</code>.
+Common mistakes: none yet — this is framing.
+Deck note: every runnable block re-generates <code>data/retail_sales.csv</code> from the guide's Appendix B generator (seed 42, reproducible) at the top, because each <code>.run</code> block is a fresh namespace; the Pyodide virtual filesystem and loaded packages persist across blocks on a page. In the real lab the course-provided CSV is placed once by hand and every exercise just reads it.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 8 min · 0:04–0:12</span>
+<h1>Load It</h1>
+<aside class="notes">
+Teaching goal: <code>pd.read_csv()</code> to load a file into a <strong>DataFrame</strong>, and four inspection methods (<code>.head()</code>, <code>.shape</code>, <code>.columns.tolist()</code>, <code>.dtypes</code>) that should become an automatic first step every time a new dataset is loaded.
+Say to the class (verbatim): "One line loads an entire CSV into a DataFrame — think of a DataFrame as a spreadsheet living inside your program. Then four inspection calls that I want to become automatic muscle memory: every single time you load a new dataset, run these four before doing anything else."
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture; the guide's lab code follows ----
+
+# --- Exercise 1 ---
+import pandas as pd
+
+df = pd.read_csv('data/retail_sales.csv')
+print(df.head())
+print(df.shape)
+print(df.columns.tolist())
+print(df.dtypes)
+</div>
+<p class="expect">Everything above <code># --- Exercise 1 ---</code> is deck scaffolding — it writes the guide's Appendix B dataset into Pyodide's virtual filesystem so the block is self-contained. The guide's Exercise 1 is the last six lines. <code>.head()</code> shows the first 5 rows; <code>.shape</code> is an <strong>attribute</strong> (no parentheses) giving <code>(rows, columns)</code>; <code>.dtypes</code> reports each column's inferred type — <code>object</code> is pandas' term for <em>text</em>.</p>
+<aside class="notes">
+Line-by-line:
+- The <code>rng = np.random.default_rng(42)</code> … <code>.to_csv("data/retail_sales.csv", …)</code> block is deck-only scaffolding — the guide's Appendix B generator verbatim. On a real machine the student places the course-provided <code>data/retail_sales.csv</code> by hand. It is shown here so the runnable block has a file to load. <code>data-packages="pandas"</code> preloads pandas (+ numpy) into Pyodide on the first Run of the page.
+- <code>import pandas as pd</code> — <code>pandas</code> is a third-party library (not standard library, unlike Module 12's <code>csv</code>) — needs <code>pip install pandas</code> if not present. <code>as pd</code> is an <strong>alias</strong>; <code>pd</code> is such a universal convention that anything else would confuse other readers.
+- <code>pd.read_csv('data/retail_sales.csv')</code> — reads the entire CSV and returns a <strong>DataFrame</strong>: a two-dimensional table with labeled columns and a numeric row index, inferring each column's type. This one line replaces an entire <code>with open(...) as f: reader = csv.reader(f)</code> block plus manual type conversion from Module 12.
+- <code>df.head()</code> — first <strong>5 rows</strong> by default — a quick sanity check without printing the whole table. Any count can be passed: <code>df.head(10)</code>.
+- <code>df.shape</code> — a tuple <code>(rows, columns)</code> — <strong>not a method call</strong>, no parentheses. It is an <strong>attribute</strong> — information the DataFrame already holds — contrast with <code>.head()</code>, a method (parentheses) that does real work each call.
+- <code>df.columns.tolist()</code> — <code>.columns</code> gives a specialized pandas object; <code>.tolist()</code> converts it to an ordinary Python list.
+- <code>df.dtypes</code> — the inferred type of every column: <code>int64</code> whole numbers, <code>float64</code> decimals, <code>object</code> = text (pandas' catch-all for strings). Flag <code>object</code> explicitly as "text" — it doesn't read that way to a beginner.
+Common mistakes: wrong relative path to the CSV (callback to Module 12 Ex 1) — <code>FileNotFoundError</code>; run <code>pwd</code>/confirm location. Calling <code>.shape()</code> with parentheses — <code>TypeError: 'tuple' object is not callable</code>, since <code>.shape</code> already <em>is</em> the tuple. Misreading <code>object</code> dtype as "generic/broken" rather than "text".
+Check for understanding (guide, verbatim parenthetical): "(<code>.head()</code>'s whole purpose is a quick, readable preview — printing all 5,000 rows would be unusable as a sanity check; get a student to state that <code>.head(10)</code> or any other number can be passed explicitly to change the count, previewing that many pandas methods accept optional arguments like this.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>   order_id        date region   product  quantity  revenue
+0    100001  2024-07-01   East  Gadget C         2    19.98
+1    100002  2024-05-27  South  Widget B        11   549.89
+2    100003  2024-03-23   West  Gadget D        12   179.88
+3    100004  2024-01-17   East  Gadget D        15   749.85
+4    100005  2024-01-31  North  Widget B        12   299.88
+(5000, 6)
+['order_id', 'date', 'region', 'product', 'quantity', 'revenue']
+order_id      int64
+date         object
+region       object
+product      object
+quantity      int64
+revenue     float64
+dtype: object</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 1 exactly — five preview rows, the <code>(5000, 6)</code> shape tuple, six column names, one dtype per column. Verified against local <code>python3</code> (pandas 2.2.0 / numpy 1.26.4, == Pyodide 0.26.4's bundled versions): <code>python3 f1.py</code> reproduces every line. DataFrame formatting may differ slightly by pandas version (column spacing, the <code>dtype:</code> line); the values and shape are the load-bearing content.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">This dataset has 5,000 rows. Why does <code>df.head()</code> show only 5?</p>
+<button data-opt="A"><code>.head()</code> samples 5 rows at random so the preview is representative of the whole table</button>
+<button data-opt="B"><code>.head()</code> is built as a quick, readable preview — printing all 5,000 rows would be unusable as a sanity check; pass <code>.head(10)</code> (or any number) to change the count</button>
+<button data-opt="C"><code>.head()</code> shows 5 because the DataFrame has not finished loading yet; the rest stream in on demand</button>
+<p class="why" hidden><code>.head()</code>'s whole purpose is a quick, readable preview — printing all 5,000 rows would be unusable as a sanity check; get a student to state that <code>.head(10)</code> or any other number can be passed explicitly to change the count, previewing that many pandas methods accept optional arguments like this.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>.head()</code>'s whole purpose is a quick, readable preview — printing all 5,000 rows would be unusable as a sanity check; get a student to state that <code>.head(10)</code> or any other number can be passed explicitly to change the count, previewing that many pandas methods accept optional arguments like this.)" Option A (random sample) is the common misconception — <code>.head()</code> is the <em>first</em> n rows, in order, deterministically.</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Wrong relative path to the CSV (a direct callback to Module 12 Exercise 1) — raises <code>FileNotFoundError</code>; run <code>pwd</code> / confirm the file's actual location the same way as always.</p>
+<p>Calling <code>.shape()</code> with parentheses, expecting it to behave like <code>.head()</code> — raises <code>TypeError: 'tuple' object is not callable</code>, since <code>.shape</code> already <em>is</em> the tuple, not a function that produces one; a concrete illustration of the attribute-vs-method distinction.</p>
+<p>Misreading <code>object</code> dtype as "some kind of generic/broken data" rather than specifically "text" — worth restating plainly, since the word choice is genuinely unintuitive.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1.</aside>
+</section>
+
+<!-- 11. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 8 min · 0:12–0:20</span>
+<h1>Filter by Region</h1>
+<aside class="notes">
+Teaching goal: the single most important mental model in this entire lab — <code>df[df['region'] == 'South']</code> is not a "search"; it is built from a column of <code>True</code>/<code>False</code> values, and the outer brackets keep only the <code>True</code> rows. Get this right and every remaining filtering exercise this semester makes sense; get it wrong and pandas filtering stays permanently mysterious.
+Say to the class (verbatim): "This next line looks like magic the first time you see it, so we're going to take it apart in two separate steps before running it as one line. This is the single most important idea in today's whole lab."
+</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — the idea -->
+<section class="s-idea">
+<h3>The idea — a filter is a column of <code>True</code>/<code>False</code></h3>
+<div class="concept">
+<div class="concept-lbl">Slow down — this is the whole lab</div>
+<p><code>df['region'] == 'South'</code> produces a <strong>brand-new column</strong> — not a filtered table, not a search result — a column of <code>True</code>/<code>False</code>, one value per row, the same length as the whole DataFrame, saying whether <em>that specific row</em> matches.</p>
+<p><code>df[ ... ]</code> around that column reads as "keep only the rows where this is <code>True</code>." Build a <code>True</code>/<code>False</code> column, then use it to select rows — every filter this semester, however complex, is built from these two steps.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 2. We live-code this in two deliberate stages: stage 1 prints the boolean column itself (the step most guides skip, and the one that actually explains everything); stage 2 places that same column inside <code>df[...]</code> to filter. <code>south = df[...]</code> is a <strong>new DataFrame</strong>, a genuinely separate object from <code>df</code> — not a live "view" (brief honest caveat: view vs. copy is more nuanced than this lab needs, and resurfaces as a real gotcha in Exercise 5's <code>SettingWithCopyWarning</code>). <code>len(south)</code> is Module 06's <code>len()</code>; <code>south.head()</code> confirms every shown row really has <code>'South'</code>.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — live code (stage 1) -->
+<section class="s-code">
+<h3>Live-code — Exercise 2, stage 1: see the boolean column</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 2, stage 1: see the boolean column itself ---
+print(df['region'] == 'South')
+</div>
+<p class="expect">This is the step most guides skip. <code>df['region'] == 'South'</code> is a <strong>column of <code>True</code>/<code>False</code></strong>, one value per row, <code>Length: 5000</code> — the same length as the whole DataFrame. Not a filtered table yet — just a yes/no answer for every row.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code> (fresh namespace per block).
+- <code>print(df['region'] == 'South')</code> — say explicitly: this produces a brand-new column — not a filtered table, not a search result — a column of <code>True</code>/<code>False</code>, one value per row, the same length as the whole DataFrame, saying whether <em>that specific row</em> matches the condition. The printed output shows the first few and last few index positions with <code>...</code> in the middle, plus <code>Name: region, Length: 5000, dtype: bool</code>.
+Common mistakes: single <code>=</code> instead of <code>==</code> — <code>SyntaxError</code> (assignment, not comparison — the Module 05 lesson in a pandas context). Skipping straight to the one-line filter without seeing this intermediate column — if a student is pattern-matching syntax without understanding <em>why</em>, walk them back through this stage individually.
+Check for understanding (guide, verbatim parenthetical): "(The first is the raw <code>True</code>/<code>False</code> column itself, same length as <code>df</code>; the second uses that column to actually filter down to a smaller DataFrame containing only the <code>True</code> rows. Getting a student to state both halves confirms the two-step mental model actually landed.)"
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — expected output (stage 1) -->
+<section class="s-out">
+<h3>Expected output — stage 1</h3>
+<pre>0       False
+1        True
+2       False
+3       False
+4       False
+        ...
+4995    False
+4996    False
+4997     True
+4998     True
+4999    False
+Name: region, Length: 5000, dtype: bool</pre>
+<aside class="notes">Matches the guide's stage-1 output — a <code>Series</code> of <code>bool</code>, one value per row, <code>Length: 5000</code>, with <code>...</code> eliding the middle. The guide's printed sample happens to show only the first five rows before the ellipsis; pandas also prints the last five (<code>4995</code>–<code>4999</code>) — shown here as it really prints. Verified against local <code>python3</code> (<code>python3 f2a.py</code>). Series/DataFrame formatting may differ slightly by pandas version; the shape (<code>Length: 5000</code>, <code>dtype: bool</code>) and the True/False pattern are the load-bearing content.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — live code (stage 2) -->
+<section class="s-code">
+<h3>Live-code — Exercise 2, stage 2: use the column to filter</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 2, stage 2 ---
+south = df[df['region'] == 'South']
+print(len(south))
+print(south.head())
+</div>
+<p class="expect">Same boolean column from stage 1, now placed inside the outer <code>df[...]</code> brackets to actually perform the filtering. <code>south</code> is a <strong>new DataFrame</strong> with only the <code>True</code> rows — <code>1352</code> of <code>5000</code>. Notice the index numbers on the left (<code>1, 9, 10, 14, 21</code>): they are the <em>original</em> index from <code>df</code>, carried over — not renumbered <code>0,1,2,3,4</code>.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>df[df['region'] == 'South']</code> — read the <strong>outer</strong> brackets as "keep only the rows where this is <code>True</code>." The inner expression is exactly stage 1's boolean column, now inside <code>df[...]</code> to filter. This two-step mental model — build a <code>True</code>/<code>False</code> column, then use it to select rows — is what every filter this semester is built from.
+- <code>south = df[...]</code> — the result is a <strong>new DataFrame</strong>, a genuinely separate object from <code>df</code>, not a live "view" that changes if <code>df</code> changes later (honest caveat: view vs. copy is more nuanced than this lab covers, and resurfaces in Exercise 5).
+- <code>len(south)</code> — Module 06's <code>len()</code>, here the row count of the filtered result: <code>1352</code>.
+- <code>south.head()</code> — confirms visually that every shown row genuinely has <code>'South'</code> in <code>region</code>.
+Point out explicitly: the row index numbers (<code>1, 9, 10, 14, 21, ...</code>) are <strong>not</strong> <code>0, 1, 2, 3, 4</code> — they are the <em>original</em> index values from <code>df</code>, carried into the filtered result. Exercise 3 makes the same observation about a different filter — noticing it twice cements it.
+Common mistakes: single <code>=</code> instead of <code>==</code> (<code>SyntaxError</code>). Pattern-matching the one-liner without understanding stage 1. Assuming <code>south</code> auto-updates if <code>df</code> changes later — it doesn't; re-run the filter if fresh data is needed.
+Check for understanding (guide, verbatim parenthetical): "(The first is the raw <code>True</code>/<code>False</code> column itself, same length as <code>df</code>; the second uses that column to actually filter down to a smaller DataFrame containing only the <code>True</code> rows. Getting a student to state both halves confirms the two-step mental model actually landed.)"
+</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — expected output (stage 2) -->
+<section class="s-out">
+<h3>Expected output — stage 2</h3>
+<pre>1352
+    order_id        date region   product  quantity  revenue
+1     100002  2024-05-27  South  Widget B        11   549.89
+9     100010  2024-04-25  South  Widget A        11   164.89
+10    100011  2024-03-10  South  Gadget D        13   259.87
+14    100015  2024-07-10  South   Gizmo E        14   209.86
+21    100022  2024-01-01  South  Widget B        13   649.87</pre>
+<aside class="notes">Matches the guide's Exercise 2 stage-2 output exactly: <code>1352</code> of <code>5000</code> rows matched <code>'South'</code>, then the first five, whose index labels (<code>1, 9, 10, 14, 21</code>) are the original <code>df</code> positions, not <code>0</code>–<code>4</code>. The <code>1352</code> count is an exact scalar. Verified against local <code>python3</code> (<code>python3 f2b.py</code>). DataFrame formatting may differ slightly by pandas version; the count, the row values, and the carried-over index are the load-bearing content.</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If you ran <code>df['region'] == 'West'</code> right now, how would it differ from <code>df[df['region'] == 'West']</code>?</p>
+<button data-opt="A">They are identical — both return the rows where <code>region</code> is <code>'West'</code></button>
+<button data-opt="B">The first raises an error, because a bare comparison is not allowed outside <code>df[...]</code></button>
+<button data-opt="C">The first is the raw <code>True</code>/<code>False</code> column itself, the same length as <code>df</code>; the second uses that column to filter down to a smaller DataFrame containing only the <code>True</code> rows</button>
+<p class="why" hidden>The first is the raw <code>True</code>/<code>False</code> column itself, same length as <code>df</code>; the second uses that column to actually filter down to a smaller DataFrame containing only the <code>True</code> rows. Getting a student to state both halves confirms the two-step mental model actually landed.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(The first is the raw <code>True</code>/<code>False</code> column itself, same length as <code>df</code>; the second uses that column to actually filter down to a smaller DataFrame containing only the <code>True</code> rows. Getting a student to state both halves confirms the two-step mental model actually landed.)" Option B is wrong — a bare boolean comparison on a column is perfectly valid and is exactly stage 1.</aside>
+</section>
+
+<!-- 18. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using a single <code>=</code> instead of <code>==</code> — a <code>SyntaxError</code>, since <code>=</code> alone is assignment, not comparison; exactly the Module 05 lesson resurfacing in a pandas context.</p>
+<p>Skipping straight to the one-line filtered version without seeing the intermediate boolean column — if a student seems to be pattern-matching the syntax without understanding <em>why</em> it works, walk them back through stage 1 individually rather than moving on.</p>
+<p>Assuming <code>south</code> will automatically update if <code>df</code> changes later in the script — a brief, honest note that this isn't reliably true; if fresh-filtered data is needed after <code>df</code> changes, re-run the filter.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 7 min · 0:20–0:27</span>
+<h1>Top 5 by Revenue</h1>
+<aside class="notes">
+Teaching goal: <code>.sort_values()</code> and <code>.head()</code> chained together — a very common "top N" pattern — plus a first, gentle introduction to the fact that a DataFrame's row index doesn't have to be <code>0, 1, 2, ...</code> in order.
+Say to the class (verbatim): "A genuinely common real request: 'show me the top 5.' One chained line."
+</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 3 ---
+top5 = df.sort_values('revenue', ascending=False).head(5)
+print(top5)
+</div>
+<p class="expect"><code>.sort_values('revenue', ascending=False)</code> sorts the <em>entire</em> DataFrame highest-first; <code>.head(5)</code> is <strong>chained directly onto that result</strong> — no intermediate variable. The leftmost index column (<code>4365, 1913, 3236, ...</code>) is each row's <em>original</em> position from the unsorted <code>df</code>: sorting rearranges row order but doesn't renumber the index.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>df.sort_values('revenue', ascending=False)</code> — sorts the <strong>entire</strong> DataFrame by <code>revenue</code>; <code>ascending=False</code> means highest-first. The default (omitted) is ascending, so this argument is doing real work, not style.
+- <code>.head(5)</code> — <strong>chained directly onto the sort</strong>, no intermediate variable: <code>.sort_values(...)</code> returns a full sorted DataFrame, and <code>.head(5)</code> is called on <em>that result</em> immediately. Name <code>.method1().method2()</code> as a pattern students will see constantly.
+- <code>top5 = ...</code> — stores the final chained result.
+Point out explicitly (matching the lab page's own required observation): the leftmost index column (<code>4365</code>, <code>1913</code>, <code>3236</code>, ...) is <strong>not</strong> <code>0, 1, 2, 3, 4</code> — it is each row's <em>original</em> position from the unsorted <code>df</code>, carried through the sort. Say plainly: <strong>sorting rearranges row order, but doesn't renumber the index</strong>. A clean <code>0</code>–<code>4</code> index would need an explicit <code>.reset_index()</code>, which this exercise deliberately doesn't ask for so students notice the index <em>isn't</em> automatically reset.
+Common mistakes: forgetting <code>ascending=False</code> — silently produces the <em>lowest</em> 5 with no error; a good "does this output actually answer the question" check. Being alarmed by the non-sequential index — reassure that this is expected, correct behavior, not a bug.
+Check for understanding (guide, verbatim parenthetical): "(Not something students need to derive precisely, but a good prompt to introduce the idea that ties are broken by original row order by default, unless a secondary sort column is specified — worth a one-sentence mention that <code>.sort_values()</code> accepts a list of columns for exactly this kind of tie-breaking, without demonstrating it live unless time allows.)"
+</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>      order_id        date region      product  quantity  revenue
+4365    104366  2024-07-06  North      Gizmo E        20   1999.8
+1913    101914  2024-01-27  South     Gadget D        20   1999.8
+3236    103237  2024-06-17   West  Doohickey F        20   1999.8
+1857    101858  2024-02-05  South  Doohickey F        20   1999.8
+637     100638  2024-02-28   East     Gadget C        20   1999.8</pre>
+<aside class="notes">Matches the guide's Exercise 3 expected output exactly — five maximum-value transactions, every one with <code>quantity</code> <code>20</code> and <code>revenue</code> <code>1999.8</code> at this dataset's price points, and a non-sequential index (<code>4365, 1913, 3236, 1857, 637</code>) carried over from the unsorted frame. Verified against local <code>python3</code> (<code>python3 f3.py</code>). DataFrame formatting may differ slightly by pandas version; the row values and the carried-over index are the load-bearing content.</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If two rows had the exact same <code>revenue</code> value, how would <code>.sort_values()</code> decide which one appears first?</p>
+<button data-opt="A">Ties are broken by original row order by default; pass a list of columns to <code>.sort_values()</code> for an explicit secondary sort</button>
+<button data-opt="B"><code>.sort_values()</code> raises <code>ValueError</code> when the sort column has duplicate values</button>
+<button data-opt="C">The order of the tied rows changes randomly each time the sort runs</button>
+<p class="why" hidden>Ties are broken by original row order by default, unless a secondary sort column is specified — <code>.sort_values()</code> accepts a list of columns for exactly this kind of tie-breaking.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Not something students need to derive precisely, but a good prompt to introduce the idea that ties are broken by original row order by default, unless a secondary sort column is specified — worth a one-sentence mention that <code>.sort_values()</code> accepts a list of columns for exactly this kind of tie-breaking, without demonstrating it live unless time allows.)" Option C (random) is the misconception to correct — the default sort is stable and deterministic.</aside>
+</section>
+
+<!-- 23. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>ascending=False</code> — silently produces the <em>lowest</em> 5 values instead of the highest, with no error at all; a good "does this output actually answer the question asked" sanity check, since a <code>revenue</code> column full of tiny numbers should look obviously wrong against "top 5."</p>
+<p>Being confused or alarmed by the non-sequential index, assuming something went wrong — reassure explicitly that this is expected, correct behavior, not a bug.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 9 min · 0:27–0:36</span>
+<h1>Two-Condition Filter</h1>
+<aside class="notes">
+Teaching goal: combine two conditions in a pandas filter — and confront, directly and deliberately, the fact that this requires <code>&amp;</code> (not <code>and</code>) <em>and</em> parentheses around each condition, a genuinely confusing, easy-to-get-wrong piece of syntax worth a real live demonstration of both failure modes.
+Say to the class (verbatim): "Combining two conditions in pandas looks similar to Module 5's <code>and</code>, but it is not the same syntax, and using the wrong one produces a genuinely confusing error. I'm going to show you both ways this breaks, on purpose, before showing you the version that works."
+</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>&amp;</code> not <code>and</code>, and parentheses every time</h3>
+<div class="concept">
+<div class="concept-lbl">This breaks in two different confusing ways</div>
+<p><code>and</code>/<code>or</code> are for <strong>single</strong> booleans; <code>&amp;</code>/<code>|</code> are pandas' <strong>element-by-element</strong> equivalents, built to combine two boolean <em>columns</em> row by row. Using <code>and</code> on two columns raises <code>ValueError: The truth value of a Series is ambiguous</code>.</p>
+<p><code>&amp;</code> has <em>higher</em> precedence than <code>==</code> and <code>&gt;</code> — the opposite of what you'd assume — so <strong>every condition needs its own parentheses, every time</strong>: <code>df[(df['region']=='South') &amp; (df['revenue']&gt;1000)]</code>. Without them you get a cryptic <code>TypeError</code>.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 4. Rehearse both broken demos before class — both produce genuinely confusing-looking errors the first time. Broken attempt 1 (<code>and</code>): Python's <code>and</code> combines two single <code>True</code>/<code>False</code> values, but <code>df['region']=='South'</code> is an entire column of thousands of booleans — <code>and</code> can't meaningfully combine two whole columns, so it raises rather than guessing. Broken attempt 2 (<code>&amp;</code>, no parentheses): without parens this evaluates as <code>df['region'] == ('South' &amp; df['revenue']) &gt; 1000</code>, trying to <code>&amp;</code>-combine the string <code>'South'</code> with a numeric column before the comparisons happen. Working version: parentheses around each condition, <code>&amp;</code> between them. Result <code>116</code> is smaller than Exercise 2's South-only <code>1352</code>: <strong><code>&amp;</code> narrows — combining two conditions can only keep the same number of rows or fewer than either alone, never more.</strong></aside>
+</section>
+
+<!-- 26. EXERCISE 4 — broken attempt 1 (and) -->
+<section class="s-code">
+<h3>Live-code — Exercise 4, broken attempt 1 (<code>and</code>)</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 4, broken attempt 1 ---
+big_south = df[df['region']=='South' and df['revenue']&gt;1000]
+</div>
+<p class="expect">Deliberately broken — run it and read the error together. Python's <code>and</code> is designed to combine two single <code>True</code>/<code>False</code> values, but <code>df['region']=='South'</code> is an entire <em>column</em> of thousands of booleans. <code>and</code> doesn't know how to combine two whole columns, so it raises rather than guessing.</p>
+<aside class="notes">
+Line-by-line: after the deck fixture rebuilds <code>df</code>, the single line <code>big_south = df[df['region']=='South' and df['revenue']&gt;1000]</code> raises immediately.
+Explain why, plainly: <code>and</code>/<code>or</code> are for single booleans; <code>&amp;</code>/<code>|</code> are pandas' element-by-element equivalents, built specifically to combine two boolean <em>columns</em>, checking each row's pair of values independently.
+Common mistakes: this <em>is</em> the mistake — have students type and run it themselves, not just watch, since the exact error text is what they'll hit independently later this semester.
+</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — broken attempt 1 output -->
+<section class="s-out">
+<h3>Expected output — broken attempt 1 raises</h3>
+<pre>ValueError: The truth value of a Series is ambiguous.
+Use a.empty, a.bool(), a.item(), a.any() or a.all().</pre>
+<aside class="notes">Matches the guide's stated error for broken attempt 1 exactly. Verified against local <code>python3</code> (<code>python3 f4b1.py</code> → exit 1): the traceback's final two lines are <code>ValueError: The truth value of a Series is ambiguous.</code> / <code>Use a.empty, a.bool(), a.item(), a.any() or a.all().</code> The file-path lines of the traceback differ between CPython (a temp path) and Pyodide (<code>&lt;exec&gt;</code>) and are not load-bearing — only the final <code>ValueError:</code> text is.</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — broken attempt 2 (& no parens) -->
+<section class="s-code">
+<h3>Live-code — Exercise 4, broken attempt 2 (<code>&amp;</code>, no parentheses)</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 4, broken attempt 2 ---
+big_south = df[df['region']=='South' &amp; df['revenue']&gt;1000]
+</div>
+<p class="expect">Also deliberately broken. <code>&amp;</code> has <em>higher</em> precedence than <code>==</code> and <code>&gt;</code>, so without parentheses this evaluates as <code>df['region'] == ('South' &amp; df['revenue']) &gt; 1000</code> — trying to <code>&amp;</code>-combine the string <code>'South'</code> with a whole numeric column before the comparisons happen.</p>
+<aside class="notes">
+Line-by-line: after the deck fixture rebuilds <code>df</code>, <code>big_south = df[df['region']=='South' &amp; df['revenue']&gt;1000]</code> raises.
+Explain why, plainly: <code>&amp;</code> has higher operator precedence than <code>==</code> and <code>&gt;</code> — the opposite of what a reader assumes — so without parentheses this gets evaluated as <code>df['region'] == ('South' &amp; df['revenue']) &gt; 1000</code>, attempting to <code>&amp;</code>-combine the string <code>'South'</code> with a whole numeric column before the comparisons even happen. Takeaway, stated plainly: every condition in a pandas multi-condition filter needs its own parentheses, every time, with no exceptions — required by how Python evaluates the expression, not optional style.
+Common mistakes: this is the mistake — have students type and run it too, so the exact error text is familiar later.
+</aside>
+</section>
+
+<!-- 29. EXERCISE 4 — broken attempt 2 output -->
+<section class="s-out">
+<h3>Expected output — broken attempt 2 raises</h3>
+<pre>TypeError: Cannot perform 'rand_' with a dtyped [float64] array and scalar of type [bool]</pre>
+<aside class="notes">Matches the guide's stated error for broken attempt 2 exactly. Verified against local <code>python3</code> (<code>python3 f4b2.py</code> → exit 1): the traceback is long (a chained exception through pandas' <code>na_logical_op</code>), but its final line is <code>TypeError: Cannot perform 'rand_' with a dtyped [float64] array and scalar of type [bool]</code> — the load-bearing line. Everything above it is file paths and internal frames that differ between CPython and Pyodide.</aside>
+</section>
+
+<!-- 30. EXERCISE 4 — working version -->
+<section class="s-code">
+<h3>Live-code — Exercise 4, the working version</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 4 ---
+big_south = df[(df['region']=='South') &amp; (df['revenue']&gt;1000)]
+print(len(big_south))
+print(big_south.head())
+</div>
+<p class="expect">Parentheses around <em>each</em> condition, <code>&amp;</code> between them. <code>116</code> rows — smaller than Exercise 2's South-only <code>1352</code>. <strong><code>&amp;</code> narrows</strong>: combining two conditions can only keep the same number of rows or fewer than either condition alone, never more.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>df[(df['region']=='South') &amp; (df['revenue']&gt;1000)]</code> — each condition wrapped in its own parentheses; <code>&amp;</code> combines them element-by-element, row by row.
+- <code>len(big_south)</code> — <code>116</code>.
+- <code>big_south.head()</code> — first five, all with <code>region == 'South'</code> and <code>revenue &gt; 1000</code>.
+Point out explicitly (matching the lab page's own required observation): <code>116</code> is smaller than either single-condition filter alone (Exercise 2's South-only filter had <code>1352</code> rows) — say plainly: <strong><code>&amp;</code> narrows the result; combining two conditions can only keep the same number of rows or fewer than either condition alone, never more.</strong>
+Common mistakes: using <code>|</code> (or) when <code>&amp;</code> (and) was intended, or vice versa — syntactically valid either way, so no error, just a silently different result set; a good "does this row count look plausible" check.
+Check for understanding (guide, verbatim parenthetical): "(More — <code>|</code> (or) keeps a row if <em>either</em> condition is true, a strictly looser filter than <code>&amp;</code>'s "both required" — get a student to reason through this from the <code>&amp;</code>/<code>|</code> definitions rather than just guessing.)"
+</aside>
+</section>
+
+<!-- 31. EXERCISE 4 — working output -->
+<section class="s-out">
+<h3>Expected output — the working version</h3>
+<pre>116
+     order_id        date region   product  quantity  revenue
+56     100057  2024-05-28  South   Gizmo E        15  1499.85
+71     100072  2024-07-09  South  Widget B        20  1999.80
+480    100481  2024-06-10  South  Widget B        11  1099.89
+499    100500  2024-03-08  South   Gizmo E        17  1699.83
+506    100507  2024-04-22  South  Widget A        12  1199.88</pre>
+<aside class="notes">Matches the guide's Exercise 4 working-version output exactly: <code>116</code> rows (an exact scalar), then the first five, every one <code>South</code> with <code>revenue</code> above <code>1000</code>. Verified against local <code>python3</code> (<code>python3 f4.py</code>). DataFrame formatting may differ slightly by pandas version; the count and the row values are the load-bearing content. Note <code>1999.80</code> prints with its trailing zero here (unlike Exercise 3's <code>1999.8</code>) because this frame's <code>revenue</code> column is displayed to a width driven by <code>1499.85</code> / <code>1099.89</code>.</aside>
+</section>
+
+<!-- 32. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Without running it, would <code>df[(df['region']=='South') | (df['revenue']&gt;1000)]</code> return more or fewer rows than the <code>&amp;</code> version above?</p>
+<button data-opt="A">Fewer — <code>|</code> is stricter than <code>&amp;</code> because it has to check two conditions instead of one</button>
+<button data-opt="B">The same number — <code>|</code> and <code>&amp;</code> differ only in syntax, not in which rows they keep</button>
+<button data-opt="C">More — <code>|</code> (or) keeps a row if <em>either</em> condition is true, a strictly looser filter than <code>&amp;</code>'s "both required"</button>
+<p class="why" hidden>More — <code>|</code> (or) keeps a row if <em>either</em> condition is true, a strictly looser filter than <code>&amp;</code>'s "both required" — reason through this from the <code>&amp;</code>/<code>|</code> definitions rather than guessing.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(More — <code>|</code> (or) keeps a row if <em>either</em> condition is true, a strictly looser filter than <code>&amp;</code>'s "both required" — get a student to reason through this from the <code>&amp;</code>/<code>|</code> definitions rather than just guessing.)"</aside>
+</section>
+
+<!-- 33. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Both broken versions above — worth having students actually type and run both themselves, not just watch, since the specific error text is exactly what they'll encounter independently later this semester if they forget this lesson.</p>
+<p>Using <code>|</code> (or) when <code>&amp;</code> (and) was intended, or vice versa — syntactically valid either way, so no error at all, just a silently different (and possibly much larger or much smaller) result set; a good "does this row count look plausible" check.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 8 min · 0:36–0:44</span>
+<h1>A New Column</h1>
+<aside class="notes">
+Teaching goal: create a new column with a single vectorized assignment — no loop, no <code>.append()</code> — directly contrasting with Module 12's row-by-row CSV processing, and computing a summary statistic with <code>.mean()</code>.
+Say to the class (verbatim): "In Module 12, computing a new value per row meant a loop and an accumulator. Today, one line, no loop at all — pandas applies the calculation to every row simultaneously."
+</aside>
+</section>
+
+<!-- 35. EXERCISE 5 — the idea -->
+<section class="s-idea">
+<h3>The idea — one line, no loop: vectorized computation</h3>
+<div class="concept">
+<div class="concept-lbl">Genuinely different from every prior module</div>
+<p><code>df['per_unit'] = df['revenue'] / df['quantity']</code> — <code>df['revenue']</code> and <code>df['quantity']</code> are whole columns; dividing one by the other produces a third column, row by row, automatically. <strong>No loop.</strong> This is <em>vectorized</em> computation — shorter to write and, on large data, dramatically faster.</p>
+<p><code>df['per_unit'].mean()</code> — a built-in aggregation, the average of an entire column in one call — parallel to Module 10's manual <code>sum(list) / len(list)</code>.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 5. If a student starts writing a loop here, ask "do you remember Exercise 2's boolean column — did that need a loop either?" to nudge toward the vectorized instinct. Assigning onto a filtered copy (<code>south['per_unit'] = ...</code> instead of <code>df['per_unit'] = ...</code>) can raise <code>SettingWithCopyWarning</code> — a real, commonly-hit professional gotcha, not just a classroom simplification; demonstrate it live if you have the minute so students recognize it later rather than being alarmed.</aside>
+</section>
+
+<!-- 36. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 5 ---
+df['per_unit'] = df['revenue'] / df['quantity']
+print(df.head())
+print(df['per_unit'].mean())
+</div>
+<p class="expect">One line adds the <code>per_unit</code> column for <strong>every row at once</strong> — no loop. The guide abbreviates its <code>.head()</code> output with <code>...</code>; the real <code>python3</code> run prints all seven columns. The mean, <code>37.023</code>, is an <strong>exact</strong> scalar — the guide states it exactly.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>df['per_unit'] = df['revenue'] / df['quantity']</code> — computes <code>revenue / quantity</code> for <strong>every row at once</strong> and stores it as a brand-new column. <strong>No loop at all</strong> — <code>df['revenue']</code> and <code>df['quantity']</code> are whole columns; dividing one by another produces a third column, row by row, automatically. This is <strong>vectorized</strong> computation — dramatically shorter to write and, on large datasets, dramatically faster than an equivalent hand-written loop.
+- <code>df['per_unit'].mean()</code> — a built-in aggregation method computing the average of an entire column in one call — parallel to, but far more concise than, Module 10's manual <code>sum(list) / len(list)</code>.
+Common mistakes: carrying over loop-and-<code>.append()</code> thinking from Module 10/12 instead of the direct vectorized assignment — possible with <code>.iterrows()</code> but far slower and more verbose. Assigning onto a filtered copy — <code>south['per_unit'] = ...</code> instead of <code>df['per_unit'] = ...</code> — can raise <code>SettingWithCopyWarning</code> because <code>south</code> (from Exercise 2) is a filtered subset whose relationship to <code>df</code> is ambiguous to pandas; a genuine professional gotcha worth demonstrating live if there's a minute.
+Check for understanding (guide, verbatim parenthetical): "(Division by zero in pandas produces <code>inf</code> — infinity — rather than crashing the whole program the way plain Python's <code>1/0</code> would raise <code>ZeroDivisionError</code>; a genuinely useful, real distinction worth surfacing even briefly, since it means a <code>0</code> in a denominator column can silently produce a technically-valid-looking but meaningless result rather than an obvious crash.)"
+</aside>
+</section>
+
+<!-- 37. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>   order_id        date region   product  quantity  revenue  per_unit
+0    100001  2024-07-01   East  Gadget C         2    19.98      9.99
+1    100002  2024-05-27  South  Widget B        11   549.89     49.99
+2    100003  2024-03-23   West  Gadget D        12   179.88     14.99
+3    100004  2024-01-17   East  Gadget D        15   749.85     49.99
+4    100005  2024-01-31  North  Widget B        12   299.88     24.99
+37.023</pre>
+<aside class="notes">The guide abbreviates its Exercise 5 <code>.head()</code> output (<code>order_id ... quantity revenue per_unit</code> with row <code>...</code>) and shows the mean exactly as <code>37.023</code>. Shown here in full — the real, unabbreviated <code>python3</code> output — so the deck teaches even if Pyodide never loads. The new <code>per_unit</code> column is present with the guide's stated first two values (<code>9.99</code>, <code>49.99</code>); the mean line is a raw <code>print(df['per_unit'].mean())</code> and prints <strong>exactly</strong> <code>37.023</code>, no rounding applied. Verified against local <code>python3</code> (<code>python3 f5.py</code>). DataFrame formatting may differ slightly by pandas version; the new column and the exact mean are the load-bearing content.</aside>
+</section>
+
+<!-- 38. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>quantity</code> were <code>0</code> for some row, what would happen to that row's <code>per_unit</code> value?</p>
+<button data-opt="A">Division by zero in pandas produces <code>inf</code> (infinity) rather than crashing — unlike plain Python's <code>1/0</code>, which raises <code>ZeroDivisionError</code></button>
+<button data-opt="B">The whole script stops with <code>ZeroDivisionError</code>, exactly as <code>1/0</code> does in plain Python</button>
+<button data-opt="C">pandas silently drops that row from the DataFrame before computing the column</button>
+<p class="why" hidden>Division by zero in pandas produces <code>inf</code> — infinity — rather than crashing the whole program the way plain Python's <code>1/0</code> would raise <code>ZeroDivisionError</code>. It means a <code>0</code> in a denominator column can silently produce a technically-valid-looking but meaningless result rather than an obvious crash.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Division by zero in pandas produces <code>inf</code> — infinity — rather than crashing the whole program the way plain Python's <code>1/0</code> would raise <code>ZeroDivisionError</code>; a genuinely useful, real distinction worth surfacing even briefly, since it means a <code>0</code> in a denominator column can silently produce a technically-valid-looking but meaningless result rather than an obvious crash.)"</aside>
+</section>
+
+<!-- 39. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Trying to create the new column with a loop and <code>.append()</code>-style thinking carried over from Module 10/12, rather than the direct vectorized assignment — not impossible (pandas <em>can</em> be looped with <code>.iterrows()</code>, not covered here), but far slower and more verbose. If a student starts writing a loop, ask "did Exercise 2's boolean column need a loop either?"</p>
+<p><strong>Attempting the assignment on a filtered copy instead of the original <code>df</code></strong> — e.g. <code>south['per_unit'] = ...</code> instead of <code>df['per_unit'] = ...</code> — can raise <code>SettingWithCopyWarning</code>, because <code>south</code> is a filtered subset whose relationship to <code>df</code> is ambiguous to pandas. A genuine, very commonly-encountered professional gotcha — demonstrate it live if you have the minute so students recognize it rather than be alarmed by it.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 7 min · 0:44–0:51</span>
+<h1>Unique Values</h1>
+<aside class="notes">
+Teaching goal: <code>.unique()</code> (what distinct values exist) and <code>.value_counts()</code> (how often each one appears) — two of the most commonly reached-for exploratory methods in real data work, and a natural pairing worth learning together.
+Say to the class (verbatim): "Two quick, extremely common questions about any column: what values does it actually contain, and how many of each?"
+</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 6 ---
+print(df['region'].unique())
+print(df['region'].value_counts())
+</div>
+<p class="expect"><code>.unique()</code> — each distinct value once, in first-encountered order (not sorted). <code>.value_counts()</code> — a count per value, automatically <strong>sorted most-to-least common</strong>. The counts sum to <code>5000</code>, the whole dataset. Both methods are <em>Series</em>-only: they work on <code>df['region']</code>, not on the whole <code>df</code>.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>df['region'].unique()</code> — returns each <strong>distinct</strong> value in the column exactly once, in the order first encountered (not sorted) — a quick way to answer "what are all the possible categories here," especially on an unfamiliar dataset before deciding how to filter or group it.
+- <code>df['region'].value_counts()</code> — a count of how many rows contain each distinct value, automatically <strong>sorted from most to least common</strong> — say explicitly this default sort order (most common first) is often exactly what you want when scanning for dominant categories.
+Point out explicitly: the row counts here sum to <code>5000</code> — the full dataset. If real course data has missing/null region values, those often show up separately or are excluded by default (<code>.value_counts(dropna=False)</code> reveals nulls) — a brief mention only; Module 14 covers missing data properly.
+Common mistakes: confusing <code>.unique()</code> (a flat array of distinct values, unordered by frequency) with <code>.value_counts()</code> (a count <em>per</em> value, ordered by frequency) — a side-by-side glance at both shapes resolves it fast. Calling <code>.unique()</code>/<code>.value_counts()</code> on the whole <code>df</code> (<code>df.unique()</code>) — raises <code>AttributeError</code>, since these are <em>Series</em> methods; <code>df['region']</code> alone is a Series (one column on its own).
+Check for understanding (guide, verbatim parenthetical): "(<code>df['product'].nunique()</code> — the count of unique values directly, rather than <code>len(df['product'].unique())</code>, though both work; if <code>nunique()</code> hasn't been introduced, accepting the <code>len(...unique())</code> combination as a correct, reasoned answer is completely fine — the point is recognizing the question maps to <code>.unique()</code>-adjacent tools at all.)"
+</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>['East' 'South' 'West' 'North']
+region
+North    1442
+South    1352
+East     1121
+West     1085
+Name: count, dtype: int64</pre>
+<aside class="notes">Matches the guide's Exercise 6 expected output exactly: <code>.unique()</code> returns the four regions in first-encountered order (<code>East</code>, <code>South</code>, <code>West</code>, <code>North</code> — not alphabetical), and <code>.value_counts()</code> lists them most-common-first (<code>North 1442</code>, <code>South 1352</code>, <code>East 1121</code>, <code>West 1085</code>), summing to <code>5000</code>. The <code>South 1352</code> here is the same count as Exercise 2's filter — a nice cross-check. Verified against local <code>python3</code> (<code>python3 f6.py</code>). Array / Series formatting may differ slightly by pandas version (e.g. the <code>Name: count</code> line was added in pandas 2.x); the distinct values and their counts are the load-bearing content.</aside>
+</section>
+
+<!-- 43. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">How would you find out how many <em>different</em> products are sold, without listing every product name?</p>
+<button data-opt="A"><code>df['product'].count()</code> — it returns the number of distinct values</button>
+<button data-opt="B"><code>df['product'].nunique()</code> — the count of unique values directly (or <code>len(df['product'].unique())</code>, which also works)</button>
+<button data-opt="C"><code>df.shape[0]</code> — the row count equals the number of distinct products</button>
+<p class="why" hidden><code>df['product'].nunique()</code> — the count of unique values directly, rather than <code>len(df['product'].unique())</code>, though both work. The point is recognizing the question maps to <code>.unique()</code>-adjacent tools at all.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>df['product'].nunique()</code> — the count of unique values directly, rather than <code>len(df['product'].unique())</code>, though both work; if <code>nunique()</code> hasn't been introduced, accepting the <code>len(...unique())</code> combination as a correct, reasoned answer is completely fine — the point is recognizing the question maps to <code>.unique()</code>-adjacent tools at all.)" Option A is the trap: <code>.count()</code> returns the number of non-null rows, not the number of <em>distinct</em> values.</aside>
+</section>
+
+<!-- 44. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Confusing <code>.unique()</code> (a plain array/list of distinct values, unordered by frequency) with <code>.value_counts()</code> (a count <em>per</em> value, ordered by frequency) — a quick side-by-side glance at both outputs' shape (a flat list vs. a value-with-a-number-next-to-it table) usually resolves the confusion fast.</p>
+<p>Calling <code>.unique()</code> or <code>.value_counts()</code> on the whole <code>df</code> instead of a single column (<code>df.unique()</code> rather than <code>df['region'].unique()</code>) — raises <code>AttributeError</code>, since these methods exist on a single column (a pandas <strong>Series</strong>), not on a whole multi-column DataFrame; a good moment to introduce that <code>df['region']</code> alone is a <em>Series</em>.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 45. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 6 min · 0:51–0:57</span>
+<h1>Select Columns</h1>
+<aside class="notes">
+Teaching goal: create a new DataFrame containing only a subset of columns — a quick, common operation for narrowing focus (and reducing memory) before deeper analysis.
+Say to the class (verbatim): "Sometimes you don't want every column, just a few — here's the syntax for pulling out exactly the ones you need."
+</aside>
+</section>
+
+<!-- 46. EXERCISE 7 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 7</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+# --- Exercise 7 ---
+subset = df[['region', 'product', 'revenue']]
+print(subset.shape)
+</div>
+<p class="expect">Note the <strong>double square brackets</strong>: the outer <code>[...]</code> is "select from <code>df</code>"; the inner <code>[...]</code> is an ordinary Python <strong>list</strong> of column names. Single brackets + one name → a <em>Series</em>; double brackets + a list → a <em>DataFrame</em> (a table, even with one column). Row count unchanged (<code>5000</code>), column count now <code>3</code>.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>df[['region', 'product', 'revenue']]</code> — note the <strong>double square brackets</strong>: the outer <code>[...]</code> is the same "select something from <code>df</code>" syntax as every filter so far; the inner <code>[...]</code> is an ordinary Python <strong>list</strong> of column names. Say explicitly: a single set of brackets with one column name (<code>df['region']</code>) gives back a <strong>Series</strong> (one column); double brackets with a list (<code>df[['region', 'product']]</code>) gives back a <strong>DataFrame</strong> (a table, even if the list has only one name). One bracket vs. two trips up nearly everyone at least once.
+- <code>subset.shape</code> — same <code>(rows, columns)</code> attribute from Exercise 1, now confirming the row count is unchanged (still every row) while the column count has dropped to exactly <code>3</code>.
+Common mistakes: writing <code>df['region', 'product', 'revenue']</code> (single brackets, comma-separated, no inner list) — raises <code>KeyError</code>, since pandas reads this as one column literally named <code>('region', 'product', 'revenue')</code> (a tuple), which doesn't exist; the error message can look confusingly like any of the individual names is the problem. Assuming <code>subset</code> shares live data with <code>df</code> — same honest caveat as Exercise 2's filtered result.
+Check for understanding (guide, verbatim parenthetical): "(A DataFrame, with exactly one column — this is precisely the distinction tonight's reflection question 2 asks students to articulate, so rehearsing it here, out loud, previews that exact question directly.)"
+</aside>
+</section>
+
+<!-- 47. EXERCISE 7 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>(5000, 3)</pre>
+<aside class="notes">Matches the guide's Exercise 7 expected output exactly — an exact scalar tuple: same <code>5000</code> rows, column count dropped to <code>3</code>. No DataFrame repr here, so no version caveat applies. Verified against local <code>python3</code> (<code>python3 f7.py</code>).</aside>
+</section>
+
+<!-- 48. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">What does <code>df[['revenue']]</code> (double brackets, one name) return, and how is that different from <code>df['revenue']</code>?</p>
+<button data-opt="A">Both return a Series; the double brackets are just an optional style choice</button>
+<button data-opt="B"><code>df[['revenue']]</code> raises <code>KeyError</code> — a list is not a valid single-column selector</button>
+<button data-opt="C">A DataFrame with exactly one column; <code>df['revenue']</code> alone returns a Series (one column pulled out on its own)</button>
+<p class="why" hidden>A DataFrame, with exactly one column — this is precisely the distinction tonight's reflection question 2 asks students to articulate. <code>df['revenue']</code> alone is a Series.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(A DataFrame, with exactly one column — this is precisely the distinction tonight's reflection question 2 asks students to articulate, so rehearsing it here, out loud, previews that exact question directly.)" Option B is wrong — a one-element list is a perfectly valid selector; it just returns a one-column DataFrame rather than a Series.</aside>
+</section>
+
+<!-- 49. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>df['region', 'product', 'revenue']</code> (single brackets, comma-separated names, no inner list) — raises <code>KeyError</code>, since pandas interprets this as looking for one single column literally named <code>('region', 'product', 'revenue')</code> (a tuple), which doesn't exist. Worth demonstrating live because the error message can look confusingly like <em>any</em> of the individual names might be the problem, when the real issue is the missing inner brackets.</p>
+<p>Assuming <code>subset</code> shares live data with <code>df</code> such that modifying one affects the other — same honest caveat as Exercise 2's filtered result; not something to rely on.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 50. EXERCISE 8 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 8 · 5 min · 0:57–1:02</span>
+<h1>Save</h1>
+<aside class="notes">
+Teaching goal: write a DataFrame back out to CSV with <code>.to_csv()</code> — the "Load" step of this lab's ETL framing, and a direct pandas replacement for Module 12's entire manual <code>csv.writer</code> block.
+Say to the class (verbatim): "Last step: save your work back to a file. One line, replacing Module 12's entire manual write-loop."
+</aside>
+</section>
+
+<!-- 51. EXERCISE 8 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 8</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+df['per_unit'] = df['revenue'] / df['quantity']   # rebuilt from Exercise 5 (fresh namespace)
+
+# --- Exercise 8 ---
+df.to_csv('data/explored.csv', index=False)
+
+# deck-only: echo a confirmation so the block has visible output
+_lines = Path('data/explored.csv').read_text().splitlines()
+print(f"explored.csv written: {len(_lines)} lines (1 header + {len(_lines)-1} data rows)")
+print(_lines[0])
+</div>
+<p class="expect">The guide's Exercise 8 is one line — <code>df.to_csv('data/explored.csv', index=False)</code> — and then "open the file to verify." The two <code>print(...)</code> lines are deck-only, echoing a confirmation so the block has visible output. <code>index=False</code> skips writing the row index as an extra unnamed column — important after a sort, where the index is gappy and would look like a mysterious ID column.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>; the <code>df['per_unit'] = ...</code> line re-adds Exercise 5's column, since each <code>.run</code> block is a fresh namespace. In the real <code>explore.py</code> that column already exists on <code>df</code> from Exercise 5.
+- <code>df.to_csv('data/explored.csv', index=False)</code> — writes the <em>entire current state</em> of <code>df</code> (including Exercise 5's new <code>per_unit</code> column, since it was added directly to <code>df</code>) to a new CSV file.
+- <code>index=False</code> — <strong>this argument matters</strong>: by default <code>.to_csv()</code> would write the DataFrame's row index (the <code>0, 1, 2, ...</code> — or, after Exercise 3's sort, the <em>non-sequential</em> — numbers on the left) as its own extra column. <code>index=False</code> skips that, writing only the actual data columns. Ask the room: "based on Exercise 3, why might writing the index out sometimes be actively misleading?" (After a sort the index numbers aren't sequential or meaningful to someone opening the CSV fresh — they'd look like a gappy, mysterious ID column.)
+- The two <code>print(...)</code> lines are deck-only — the file has no <code>print</code> output of its own; they echo <code>5001</code> lines (1 header + 5000 data rows) and the header line so the runnable block shows something.
+Common mistakes: forgetting <code>index=False</code> — not an error, just an extra confusing unnamed column; open the file and point at the artifact. Running Exercise 8 <em>before</em> Exercise 5 in their script and being confused that <code>per_unit</code> is missing from <code>explored.csv</code> — a script runs top to bottom, and <code>.to_csv()</code> only saves what <code>df</code> contains at the moment it's called.
+Check for understanding (guide, verbatim parenthetical): "(No — same input, same deterministic transformations, same output; a good sanity check that nothing in today's pipeline depends on anything outside the script itself, unlike, say, Module 12 Exercise 8's timestamp-dependent log.)"
+</aside>
+</section>
+
+<!-- 52. EXERCISE 8 — expected output -->
+<section class="s-out">
+<h3>Expected output — deck-only confirmation echo</h3>
+<pre>explored.csv written: 5001 lines (1 header + 5000 data rows)
+order_id,date,region,product,quantity,revenue,per_unit</pre>
+<aside class="notes">The guide's Exercise 8 produces <strong>no printed output</strong> — it says "open <code>data/explored.csv</code> in a text editor or spreadsheet application and confirm the header row and a few sample rows look correct, including the <code>per_unit</code> column from Exercise 5." Since a slide needs visible output, the deck adds two <code>print(...)</code> lines that echo a deterministic confirmation: <code>5001</code> total lines (1 header + 5000 data rows) and the written header — <code>order_id,date,region,product,quantity,revenue,per_unit</code> — showing the Exercise 5 <code>per_unit</code> column made it into the file and that <code>index=False</code> kept the row index out (no leading unnamed column). Both lines are exact strings, not a DataFrame repr — no version caveat. Verified against local <code>python3</code> (<code>python3 f8.py</code>).</aside>
+</section>
+
+<!-- 53. EXERCISE 8 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If you reran this entire script tomorrow with the same source CSV, would <code>explored.csv</code> change?</p>
+<button data-opt="A">No — same input, same deterministic transformations, same output; nothing in the pipeline depends on anything outside the script</button>
+<button data-opt="B">Yes — <code>.to_csv()</code> appends to the existing file, so it grows by 5,000 rows each run</button>
+<button data-opt="C">Yes — pandas stamps each write with the current date, so the file differs every day</button>
+<p class="why" hidden>No — same input, same deterministic transformations, same output; a good sanity check that nothing in today's pipeline depends on anything outside the script itself, unlike, say, Module 12 Exercise 8's timestamp-dependent log.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(No — same input, same deterministic transformations, same output; a good sanity check that nothing in today's pipeline depends on anything outside the script itself, unlike, say, Module 12 Exercise 8's timestamp-dependent log.)" Option B is wrong — <code>.to_csv()</code> with a plain path overwrites, it does not append.</aside>
+</section>
+
+<!-- 54. EXERCISE 8 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>index=False</code> — not an error, just an extra, likely-confusing unnamed column in the output file; open the file together and point at the artifact directly if it happens.</p>
+<p>Running Exercise 8 <em>before</em> Exercise 5 in their actual script (out of the stated exercise order) and being confused that <code>per_unit</code> doesn't appear in <code>explored.csv</code> — a good reminder that a script runs top to bottom, and <code>.to_csv()</code> only saves whatever <code>df</code> currently <em>contains</em> at the moment it's called, not anything added afterward.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
+</section>
+
+<!-- 55. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 &amp; 2 · 1:02–1:10 · as time allows</span>
+<h1>Stretch 1 &amp; 2 Preview</h1>
+<aside class="notes">
+Frame both as previews rather than full live-coded content — Stretch 1 explicitly uses <code>groupby</code>, which the lab page itself flags as a Module 15 concept, ahead of this lab's normal sequence. Stretch 2 is fully within today's toolkit and worth doing live if time allows.
+Say to the class (Stretch 1, verbatim): "<code>.groupby('product')</code> splits the South data into one group per product name; <code>['per_unit'].mean()</code> then computes the average per-unit price <em>within each group separately</em>; the rest is Exercise 3's familiar sort-and-head pattern. Don't worry about fully understanding <code>groupby</code> today — Module 15 covers it properly; this is just a preview that today's filtering and column-creation skills combine directly with tools you'll learn soon."
+No "Check for understanding" in the guide for either Stretch segment — quiz omitted, matching the lighter treatment stretch segments get (same as the Week 12 deck).
+</aside>
+</section>
+
+<!-- 56. STRETCH — the idea -->
+<section class="s-idea">
+<h3>The idea — today's skills + one preview tool</h3>
+<div class="concept">
+<div class="concept-lbl">Two previews, both built on today</div>
+<p><strong>Stretch 1</strong> — top 3 products by average per-unit price in the South: filter (Exercise 2) → <code>.groupby('product')['per_unit'].mean()</code> (Module 15 preview) → <code>.sort_values(ascending=False).head(3)</code> (Exercise 3). Only <code>groupby</code> is new.</p>
+<p><strong>Stretch 2</strong> — what fraction of revenue comes from orders above $500: filter (Exercise 2) → <code>.sum()</code> (parallel to Exercise 5's <code>.mean()</code>) → an f-string format spec from Module 03. Nothing beyond today.</p>
+</div>
+<aside class="notes">Stretch 1: <code>.groupby('product')</code> splits the South data into one group per product name; <code>['per_unit'].mean()</code> computes the average per-unit price within each group; then Exercise 3's sort-and-head. One sentence of framing is enough if you demo it — don't teach <code>groupby</code> properly today. Stretch 2 requires nothing beyond what's already been taught this session: Exercise 2's filtering, plus <code>.sum()</code>, plus an f-string format spec. The guide verifies Stretch 2 against the synthetic sample at <code>59.7%</code>.</aside>
+</section>
+
+<!-- 57. STRETCH 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 1 (<code>groupby</code> preview)</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+df['per_unit'] = df['revenue'] / df['quantity']   # rebuilt from Exercise 5 (fresh namespace)
+
+south = df[df['region'] == 'South']
+print(south.groupby('product')['per_unit'].mean().sort_values(ascending=False).head(3))
+</div>
+<p class="expect">A preview only. <code>.groupby('product')</code> splits the South rows into one group per product; <code>['per_unit'].mean()</code> averages within each group; then Exercise 3's <code>.sort_values(ascending=False).head(3)</code>. Module 15 covers <code>groupby</code> properly.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>; <code>df['per_unit'] = ...</code> re-adds Exercise 5's column (fresh namespace per block). In the real script <code>per_unit</code> already exists.
+- <code>south = df[df['region'] == 'South']</code> — Exercise 2's filter.
+- <code>south.groupby('product')['per_unit'].mean()</code> — <code>.groupby('product')</code> splits the South data into one group per product name; <code>['per_unit'].mean()</code> computes the average per-unit price <em>within each group separately</em>.
+- <code>.sort_values(ascending=False).head(3)</code> — Exercise 3's familiar "top N" pattern applied to the grouped result.
+The guide gives the Stretch 1 code but no expected output (it is framed as a preview). The values below are the real <code>python3</code> run.
+Common mistakes: none called out in the guide for a preview segment. Do not derive <code>groupby</code> from first principles today.
+No "Check for understanding" in the guide for this segment — no quiz.
+</aside>
+</section>
+
+<!-- 58. STRETCH 1 — expected output -->
+<section class="s-out">
+<h3>Expected output — Stretch 1</h3>
+<pre>product
+Gizmo E     40.105741
+Widget A    39.659421
+Gadget D    37.578235
+Name: per_unit, dtype: float64</pre>
+<aside class="notes">The guide gives the Stretch 1 code but no explicit expected output (it is a <code>groupby</code> preview, not a walked-through exercise). This is the real <code>python3</code> result (<code>python3 fS1.py</code>) against the guide's Appendix B generator: the three South products with the highest average per-unit price, descending. Series formatting and float display precision may differ slightly by pandas version; the product ranking and approximate values are the load-bearing content.</aside>
+</section>
+
+<!-- 59. STRETCH 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 2 (within today's toolkit)</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(42)
+n = 5000
+regions = ["North", "South", "East", "West"]
+products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
+region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
+product_arr = rng.choice(products, size=n)
+quantity_arr = rng.integers(1, 21, size=n)
+unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
+revenue_arr = np.round(quantity_arr * unit_price, 2)
+dates = pd.date_range("2024-01-01", periods=200, freq="D")
+date_arr = rng.choice(dates, size=n)
+order_id = np.arange(100001, 100001 + n)
+pd.DataFrame({
+    "order_id": order_id,
+    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
+    "region": region_arr,
+    "product": product_arr,
+    "quantity": quantity_arr,
+    "revenue": revenue_arr,
+}).to_csv("data/retail_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/retail_sales.csv')
+
+big_orders = df[df['revenue'] &gt; 500]
+fraction = big_orders['revenue'].sum() / df['revenue'].sum() * 100
+print(f"{fraction:.1f}%")
+</div>
+<p class="expect">Exercise 2's filter, plus <code>.sum()</code> (parallel to Exercise 5's <code>.mean()</code>), plus a Module 03 f-string format spec (<code>:.1f</code>). Nothing beyond today. The guide states <code>59.7%</code> against the synthetic sample.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
+- <code>big_orders = df[df['revenue'] &gt; 500]</code> — Exercise 2's filtering pattern.
+- <code>big_orders['revenue'].sum() / df['revenue'].sum() * 100</code> — the filtered revenue total over the whole revenue total, times 100 for a percentage; <code>.sum()</code> is parallel to Exercise 5's <code>.mean()</code>.
+- <code>print(f"{fraction:.1f}%")</code> — a Module 03 f-string format spec, one decimal place, literal <code>%</code>.
+This is the one Stretch worth doing live if time allows — unlike Stretch 1, it needs nothing beyond what's been taught this session. Verified against the guide's Appendix B generator: <code>59.7%</code>.
+No "Check for understanding" in the guide for this segment — no quiz.
+</aside>
+</section>
+
+<!-- 60. STRETCH 2 — expected output -->
+<section class="s-out">
+<h3>Expected output — Stretch 2</h3>
+<pre>59.7%</pre>
+<aside class="notes">Matches the guide's stated Stretch 2 result exactly: "(Verified against the synthetic sample: <code>59.7%</code>.)" The output is an <code>f"{fraction:.1f}%"</code> string — an exact scalar, not a DataFrame repr — so no version caveat applies. Verified against local <code>python3</code> (<code>python3 fS2.py</code>).</aside>
+</section>
+
+<!-- 61. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li><strong>Explain a boolean filter in plain English.</strong> A strong answer states, unprompted, the two-step model from Exercise 2: build a column of <code>True</code>/<code>False</code>, then keep only the <code>True</code> rows — not just "it searches for matching rows," which skips the actual mechanism.</li>
+<li><strong><code>df["revenue"]</code> vs. <code>df[["revenue"]]</code>.</strong> The single-vs-double-bracket distinction from Exercise 7: a Series versus a one-column DataFrame. Push for <em>when it matters</em> — many DataFrame-only methods or method chains require a DataFrame, not a Series; name at least one concrete situation.</li>
+<li><strong>The single most compelling reason to choose pandas over Excel.</strong> No wrong answer, but push past "it's more powerful": scale (thousands to millions of rows without manual scrolling), reproducibility (the exact same script re-run on updated data), or being embeddable in a larger automated pipeline.</li>
+</ul>
+<aside class="notes">
+Review the reflection questions out loud in the last ~5 minutes. Strong-answer guidance (guide, verbatim):
+1. <em>Explain a boolean filter in plain English</em> — a strong answer states, unprompted, the two-step model from Exercise 2: build a column of <code>True</code>/<code>False</code>, then keep only the <code>True</code> rows — not just "it searches for matching rows," which skips the actual mechanism.
+2. <em><code>df["revenue"]</code> vs. <code>df[["revenue"]]</code></em> — the single-vs-double-bracket distinction from Exercise 7: a Series versus a one-column DataFrame. Push for <em>when it matters</em>: many DataFrame-only methods (like <code>.to_csv()</code> in some contexts, or later chaining onto another DataFrame method) require a DataFrame, not a Series — a good answer names at least one concrete situation where the distinction has real consequences.
+3. <em>The single most compelling reason to choose pandas over Excel</em> — no wrong answer, but push past "it's more powerful" for something specific: scale, reproducibility, or being embeddable in a larger automated pipeline are all strong, concrete answers.
+</aside>
+</section>
+
+<!-- 62. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>explore.py</code> (or <code>explore.ipynb</code>)</li>
+<li>Contains Exercises 1–8, each clearly separated</li>
+<li>Runs top to bottom with no errors</li>
+<li>Pushed to GitHub inside a <code>module13/</code> folder</li>
+<li>Repo URL submitted to Canvas</li>
+</ul>
+<aside class="notes">Review the submission checklist together. Preview Module 14 (verbatim): "Today assumed the data was already clean — no missing values, no weird formatting. Next module tackles the reality that real data almost never starts that clean: missing values, duplicate rows, and descriptive statistics to understand a dataset's overall shape before analyzing it further."</aside>
+</section>
+
+<!-- 63. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 13</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w13.md (Week 13 facilitation guide — "First DataFrame — Retail Sales Explorer"). This is a DATA WEEK: every runnable block carries <code>data-packages="pandas"</code> (the first Run on the page preloads pandas + numpy into Pyodide). Each <code>.run</code> block runs in its OWN fresh namespace, so every block first re-generates <code>data/retail_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(42)</code>, fully reproducible) and rebuilds <code>df</code>, then runs the guide's actual lab code — in the real <code>explore.py</code> the course-provided CSV is placed once and every exercise reads it. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / numpy 1.26.4, the exact versions Pyodide 0.26.4 bundles, so the DataFrame reprs shown should match; the version caveat on repr slides is a safety note. No block uses <code>input()</code>, so there is no <code>data-stdin</code>.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
