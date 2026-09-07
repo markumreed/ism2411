@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 14 — Clean a Messy Sales CSV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 14 &nbsp;·&nbsp; Module 14 &nbsp;·&nbsp; Unit 4 &nbsp;·&nbsp; Data Analysis with pandas</p>
+<h1>Clean a Messy Sales CSV</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Intro — real data is messy</span>
+<span class="t-item"><strong>0:04–0:12</strong> Ex 1 — Inspect</span>
+<span class="t-item"><strong>0:12–0:18</strong> Ex 2 — Standardize Column Names</span>
+<span class="t-item"><strong>0:18–0:28</strong> Ex 3 — Handle Missing Values</span>
+<span class="t-item"><strong>0:28–0:38</strong> Ex 4 — Fix Types</span>
+<span class="t-item"><strong>0:38–0:44</strong> Ex 5 — Check Duplicates</span>
+<span class="t-item"><strong>0:44–0:53</strong> Ex 6 — Describe</span>
+<span class="t-item"><strong>0:53–1:01</strong> Ex 7 — Save</span>
+<span class="t-item"><strong>1:01–1:10</strong> Stretch 1/2 Preview</span>
+<span class="t-item"><strong>1:10–1:15</strong> Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Teaching goal (session): Module 13 quietly assumed the data was already clean. This module confronts the fact that real data almost never starts that way — and the lab page's own framing deserves repeating verbatim: "every decision you make here will feed directly into Module 15's analysis and the capstone." Two things make this lab different from every prior one: first, several exercises have <strong>no single correct answer</strong> — dropping vs. filling a missing value is a judgment call, and this lab explicitly grades the <em>reasoning</em> in students' comments, not just working code. Second, real messy data teaches lessons no clean synthetic dataset can — protect real time for actually looking at <code>.info()</code>'s output together (Exercise 1) and for the genuinely surprising type-loss-on-reload gotcha in Exercise 7.
+75-minute session, live code-along. Prerequisites: Module 13 — DataFrames, boolean filtering, <code>.dtypes</code>. Submission: <code>clean.py</code> (or <code>clean.ipynb</code>) + <code>clean_sales.csv</code> via GitHub in a <code>module14/</code> folder, URL to Canvas.
+Deck note: this is a <strong>DATA WEEK</strong> and this lab cleans a deliberately <strong>messy CSV</strong> — missing values, whitespace/case in column names, <code>"$"</code>-prefixed price strings, a malformed date, duplicate rows, a negative price, an extreme outlier. Every runnable block carries <code>data-packages="pandas"</code> — the first Run on the page pays a one-time multi-MB download to bring pandas (and its numpy dependency) into Pyodide; later Runs reuse it. Each <code>.run</code> block executes in its OWN fresh Pyodide namespace, so every block first re-generates <code>data/messy_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(7)</code>, fully reproducible; loop variables renamed so the scaffold never shadows the lab's <code>df</code>) and rebuilds <code>df</code> through every prior exercise, then runs the current exercise's actual lab code. In the real <code>clean.py</code> the course-provided messy dataset is placed once and every exercise builds on the same running <code>df</code>. <strong>Use your course's real provided dataset with students</strong> — the numbers here are verified against the synthetic Appendix B version for preparation. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / numpy 1.26.4 — the exact versions Pyodide 0.26.4 bundles.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>clean.py</code> built exercise by exercise on a deliberately messy sales CSV; the course provides the real <code>data/messy_sales.csv</code> (Appendix B's seeded generator stands in for instructor rehearsal)</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 13: DataFrames, boolean filtering, <code>.dtypes</code></span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>clean.py</code> (or <code>clean.ipynb</code>) + <code>clean_sales.csv</code> via GitHub in a <code>module14/</code> folder, URL to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week14_lab. Class length 75 minutes, format live code-along. The required exercises fill most of available time; both Stretch challenges are positioned as previews — Stretch 1 is genuinely new statistical content (IQR outlier detection) worth unhurried treatment, and Stretch 2 (a reusable <code>clean_sales(filepath)</code> function) is best done once the pipeline itself is solid. Before class: obtain or generate the messy dataset; rehearse Exercise 7's save-then-reload sequence yourself (the dtype-loss-on-reload behavior surprises instructors too); decide in advance which missing-value columns you will fill vs. drop for your actual dataset and be ready to explain your own reasoning as a model answer.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Use <code>.info()</code> and <code>.isnull().sum()</code> to diagnose a dataset's specific quality problems before touching any data.</li>
+<li>Decide, with articulated reasoning, when to drop rows with missing data versus fill them with a computed value.</li>
+<li>Convert columns to correct types with <code>pd.to_datetime(errors="coerce")</code> and <code>.astype()</code>, understanding what <code>errors="coerce"</code> actually does to unparseable values.</li>
+<li>Detect and remove duplicate rows with <code>.duplicated()</code> and <code>.drop_duplicates()</code>.</li>
+<li>Read <code>.describe()</code>'s output critically, identifying statistics that suggest a real business explanation is needed, not just accepting numbers at face value.</li>
+<li>Explain why saving and reloading a CSV does not always preserve every column's dtype, and what to do about it.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Protect the most time for objective 2 (the drop-vs-fill judgment call, Exercise 3) and objective 6 (the dtype-loss-on-reload gotcha, Exercise 7) — the guide flags both as the highest-value, least-obvious ideas in the lab. Objectives 1 and 5 are about <em>reading</em> output like test results — specific evidence-cited observations, not vague impressions.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Intro — Module 13's data was clean; that was not realistic</td><td>4</td></tr>
+<tr><td>0:04–0:12</td><td>Exercise 1 — Inspect</td><td>8</td></tr>
+<tr><td>0:12–0:18</td><td>Exercise 2 — Standardize Column Names</td><td>6</td></tr>
+<tr><td>0:18–0:28</td><td>Exercise 3 — Handle Missing Values</td><td>10</td></tr>
+<tr><td>0:28–0:38</td><td>Exercise 4 — Fix Types</td><td>10</td></tr>
+<tr><td>0:38–0:44</td><td>Exercise 5 — Check Duplicates</td><td>6</td></tr>
+<tr><td>0:44–0:53</td><td>Exercise 6 — Describe</td><td>9</td></tr>
+<tr><td>0:53–1:01</td><td>Exercise 7 — Save</td><td>8</td></tr>
+<tr><td>1:01–1:10</td><td>Stretch 1 &amp; 2 Preview (as time allows)</td><td>9</td></tr>
+<tr><td>1:10–1:15</td><td>Wrap-Up — reflection + submission + Module 15 preview</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">The required exercises fill most of available time at a normal code-along pace. Both Stretch challenges are framed as previews — Stretch 1 (IQR outlier detection) is genuinely new statistical content; Stretch 2 (a reusable cleaning function) wraps Exercises 2–7 in one callable. Appendix C has two extra-practice items (inspect <code>quantity_sold</code> for a <code>min</code> of <code>0</code>; a subset-column duplicate check <code>df.duplicated(subset=["order_id"])</code>) if a section moves unusually fast. Wrap-Up runs in the last ~5 minutes: three reflection questions + the submission checklist + the Module 15 (grouping / aggregation / charts) preview.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Module 13's data was clean. That was not realistic.</h1>
+<aside class="notes">
+Teaching goal: frame what is different about today — real, deliberately messy data, and several decisions with no single correct answer where the <em>reasoning</em> in comments is graded as seriously as the code.
+Say to the class (verbatim): "Module 13's dataset loaded cleanly, with no missing values, no type problems, no duplicates — that was not realistic, and I told you so at the time. Today's dataset is deliberately messy, the way real data actually is. And I want to flag something different about this lab before we start: several of today's decisions don't have one single correct answer. Drop a row, or fill it with an estimate? Both can be defensible — what matters is that you can explain <em>why</em> you chose what you chose. Your comments today are graded as seriously as your code."
+Do: open <code>clean.py</code>, type the header — <code># clean.py</code> / <code># ISM2411 Module 14 Lab — Clean a Messy Sales CSV</code>.
+Common mistakes: none yet — this is framing.
+Deck note: every runnable block re-generates <code>data/messy_sales.csv</code> from the guide's Appendix B generator (seed 7, reproducible) at the top and re-runs every prior exercise, because each <code>.run</code> block is a fresh namespace; the Pyodide virtual filesystem and loaded packages persist across blocks on a page. In the real lab the course-provided messy CSV is placed once by hand and each exercise builds on the same <code>df</code>.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 8 min · 0:04–0:12</span>
+<h1>Inspect</h1>
+<aside class="notes">
+Teaching goal: <code>.info()</code> and <code>.isnull().sum()</code> as the mandatory first step on any new, unfamiliar dataset — and writing down <em>specific</em>, evidence-based observations rather than a vague "the data looks messy."
+Say to the class (verbatim): "Before changing anything, diagnose. Two commands, and I want you to read their output like a doctor reading test results — specific numbers, not vague impressions."
+Line-by-line: <code>df.info()</code> prints, for every column: its name, how many <strong>non-null</strong> values it has (out of the total row count), and its dtype — reading the non-null counts against the total row count, column by column, is the actual skill, not just running the command. <code>df.isnull().sum()</code> is a complementary view: <code>.isnull()</code> produces a same-shaped grid of <code>True</code>/<code>False</code>, and <code>.sum()</code> totals that per column, giving a direct missing-value count.
+Common mistakes: writing vague observations ("this column looks bad") instead of the required specific, evidence-cited format — redirect to the "column X has Y% missing" / "column Z is dtype object but should be float" templates the lab page provides. Confusing <code>.isnull().sum()</code>'s per-column totals with a <em>row</em> count — have a student state explicitly what the number next to <code>"Unit Price"</code> means ("this many rows are missing a value in this specific column," not "this many rows are entirely broken").
+Check for understanding (guide, verbatim parenthetical): "Which column's missing-value count worries you <em>least</em>, and why? (A good answer names whichever column has the fewest missing values relative to its total, or one where a missing value is least consequential to later analysis — getting students to triage, not just enumerate, previews Exercise 3's actual decision-making.)"
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture; the guide's lab code follows ----
+
+# --- Exercise 1 ---
+import pandas as pd
+
+df = pd.read_csv('data/messy_sales.csv')
+print(df.info())
+print(df.isnull().sum())
+</div>
+<p class="expect">Everything above <code># --- Exercise 1 ---</code> is deck scaffolding — it writes the guide's Appendix B messy dataset into Pyodide's virtual filesystem so the block is self-contained. The guide's Exercise 1 is the last four lines. Read <code>.info()</code>'s <strong>Non-Null Count</strong> against the <code>42</code>-row total, column by column: <code>Order ID</code> and <code>Order Date</code> show <code>41</code> (one missing each); <code>Unit Price</code> shows <code>40</code> (two missing) <em>and</em> is dtype <code>object</code>, not numeric — a strong hint the raw values are wrong (Exercise 4 reveals <code>"$"</code>-prefixed strings). <code>.isnull().sum()</code> restates the same gaps as direct per-column counts.</p>
+<aside class="notes">
+Line-by-line:
+- The <code>rng = np.random.default_rng(7)</code> … <code>_g.to_csv("data/messy_sales.csv", …)</code> block is deck-only scaffolding — the guide's Appendix B generator, with loop variables renamed (<code>_i</code>, <code>_oid</code>, <code>_dt</code>, <code>_g</code>) so it never shadows the lab's <code>df</code>. On a real machine the student places the course-provided messy CSV by hand. <code>data-packages="pandas"</code> preloads pandas (+ numpy) into Pyodide on the first Run of the page. The <code>warnings.simplefilter</code> line is deck-only — it silences a harmless pandas dtype-cast <code>FutureWarning</code> the generator emits when it writes <code>"$"</code>-prefixed strings into the numeric <code>Unit Price</code> column; it does not touch the lab code's output.
+- <code>df.info()</code> — prints, for every column: its name, how many <strong>non-null</strong> values it has (out of the total row count), and its dtype. This single call answers two questions at once — "does this column have missing data" (compare the non-null count to the total row count) and "is this column the type I'd expect" (check the dtype column). Say explicitly that reading <code>.info()</code>'s non-null counts against the total row count, column by column, is the actual skill.
+- <code>df.isnull().sum()</code> — a second, complementary view: <code>.isnull()</code> produces a same-shaped grid of <code>True</code>/<code>False</code>, and <code>.sum()</code> (True counts as <code>1</code>) totals that up <strong>per column</strong>, giving a direct missing-value count.
+Have students write at least three specific observations as comments — model the required specificity: not "Unit Price has some missing values" but "Unit Price is dtype <code>object</code>, not numeric, and is missing 2 of 42 values (4.8%)". Point out that <code>Unit Price</code> being <code>object</code> when it should be numeric is itself a strong hint something's wrong with the raw values, <em>before</em> students have looked at the actual data — dtype alone is diagnostic.
+Common mistakes: writing vague observations ("this column looks bad") instead of the required specific, evidence-cited format. Confusing <code>.isnull().sum()</code>'s per-column totals with a <em>row</em> count — have a student state explicitly that the number next to <code>"Unit Price"</code> means "this many rows are missing a value in this specific column," not "this many rows are entirely broken."
+Check for understanding (guide, verbatim parenthetical): "(A good answer names whichever column has the fewest missing values relative to its total, or one where a missing value is least consequential to later analysis — getting students to triage, not just enumerate, previews Exercise 3's actual decision-making.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 42 entries, 0 to 41
+Data columns (total 7 columns):
+ #   Column            Non-Null Count  Dtype
+---  ------            --------------  -----
+ 0   Order ID          41 non-null     object
+ 1   Order Date        41 non-null     object
+ 2   Product Category  42 non-null     object
+ 3   Region            42 non-null     object
+ 4   Unit Price        40 non-null     object
+ 5   Quantity Sold     42 non-null     int64
+ 6   Customer ID       42 non-null     object
+dtypes: int64(1), object(6)
+memory usage: 2.4+ KB
+None
+Order ID            1
+Order Date          1
+Product Category    0
+Region              0
+Unit Price          2
+Quantity Sold       0
+Customer ID         0
+dtype: int64</pre>
+<aside class="notes">Matches the guide's "Expected output shape" for Exercise 1 on every load-bearing line — <code>42</code> entries, seven columns, <code>Order ID</code>/<code>Order Date</code> at <code>41</code> non-null, <code>Unit Price</code> at <code>40</code> non-null and dtype <code>object</code>, and the <code>.isnull().sum()</code> counts (<code>1</code>, <code>1</code>, <code>0</code>, <code>0</code>, <code>2</code>, <code>0</code>, <code>0</code>). The guide abbreviates: it omits the <code>dtypes: int64(1), object(6)</code> / <code>memory usage: 2.4+ KB</code> / <code>None</code> trailer that <code>print(df.info())</code> really emits (<code>.info()</code> prints the report and returns <code>None</code>, which <code>print()</code> then shows). Shown here in full — the real, unabbreviated <code>python3</code> output — so the deck teaches even if Pyodide never loads. Verified against local <code>python3</code> (<code>python3 blk1.py</code>, pandas 2.2.0 / numpy 1.26.4, == Pyodide 0.26.4's bundled versions). DataFrame formatting may differ slightly by pandas version; the values and shape are the load-bearing content.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">In <code>df.isnull().sum()</code>, the <code>2</code> printed next to <code>Unit Price</code> means —</p>
+<button data-opt="A">2 rows are entirely broken and should be dropped from the DataFrame</button>
+<button data-opt="B">2 rows are missing a value <em>in this specific column</em> — not 2 rows that are entirely broken</button>
+<button data-opt="C">the <code>Unit Price</code> column has only 2 valid values left; every other row is null</button>
+<p class="why" hidden>This many rows are missing a value in this specific column, not this many rows are entirely broken. <code>.isnull().sum()</code> totals the per-column <code>True</code>/<code>False</code> grid one column at a time.</p>
+</div>
+<aside class="notes">The guide's actual Check for understanding here is open-ended triage ("Which column's missing-value count worries you <em>least</em>, and why?" — a good answer names whichever column has the fewest missing values relative to its total, or one where a missing value is least consequential). Since that has no single keyable answer, this quiz is drawn instead from a verbatim line in the same segment's "Common student mistakes": have a student state that the number next to <code>"Unit Price"</code> means "this many rows are missing a value in this specific column," not "this many rows are entirely broken." Option A is the exact misread the guide warns about.</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing vague observations ("this column looks bad") instead of the required specific, evidence-cited format — redirect explicitly to the "column X has Y% missing" / "column Z is dtype <code>object</code> but should be <code>float</code>" templates the lab page itself provides.</p>
+<p>Confusing <code>.isnull().sum()</code>'s per-column totals with a <em>row</em> count — a common early misread; have a student state explicitly what the number next to <code>"Unit Price"</code> means ("this many rows are missing a value in this specific column," not "this many rows are entirely broken").</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1.</aside>
+</section>
+
+<!-- 11. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 6 min · 0:12–0:18</span>
+<h1>Standardize Column Names</h1>
+<aside class="notes">
+Teaching goal: a single vectorized string operation applied to column <em>names</em> themselves — a small, high-payoff cleanup step that makes every subsequent line of code shorter and less error-prone.
+Say to the class (verbatim): "Notice the column names — mixed case, spaces. That means every reference to them later needs exact capitalization and quoting a space-containing string. One line fixes this permanently."
+Line-by-line: <code>df.columns</code> is the current column names, as seen in Exercise 1. <code>.str.lower()</code> — pandas' <code>.str</code> accessor applies a string method to <strong>every column name at once</strong> — the same vectorized idea as Module 13's <code>df['revenue'] / df['quantity']</code>, operating on the column <em>labels</em>. <code>.str.replace(' ', '_')</code> — chained onto the lowercased result, replacing every space with an underscore: <code>"Order Date"</code> → <code>"order date"</code> → <code>"order_date"</code>. <code>df.columns = ...</code> — <strong>reassigns</strong> the DataFrame's column labels; every reference to a column from this point forward must use the new lowercase-underscore names.
+Common mistakes: forgetting this changes <code>df</code> permanently and continuing to reference <code>df['Order ID']</code> (old capitalization) later — raises <code>KeyError</code>. Only calling <code>.str.lower()</code> without the <code>.str.replace()</code> — leaves spaces, which still work with bracket notation but block dot-notation access.
+Check for understanding (guide, verbatim parenthetical): "If a column were named <code>'Customer&nbsp;&nbsp;&nbsp;ID'</code> with multiple spaces between words, would this exact one-liner produce a clean <code>'customer_id'</code>, or something else? (Something else — <code>'customer___id'</code>, with three underscores, since <code>.str.replace(' ', '_')</code> replaces every individual space character one-for-one, not collapsing runs of spaces into one. A good moment to note real column names are often messier than a single clean example suggests, and this simple fix doesn't handle every possible case — good enough for today's dataset, not a universal solution.)"
+</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+
+# --- Exercise 2 ---
+df.columns = df.columns.str.lower().str.replace(' ', '_')
+print(df.columns.tolist())
+</div>
+<p class="expect">One chained line lowercases every column label and swaps spaces for underscores — applied to <em>all seven</em> names at once, no loop. <code>df.columns = ...</code> reassigns the labels on <code>df</code> itself; from here on every column reference must use the new lowercase-underscore names.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/messy_sales.csv</code> and <code>df</code> (fresh namespace per block).
+- <code>df.columns.str.lower()</code> — the <code>.str</code> accessor applies <code>.lower()</code> to every column name simultaneously; vectorized, on the labels rather than the values.
+- <code>.str.replace(' ', '_')</code> — chained onto the lowercased result; <code>"Order Date"</code> becomes <code>"order date"</code> then <code>"order_date"</code>.
+- <code>df.columns = ...</code> — reassigns the DataFrame's column labels in place; every later reference must use the new names.
+Common mistakes: continuing to reference <code>df['Order ID']</code> (old capitalization) after this — <code>KeyError</code>, a quick diagnostic. Calling only <code>.str.lower()</code> and leaving spaces in place — still works with bracket notation but blocks the convenient dot-notation access.
+Check for understanding (guide, verbatim parenthetical): "(Something else — <code>'customer___id'</code>, with three underscores, since <code>.str.replace(' ', '_')</code> replaces every individual space character one-for-one, not collapsing runs of spaces into one. A good moment to note real column names are often messier than a single clean example suggests, and this simple fix doesn't handle every possible case — good enough for today's dataset, not a universal solution.)"
+</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>['order_id', 'order_date', 'product_category', 'region', 'unit_price', 'quantity_sold', 'customer_id']</pre>
+<aside class="notes">Matches the guide's Exercise 2 expected output exactly — a plain Python list of the seven cleaned names, all lowercase, spaces replaced by underscores. This is an exact scalar (a list repr), not a DataFrame repr, so no version caveat applies. Verified against local <code>python3</code> (<code>python3 blk2.py</code>).</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If a column were named <code>'Customer&nbsp;&nbsp;&nbsp;ID'</code> with three spaces, what would <code>df.columns.str.lower().str.replace(' ', '_')</code> produce for it?</p>
+<button data-opt="A">A clean <code>'customer_id'</code> — <code>.str.replace</code> collapses any run of spaces into a single underscore</button>
+<button data-opt="B">A <code>ValueError</code> — pandas rejects column names with more than one consecutive space</button>
+<button data-opt="C"><code>'customer___id'</code>, with three underscores — <code>.str.replace(' ', '_')</code> swaps every individual space one-for-one, it does not collapse runs</button>
+<p class="why" hidden>Something else — <code>'customer___id'</code>, with three underscores, since <code>.str.replace(' ', '_')</code> replaces every individual space character one-for-one, not collapsing runs of spaces into one. Real column names are often messier than a single clean example suggests; this simple fix is good enough for today's dataset, not a universal solution.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Something else — <code>'customer___id'</code>, with three underscores, since <code>.str.replace(' ', '_')</code> replaces every individual space character one-for-one, not collapsing runs of spaces into one. A good moment to note real column names are often messier than a single clean example suggests, and this simple fix doesn't handle every possible case — good enough for today's dataset, not a universal solution.)"</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting this changes <code>df</code> permanently, and continuing to reference <code>df['Order ID']</code> (old capitalization) later in the script — raises <code>KeyError</code>, since that column name no longer exists; a good, quick diagnostic if it happens.</p>
+<p>Only calling <code>.str.lower()</code> without the <code>.str.replace()</code> — leaves spaces in place, which technically still work with bracket notation (<code>df['order date']</code>) but prevent the more convenient dot-notation access (<code>df.order_date</code>) some pandas code uses.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 16. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 10 min · 0:18–0:28</span>
+<h1>Handle Missing Values</h1>
+<aside class="notes">
+Teaching goal: the lab's first genuine judgment call — drop rows missing essential identifiers, but fill (rather than drop) numeric columns with few missing values — and require students to articulate <em>why</em> each choice fits its specific situation.
+Say to the class (verbatim): "Two different strategies for two different kinds of missingness, and this is a real decision, not a formula. A missing <code>order_id</code> means we fundamentally don't know what transaction this row represents — there's no reasonable way to guess it, so we drop it. A missing <code>unit_price</code>, on a dataset where it's only missing in a couple of rows, can reasonably be estimated from the other rows' average — so we fill it instead of losing the whole row."
+Line-by-line: <code>df.dropna(subset=["order_id", "order_date"])</code> — <code>.dropna()</code> removes rows containing missing values; <code>subset=[...]</code> restricts the check to <em>only</em> the named columns. Say explicitly: <strong>without <code>subset</code>, <code>.dropna()</code> checks every column</strong>, which is almost never what you want on a real multi-column dataset. The comment above the drop is the exercise's real required content. <code>df["unit_price"].astype(str).str.replace("$", "", regex=False)</code> — preparatory cleanup: some <code>unit_price</code> values are <code>"$xx.xx"</code> strings; <code>.astype(str)</code> makes every value text for this step; <code>.str.replace("$", "", regex=False)</code> strips the dollar sign. <code>regex=False</code> — <code>$</code> means end-of-string in a regex; <code>regex=False</code> treats it as a literal. <code>pd.to_numeric(..., errors="coerce")</code> — converts the dollar-sign-free strings to numbers; any value that still can't convert becomes <code>NaN</code> rather than crashing. <code>df["unit_price"].fillna(mean_price)</code> — <strong>must happen after</strong> the string-to-numeric conversion: before conversion, the "missing" values sit alongside dollar-sign strings in an <code>object</code> column where <code>.mean()</code> can't be computed.
+Common mistakes: calling <code>.fillna()</code> before stripping the <code>"$"</code> and converting — <code>.mean()</code> on a column still containing text errors or silently misbehaves. Dropping rows for <em>any</em> missing value (forgetting <code>subset=</code>) — silently loses the two rows that were only missing <code>unit_price</code> and should have been fixable via fill. Writing a comment that states <em>what</em> was done without the <em>why</em>.
+Check for understanding (guide, verbatim parenthetical): "If <code>unit_price</code> had been missing in 30 of 42 rows instead of just 2, would filling with the mean still be a reasonable choice? (Much less reasonable — a mean computed from only 12 real values, then imposed on 30 rows, would dominate the column with a single estimated number and could seriously distort any later analysis; a good answer recognizes that the "fill vs. drop" decision genuinely depends on <em>how much</em> is missing, not just <em>that</em> something is missing — directly previewing tonight's first reflection question.)"
+</aside>
+</section>
+
+<!-- 17. EXERCISE 3 — the idea -->
+<section class="s-idea">
+<h3>The idea — drop essentials, fill estimables, and say <em>why</em></h3>
+<div class="concept">
+<div class="concept-lbl">This is a judgment call, not a formula</div>
+<p>A missing <code>order_id</code> or <code>order_date</code> means we can't identify or place the transaction — there's no honest way to guess it, so we <strong>drop</strong> the row: <code>df.dropna(subset=["order_id", "order_date"])</code>. The <code>subset=</code> is load-bearing — without it, <code>.dropna()</code> drops a row for a missing value in <em>any</em> column.</p>
+<p>A missing <code>unit_price</code>, on a dataset where only 2 of 42 rows lack it, can be estimated from the column mean — so we <strong>fill</strong> instead of losing two otherwise-complete rows. First strip <code>"$"</code> and <code>pd.to_numeric(errors="coerce")</code>, <em>then</em> <code>.fillna(mean_price)</code> — the order matters.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 3. The comment above each choice is the exercise's real required content — a strong version names the specific reason essential identifiers can't be reasonably estimated, in contrast to a price. Decide in advance which columns you'll fill vs. drop for your actual dataset and model your own reasoning aloud.</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')   # Exercise 2, fresh namespace
+
+# --- Exercise 3 ---
+print("Shape before:", df.shape)
+
+# Drop rows missing essential identifiers — no reasonable way to recover
+# an unknown order_id or order_date, and keeping a row we can't uniquely
+# identify or place in time would corrupt any later grouping/sorting.
+df = df.dropna(subset=["order_id", "order_date"])
+print("Shape after dropping essential-missing rows:", df.shape)
+
+# Fill unit_price with the column mean — only 2 of 42 rows are missing
+# it, and a reasonable price estimate is far less damaging here than
+# losing two otherwise-complete, usable rows.
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+mean_price = df["unit_price"].mean()
+df["unit_price"] = df["unit_price"].fillna(mean_price)
+
+print(df.isnull().sum())
+</div>
+<p class="expect">Two rows are dropped for a missing <code>order_id</code> / <code>order_date</code> (<code>(42, 7)</code> → <code>(40, 7)</code>). Then <code>unit_price</code> is de-dollar-signed, coerced to numeric, and its two <code>NaN</code>s filled with the column mean. After both steps, <code>.isnull().sum()</code> is <code>0</code> for every column — but note <code>order_date</code> still holds the string <code>"not_a_date"</code>, which isn't null <em>yet</em> (Exercise 4 turns it into <code>NaT</code>).</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/messy_sales.csv</code>; the <code>df.columns = ...</code> line re-applies Exercise 2 (fresh namespace per block).
+- <code>df.dropna(subset=["order_id", "order_date"])</code> — removes only rows with a missing value in one of the two named columns; <strong>without <code>subset</code>, <code>.dropna()</code> checks every column</strong>, which would also drop the rows only missing <code>unit_price</code>.
+- <code>df["unit_price"].astype(str).str.replace("$", "", regex=False)</code> — preparatory cleanup; <code>regex=False</code> tells pandas to treat <code>$</code> as a literal, not the regex end-of-string anchor.
+- <code>pd.to_numeric(df["unit_price"], errors="coerce")</code> — converts the now-clean strings to numbers; anything still unconvertible becomes <code>NaN</code> rather than crashing — the same "handle the unexpected gracefully" philosophy as Module 10's <code>try</code>/<code>except</code>.
+- <code>df["unit_price"].fillna(mean_price)</code> — <strong>must run after</strong> the string-to-numeric conversion; before it, <code>.mean()</code> can't be computed on an <code>object</code> column mixing dollar-sign strings and <code>NaN</code>.
+Common mistakes: calling <code>.fillna()</code> before stripping the <code>"$"</code> and converting. Dropping rows for <em>any</em> missing value (forgetting <code>subset=</code>) — compare shapes: an over-aggressive drop produces a smaller <code>df.shape</code>. Writing a comment that states <em>what</em> without the <em>why</em>.
+Check for understanding (guide, verbatim parenthetical): "(Much less reasonable — a mean computed from only 12 real values, then imposed on 30 rows, would dominate the column with a single estimated number and could seriously distort any later analysis; a good answer recognizes that the "fill vs. drop" decision genuinely depends on <em>how much</em> is missing, not just <em>that</em> something is missing — directly previewing tonight's first reflection question.)"
+</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Shape before: (42, 7)
+Shape after dropping essential-missing rows: (40, 7)
+order_id            0
+order_date          0
+product_category    0
+region              0
+unit_price          0
+quantity_sold       0
+customer_id         0
+dtype: int64</pre>
+<aside class="notes">Matches the guide's Exercise 3 expected output: <code>(42, 7)</code> before, <code>(40, 7)</code> after the two essential-missing rows are dropped, then a zero <code>.isnull().sum()</code> on every column. (The guide's printed sample mis-indents three of the count rows; real pandas output right-aligns the numbers under a common column, as shown here.) Verified against local <code>python3</code> (<code>python3 blk3.py</code>). Series formatting may differ slightly by pandas version; the shapes and the all-zero counts are the load-bearing content.</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>unit_price</code> had been missing in 30 of 42 rows instead of just 2, would filling with the column mean still be a reasonable choice?</p>
+<button data-opt="A">Much less reasonable — a mean computed from only ~12 real values, then imposed on 30 rows, would dominate the column with one estimated number and could seriously distort later analysis; fill-vs-drop depends on <em>how much</em> is missing, not just <em>that</em> something is</button>
+<button data-opt="B">Still fine — the column mean is the safest possible fill regardless of how many values are missing</button>
+<button data-opt="C">It wouldn't matter — pandas refuses to <code>.fillna()</code> more than 10% of a column, so the extra rows stay <code>NaN</code></button>
+<p class="why" hidden>Much less reasonable — a mean computed from only 12 real values, then imposed on 30 rows, would dominate the column with a single estimated number and could seriously distort any later analysis. The "fill vs. drop" decision genuinely depends on how much is missing, not just that something is.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Much less reasonable — a mean computed from only 12 real values, then imposed on 30 rows, would dominate the column with a single estimated number and could seriously distort any later analysis; a good answer recognizes that the "fill vs. drop" decision genuinely depends on <em>how much</em> is missing, not just <em>that</em> something is missing — directly previewing tonight's first reflection question.)"</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Calling <code>.fillna()</code> before stripping the <code>"$"</code> and converting to numeric — <code>.mean()</code> on a column still containing text raises an error, or silently produces a nonsensical result depending on pandas' version and the exact mix of values; trace through <em>why</em> order matters, don't just accept "do it in this order."</p>
+<p>Dropping rows for <em>any</em> missing value (forgetting <code>subset=</code>) — silently loses more data than intended, including the two rows that were only missing <code>unit_price</code> and should have been fixable via fill. Compare shapes explicitly.</p>
+<p>Writing a comment that states <em>what</em> was done ("I dropped rows with missing order_id") without the <em>why</em> — exactly the gap tonight's reflection question 2 asks students to self-audit.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 22. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 10 min · 0:28–0:38</span>
+<h1>Fix Types</h1>
+<aside class="notes">
+Teaching goal: <code>pd.to_datetime(errors="coerce")</code> and <code>.astype()</code> — converting columns to their correct, analysis-ready types, and understanding precisely what happens to a value that can't be converted.
+Say to the class (verbatim): "Two more type conversions: dates, and quantities. Same <code>errors="coerce"</code> philosophy as the price cleanup — a value that can't be converted becomes missing, rather than crashing the whole pipeline."
+Line-by-line: <code>pd.to_datetime(df["order_date"], errors="coerce")</code> — parses every value as a real date/time, producing <code>datetime64</code>; <code>errors="coerce"</code> turns any unparseable value (a malformed string) into <strong><code>NaT</code></strong> ("Not a Time," the datetime equivalent of <code>NaN</code>) rather than raising. <strong>This is worth checking for after the fact</strong> — a coerced <code>NaT</code> is a new form of missingness this step <em>introduces</em>, one Exercise 1's diagnosis couldn't have caught because it didn't exist until this conversion ran. <code>df["quantity_sold"].astype(int)</code> — a direct conversion; this column was already <code>int64</code> per Exercise 1, so it may be a no-op, but note that <code>.astype()</code>, unlike <code>pd.to_numeric(..., errors="coerce")</code>, will <em>raise</em> on a genuinely unconvertible value rather than silently producing <code>NaN</code> — a real difference in failure behavior.
+After running: one row's <code>order_date</code> is now <code>NaT</code> — a <em>new</em> missing value Exercise 3's <code>.dropna()</code> couldn't have caught. Ask the room: "should we go back and drop this row too?" — defensible either way; the point is noticing the new problem and reasoning about it explicitly.
+Common mistakes: omitting <code>errors="coerce"</code> — <code>pd.to_datetime()</code> without it <strong>raises</strong> on the first unparseable value, halting the script; a good live demo of the contrast. Assuming <code>.astype(int)</code> would gracefully handle a non-numeric value the way <code>errors="coerce"</code> does — it raises <code>ValueError</code> instead; <code>.astype()</code> and <code>pd.to_numeric(..., errors="coerce")</code> are not interchangeable safety-wise.
+Check for understanding (guide, verbatim parenthetical): "After this exercise, do we have zero missing values across the whole dataset, or could there still be some? (Not necessarily zero — the new <code>NaT</code> from the coerced date is a fresh missing value nobody has explicitly resolved yet; a good "don't declare victory too early" check that reinforces re-running <code>.isnull().sum()</code> after <em>any</em> transformation, not just once at the very start.)"
+</aside>
+</section>
+
+<!-- 23. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')                       # Exercise 2
+df = df.dropna(subset=["order_id", "order_date"])                              # Exercise 3
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+
+# --- Exercise 4 ---
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
+df["quantity_sold"] = df["quantity_sold"].astype(int)
+print(df.dtypes)
+print("Unparseable dates (now NaT):", df["order_date"].isnull().sum())
+</div>
+<p class="expect"><code>pd.to_datetime(errors="coerce")</code> turns <code>order_date</code> into real <code>datetime64[ns]</code> — and the one malformed string (<code>"not_a_date"</code>) becomes <code>NaT</code>, a <em>brand-new</em> missing value that Exercise 3's <code>.dropna()</code> ran too early to catch. <code>.astype(int)</code> on <code>quantity_sold</code> is a safety no-op here (already <code>int64</code>), but note it would <em>raise</em> on a genuinely non-numeric value, unlike <code>errors="coerce"</code>.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds the CSV and re-runs Exercises 2–3 (fresh namespace per block).
+- <code>pd.to_datetime(df["order_date"], errors="coerce")</code> — parses each value as a date; unparseable values become <code>NaT</code> rather than raising. Check for it afterward — this step can <em>introduce</em> missingness.
+- <code>df["quantity_sold"].astype(int)</code> — direct conversion, included for completeness/safety; <code>.astype()</code> raises on a truly unconvertible value rather than coercing to <code>NaN</code>.
+Point out explicitly: one row's <code>order_date</code> is now <code>NaT</code>. Ask "should we drop this row too?" — defensible either way (drop it, since a missing date is exactly the essential-column gap Exercise 3 treats as a drop; or keep it for aggregate stats that don't depend on date). The "right" answer matters less than noticing the new problem and reasoning about it — the lab's stated grading philosophy.
+Common mistakes: omitting <code>errors="coerce"</code> — <code>pd.to_datetime()</code> raises on the first unparseable value, halting the script. Assuming <code>.astype(int)</code> handles a non-numeric value like <code>errors="coerce"</code> does — it raises <code>ValueError</code>.
+Check for understanding (guide, verbatim parenthetical): "(Not necessarily zero — the new <code>NaT</code> from the coerced date is a fresh missing value nobody has explicitly resolved yet; a good "don't declare victory too early" check that reinforces re-running <code>.isnull().sum()</code> after <em>any</em> transformation, not just once at the very start.)"
+</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>order_id                    object
+order_date          datetime64[ns]
+product_category            object
+region                      object
+unit_price                 float64
+quantity_sold                int64
+customer_id                 object
+dtype: object
+Unparseable dates (now NaT): 1</pre>
+<aside class="notes">Matches the guide's Exercise 4 expected output exactly — <code>order_date</code> is now <code>datetime64[ns]</code>, <code>unit_price</code> is <code>float64</code> (from Exercise 3), and exactly <code>1</code> date was coerced to <code>NaT</code> (the deliberately malformed <code>"not_a_date"</code> string). The <code>1</code> is an exact scalar; the dtype listing is a Series repr. Verified against local <code>python3</code> (<code>python3 blk4.py</code>). DataFrame/Series formatting may differ slightly by pandas version; the dtypes and the <code>NaT</code> count are the load-bearing content.</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">After Exercise 4 runs, is the dataset guaranteed to have zero missing values?</p>
+<button data-opt="A">Yes — Exercise 3 already resolved every missing value, and nothing in Exercise 4 adds one</button>
+<button data-opt="B">Not necessarily — the coerced <code>NaT</code> from the unparseable date is a brand-new missing value nobody has resolved yet; re-run <code>.isnull().sum()</code> after <em>any</em> transformation</button>
+<button data-opt="C">No — <code>errors="coerce"</code> guarantees a fully populated column by design, so this is impossible to reason about</button>
+<p class="why" hidden>Not necessarily zero — the new <code>NaT</code> from the coerced date is a fresh missing value nobody has explicitly resolved yet. A good "don't declare victory too early" check that reinforces re-running <code>.isnull().sum()</code> after any transformation, not just once at the start.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Not necessarily zero — the new <code>NaT</code> from the coerced date is a fresh missing value nobody has explicitly resolved yet; a good "don't declare victory too early" check that reinforces re-running <code>.isnull().sum()</code> after <em>any</em> transformation, not just once at the very start.)"</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Omitting <code>errors="coerce"</code> — <code>pd.to_datetime()</code> without it will <strong>raise an exception</strong> on the first unparseable value, halting the whole script; a good live demo of the contrast, since it directly shows what the argument is protecting against.</p>
+<p>Assuming <code>.astype(int)</code> would gracefully handle a genuinely non-numeric value the same way <code>errors="coerce"</code> does — it would raise <code>ValueError</code> instead; <code>.astype()</code> and <code>pd.to_numeric(..., errors="coerce")</code> are not interchangeable safety-wise, even though both can end up producing numeric columns.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 27. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 6 min · 0:38–0:44</span>
+<h1>Check Duplicates</h1>
+<aside class="notes">
+Teaching goal: <code>.duplicated()</code> to detect exact duplicate rows, and <code>.drop_duplicates()</code> to remove them — a quick, mechanical check worth making habitual on any real dataset.
+Say to the class (verbatim): "One more common data-quality problem: exact duplicate rows — sometimes from a double-submitted form, a re-run import script, or a copy-paste error somewhere upstream."
+Line-by-line: <code>df.duplicated()</code> — returns a <code>True</code>/<code>False</code> column, one value per row, <code>True</code> wherever a row is an <strong>exact</strong> repeat of an earlier row (every single column matching). By default the <em>first</em> occurrence of a repeated row is marked <code>False</code> (kept), and only later repeats are marked <code>True</code>. <code>.sum()</code> — Module 13's boolean-sum trick, totaling the duplicate flags. <code>df.drop_duplicates()</code> — removes the <code>True</code>-flagged rows, keeping one copy of each unique row.
+Point out explicitly: the count here (<code>1</code>) may be lower than the number of duplicate rows deliberately introduced upstream, because <code>.duplicated()</code> counts <em>exact, full-row</em> matches — <strong>two rows with the same <code>order_id</code> but a different <code>quantity_sold</code> would <em>not</em> be flagged as duplicates by this check at all</strong>. Identifying "the same order recorded twice with conflicting details" is a meaningfully harder, different problem than this exercise covers.
+Common mistakes: running <code>.drop_duplicates()</code> <em>before</em> the type-fixing in Exercise 4 — two rows that are "the same" except one has <code>"$72.85"</code> and a cleaned version has <code>72.85</code> wouldn't be caught until after the string-to-numeric conversion; exercise <em>order</em> matters. Assuming <code>.duplicated()</code> flags <em>all</em> copies of a repeated row (including the first) — it doesn't, by default.
+Check for understanding (guide, verbatim parenthetical): "If a row appeared <strong>three</strong> times, not two, how many would <code>.duplicated()</code> flag as <code>True</code>? (Two — the first occurrence is kept as the canonical copy; the second and third are both flagged as duplicates of it. A good check that the "first kept, rest flagged" rule generalizes beyond the simple two-copy case.)"
+</aside>
+</section>
+
+<!-- 28. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')                       # Exercise 2
+df = df.dropna(subset=["order_id", "order_date"])                              # Exercise 3
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")           # Exercise 4
+df["quantity_sold"] = df["quantity_sold"].astype(int)
+
+# --- Exercise 5 ---
+print("Duplicate rows:", df.duplicated().sum())
+df = df.drop_duplicates()
+print("Shape after removing duplicates:", df.shape)
+</div>
+<p class="expect"><code>.duplicated().sum()</code> is <code>1</code> — only one of the two rows deliberately duplicated upstream is still an <em>exact</em> full-row match (the other had its <code>unit_price</code> changed to <code>999.99</code>, so it's no longer identical). <code>.drop_duplicates()</code> removes that one row: <code>(40, 7)</code> → <code>(39, 7)</code>.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds the CSV and re-runs Exercises 2–4 (fresh namespace per block).
+- <code>df.duplicated()</code> — a <code>True</code>/<code>False</code> per row; <code>True</code> only where every column matches an earlier row. First occurrence kept (<code>False</code>), later repeats flagged (<code>True</code>).
+- <code>.sum()</code> — totals the flags into a single count.
+- <code>df.drop_duplicates()</code> — removes the flagged rows, keeping one copy of each unique row.
+Point out explicitly: <code>1</code> is lower than the two rows duplicated during generation, because <code>.duplicated()</code> requires an <em>exact, full-row</em> match — two rows with the same <code>order_id</code> but different other details would not be flagged at all. That harder problem is out of scope here.
+Common mistakes: running <code>.drop_duplicates()</code> before Exercise 4's type-fixing — string vs. cleaned-numeric versions of the "same" row aren't identical until conversion. Assuming <code>.duplicated()</code> flags every copy including the first — it doesn't.
+Check for understanding (guide, verbatim parenthetical): "(Two — the first occurrence is kept as the canonical copy; the second and third are both flagged as duplicates of it. A good check that the "first kept, rest flagged" rule generalizes beyond the simple two-copy case.)"
+</aside>
+</section>
+
+<!-- 29. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Duplicate rows: 1
+Shape after removing duplicates: (39, 7)</pre>
+<aside class="notes">Matches the guide's Exercise 5 expected output exactly: <code>1</code> exact-duplicate row detected, <code>(39, 7)</code> after removing it. Both lines are exact scalars (a count and a shape tuple), not a DataFrame repr — no version caveat applies. Verified against local <code>python3</code> (<code>python3 blk5.py</code>).</aside>
+</section>
+
+<!-- 30. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If one row appeared <strong>three</strong> times in the data, how many of those rows would <code>df.duplicated()</code> flag as <code>True</code>?</p>
+<button data-opt="A">Three — every copy of a repeated row is flagged</button>
+<button data-opt="B">Zero — <code>.duplicated()</code> only flags rows that <em>differ</em> from their neighbours</button>
+<button data-opt="C">Two — the first occurrence is kept as the canonical copy; the second and third are both flagged as duplicates of it</button>
+<p class="why" hidden>Two — the first occurrence is kept as the canonical copy; the second and third are both flagged as duplicates of it. The "first kept, rest flagged" rule generalizes beyond the simple two-copy case.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Two — the first occurrence is kept as the canonical copy; the second and third are both flagged as duplicates of it. A good check that the "first kept, rest flagged" rule generalizes beyond the simple two-copy case.)"</aside>
+</section>
+
+<!-- 31. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>.drop_duplicates()</code> <em>before</em> the type-fixing in Exercise 4 — two rows that are "the same" except one has <code>"$72.85"</code> and a since-cleaned version has <code>72.85</code> wouldn't be caught as duplicates until after the string-to-numeric conversion made them genuinely identical; exercise <em>order</em> matters, not just running each command correctly in isolation.</p>
+<p>Assuming <code>.duplicated()</code> flags <em>all</em> copies of a repeated row (including the first) — it doesn't, by default; if a student expects the duplicate count to match "how many total rows are part of some duplicate group," walk through the distinction concretely with the actual flagged rows.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 32. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 9 min · 0:44–0:53</span>
+<h1>Describe</h1>
+<aside class="notes">
+Teaching goal: read <code>.describe()</code>'s output critically — not just running it, but genuinely inspecting the numbers for values that suggest something worth investigating, and proposing a plausible business explanation.
+Say to the class (verbatim): "One command, but the real skill is what happens after you run it: does anything in this table look wrong, or at least worth a second look? I want at least two specific numbers flagged, with a guess at what might have caused each one."
+Line-by-line: <code>df.describe()</code> — computes summary statistics (count, mean, min, the 25th/50th/75th percentiles, max, and standard deviation) for every <strong>numeric</strong> column at once — it automatically skips text columns like <code>product_category</code>.
+Walk through what a careful read reveals:
+- <strong><code>min</code> for <code>unit_price</code> is <code>-25.00</code>.</strong> A negative price should immediately look wrong — prices are essentially never legitimately negative in a raw sales record (a refund might be, but that's a specific different kind of transaction this dataset doesn't distinguish). A strong comment proposes a plausible cause (data-entry sign error, miscoded return, corrupted import) and does <strong>not</strong> just delete the row silently.
+- <strong><code>max</code> for <code>unit_price</code> is <code>999.99</code></strong>, dramatically higher than the <code>75%</code> value of <code>116.72</code> — a strong comment notices <em>how far</em> it sits above the rest of the distribution and proposes an explanation (bulk/wholesale order, or a data-entry error — an extra digit, a misplaced decimal).
+- <strong>The mean (<code>101.72</code>) sitting noticeably above the median (<code>84.41</code>)</strong> suggests a <strong>right-skewed</strong> distribution — a few large values pulling the average up. A genuine preview of Module 15 Exercise 3's skew discussion.
+Common mistakes: running <code>.describe()</code> and moving on without genuinely reading the numbers — this exercise is evaluated on "analytical thinking, not just code execution." Proposing an explanation with false certainty ("the negative price is definitely a typo") rather than a plausible, appropriately hedged one.
+Check for understanding (guide, verbatim parenthetical): "If you discovered the negative price really was a data-entry sign error, what would you do about it — and how is that decision different from Exercise 3's drop-vs-fill choices? (This is a <em>third</em> kind of judgment call, distinct from drop or fill: <strong>correct</strong> the value if the true value can be confidently inferred (e.g., flip the sign back to positive) — but only if that inference is genuinely well-supported, not just convenient; otherwise, flagging it for human review, rather than silently "fixing" a value you're not actually sure about, may be the more honest choice. Getting a student to articulate this as a <em>third</em> category — beyond simple drop/fill — shows real analytical maturity.)"
+</aside>
+</section>
+
+<!-- 33. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')                       # Exercise 2
+df = df.dropna(subset=["order_id", "order_date"])                              # Exercise 3
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")           # Exercise 4
+df["quantity_sold"] = df["quantity_sold"].astype(int)
+df = df.drop_duplicates()                                                      # Exercise 5
+
+# --- Exercise 6 ---
+print(df.describe())
+</div>
+<p class="expect">Read the table, don't just print it. <strong><code>min</code> unit_price is <code>-25.00</code></strong> — prices are essentially never legitimately negative; propose a cause (sign error, miscoded return). <strong><code>max</code> is <code>999.99</code></strong>, far above the <code>75%</code> of <code>116.715</code> — bulk order, or an extra digit. And the <strong>mean (<code>101.72</code>) sits well above the median (<code>84.41</code>)</strong> — a right-skew signal, previewing Module 15.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds the CSV and re-runs Exercises 2–5 (fresh namespace per block).
+- <code>df.describe()</code> — summary statistics for every <strong>numeric</strong> column; text columns like <code>product_category</code> are skipped automatically.
+Repr divergence to disclose to the room: with pandas 2.x, <code>df.describe()</code> also includes the <code>datetime64</code> <code>order_date</code> column (as date min/quartiles/max) and appends a <code>std</code> row (<code>NaN</code> for the datetime column). The guide's printed sample predates that behavior and shows only <code>unit_price</code> and <code>quantity_sold</code> with no <code>std</code> row. Every number the guide's walkthrough cites is unchanged: <code>min</code> <code>-25.00</code>, <code>max</code> <code>999.99</code>, <code>75%</code> <code>116.715</code>, <code>mean</code> <code>101.72</code>, median <code>84.41</code>, <code>count</code> <code>39</code>.
+- Negative price (<code>-25.00</code>): a strong comment proposes a plausible cause and does not silently delete the row.
+- Extreme <code>max</code> (<code>999.99</code>): notice <em>how far</em> it sits above the <code>75%</code>; propose bulk order or a data-entry error.
+- Mean above median: a right-skew diagnostic — a genuine Module 15 preview.
+Common mistakes: running <code>.describe()</code> and moving on without reading the numbers. Proposing an explanation with false certainty rather than a hedged one.
+Check for understanding (guide, verbatim parenthetical): "(This is a <em>third</em> kind of judgment call, distinct from drop or fill: <strong>correct</strong> the value if the true value can be confidently inferred (e.g., flip the sign back to positive) — but only if that inference is genuinely well-supported, not just convenient; otherwise, flagging it for human review, rather than silently "fixing" a value you're not actually sure about, may be the more honest choice.)"
+</aside>
+</section>
+
+<!-- 34. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>                          order_date  unit_price  quantity_sold
+count                             38   39.000000      39.000000
+mean   2024-04-17 03:47:22.105263104  101.721673       9.051282
+min              2024-01-02 00:00:00  -25.000000       1.000000
+25%              2024-03-06 06:00:00   40.850000       6.500000
+50%              2024-04-18 00:00:00   84.410000       9.000000
+75%              2024-06-08 12:00:00  116.715000      12.500000
+max              2024-07-18 00:00:00  999.990000      14.000000
+std                              NaN  154.663565       3.879424</pre>
+<aside class="notes">The guide's stated Expected output shows only the <code>unit_price</code> and <code>quantity_sold</code> columns, rows <code>count / mean / min / 25% / 50% / 75% / max</code>, and no <code>std</code> row. This is the real, unabbreviated <code>python3</code> (pandas 2.2.0) output: <code>df.describe()</code> now also profiles the <code>datetime64</code> <code>order_date</code> column and appends a <code>std</code> row (<code>NaN</code> for the datetime). Every load-bearing value the guide's walkthrough discusses is reproduced <strong>exactly</strong> — <code>count</code> <code>39</code>, <code>mean</code> <code>101.721673</code> (the guide rounds to <code>101.72</code>), <code>min</code> <code>-25.000000</code>, <code>25%</code> <code>40.850000</code>, <code>50%</code> <code>84.410000</code>, <code>75%</code> <code>116.715000</code>, <code>max</code> <code>999.990000</code>, and the <code>quantity_sold</code> column identical. Verified against local <code>python3</code> (<code>python3 blk6.py</code>). DataFrame formatting differs by pandas version (the extra <code>order_date</code> column and <code>std</code> row are version behavior); the <code>unit_price</code> / <code>quantity_sold</code> statistics are the load-bearing content.</aside>
+</section>
+
+<!-- 35. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">You confirm the <code>-25.00</code> price really was a data-entry sign error. What's the right response, and how does it differ from Exercise 3's drop-vs-fill?</p>
+<button data-opt="A"><strong>Correct</strong> the value if the true value can be confidently inferred (flip the sign) — otherwise flag it for human review rather than silently "fixing" it; this is a <em>third</em> category beyond drop or fill</button>
+<button data-opt="B">Drop the row — any implausible value is always safest removed, exactly like a missing <code>order_id</code></button>
+<button data-opt="C">Fill it with the column mean, treating it identically to the missing prices in Exercise 3</button>
+<p class="why" hidden>This is a third kind of judgment call, distinct from drop or fill: correct the value if the true value can be confidently inferred (e.g., flip the sign back to positive) — but only if that inference is genuinely well-supported; otherwise, flagging it for human review rather than silently "fixing" a value you're not sure about is the more honest choice.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(This is a <em>third</em> kind of judgment call, distinct from drop or fill: <strong>correct</strong> the value if the true value can be confidently inferred (e.g., flip the sign back to positive) — but only if that inference is genuinely well-supported, not just convenient; otherwise, flagging it for human review, rather than silently "fixing" a value you're not actually sure about, may be the more honest choice. Getting a student to articulate this as a <em>third</em> category — beyond simple drop/fill — shows real analytical maturity.)"</aside>
+</section>
+
+<!-- 36. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>.describe()</code> and moving on without genuinely reading the numbers — the lab page's own grading note is explicit that this exercise is evaluated on "analytical thinking, not just code execution"; if a student's comment just restates a number without an accompanying "and here's why that's worth a second look," redirect them to the actual observations as a model.</p>
+<p>Proposing an explanation with false certainty ("the negative price is definitely a typo") rather than a <em>plausible, appropriately hedged</em> one — a strong analyst's comment acknowledges genuine uncertainty about root cause while still being specific about the most likely explanations.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 37. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 8 min · 0:53–1:01</span>
+<h1>Save</h1>
+<aside class="notes">
+Teaching goal: export the cleaned data — and encounter a genuinely important, surprising pandas gotcha: <strong>not every dtype survives a save-and-reload round trip through CSV</strong>, specifically datetime columns.
+Say to the class (verbatim): "Last step: save the cleaned data, then reload it and verify the types are still correct. I want you to genuinely predict, before we run it, whether you expect every dtype to come back exactly as it was."
+This is the exercise's genuine payoff — read it slowly with the room: <code>order_date</code> comes back as dtype <code>object</code>, <strong>not</strong> <code>datetime64</code>, even though it was correctly converted in Exercise 4 and saved in that state. Explain why, explicitly: a CSV file is plain text — it has no way to record "this column is a datetime type" as metadata; a date is written as a text string that happens to look like a date (<code>"2024-04-09"</code>), and <code>pd.read_csv()</code> by default reads every column as whatever type it can most simply infer — dates come back as generic strings unless explicitly told otherwise. The fix: <code>pd.read_csv('data/clean_sales.csv', parse_dates=['order_date'])</code> restores <code>datetime64</code>. Say the real lesson plainly: <strong><code>.to_csv()</code> / <code>pd.read_csv()</code> is not a perfectly lossless round trip for every dtype</strong> — numeric types generally survive, datetime columns need <code>parse_dates=[...]</code> every reload. A common real source of confusing professional bugs — a script that worked when the DataFrame was built fresh mysteriously fails later when the same data is reloaded, because a <code>.dt</code> accessor is called on what's now a string column.
+Common mistakes: assuming the reload's <code>.info()</code> should exactly mirror the saved DataFrame's <code>.dtypes</code> — expect genuine surprise; that's the intended reaction. Not noticing the reduced non-null count on <code>order_date</code> after reload (<code>38</code>, not <code>39</code>) — the <code>NaT</code> from Exercise 4 was written as an empty field and reads back as <code>NaN</code>; that part of the round trip <em>did</em> work correctly.
+Check for understanding (guide, verbatim parenthetical): "If this dataset had no date column at all — only text, numbers, and booleans — would this exercise's gotcha have applied at all? (No, or much less so — numeric and text types generally round-trip through CSV correctly by default; it's specifically datetime (and, relatedly, some other specialized pandas types) that need explicit help on reload. Worth stating plainly that this isn't a reason to distrust CSV broadly, just a specific, memorable exception worth knowing.)"
+</aside>
+</section>
+
+<!-- 38. EXERCISE 7 — the idea -->
+<section class="s-idea">
+<h3>The idea — CSV is plain text, so it forgets dtypes</h3>
+<div class="concept">
+<div class="concept-lbl">Predict before you run</div>
+<p>Save the cleaned <code>df</code> with <code>df.to_csv('data/clean_sales.csv', index=False)</code>, then reload it and check <code>.info()</code>. A CSV file has <strong>no place to record types</strong> — a date is written as the text <code>"2024-04-09"</code>, and <code>pd.read_csv()</code> reads it back as a generic string. <code>order_date</code> returns as dtype <code>object</code>, not <code>datetime64</code>.</p>
+<p>The fix, every reload: <code>pd.read_csv(path, parse_dates=['order_date'])</code>. Numeric columns round-trip fine; datetime columns need to be told. A real, common source of "worked yesterday, broke today" bugs when a <code>.dt</code> call hits a reloaded string column.</p>
+</div>
+<aside class="notes">Condenses the guide's Exercise 7 walkthrough. Rehearse this yourself before class — the dtype loss surprises instructors too. Also note the non-null count on <code>order_date</code> drops to <code>38</code> on reload: the Exercise 4 <code>NaT</code> was written as an empty field and reads back as <code>NaN</code> — that part of the round trip worked correctly; keep the lesson scoped to the dtype issue.</aside>
+</section>
+
+<!-- 39. EXERCISE 7 — live code (save + reload) -->
+<section class="s-code">
+<h3>Live-code — Exercise 7: save, then reload</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')                       # Exercise 2
+df = df.dropna(subset=["order_id", "order_date"])                              # Exercise 3
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")           # Exercise 4
+df["quantity_sold"] = df["quantity_sold"].astype(int)
+df = df.drop_duplicates()                                                      # Exercise 5
+
+# --- Exercise 7 ---
+df.to_csv('data/clean_sales.csv', index=False)
+
+reloaded = pd.read_csv('data/clean_sales.csv')
+print(reloaded.info())
+</div>
+<p class="expect">Read the <code>Dtype</code> column slowly: <code>order_date</code> comes back as <code>object</code>, <strong>not</strong> <code>datetime64</code> — even though it was a real datetime when saved. CSV is plain text with no type metadata. Also note <code>order_date</code>'s Non-Null Count is <code>38</code>, not <code>39</code>: the Exercise 4 <code>NaT</code> was written as an empty field and reads back as <code>NaN</code> — that part worked correctly.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds the CSV and re-runs Exercises 2–5 (fresh namespace per block).
+- <code>df.to_csv('data/clean_sales.csv', index=False)</code> — writes the cleaned frame; <code>index=False</code> keeps the row index out of the file.
+- <code>reloaded = pd.read_csv('data/clean_sales.csv')</code> — a plain reload with no type hints.
+- <code>print(reloaded.info())</code> — the payoff: <code>order_date</code> is dtype <code>object</code>. Explain why: CSV is plain text, a date is stored as the string <code>"2024-04-09"</code>, and <code>read_csv</code> infers a generic string.
+The guide abbreviates its expected output (it omits the <code>dtypes:</code> / <code>memory usage:</code> / <code>None</code> trailer that <code>print(df.info())</code> really emits). Shown in full on the next slide.
+Common mistakes: expecting the reload's <code>.info()</code> to mirror the pre-save <code>.dtypes</code> — the surprise is the lesson. Not noticing <code>order_date</code>'s non-null count dropped to <code>38</code> — confirm that part of the round trip worked.
+Check for understanding (guide, verbatim parenthetical): "(No, or much less so — numeric and text types generally round-trip through CSV correctly by default; it's specifically datetime (and, relatedly, some other specialized pandas types) that need explicit help on reload. Worth stating plainly that this isn't a reason to distrust CSV broadly, just a specific, memorable exception worth knowing.)"
+</aside>
+</section>
+
+<!-- 40. EXERCISE 7 — expected output (save + reload) -->
+<section class="s-out">
+<h3>Expected output — save, then reload</h3>
+<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 39 entries, 0 to 38
+Data columns (total 7 columns):
+ #   Column            Non-Null Count  Dtype
+---  ------            --------------  -----
+ 0   order_id          39 non-null     object
+ 1   order_date        38 non-null     object
+ 2   product_category  39 non-null     object
+ 3   region            39 non-null     object
+ 4   unit_price        39 non-null     float64
+ 5   quantity_sold     39 non-null     int64
+ 6   customer_id       39 non-null     object
+dtypes: float64(1), int64(1), object(5)
+memory usage: 2.3+ KB
+None</pre>
+<aside class="notes">Matches the guide's Exercise 7 expected output on every load-bearing line — <code>39</code> entries, and crucially <code>order_date</code> back to dtype <code>object</code> (not <code>datetime64</code>) with a <code>38</code> non-null count (the <code>NaT</code> read back as <code>NaN</code>). The guide abbreviates: it omits the <code>dtypes: float64(1), int64(1), object(5)</code> / <code>memory usage: 2.3+ KB</code> / <code>None</code> trailer that <code>print(df.info())</code> really emits. Shown here in full. Verified against local <code>python3</code> (<code>python3 blk7.py</code>). DataFrame formatting may differ slightly by pandas version; the dtypes and non-null counts are the load-bearing content.</aside>
+</section>
+
+<!-- 41. EXERCISE 7 — live code (the fix) -->
+<section class="s-code">
+<h3>Live-code — Exercise 7: the fix</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')                       # Exercise 2
+df = df.dropna(subset=["order_id", "order_date"])                              # Exercise 3
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")           # Exercise 4
+df["quantity_sold"] = df["quantity_sold"].astype(int)
+df = df.drop_duplicates()                                                      # Exercise 5
+df.to_csv('data/clean_sales.csv', index=False)                                 # Exercise 7 save
+
+# --- Exercise 7, the fix ---
+reloaded_fixed = pd.read_csv('data/clean_sales.csv', parse_dates=['order_date'])
+print(reloaded_fixed.dtypes)
+</div>
+<p class="expect"><code>parse_dates=['order_date']</code> tells <code>read_csv()</code> to parse that column as dates on the way in — <code>order_date</code> now correctly comes back as <code>datetime64[ns]</code>. This has to be passed <em>every single time</em> the CSV is reloaded; the file itself still carries no type information.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds the CSV, re-runs Exercises 2–5, and re-saves <code>data/clean_sales.csv</code> (fresh namespace per block).
+- <code>pd.read_csv('data/clean_sales.csv', parse_dates=['order_date'])</code> — the fix; <code>parse_dates</code> takes a list of column names to parse as datetimes during the read.
+- <code>print(reloaded_fixed.dtypes)</code> — <code>order_date</code> is <code>datetime64[ns]</code> again.
+Real lesson, stated plainly: <code>.to_csv()</code> / <code>pd.read_csv()</code> is not a perfectly lossless round trip for every dtype — numeric types survive, datetime columns need <code>parse_dates=[...]</code> on every reload.
+Check for understanding (guide, verbatim parenthetical): "(No, or much less so — numeric and text types generally round-trip through CSV correctly by default; it's specifically datetime (and, relatedly, some other specialized pandas types) that need explicit help on reload.)"
+</aside>
+</section>
+
+<!-- 42. EXERCISE 7 — expected output (the fix) -->
+<section class="s-out">
+<h3>Expected output — the fix</h3>
+<pre>order_id                    object
+order_date          datetime64[ns]
+product_category            object
+region                      object
+unit_price                 float64
+quantity_sold                int64
+customer_id                 object
+dtype: object</pre>
+<aside class="notes">Matches the guide's stated behavior for the fix exactly: with <code>parse_dates=['order_date']</code>, <code>order_date</code> is restored to <code>datetime64[ns]</code> on reload; every other column is unchanged. This is a Series (<code>.dtypes</code>) repr. Verified against local <code>python3</code> (<code>python3 blk7fix.py</code>). Series formatting may differ slightly by pandas version; the dtypes are the load-bearing content.</aside>
+</section>
+
+<!-- 43. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If this dataset had no date column at all — only text, numbers, and booleans — would Exercise 7's round-trip gotcha still apply?</p>
+<button data-opt="A">Yes — CSV never preserves any dtype; every column's type is lost and re-inferred on every reload equally</button>
+<button data-opt="B">No, or much less so — numeric and text types generally round-trip through CSV fine; it's specifically datetime (and some other specialized pandas types) that need <code>parse_dates=[...]</code> on reload</button>
+<button data-opt="C">Yes — booleans in particular always come back as the strings <code>"True"</code>/<code>"False"</code>, so the gotcha is unavoidable</button>
+<p class="why" hidden>No, or much less so — numeric and text types generally round-trip through CSV correctly by default; it's specifically datetime (and, relatedly, some other specialized pandas types) that need explicit help on reload. This isn't a reason to distrust CSV broadly, just a specific, memorable exception.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(No, or much less so — numeric and text types generally round-trip through CSV correctly by default; it's specifically datetime (and, relatedly, some other specialized pandas types) that need explicit help on reload. Worth stating plainly that this isn't a reason to distrust CSV broadly, just a specific, memorable exception worth knowing.)"</aside>
+</section>
+
+<!-- 44. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Assuming the reload's <code>.info()</code> output should exactly mirror the saved DataFrame's <code>.dtypes</code> from before saving — expect some genuine surprise here; that's the intended reaction, not something to smooth over quickly.</p>
+<p>Not noticing the reduced non-null count on <code>order_date</code> after reload (<code>38</code>, not <code>39</code>) — the <code>NaT</code> value from Exercise 4 was written to the CSV as an empty field, and reads back as a genuine missing value; worth a quick confirmation that this part of the round trip <em>did</em> work correctly, so the lesson stays scoped to the dtype issue.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 45. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 &amp; 2 · 1:01–1:10 · as time allows</span>
+<h1>Stretch 1 &amp; 2 Preview</h1>
+<aside class="notes">
+Frame both as previews. Stretch 1 (IQR outlier detection) is genuinely new statistical content worth unhurried treatment; Stretch 2 (a reusable <code>clean_sales(filepath)</code> function) is best done once the pipeline itself is solid.
+Stretch 1 observation worth surfacing, verified against the synthetic sample: the IQR method flags the <code>999.99</code> extreme value as an outlier, but <strong>not</strong> the <code>-25.00</code> negative price from Exercise 6 — because <code>lower_bound</code> computes out to roughly <code>-73</code> (pulled that low <em>because</em> the <code>999.99</code> outlier widens <code>Q3</code> and the IQR itself). Ask the room: "does this mean the negative price <em>isn't</em> actually a problem, since the IQR method didn't flag it?" (No — this is a genuinely important limitation to name explicitly: <strong>the IQR method is a statistical rule of thumb about a value's position relative to the rest of the data's spread, not a business-logic check</strong> — it has no concept that a negative price is nonsensical regardless of statistical position. Exercise 6's manual, human read of <code>.describe()</code>'s <code>min</code> value caught something this automated method alone would have missed entirely — a genuinely good argument for why "look at the numbers yourself" and "run an automated check" are complementary, not substitutable.)
+Stretch 2 framing (verbatim): "This is Module 07's function-writing applied to today's whole pipeline — wrapping steps 2 through 7 in one callable function means next semester's messy dataset, or next month's updated export, gets cleaned with one line, not by re-running eight cells by hand."
+Stretch segments get the lighter treatment (idea → code → out); no separate knowledge-check quiz, matching the Week 12 / Week 13 decks — the Stretch 1 discussion above stands in for a CFU.
+</aside>
+</section>
+
+<!-- 46. STRETCH — the idea -->
+<section class="s-idea">
+<h3>The idea — one automated check, one reusable function</h3>
+<div class="concept">
+<div class="concept-lbl">Two previews, both built on today</div>
+<p><strong>Stretch 1</strong> — flag outliers with the IQR method: <code>q1</code>, <code>q3</code> = the 25th / 75th percentiles; <code>iqr = q3 - q1</code>; anything below <code>q1 - 1.5*iqr</code> or above <code>q3 + 1.5*iqr</code> is an outlier. It flags the <code>999.99</code> price — but <em>not</em> the <code>-25.00</code>, because the bounds are statistical, not business rules.</p>
+<p><strong>Stretch 2</strong> — wrap Exercises 2–7 in <code>clean_sales(filepath)</code>: Module 07's function-writing applied to today's whole pipeline, so the next messy export is cleaned with one call, not eight cells re-run by hand.</p>
+</div>
+<aside class="notes">Stretch 1's real payoff is the contrast with Exercise 6: the IQR rule is about a value's position in the distribution's spread, with no concept that a negative price is nonsensical. The manual read of <code>.describe()</code>'s <code>min</code> caught what the automated check missed — the two approaches are complementary, not substitutable. Stretch 2 needs nothing beyond Module 07 plus today's pipeline.</aside>
+</section>
+
+<!-- 47. STRETCH 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 1 (IQR outlier detection)</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+df = pd.read_csv('data/messy_sales.csv')
+df.columns = df.columns.str.lower().str.replace(' ', '_')
+df = df.dropna(subset=["order_id", "order_date"])
+df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
+df["quantity_sold"] = df["quantity_sold"].astype(int)
+df = df.drop_duplicates()
+
+# --- Stretch 1: IQR outlier detection ---
+q1 = df["unit_price"].quantile(0.25)
+q3 = df["unit_price"].quantile(0.75)
+iqr = q3 - q1
+lower_bound = q1 - 1.5 * iqr
+upper_bound = q3 + 1.5 * iqr
+
+df["is_outlier"] = (df["unit_price"] &lt; lower_bound) | (df["unit_price"] &gt; upper_bound)
+print(f"Outliers: {df['is_outlier'].sum()}")
+print(f"Average price of outliers: ${df[df['is_outlier']]['unit_price'].mean():.2f}")
+</div>
+<p class="expect">A preview. The IQR rule flags <strong>1</strong> outlier — the <code>999.99</code> price. It does <em>not</em> flag the <code>-25.00</code>: <code>lower_bound</code> works out to roughly <code>-73</code> (widened by the <code>999.99</code> value itself), so <code>-25.00</code> sits inside the "normal" band. The IQR method knows about statistical spread, not about prices being nonsensical when negative.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds the CSV and re-runs the Exercise 2–5 cleaning pipeline (fresh namespace per block).
+- <code>q1</code>, <code>q3</code> — the 25th and 75th percentiles of <code>unit_price</code>; <code>iqr = q3 - q1</code>.
+- <code>lower_bound</code> / <code>upper_bound</code> — <code>q1 - 1.5*iqr</code> and <code>q3 + 1.5*iqr</code>, the standard Tukey fences.
+- <code>df["is_outlier"] = (...) | (...)</code> — a boolean column, <code>True</code> outside either fence.
+- the two <code>print</code>s — the count of outliers and their average price.
+The guide gives the code but no explicit expected output (framed as a preview). The values below are the real <code>python3</code> run. The teaching payoff is the contrast with Exercise 6: this automated rule misses the negative price the manual read caught.
+No separate quiz — the guide's discussion here (IQR is statistical, not a business-logic check) stands in for a CFU and is captured in the Stretch divider's notes.
+</aside>
+</section>
+
+<!-- 48. STRETCH 1 — expected output -->
+<section class="s-out">
+<h3>Expected output — Stretch 1</h3>
+<pre>Outliers: 1
+Average price of outliers: $999.99</pre>
+<aside class="notes">The guide gives the Stretch 1 code but no explicit expected output (it is an IQR preview, not a walked-through exercise). This is the real <code>python3</code> result (<code>python3 blkS1.py</code>) against the guide's Appendix B generator: exactly <code>1</code> outlier (the <code>999.99</code> value), average <code>$999.99</code>. Consistent with the guide's stated behavior — "the IQR method flags the <code>999.99</code> extreme value as an outlier, but not the <code>-25.00</code> negative price ... lower_bound computes out to roughly <code>-73</code>" (the real run: <code>lower_bound</code> ≈ <code>-72.95</code>). Both printed lines are exact scalars/strings, not a DataFrame repr — no version caveat.</aside>
+</section>
+
+<!-- 49. STRETCH 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 2 (reusable cleaning function)</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
+import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+rng = np.random.default_rng(7)
+regions = ["North", "South", "East", "West"]
+categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+rows = []
+for _i in range(1, 41):
+    _oid = f"ORD{1000 + _i}"
+    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
+    rows.append([
+        _oid, _dt.strftime("%Y-%m-%d"),
+        rng.choice(categories), rng.choice(regions),
+        round(float(rng.uniform(5, 150)), 2),
+        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
+    ])
+
+_g = pd.DataFrame(rows, columns=[
+    "Order ID", "Order Date", "Product Category", "Region",
+    "Unit Price", "Quantity Sold", "Customer ID",
+])
+for _i in [2, 5, 9, 14, 20]:
+    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
+for _i in [7, 22]:
+    _g.loc[_i, "Unit Price"] = np.nan
+_g.loc[12, "Order ID"] = np.nan
+_g.loc[30, "Order Date"] = np.nan
+_g.loc[18, "Order Date"] = "not_a_date"
+_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
+_g.loc[_g.index[-1], "Unit Price"] = 999.99
+_g.loc[35, "Unit Price"] = -25.00
+_g.to_csv("data/messy_sales.csv", index=False)
+# ---- end deck fixture ----
+
+# --- Stretch 2: reusable clean_sales(filepath) ---
+def clean_sales(filepath):
+    df = pd.read_csv(filepath)
+    df.columns = df.columns.str.lower().str.replace(' ', '_')
+    df = df.dropna(subset=["order_id", "order_date"])
+    df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
+    df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
+    df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
+    df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
+    df["quantity_sold"] = df["quantity_sold"].astype(int)
+    df = df.drop_duplicates()
+    return df
+
+result = clean_sales('data/messy_sales.csv')
+print(result.shape)
+print(result.dtypes)
+</div>
+<p class="expect">Exercises 2–7's steps, wrapped in one callable function — Module 07's function-writing applied to the whole pipeline. <code>result.shape</code> is <code>(39, 7)</code> (same as after Exercise 5) and <code>result.dtypes</code> shows the fully typed frame. Next month's updated export is now one <code>clean_sales(path)</code> call away.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/messy_sales.csv</code> (fresh namespace per block).
+- <code>def clean_sales(filepath):</code> — takes a path, returns a cleaned DataFrame; the body is Exercises 2–5's pipeline verbatim (the guide's Stretch 2 wraps "steps 2 through 7").
+- <code>result = clean_sales('data/messy_sales.csv')</code> then <code>print(result.shape)</code> / <code>print(result.dtypes)</code> — confirms the function reproduces the pipeline: <code>(39, 7)</code> and the correct dtypes.
+The guide gives the code but no explicit expected output (a preview). Values below are the real <code>python3</code> run.
+No "Check for understanding" in the guide for this segment — no quiz.
+</aside>
+</section>
+
+<!-- 50. STRETCH 2 — expected output -->
+<section class="s-out">
+<h3>Expected output — Stretch 2</h3>
+<pre>(39, 7)
+order_id                    object
+order_date          datetime64[ns]
+product_category            object
+region                      object
+unit_price                 float64
+quantity_sold                int64
+customer_id                 object
+dtype: object</pre>
+<aside class="notes">The guide gives the Stretch 2 code but no explicit expected output (a preview). This is the real <code>python3</code> result (<code>python3 blkS2.py</code>): <code>clean_sales()</code> reproduces the pipeline — <code>(39, 7)</code>, matching the shape after Exercise 5, and the same fully-typed dtypes as Exercise 7's fix (<code>order_date</code> as <code>datetime64[ns]</code> since the function returns the in-memory frame, no CSV round trip). The <code>(39, 7)</code> is an exact scalar tuple; the dtype listing is a Series repr — formatting may differ slightly by pandas version, the shape and dtypes are the load-bearing content.</aside>
+</section>
+
+<!-- 51. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li><strong>Which cleaning decision felt most ambiguous — drop, fill, or flag?</strong> No wrong answer; a strong response names a specific exercise and articulates what additional information (business context, data-source knowledge) would resolve the ambiguity.</li>
+<li><strong>Would someone unfamiliar with the dataset understand your comments' "why," not just "what"?</strong> A genuine self-audit — actually re-read your own comments cold, as if seeing them for the first time, before answering.</li>
+<li><strong>The most important thing you noticed from <code>.describe()</code> that you didn't expect.</strong> Likely the negative price, the extreme outlier, or the mean/median gap — push for the specific number and its implication, not just "the data was messier than expected."</li>
+</ul>
+<aside class="notes">
+Review the reflection questions out loud in the last ~5 minutes. Strong-answer guidance (guide, verbatim):
+1. <em>Which cleaning decision felt most ambiguous — drop, fill, or flag?</em> — no wrong answer; a strong response names a specific exercise and articulates what additional information (business context, data-source knowledge) would resolve the ambiguity.
+2. <em>Would someone unfamiliar with the dataset understand your comments' "why," not just "what"?</em> — this is a genuine self-audit; encourage students to actually re-read their own comments cold, as if seeing them for the first time, before answering.
+3. <em>The most important thing noticed from <code>.describe()</code> that wasn't expected</em> — likely the negative price, the extreme outlier, or the mean/median gap — push for the specific number and its implication, not just "the data was messier than expected."
+</aside>
+</section>
+
+<!-- 52. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>clean.py</code> (or <code>clean.ipynb</code>)</li>
+<li>Contains Exercises 1–7, each clearly separated, with reasoning comments where required</li>
+<li>Runs top to bottom with no errors</li>
+<li>Produces <code>clean_sales.csv</code> as output</li>
+<li>Pushed to GitHub inside a <code>module14/</code> folder</li>
+<li>Repo URL submitted to Canvas</li>
+</ul>
+<aside class="notes">Review the submission checklist together. Preview Module 15 (verbatim): "Today's cleaned data becomes next module's direct input — Module 15 groups it, aggregates it, and turns it into charts answering real business questions, using the exact workflow and standards the capstone itself will grade you on."</aside>
+</section>
+
+<!-- 53. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 14</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w14.md (Week 14 facilitation guide — "Clean a Messy Sales CSV"). This is a DATA WEEK and the lab cleans a deliberately messy CSV: every runnable block carries <code>data-packages="pandas"</code> (the first Run on the page preloads pandas + numpy into Pyodide). Each <code>.run</code> block runs in its OWN fresh namespace, so every block first re-generates <code>data/messy_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(7)</code>, fully reproducible; loop variables renamed to <code>_i</code>/<code>_oid</code>/<code>_dt</code>/<code>_g</code> so the scaffold never shadows the lab's <code>df</code>) and re-runs every prior exercise, then runs the current exercise's actual lab code — in the real <code>clean.py</code> the course-provided messy CSV is placed once and each exercise builds on the same running <code>df</code>. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / numpy 1.26.4, the exact versions Pyodide 0.26.4 bundles. Two repr divergences are disclosed on their slides: (1) <code>print(df.info())</code> in Exercises 1 and 7 emits a <code>dtypes:</code> / <code>memory usage:</code> / <code>None</code> trailer the guide abbreviates away; (2) pandas 2.x's <code>df.describe()</code> in Exercise 6 also profiles the <code>datetime64</code> <code>order_date</code> column and appends a <code>std</code> row that the guide's older sample omits — every <code>unit_price</code> / <code>quantity_sold</code> statistic the guide cites is reproduced exactly. No block uses <code>input()</code>, so there is no <code>data-stdin</code>.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
