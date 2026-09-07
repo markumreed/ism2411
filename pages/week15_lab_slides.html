@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 15 — Aggregate &amp; Chart — Capstone Warm-up</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; Module 15 &nbsp;·&nbsp; Unit 4 &nbsp;·&nbsp; Data Analysis with pandas</p>
+<h1>Aggregate &amp; Chart — Capstone Warm-up</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Intro — this lab <em>is</em> the capstone, at small scale</span>
+<span class="t-item"><strong>0:04–0:14</strong> Ex 1 — Q1: Revenue by Region</span>
+<span class="t-item"><strong>0:14–0:24</strong> Ex 2 — Q2: Monthly Revenue Trend</span>
+<span class="t-item"><strong>0:24–0:33</strong> Ex 3 — Q3: Order Size Distribution</span>
+<span class="t-item"><strong>0:33–0:41</strong> Ex 4 — Q4: Your Own Business Question</span>
+<span class="t-item"><strong>0:41–0:48</strong> Ex 5 — Seaborn Version</span>
+<span class="t-item"><strong>0:48–0:55</strong> Ex 6 — Multiple Aggregations</span>
+<span class="t-item"><strong>0:55–0:59</strong> Ex 7 — Notebook Tidy-Up</span>
+<span class="t-item"><strong>0:59–1:09</strong> Stretch 1 &amp; 2 Preview</span>
+<span class="t-item"><strong>1:09–1:15</strong> Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Teaching goal (session): this lab is the capstone dress rehearsal — the workflow, standards, and deliverable format are identical, and everything graded loosely in earlier modules (vague comments, unlabeled output) is graded strictly here, on purpose. Two things deserve outsized attention: the "state your finding as a sentence with a number" discipline (every required chart needs a one-sentence, numeric finding beneath it) and Exercise 2's "all 12 months" requirement, which contains a genuine, easy-to-miss gotcha — <code>groupby</code> silently omits any month with zero orders unless explicitly told not to.
+75-minute session, live code-along. Prerequisites: Module 14's <code>clean_sales.csv</code>; Module 13's <code>groupby</code>-adjacent filtering and aggregation basics. Submission: <code>aggregate.ipynb</code> (or <code>.py</code>) + all 4 PNG chart files via GitHub in a <code>module15/</code> folder, URL to Canvas.
+Deck note: this is a <strong>DATA WEEK with matplotlib charts</strong>. Non-chart blocks (groupby / aggregate / pivot) carry <code>data-packages="pandas"</code>; chart blocks (<code>.plot(...)</code> / <code>plt.*</code>) carry <code>data-packages="pandas,matplotlib"</code> — the first Run on the page pays a one-time multi-MB download to bring pandas (and numpy, and for chart blocks matplotlib) into Pyodide; later Runs reuse it. Each <code>.run</code> block executes in its OWN fresh Pyodide namespace, so every block first re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, a full calendar year, a genuine December peak, and a region — East — that wins on revenue and average order value despite <em>not</em> having the most orders; loop/frame variables renamed with a <code>_</code> prefix so the scaffold never shadows the lab's <code>df</code>) and rebuilds <code>df</code> through every prior step, then runs the current exercise's actual lab code. In the real <code>aggregate.py</code> the course's own Module 14 output is placed once and every exercise builds on the same running <code>df</code>. <strong>Use your course's real Module 14 output with students</strong> — the numbers here are verified against the Appendix B synthetic version for preparation. Chart blocks: the framework forces the headless <code>AGG</code> backend and, after the block's plotting code runs, captures the current figure to a PNG shown in the output pane — so each chart block holds only the guide's chart-building code (the guide's own trailing <code>plt.savefig("module15/charts/…")</code> / <code>plt.show()</code> lines, which target the student's real disk and interactive session, are omitted; run the guide's version locally to write the actual PNG files the submission needs). Each chart <code>s-out</code> describes the expected chart in prose because a PNG cannot be byte-diffed. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / matplotlib 3.9.2; Pyodide 0.26.4 bundles pandas 2.2.0 and matplotlib ~3.5.2, so chart styling/fonts may differ slightly in the browser — the data shown is the load-bearing content. Exercise 5 (Seaborn) and Stretch 2 (Seaborn heatmap) are shown as static reference code, not runnable blocks — Seaborn is outside this deck's browser package set; run those locally.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>aggregate.py</code> (or a notebook) built exercise by exercise on Module 14's cleaned <code>data/clean_sales.csv</code>; the course provides the real cleaned dataset (Appendix B's seeded 1,200-row generator stands in for instructor rehearsal)</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 14's <code>clean_sales.csv</code>; Module 13's <code>groupby</code>-adjacent filtering and aggregation basics</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>aggregate.ipynb</code> (or <code>.py</code>) + all 4 PNG chart files via GitHub (<code>module15/</code> folder), URL to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week15_lab. Class length 75 minutes, format live code-along. The lab page's own framing is worth stating verbatim: "this is the capstone dress rehearsal — the workflow, standards, and deliverable format are identical." The required exercises fill most of available time; both Stretch challenges are positioned as previews of genuinely dashboard-grade techniques worth seeing even briefly. Before class: confirm <code>matplotlib</code> and <code>seaborn</code> are installed on the demo machine and rehearse Exercises 1–3 once end to end (chart-heavy live coding has more moving parts — figure setup, saving, closing — than most prior labs); obtain or generate <code>data/clean_sales.csv</code> as the direct output of Module 14; create a <code>module15/charts/</code> folder and decide up front whether the section works in a <code>.py</code> file or a Jupyter notebook, since Exercise 7's tidy-up instructions differ slightly by format.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Aggregate a DataFrame with <code>.groupby(...)[...].sum()</code> (or <code>.mean()</code>), and chain <code>.reset_index()</code> to get a clean, chart-ready result.</li>
+<li>Build a labeled, titled bar chart, line chart, and histogram with matplotlib, and know which chart type fits which kind of question.</li>
+<li>Ensure a time-based aggregation shows every expected period (e.g., all 12 months), even when some have zero activity.</li>
+<li>State an analytical finding as a specific, numeric sentence — "Region X drove $Y, Z% above the average" — not a vague description.</li>
+<li>Use <code>.agg()</code> to compute multiple statistics from one <code>groupby</code> call.</li>
+<li>Build an equivalent chart in Seaborn and articulate at least one concrete difference from the matplotlib version.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Protect the most time for the "state your finding as a sentence with a number" discipline (objective 4, rehearsed live in Exercises 1–3) and for objective 3's "all 12 months" safeguard (Exercise 2's <code>.reindex()</code>), which the guide flags as a genuine, easy-to-miss gotcha. Objective 2 is about knowing <em>which chart type fits which kind of question</em> — bar for "how much per category," line for "how does it move over time," histogram for "what is the shape of this one variable" — not just producing a chart.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Intro — this lab <em>is</em> the capstone, at smaller scale, as a rehearsal</td><td>4</td></tr>
+<tr><td>0:04–0:14</td><td>Exercise 1 — Q1: Revenue by Region</td><td>10</td></tr>
+<tr><td>0:14–0:24</td><td>Exercise 2 — Q2: Monthly Revenue Trend</td><td>10</td></tr>
+<tr><td>0:24–0:33</td><td>Exercise 3 — Q3: Order Size Distribution</td><td>9</td></tr>
+<tr><td>0:33–0:41</td><td>Exercise 4 — Q4: Your Own Business Question</td><td>8</td></tr>
+<tr><td>0:41–0:48</td><td>Exercise 5 — Seaborn Version</td><td>7</td></tr>
+<tr><td>0:48–0:55</td><td>Exercise 6 — Multiple Aggregations</td><td>7</td></tr>
+<tr><td>0:55–0:59</td><td>Exercise 7 — Notebook Tidy-Up</td><td>4</td></tr>
+<tr><td>0:59–1:09</td><td>Stretch 1 &amp; 2 Preview (as time allows)</td><td>10</td></tr>
+<tr><td>1:09–1:15</td><td>Wrap-Up — reflection + submission + Module 16 preview</td><td>6</td></tr>
+</tbody>
+</table>
+<aside class="notes">The required exercises fill most of available time at a normal code-along pace. Both Stretch challenges are framed as previews of genuinely dashboard-grade techniques: Stretch 1 (side-by-side subplots) is exactly what executive dashboards use constantly; Stretch 2 (a regional monthly heatmap via <code>.pivot_table()</code>) reshapes the data into a full grid in one call. Appendix C has two extra-practice items (a second single-dimension aggregation by <code>product_category</code> with <code>.agg()</code>; a day-of-week chart via <code>df['order_date'].dt.day_name()</code>) if a section moves unusually fast. Wrap-Up runs in the last ~6 minutes: three reflection questions + the submission checklist + the Module 16 (dedicated capstone work time) preview.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>This lab <em>is</em> the capstone — at smaller scale, as a rehearsal.</h1>
+<aside class="notes">
+Teaching goal: frame that everything today is graded to the same standard as the capstone, and that the actual skill this whole unit has been building toward is stating a finding as a real, specific number — not a vague description.
+Say to the class (verbatim): "Everything today is graded to the same standard as the capstone — because this lab <em>is</em> the capstone, at smaller scale, as a rehearsal. Every chart needs a title, axis labels, and a one-sentence finding stated as a real number underneath it. Not 'revenue varies by region' — 'the South drove $112,040 in revenue, the most of any region.' That specificity is the actual skill this whole unit has been building toward."
+Do: open <code>aggregate.py</code> (or a new notebook), type the header — <code># aggregate.py</code> / <code># ISM2411 Module 15 Lab — Aggregate &amp; Chart: Capstone Warm-up</code> / <code>import pandas as pd</code> / <code>import matplotlib.pyplot as plt</code>.
+Common mistakes: none yet — this is framing.
+Deck note: every runnable block re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, reproducible) at the top and re-runs every prior step, because each <code>.run</code> block is a fresh namespace; the Pyodide virtual filesystem and loaded packages persist across blocks on a page. In the real lab the course's Module 14 output is placed once by hand and each exercise builds on the same <code>df</code>.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 10 min · 0:04–0:14</span>
+<h1>Q1: Revenue by Region</h1>
+<aside class="notes">
+Teaching goal: <code>.groupby().sum().reset_index()</code> as a repeatable three-step recipe, and a first properly-labeled bar chart — the template every remaining chart in this lab (and the capstone) will follow.
+Say to the class (verbatim): "First business question: which region makes the most money? One aggregation, one bar chart, one sentence stating the answer as a number."
+Line-by-line: <code>df.groupby("region")["revenue"].sum()</code> — read as three steps left to right: group the DataFrame into buckets, one per distinct <code>region</code>; pull out just the <code>"revenue"</code> column from each bucket; sum it within each bucket — one total per region. <code>.reset_index()</code> — worth explaining, not boilerplate: a raw <code>groupby(...).sum()</code> uses the grouped column (<code>region</code>) <em>as its index</em>, not an ordinary column, which is awkward for charting and sorting; <code>.reset_index()</code> converts that index back into a normal column, giving a clean two-column DataFrame (<code>region</code>, <code>revenue</code>) — memorize "groupby, then reset_index" as a unit. <code>.sort_values("revenue", ascending=False)</code> — Module 13's sort applied to the aggregated result so both the printed table and the chart show regions highest-first. <code>fig, ax = plt.subplots(figsize=(8, 5))</code> — new syntax: creates a figure (<code>fig</code>, the canvas) and an axes (<code>ax</code>, the plotting area) together; nearly everything forward is a method call <em>on</em> <code>ax</code>, and this is the standard professional pattern, not the <code>plt.bar(...)</code> shortcut. <code>ax.bar(region_revenue["region"], region_revenue["revenue"], color="#4C72B0")</code> — <code>region</code> values become x-axis categories, <code>revenue</code> values become bar heights. <code>ax.set_title(...)</code>, <code>ax.set_xlabel(...)</code>, <code>ax.set_ylabel(...)</code> — all three required explicitly; an unlabeled chart, even a correct one, does not meet the standard. <code>plt.tight_layout()</code> — adjusts spacing so labels/titles are not cut off; a cheap habit on every chart. The guide's own <code>plt.savefig("module15/charts/q1_revenue_by_region.png", dpi=150)</code> must come before <code>plt.show()</code> on a real machine (since <code>plt.show()</code> can clear the current figure in some environments) — in this deck the framework captures the figure automatically, so those two lines are omitted here.
+Required one-sentence finding (model it — it is graded): "The East region drove $158,621.95 in revenue, the highest of any region — about 41% more than the second-place South region."
+Common mistakes: skipping <code>.reset_index()</code> then hitting <code>KeyError</code> on <code>region_revenue["region"]</code> (without it, <code>region</code> is the <em>index</em>, not a column) — a concrete illustration of why the step matters. Forgetting one of the three required labels — walk the room and check for all three. Vague findings ("revenue differs by region") instead of the required specific, numeric sentence.
+Check for understanding (guide, verbatim parenthetical): "If two regions had exactly equal revenue, what would this chart's sort produce? (Their relative order would follow whatever tie-breaking <code>.sort_values()</code> applies by default — not something to derive precisely, but a good prompt that "sorted" doesn't always imply a unique, unambiguous order when values can tie.)"
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code (aggregation) -->
+<section class="s-code">
+<h3>Live-code — Exercise 1: the three-step aggregation</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture; the guide's lab code follows ----
+
+# --- Exercise 1 (Q1) ---
+df = pd.read_csv('data/clean_sales.csv')
+
+region_revenue = df.groupby("region")["revenue"].sum().reset_index()
+region_revenue = region_revenue.sort_values("revenue", ascending=False)
+print(region_revenue)
+</div>
+<p class="expect">Everything above <code># --- Exercise 1 (Q1) ---</code> is deck scaffolding — it writes the guide's Appendix B dataset into Pyodide's virtual filesystem so the block is self-contained (on a real machine you place your Module 14 <code>clean_sales.csv</code> once). The guide's Exercise 1 aggregation is the last four lines: group by <code>region</code>, sum <code>revenue</code>, <code>.reset_index()</code> to a clean two-column frame, then sort highest-first. The chart is on the next slide.</p>
+<aside class="notes">
+Line-by-line:
+- The <code>_rng = np.random.default_rng(99)</code> … <code>_gen.to_csv("data/clean_sales.csv", …)</code> block is deck-only scaffolding — the guide's Appendix B generator with loop/frame variables renamed (<code>_rng</code>, <code>_n</code>, <code>_i</code>, <code>_d</code>, <code>_gen</code>, <code>_region_arr</code> …) so it never shadows the lab's <code>df</code>. <code>data-packages="pandas"</code> preloads pandas (+ numpy) into Pyodide on the first Run of the page.
+- <code>df.groupby("region")["revenue"].sum()</code> — group into one bucket per distinct <code>region</code>, take the <code>revenue</code> column of each, sum within each; one total per region, indexed by <code>region</code>.
+- <code>.reset_index()</code> — turns that <code>region</code> index back into an ordinary column, giving a clean two-column DataFrame (<code>region</code>, <code>revenue</code>); memorize "groupby, then reset_index" as one move.
+- <code>.sort_values("revenue", ascending=False)</code> — sorts the aggregated rows so both the table and the chart run highest revenue first.
+Common mistakes: skipping <code>.reset_index()</code> then hitting <code>KeyError</code> on <code>region_revenue["region"]</code>. Vague findings instead of the required numeric sentence.
+Check for understanding (guide, verbatim parenthetical): "(Their relative order would follow whatever tie-breaking <code>.sort_values()</code> applies by default — not something to derive precisely, but a good prompt that "sorted" doesn't always imply a unique, unambiguous order when values can tie.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output (table) -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>  region    revenue
+0   East  158621.95
+2  South  112040.69
+3   West   63666.44
+1  North   60112.83</pre>
+<aside class="notes">Matches the guide's Exercise 1 "Expected output" exactly (verified against the synthetic Appendix B dataset — actual values differ with real course data): <code>East</code> 158621.95, <code>South</code> 112040.69, <code>West</code> 63666.44, <code>North</code> 60112.83, with the original row-index labels (<code>0</code>, <code>2</code>, <code>3</code>, <code>1</code>) preserved after the sort. Verified against local <code>python3</code> (<code>python3 blk1.py</code>, pandas 2.2.0 == Pyodide 0.26.4's bundled version). DataFrame formatting may differ slightly by pandas version; the values and their order are the load-bearing content. Required one-sentence finding to model beneath the chart: "The East region drove $158,621.95 in revenue, the highest of any region — about 41% more than the second-place South region."</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — live code (bar chart) -->
+<section class="s-code">
+<h3>Live-code — Exercise 1: the labeled bar chart</h3>
+<div class="run" data-lang="python" data-packages="pandas,matplotlib">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('data/clean_sales.csv')
+region_revenue = df.groupby("region")["revenue"].sum().reset_index()
+region_revenue = region_revenue.sort_values("revenue", ascending=False)
+
+# --- Exercise 1 (Q1): the chart ---
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.bar(region_revenue["region"], region_revenue["revenue"], color="#4C72B0")
+ax.set_title("Total Revenue by Region")
+ax.set_xlabel("Region")
+ax.set_ylabel("Revenue ($)")
+plt.tight_layout()
+</div>
+<p class="expect">The <code>fig, ax = plt.subplots(...)</code> pattern, then <code>ax.bar(...)</code> with all three required labels. The guide's trailing <code>plt.savefig("module15/charts/q1_revenue_by_region.png", dpi=150)</code> and <code>plt.show()</code> are omitted — this deck's framework forces the <code>AGG</code> backend and captures the figure to a PNG automatically. Run the guide's version locally to write the actual file the submission needs.</p>
+<aside class="notes">
+The live block renders the actual chart as a PNG; the next panel describes what it should show.
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> and re-does the Exercise 1 aggregation (fresh namespace per block); <code>data-packages="pandas,matplotlib"</code> preloads matplotlib in addition to pandas/numpy on this block's first Run.
+- <code>fig, ax = plt.subplots(figsize=(8, 5))</code> — figure + axes in one call; build the chart with methods on <code>ax</code>.
+- <code>ax.bar(region_revenue["region"], region_revenue["revenue"], color="#4C72B0")</code> — <code>region</code> values are the x categories, <code>revenue</code> the bar heights, all bars a single muted blue.
+- <code>ax.set_title</code> / <code>ax.set_xlabel</code> / <code>ax.set_ylabel</code> — all three required explicitly; an unlabeled chart does not meet the standard.
+- <code>plt.tight_layout()</code> — keeps labels and the title from being cut off.
+Common mistakes: forgetting one of the three labels; using the <code>plt.bar(...)</code> shortcut instead of the <code>fig, ax</code> pattern.
+Pyodide 0.26.4 bundles matplotlib ~3.5.2 vs local 3.9.2 — chart styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.
+Check for understanding (guide, verbatim parenthetical): "(Their relative order would follow whatever tie-breaking <code>.sort_values()</code> applies by default — not something to derive precisely, but a good prompt that "sorted" doesn't always imply a unique, unambiguous order when values can tie.)"
+</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — chart description -->
+<section class="s-out">
+<h3>Expected chart</h3>
+<pre>Chart type : vertical bar chart
+Title      : "Total Revenue by Region"
+x-axis     : "Region" — 4 categorical ticks, left to right in
+             descending-revenue order: East, South, West, North
+y-axis     : "Revenue ($)" — 0 up to just above ~160,000
+Bars       : one per region, all a single muted blue (#4C72B0)
+             East  ~158,622  (tallest, by a wide margin)
+             South ~112,041  (about 41% shorter than East)
+             West  ~63,666   (near-tied with North)
+             North ~60,113   (shortest)
+Reading    : East dominates; West and North are close and lowest.</pre>
+<aside class="notes">The live block renders the actual chart as a PNG; this panel describes what it should show — a PNG cannot be byte-diffed, so this is a prose description of chart type, axes, series, ordering, and title. Verified locally: <code>matplotlib.use("AGG")</code> + the guide's plotting code + <code>plt.gcf().savefig(...)</code> ran <code>rc=0</code> and produced a non-empty PNG (~23 KB). Bar heights are the Exercise 1 aggregation values (East 158621.95, South 112040.69, West 63666.44, North 60112.83). Pyodide's matplotlib ~3.5.2 vs local 3.9.2 — styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 11. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If two regions had <em>exactly</em> equal revenue, what would this chart's <code>.sort_values("revenue", ascending=False)</code> produce for them?</p>
+<button data-opt="A">The two bars would be merged into one combined bar totalling both regions' revenue</button>
+<button data-opt="B">Their relative order would follow whatever tie-breaking <code>.sort_values()</code> applies by default — "sorted" doesn't always imply a unique, unambiguous order when values can tie</button>
+<button data-opt="C">pandas raises a <code>ValueError</code> because it cannot sort rows whose sort keys are identical</button>
+<p class="why" hidden>Their relative order would follow whatever tie-breaking <code>.sort_values()</code> applies by default — not something to derive precisely, but a good prompt that "sorted" doesn't always imply a unique, unambiguous order when values can tie.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Their relative order would follow whatever tie-breaking <code>.sort_values()</code> applies by default — not something to derive precisely, but a good prompt that "sorted" doesn't always imply a unique, unambiguous order when values can tie.)"</aside>
+</section>
+
+<!-- 12. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Skipping <code>.reset_index()</code> and then being confused why <code>region_revenue["region"]</code> raises <code>KeyError</code> — without it, <code>region</code> is the DataFrame's <em>index</em>, not a column reachable by that bracket syntax; a concrete illustration of why the step matters, not just an instruction to follow.</p>
+<p>Forgetting one of the three required labels (title, x-label, y-label) — walk the room and check for all three explicitly, since it is easy to skip under time pressure and is graded strictly here on purpose.</p>
+<p>Vague findings ("revenue differs by region") instead of the required specific, numeric sentence — redirect to the model: "The East region drove $158,621.95 in revenue, the highest of any region — about 41% more than the second-place South region."</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 10 min · 0:14–0:24</span>
+<h1>Q2: Monthly Revenue Trend</h1>
+<aside class="notes">
+Teaching goal: extract a month from a datetime column, aggregate by it, and confront a genuine, easy-to-miss gotcha: <code>groupby</code> only shows months that actually appear in the data — a month with zero orders simply vanishes from the result unless explicitly handled.
+Say to the class (verbatim): "Second question: how does revenue move across the year? The lab page requires all 12 months on the x-axis — and I want to show you why that requirement isn't automatic, because it genuinely trips people up."
+Line-by-line: <code>pd.to_datetime(df['order_date'])</code> — parses the date column to a real datetime type; echoing Module 14 Exercise 7's gotcha, if <code>clean_sales.csv</code> was saved and reloaded without <code>parse_dates</code>, <code>order_date</code> likely came back as <code>object</code> (text) — this line (re-)converts it. <code>df['order_date'].dt.month</code> — <code>.dt</code> is a specialized accessor available only on genuine datetime columns; <code>.month</code> extracts the month number (<code>1</code>–<code>12</code>) from each date — analogous to Module 13's <code>.str</code> accessor. <code>df.groupby("month")["revenue"].sum()</code> — Exercise 1's exact aggregation pattern, grouping by month instead of region. <code>.reindex(range(1, 13), fill_value=0)</code> — the exercise's real payoff line: forces the result to have exactly index values <code>1</code>–<code>12</code>, inserting <code>fill_value=0</code> for any missing from the grouped result; this is the general, reliable pattern for "make sure every expected category appears, even ones with zero activity." <code>ax.plot(monthly.index, monthly.values, marker='o')</code> — a line chart with a circular marker at each real data point. <code>ax.set_xticks(range(1, 13))</code> — a second, chart-level safeguard forcing a tick for every month <code>1</code>–<code>12</code> regardless of the plotted data.
+Required one-sentence finding: "December was the peak month at $63,641.59 in revenue, about 94% above the monthly average — consistent with a genuine holiday-season sales pattern."
+Common mistakes: skipping <code>.reindex()</code> because "it happened to work anyway" on their specific dataset (every month having at least one order by chance) — a fragile script likely to break silently on the capstone's actual data or any future month with a genuine sales gap. Calling <code>.dt.month</code> on a column still <code>object</code> dtype (forgot <code>pd.to_datetime()</code>) — raises <code>AttributeError: Can only use .dt accessor with datetimelike values</code>.
+Check for understanding (guide, verbatim parenthetical): "If March had genuinely zero orders in the real data, what would <code>monthly</code> show for March <em>before</em> <code>.reindex()</code>, versus <em>after</em>? (Before: March simply wouldn't be a row in the result at all — not zero, absent. After: March would show explicitly as <code>0</code>. Getting a student to articulate "absent" as different from "present with value zero" is the exercise's real conceptual point.)"
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>groupby</code> shows only the months that <em>appear</em>; <code>.reindex()</code> forces all 12</h3>
+<div class="concept">
+<div class="concept-lbl">A month with zero orders is <em>absent</em>, not zero</div>
+<p><code>df.groupby("month")["revenue"].sum()</code> produces one row per month that actually occurs in the data. If February had zero orders, February is not a <code>0</code> row — it is simply <em>not there</em>. The exercise requires all 12 months on the x-axis regardless.</p>
+<p><code>monthly.reindex(range(1, 13), fill_value=0)</code> forces the index to be exactly <code>1…12</code>, inserting <code>0</code> for any missing month. This is the general pattern for "every expected category must appear, even ones with zero activity" — it works for regions, products, anything. <code>ax.set_xticks(range(1, 13))</code> is a second, chart-level safeguard for the same requirement.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 2. This synthetic dataset happens to have activity in every month, so the pre-<code>.reindex()</code> output already shows all 12 — narrate the gotcha explicitly anyway (the guide says to): "Right now, <code>monthly</code> only contains rows for months that actually have at least one order. If February had zero orders, February simply wouldn't appear in this result at all — not as a zero, just absent." A script that coincidentally works on one dataset but omits a genuinely necessary safeguard is a fragile script.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — live code (aggregate + reindex) -->
+<section class="s-code">
+<h3>Live-code — Exercise 2: month accessor, aggregate, reindex to all 12</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+
+df = pd.read_csv('data/clean_sales.csv')
+
+# --- Exercise 2 (Q2) ---
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['month'] = df['order_date'].dt.month
+
+monthly = df.groupby("month")["revenue"].sum()
+monthly = monthly.reindex(range(1, 13), fill_value=0)
+print(monthly)
+</div>
+<p class="expect">Parse <code>order_date</code> to real datetimes, pull the month number with the <code>.dt</code> accessor, aggregate revenue by month, then <code>.reindex(range(1, 13), fill_value=0)</code> so every month <code>1</code>–<code>12</code> is present even if some had zero orders. On this dataset every month already has activity, so the reindex changes nothing visible — but it is the safeguard the capstone's data may actually need.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> (fresh namespace per block).
+- <code>pd.to_datetime(df['order_date'])</code> — (re-)parses the date column to <code>datetime64</code>; needed before any <code>.dt</code> access.
+- <code>df['order_date'].dt.month</code> — the <code>.dt</code> accessor exposes date-specific properties; <code>.month</code> gives <code>1</code>–<code>12</code>.
+- <code>df.groupby("month")["revenue"].sum()</code> — Exercise 1's pattern, grouped by month; produces one row per month that occurs.
+- <code>.reindex(range(1, 13), fill_value=0)</code> — forces the index to exactly <code>1…12</code>, filling <code>0</code> for any missing month. The general "every expected category appears" pattern.
+Common mistakes: skipping <code>.reindex()</code> because it "worked anyway"; calling <code>.dt.month</code> on a still-<code>object</code> column (<code>AttributeError</code>).
+Check for understanding (guide, verbatim parenthetical): "(Before: March simply wouldn't be a row in the result at all — not zero, absent. After: March would show explicitly as <code>0</code>. Getting a student to articulate "absent" as different from "present with value zero" is the exercise's real conceptual point.)"
+</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>month
+1     23623.82
+2     29972.71
+3     24768.20
+4     23804.40
+5     31168.51
+6     34053.23
+7     24464.09
+8     37767.93
+9     29883.33
+10    30802.71
+11    40491.39
+12    63641.59
+Name: revenue, dtype: float64</pre>
+<aside class="notes">Matches the guide's Exercise 2 "Expected output" on every value — a deliberate December seasonal peak (<code>12</code>: 63641.59), with November (<code>11</code>: 40491.39) second. The guide abbreviates the printed sample: it omits the <code>Name: revenue, dtype: float64</code> trailer that <code>print()</code> of a Series really shows — reproduced here in full, the real unabbreviated <code>python3</code> output (<code>python3 blk2.py</code>, pandas 2.2.0). Series formatting may differ slightly by pandas version; the 12 values are the load-bearing content. Monthly average ≈ 32,870, so December (63,641.59) is about 94% above it — the required finding: "December was the peak month at $63,641.59 in revenue, about 94% above the monthly average — consistent with a genuine holiday-season sales pattern."</aside>
+</section>
+
+<!-- 17. EXERCISE 2 — live code (line chart) -->
+<section class="s-code">
+<h3>Live-code — Exercise 2: the line chart, all 12 months</h3>
+<div class="run" data-lang="python" data-packages="pandas,matplotlib">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('data/clean_sales.csv')
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['month'] = df['order_date'].dt.month
+monthly = df.groupby("month")["revenue"].sum().reindex(range(1, 13), fill_value=0)
+
+# --- Exercise 2 (Q2): the chart ---
+fig, ax = plt.subplots(figsize=(9, 5))
+ax.plot(monthly.index, monthly.values, marker='o')
+ax.set_xticks(range(1, 13))
+ax.set_title("Monthly Revenue Trend")
+ax.set_xlabel("Month")
+ax.set_ylabel("Revenue ($)")
+plt.tight_layout()
+</div>
+<p class="expect"><code>ax.plot(...)</code> with <code>marker='o'</code> draws a real data point at each month; <code>ax.set_xticks(range(1, 13))</code> forces every month number onto the axis. The guide's trailing <code>plt.savefig("module15/charts/q2_monthly_trend.png", dpi=150)</code> / <code>plt.show()</code> are omitted — the framework captures the figure automatically.</p>
+<aside class="notes">
+The live block renders the actual chart as a PNG; the next panel describes what it should show.
+Line-by-line:
+- deck fixture rebuilds the CSV and re-does the Exercise 2 aggregation + reindex (fresh namespace per block).
+- <code>ax.plot(monthly.index, monthly.values, marker='o')</code> — x is months <code>1…12</code>, y is the revenue totals, with a circular marker at each real point (required by the exercise: distinguishes a data point from the connecting line).
+- <code>ax.set_xticks(range(1, 13))</code> — a chart-level safeguard reinforcing "show every expected period."
+- title / x-label / y-label — all required.
+Common mistakes: omitting <code>marker='o'</code>; relying on the reindex being unnecessary "this time."
+Pyodide 0.26.4 bundles matplotlib ~3.5.2 vs local 3.9.2 — chart styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.
+Check for understanding (guide, verbatim parenthetical): "(Before: March simply wouldn't be a row in the result at all — not zero, absent. After: March would show explicitly as <code>0</code>. Getting a student to articulate "absent" as different from "present with value zero" is the exercise's real conceptual point.)"
+</aside>
+</section>
+
+<!-- 18. EXERCISE 2 — chart description -->
+<section class="s-out">
+<h3>Expected chart</h3>
+<pre>Chart type : single line chart with circular markers ('o') at
+             each of the 12 monthly points
+Title      : "Monthly Revenue Trend"
+x-axis     : "Month" — ticks 1 through 12 (forced by set_xticks)
+y-axis     : "Revenue ($)" — ~23,000 up to just above ~63,000
+Series     : one line, month vs. total revenue:
+             Jan 23,624 -> Feb 29,973 -> Mar 24,768 -> Apr 23,804
+             -> May 31,169 -> Jun 34,053 -> Jul 24,464 -> Aug 37,768
+             -> Sep 29,883 -> Oct 30,803 -> Nov 40,491 -> Dec 63,642
+Shape      : uneven rise across the year; sharp spike at month 12
+             (December), with month 11 (November) the 2nd-highest.
+             Local dips at months 1, 4, 7.</pre>
+<aside class="notes">The live block renders the actual chart as a PNG; this panel describes what it should show — a PNG cannot be byte-diffed. Verified locally: <code>matplotlib.use("AGG")</code> + the guide's plotting code + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~39 KB). The 12 y-values are the Exercise 2 reindexed aggregation (Jan 23623.82 … Dec 63641.59). The December spike (~94% above the monthly average) is the dominant visual feature. Pyodide's matplotlib ~3.5.2 vs local 3.9.2 — styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 19. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If March had genuinely zero orders, what would <code>monthly</code> show for March <em>before</em> <code>.reindex(range(1, 13), fill_value=0)</code> versus <em>after</em>?</p>
+<button data-opt="A">Before: March isn't a row in the result at all — absent, not zero. After: March appears explicitly as <code>0</code></button>
+<button data-opt="B">Before and after: March shows as <code>0</code> either way — <code>.reindex()</code> only reorders rows that already exist</button>
+<button data-opt="C">Before: March shows as <code>NaN</code>. After: <code>.reindex()</code> raises because month <code>3</code> is missing from the data</button>
+<p class="why" hidden>Before: March simply wouldn't be a row in the result at all — not zero, absent. After: March would show explicitly as <code>0</code>. Articulating "absent" as different from "present with value zero" is the exercise's real conceptual point.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Before: March simply wouldn't be a row in the result at all — not zero, absent. After: March would show explicitly as <code>0</code>. Getting a student to articulate "absent" as different from "present with value zero" is the exercise's real conceptual point.)"</aside>
+</section>
+
+<!-- 20. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Skipping <code>.reindex()</code> entirely because "it happened to work anyway" on their specific dataset (every month having at least one order by chance) — a script that <em>coincidentally</em> produces correct-looking output but is missing a genuinely necessary safeguard is fragile, likely to break silently on the capstone's actual dataset or any future month with a genuine sales gap.</p>
+<p>Calling <code>.dt.month</code> on a column that's still <code>object</code> dtype (forgot the <code>pd.to_datetime()</code> conversion first) — raises <code>AttributeError: Can only use .dt accessor with datetimelike values</code>, a specific error worth reading together since it directly names the fix.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 9 min · 0:24–0:33</span>
+<h1>Q3: Order Size Distribution</h1>
+<aside class="notes">
+Teaching goal: a histogram — a genuinely different chart <em>type</em> from Exercises 1–2's bar/line charts, answering a different <em>kind</em> of question (not "how much per category," but "what does the overall shape of this variable look like") — plus a direct, concrete connection to Module 14's mean-vs-median skew discussion.
+Say to the class (verbatim): "Different question entirely: not 'how much per region,' but 'what does the spread of individual order sizes actually look like?' This calls for a histogram, a genuinely different chart type — and it connects directly to something we noticed while cleaning this data last module."
+Line-by-line: <code>ax.hist(df['revenue'], bins=20, ...)</code> — a histogram, required by the exercise, not a bar chart: a bar chart's bars each represent one <em>category</em>; a histogram's bars ("bins") each represent a <em>range of numeric values</em>, and the bar height shows how many individual orders fall into that range. <code>bins=20</code> divides the full range of <code>revenue</code> into 20 equal-width buckets. <code>median = df['revenue'].median()</code>, <code>mean = df['revenue'].mean()</code> — two different measures of "the center," computed for direct comparison.
+Required interpretation (this exercise's actual point): the mean ($328.70) is noticeably higher than the median ($194.87) — a mean pulled well above the median indicates a right-skewed distribution: most orders are relatively small, but a smaller number of large orders pull the average upward. Connect explicitly back to Module 14 Exercise 6: the same signal (mean above median) students noticed in <code>.describe()</code>, now visualized as a histogram's shape — a long tail stretching right.
+Required one-sentence finding: "Order revenue is right-skewed (mean $328.70 vs. median $194.87) — a small number of large orders pull the average well above what a 'typical' order actually looks like, which means the median is the more representative single number for describing a typical order here, not the mean."
+Common mistakes: building a bar chart instead of a true histogram (e.g. manual binning + <code>ax.bar</code>). Stating the skew direction backwards — right-skewed means the tail (the long stretch of less-common, extreme values) points to the right, toward higher values, which is where the mean gets pulled. Choosing mean over median as "the" typical order size in the written finding, contradicting the correct skew observation.
+Check for understanding (guide, verbatim parenthetical): "If this distribution were instead perfectly symmetric, what relationship would you expect between the mean and the median? (They'd be equal, or very close — no skew pulling the average away from the middle value. A good check that the mean-vs-median-as-a-skew-signal idea generalizes beyond this one specific dataset.)"
+</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — live code (median / mean) -->
+<section class="s-code">
+<h3>Live-code — Exercise 3: median vs. mean</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+
+df = pd.read_csv('data/clean_sales.csv')
+
+# --- Exercise 3 (Q3) ---
+median = df['revenue'].median()
+mean = df['revenue'].mean()
+print(f"Median: ${median:.2f}, Mean: ${mean:.2f}")
+</div>
+<p class="expect">Two measures of "the center" of the <code>revenue</code> distribution, computed for direct comparison. The gap between them is the whole point of the exercise — a mean well above the median is the signature of a right-skewed distribution, the exact signal noticed in Module 14's <code>.describe()</code> output. The histogram on the next slide makes that shape visible.</p>
+<aside class="notes">
+The live block renders the actual chart as a PNG on the next code slide; this block is plain numeric output.
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> (fresh namespace per block).
+- <code>df['revenue'].median()</code> — the middle value; unaffected by how extreme the largest orders are.
+- <code>df['revenue'].mean()</code> — the arithmetic average; pulled upward by a few large orders.
+- the f-string prints both to two decimals for a direct side-by-side read.
+Common mistakes: choosing the mean as "typical" in the written finding despite correctly noting the skew.
+Check for understanding (guide, verbatim parenthetical): "(They'd be equal, or very close — no skew pulling the average away from the middle value. A good check that the mean-vs-median-as-a-skew-signal idea generalizes beyond this one specific dataset.)"
+</aside>
+</section>
+
+<!-- 23. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Median: $194.87, Mean: $328.70</pre>
+<aside class="notes">Matches the guide's Exercise 3 "Expected output" exactly. Both are exact scalars formatted to two decimals (an f-string, not a DataFrame repr) — no version caveat applies. Verified against local <code>python3</code> (<code>python3 blk3.py</code>, pandas 2.2.0). The mean ($328.70) sitting well above the median ($194.87) is the right-skew signal the histogram visualizes. Required finding: "Order revenue is right-skewed (mean $328.70 vs. median $194.87) — a small number of large orders pull the average well above what a 'typical' order actually looks like, which means the median is the more representative single number for describing a typical order here, not the mean."</aside>
+</section>
+
+<!-- 24. EXERCISE 3 — live code (histogram) -->
+<section class="s-code">
+<h3>Live-code — Exercise 3: the histogram</h3>
+<div class="run" data-lang="python" data-packages="pandas,matplotlib">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('data/clean_sales.csv')
+
+# --- Exercise 3 (Q3): the chart ---
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.hist(df['revenue'], bins=20, color="#55A868", edgecolor="white")
+ax.set_title("Order Size Distribution")
+ax.set_xlabel("Revenue ($)")
+ax.set_ylabel("Number of Orders")
+plt.tight_layout()
+</div>
+<p class="expect"><code>ax.hist(df['revenue'], bins=20, ...)</code> — the purpose-built tool, not a hand-binned <code>ax.bar(...)</code>. Each bar is a <em>range</em> of revenue values; its height is how many orders fall in that range. The guide's trailing <code>plt.savefig("module15/charts/q3_order_distribution.png", dpi=150)</code> / <code>plt.show()</code> are omitted — the framework captures the figure automatically.</p>
+<aside class="notes">
+The live block renders the actual chart as a PNG; the next panel describes what it should show.
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> (fresh namespace per block).
+- <code>ax.hist(df['revenue'], bins=20, color="#55A868", edgecolor="white")</code> — 20 equal-width bins across the full <code>revenue</code> range; green bars with white separating edges.
+- title / x-label ("Revenue ($)") / y-label ("Number of Orders") — all required; note the y-axis is a <em>count</em>, not a dollar amount.
+Common mistakes: manually binning and using <code>ax.bar(...)</code> instead of <code>ax.hist(...)</code>; describing the skew backwards.
+Pyodide 0.26.4 bundles matplotlib ~3.5.2 vs local 3.9.2 — chart styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.
+Check for understanding (guide, verbatim parenthetical): "(They'd be equal, or very close — no skew pulling the average away from the middle value. A good check that the mean-vs-median-as-a-skew-signal idea generalizes beyond this one specific dataset.)"
+</aside>
+</section>
+
+<!-- 25. EXERCISE 3 — chart description -->
+<section class="s-out">
+<h3>Expected chart</h3>
+<pre>Chart type : histogram, 20 equal-width bins
+Title      : "Order Size Distribution"
+x-axis     : "Revenue ($)" — spans ~10 to ~2,100
+y-axis     : "Number of Orders" (a count, not dollars) — 0 to ~390
+Bars       : green (#55A868) with white edges. Strongly RIGHT-SKEWED:
+             leftmost bin (~$10-$114) is tallest at ~392 orders;
+             each successive bin is shorter (~288, ~176, ~62, ~47...);
+             a long thin tail stretches right with near-zero counts
+             past ~$1,200.
+Reading    : most orders are small; a few large orders form the
+             right tail and pull the mean ($328.70) above the
+             median ($194.87).</pre>
+<aside class="notes">The live block renders the actual chart as a PNG; this panel describes what it should show — a PNG cannot be byte-diffed. Verified locally: <code>matplotlib.use("AGG")</code> + the guide's plotting code + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~20 KB); <code>numpy.histogram(df['revenue'], bins=20)</code> gives bin counts <code>[392, 288, 176, 62, 47, 45, 41, 22, 19, 24, 10, 16, 14, 17, 9, 9, 0, 3, 5, 1]</code> over the range 9.99–2099.86. The right-skew shape is the exercise's point. Pyodide's matplotlib ~3.5.2 vs local 3.9.2 — styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 26. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If this distribution were instead perfectly <em>symmetric</em>, what relationship would you expect between the mean and the median?</p>
+<button data-opt="A">The mean would still be far above the median, as it is now — symmetry doesn't change that</button>
+<button data-opt="B">The median would be roughly double the mean</button>
+<button data-opt="C">They'd be equal, or very close — no skew pulling the average away from the middle value</button>
+<p class="why" hidden>They'd be equal, or very close — no skew pulling the average away from the middle value. A good check that the mean-vs-median-as-a-skew-signal idea generalizes beyond this one specific dataset.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(They'd be equal, or very close — no skew pulling the average away from the middle value. A good check that the mean-vs-median-as-a-skew-signal idea generalizes beyond this one specific dataset.)"</aside>
+</section>
+
+<!-- 27. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Building a bar chart instead of a true histogram — e.g. manually binning the data and using <code>ax.bar(...)</code>. Not conceptually wrong, but the exercise specifically asks for <code>bins=20</code> on <code>ax.hist(...)</code>; use the purpose-built tool rather than reinventing it.</p>
+<p>Stating the skew direction backwards — <strong>right-skewed means the tail (the long stretch of less-common, extreme values) points to the right</strong>, toward higher values, which is also where the mean gets pulled relative to the median. If a student says "left-skewed" when the mean is above the median, walk through the definition again.</p>
+<p>Choosing mean over median as "the" typical order size in the written finding, contradicting their own correct observation about skew — connect the <em>business</em> implication (which number an analyst should report as "typical") to the statistical observation.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 8 min · 0:33–0:41</span>
+<h1>Q4: Your Own Business Question</h1>
+<aside class="notes">
+Teaching goal: independently formulate a genuine business question, choose an appropriate chart type for it, and justify that choice in writing — the exercise most directly rehearsing the capstone's own open-ended requirements.
+Say to the class (verbatim): "Now you pick the question. Something a real analyst or manager would actually want to know from this dataset — not just 'because I can compute it.' And I want a comment justifying <em>why</em> you chose the chart type you did, not just which one."
+Facilitation notes (the guide gives no single live-coded answer — modeling one "correct" version risks the room converging on one unoriginal idea): circulate and ask each student/pair to state their question out loud, in one sentence, before coding — this catches a "question" that's really just a restatement of a <code>groupby</code> ("group by product category") rather than an actual business question ("which product category should we stock more of heading into the holiday season, based on this year's trend?"). Starter angles if stuck: revenue by product category (bar), order count by day-of-week (<code>.dt.dayofweek</code>, bar), a scatter of <code>quantity_sold</code> vs <code>unit_price</code>. The chart-type-justification comment is graded — model a strong one: "I chose a bar chart, not a line chart, because product category is a discrete set of unordered labels, not a continuous sequence like time — a line chart would misleadingly imply an ordering or trend between categories that don't actually have one."
+Example demonstration, framed explicitly as "one possible answer, not the answer" (verified against the synthetic dataset): revenue by <code>product_category</code>, sorted descending, as a bar chart.
+Common mistakes: a question too broad to answer with one chart ("how is the business doing overall?"). A technically correct chart with weak or missing business framing — the lab page grades "quality of the business question," not just execution.
+Check for understanding (guide, verbatim parenthetical): "If a colleague looked at your Q4 chart for ten seconds with no other context, could they state your finding? (This is directly lifted from tonight's own first reflection question — asking it now, per-chart, in the moment, is better rehearsal than only reflecting on it once at the end.)"
+</aside>
+</section>
+
+<!-- 29. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — a real question, and a comment saying <em>why</em> this chart type</h3>
+<div class="concept">
+<div class="concept-lbl">"Group by product category" is not a business question</div>
+<p>State your question out loud, in one sentence, before coding it. "Which product category should we stock more of heading into the holiday season?" is a business question; "group by product category" is just a description of a <code>groupby</code> call.</p>
+<p>The chart-type-justification comment is graded. Model: <em>"I chose a bar chart, not a line chart, because product category is a discrete set of unordered labels, not a continuous sequence like time — a line chart would misleadingly imply an ordering or trend between categories that don't actually have one."</em> The example below (revenue by <code>product_category</code>) is one possible answer, not <em>the</em> answer.</p>
+</div>
+<aside class="notes">Condenses the guide's facilitation notes for Exercise 4. Keep this open-ended — modeling a single "correct" version risks the whole room converging on one unoriginal idea. The demonstrated example (revenue by <code>product_category</code>, bar chart) is verified against the synthetic dataset and framed by the guide as illustrative only.</aside>
+</section>
+
+<!-- 30. EXERCISE 4 — live code (aggregation) -->
+<section class="s-code">
+<h3>Live-code — Exercise 4: one possible answer — revenue by category</h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+
+df = pd.read_csv('data/clean_sales.csv')
+
+# --- Exercise 4 (Q4) ---
+# Business question: which product category generates the most revenue?
+# Chart type: bar chart -- product_category is a discrete, unordered set
+# of labels, so a bar chart (not a line chart, which would imply an
+# ordering/trend that doesn't exist between categories) is the right fit.
+cat_revenue = df.groupby("product_category")["revenue"].sum().sort_values(ascending=False)
+print(cat_revenue)
+</div>
+<p class="expect">One possible Q4, framed as "one answer, not the answer." Note the comment does two graded things: states a real business question, and justifies the chart type (discrete unordered labels &rarr; bar, not line). <code>.sort_values(ascending=False)</code> on the aggregated Series orders the categories highest-first for the chart.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> (fresh namespace per block).
+- the comment block — the graded content: a business question in plain language, then a chart-type justification.
+- <code>df.groupby("product_category")["revenue"].sum()</code> — Exercise 1's pattern, grouped by category; result is a Series indexed by category (no <code>.reset_index()</code> here — the chart uses <code>.index</code> / <code>.values</code> directly).
+- <code>.sort_values(ascending=False)</code> — highest revenue first.
+Common mistakes: a question too broad for one chart; a chart with weak business framing.
+Check for understanding (guide, verbatim parenthetical): "(This is directly lifted from tonight's own first reflection question — asking it now, per-chart, in the moment, is better rehearsal than only reflecting on it once at the end.)"
+</aside>
+</section>
+
+<!-- 31. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>product_category
+Apparel        103886.52
+Home Goods     101113.58
+Toys            98238.57
+Electronics     91203.24
+Name: revenue, dtype: float64</pre>
+<aside class="notes">Matches the guide's Exercise 4 "Verified output" on every value — <code>Apparel</code> 103886.52, <code>Home Goods</code> 101113.58, <code>Toys</code> 98238.57, <code>Electronics</code> 91203.24. The guide abbreviates the <code>Name: revenue, dtype: float64</code> trailer that <code>print()</code> of a Series really shows; reproduced here in full (real <code>python3</code> output, <code>python3 blk4.py</code>, pandas 2.2.0). Series formatting may differ slightly by pandas version; the four values and their order are the load-bearing content. Note the categories are close (range only ~$12.7k) — a genuine finding here is "no dominant category," which is itself worth stating specifically.</aside>
+</section>
+
+<!-- 32. EXERCISE 4 — live code (bar chart) -->
+<section class="s-code">
+<h3>Live-code — Exercise 4: the bar chart</h3>
+<div class="run" data-lang="python" data-packages="pandas,matplotlib">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('data/clean_sales.csv')
+cat_revenue = df.groupby("product_category")["revenue"].sum().sort_values(ascending=False)
+
+# --- Exercise 4 (Q4): the chart ---
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.bar(cat_revenue.index, cat_revenue.values, color="#C44E52")
+ax.set_title("Total Revenue by Product Category")
+ax.set_xlabel("Product Category")
+ax.set_ylabel("Revenue ($)")
+plt.tight_layout()
+</div>
+<p class="expect">Same <code>fig, ax</code> + <code>ax.bar(...)</code> template as Exercise 1, now fed <code>cat_revenue.index</code> (category names) and <code>cat_revenue.values</code> (totals) straight from the aggregated Series. The guide's trailing <code>plt.savefig("module15/charts/q4_custom.png", dpi=150)</code> / <code>plt.show()</code> are omitted — the framework captures the figure automatically.</p>
+<aside class="notes">
+The live block renders the actual chart as a PNG; the next panel describes what it should show.
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> and re-does the category aggregation (fresh namespace per block).
+- <code>ax.bar(cat_revenue.index, cat_revenue.values, color="#C44E52")</code> — category names as x categories, totals as heights, red bars.
+- title / x-label / y-label — all required.
+Common mistakes: a chart that is accurate but has weak business framing.
+Pyodide 0.26.4 bundles matplotlib ~3.5.2 vs local 3.9.2 — chart styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.
+Check for understanding (guide, verbatim parenthetical): "(This is directly lifted from tonight's own first reflection question — asking it now, per-chart, in the moment, is better rehearsal than only reflecting on it once at the end.)"
+</aside>
+</section>
+
+<!-- 33. EXERCISE 4 — chart description -->
+<section class="s-out">
+<h3>Expected chart</h3>
+<pre>Chart type : vertical bar chart
+Title      : "Total Revenue by Product Category"
+x-axis     : "Product Category" — 4 ticks, descending-revenue order:
+             Apparel, Home Goods, Toys, Electronics
+y-axis     : "Revenue ($)" — 0 up to just above ~104,000
+Bars       : one per category, all red (#C44E52)
+             Apparel     ~103,887  (tallest)
+             Home Goods  ~101,114
+             Toys        ~98,239
+             Electronics ~91,203   (shortest)
+Reading    : a gentle downward step, NOT a dramatic winner —
+             the four bars are close (range only ~$12,700).</pre>
+<aside class="notes">The live block renders the actual chart as a PNG; this panel describes what it should show — a PNG cannot be byte-diffed. Verified locally: <code>matplotlib.use("AGG")</code> + the guide's plotting code + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~24 KB). Bar heights are the Exercise 4 aggregation values (Apparel 103886.52 … Electronics 91203.24). The near-level bars are the honest finding — "no category dominates" is a real, statable result. Pyodide's matplotlib ~3.5.2 vs local 3.9.2 — styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 34. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">The lab grades your Q4 comment justifying the chart type. Which is the strong version the guide models?</p>
+<button data-opt="A">"I chose a bar chart because bar charts are the most common chart type and everyone understands them."</button>
+<button data-opt="B">"I chose a bar chart, not a line chart, because product category is a discrete set of unordered labels, not a continuous sequence like time — a line chart would misleadingly imply an ordering or trend between categories that don't actually have one."</button>
+<button data-opt="C">"I chose a bar chart because there were only four categories and a line chart needs at least ten points to render."</button>
+<p class="why" hidden>The graded justification names <em>why</em> the chart type fits the data's nature: product category is discrete and unordered, so a bar chart is right and a line chart would imply a trend that doesn't exist. "It's common" and a made-up rule about point counts are not reasons.</p>
+</div>
+<aside class="notes">The guide's Check for understanding here — "If a colleague looked at your Q4 chart for ten seconds with no other context, could they state your finding?" — has no single keyable answer (it is a yes/no self-audit lifted from the reflection questions). Per the rollout's R-conv-3 fallback, this quiz is drawn instead from a verbatim line in the same segment: the model chart-type-justification comment the guide says to "model explicitly" — "I chose a bar chart, not a line chart, because product category is a discrete set of unordered labels, not a continuous sequence like time — a line chart would misleadingly imply an ordering or trend between categories that don't actually have one." (guide, Exercise 4 facilitation notes; repeated verbatim in the example demonstration comment and Appendix A). Keyed option B is that sentence verbatim.</aside>
+</section>
+
+<!-- 35. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>A question that's too broad to answer with one chart ("how is the business doing overall?") — help narrow it to something a single, specific chart can genuinely answer.</p>
+<p>A technically correct chart with a weak or missing business framing — the lab page explicitly grades "quality of the business question," not just execution; push students to state <em>why</em> their chosen manager or analyst would care about the answer, not just that the chart is accurate.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 36. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 7 min · 0:41–0:48</span>
+<h1>Seaborn Version</h1>
+<aside class="notes">
+Teaching goal: rebuild one existing chart in Seaborn instead of matplotlib, and articulate a genuine, specific difference — not just "it looks nicer."
+Say to the class (verbatim): "Seaborn is built on top of matplotlib — think of it as a layer that handles a lot of styling and statistical-chart conveniences automatically. We're rebuilding Q1's bar chart as a Seaborn version, and I want a real, specific observation about what's different, not just a vibes-based 'it looks better.'"
+Line-by-line: <code>import seaborn as sns</code> — same aliasing convention as <code>pandas as pd</code>; <code>sns</code> is the near-universal community convention. <code>sns.barplot(data=region_revenue, x="region", y="revenue", ax=ax, ...)</code> — the calling convention is genuinely different from matplotlib's <code>ax.bar(...)</code>: Seaborn functions typically take the whole DataFrame via <code>data=</code>, plus column <em>names</em> (as strings) for <code>x=</code>/<code>y=</code>, rather than requiring you to pull out and pass raw arrays yourself — often less code, especially as the number of variables grows (a Seaborn chart with a third <code>hue=</code> grouping variable stays almost as simple; the raw-matplotlib equivalent gets noticeably more verbose). <code>ax=ax</code> — Seaborn functions can be told which matplotlib axes to draw onto, integrating cleanly with the same <code>fig, ax = plt.subplots(...)</code> pattern; Seaborn isn't a wholesale replacement for matplotlib, it's a complementary layer on top of it.
+Common mistakes: a comment that only notes an aesthetic difference ("the seaborn one looks nicer") without anything specific — push for <em>what specifically</em> (default color choices, background gridlines, bar edge styling) or a code-volume observation. Forgetting <code>ax=ax</code> and letting Seaborn create its own default figure — breaks the consistent <code>fig, ax</code> pattern and can confuse which figure <code>plt.savefig(...)</code> saves.
+Deck note: this block is shown as static reference code, not a runnable cell — Seaborn is outside this deck's browser package set. Run it locally against the same <code>region_revenue</code> from Exercise 1.
+Check for understanding (guide, verbatim parenthetical): "If you needed a chart broken down by region <em>and</em> product category at once — a grouped or stacked bar chart — which library would likely need less code to get there, based on what you just saw? (Seaborn — its <code>hue=</code> parameter handles this kind of multi-dimensional grouping with one additional argument, where equivalent raw matplotlib code typically requires manually computing bar positions and offsets. Not something to demonstrate live necessarily, but a good forward-looking question.)"
+</aside>
+</section>
+
+<!-- 37. EXERCISE 5 — reference code (not runnable) -->
+<section class="s-code">
+<h3>Reference code — Exercise 5 (run locally: Seaborn isn't in the browser package set)</h3>
+<pre><code class="language-python"># --- Exercise 5 ---
+import seaborn as sns
+
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.barplot(data=region_revenue, x="region", y="revenue", ax=ax, color="#4C72B0")
+ax.set_title("Total Revenue by Region (Seaborn)")
+ax.set_xlabel("Region")
+ax.set_ylabel("Revenue ($)")
+plt.tight_layout()
+plt.savefig("module15/charts/q1_seaborn.png", dpi=150)
+plt.show()
+
+# Difference observed: sns.barplot() took a DataFrame and column names
+# directly (data=, x=, y=) instead of separate x/y arrays -- noticeably
+# less code to point at the right values, and the default color palette
+# and gridlines needed no manual styling to look presentable.</code></pre>
+<p class="expect">Shown for reference — run this on your own machine. Seaborn is a complementary layer on matplotlib, not a replacement: it still draws onto the same <code>ax</code> from <code>plt.subplots(...)</code> via <code>ax=ax</code>. The graded content is a <em>specific</em> difference from the Q1 matplotlib chart, not "it looks nicer."</p>
+<aside class="notes">The live deck cannot run this — Seaborn is outside <code>data-packages</code>'s <code>pandas,matplotlib</code> set; it is a plain <code>&lt;pre&gt;&lt;code&gt;</code> block, not a <code>.run</code> div, exactly as the recipe (§5) directs for code that genuinely cannot run in the browser. Verified locally against the real dataset: <code>matplotlib.use("AGG")</code> + this code (with the Exercise 1 <code>region_revenue</code>) + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~25 KB). Line-by-line: <code>import seaborn as sns</code> (universal alias); <code>sns.barplot(data=, x=, y=, ax=ax, color=)</code> takes the DataFrame + column-name strings rather than raw arrays; <code>ax=ax</code> integrates with the lab's <code>fig, ax</code> pattern. Common mistakes: an aesthetic-only comment; forgetting <code>ax=ax</code>. Check for understanding (guide, verbatim parenthetical): "(Seaborn — its <code>hue=</code> parameter handles this kind of multi-dimensional grouping with one additional argument, where equivalent raw matplotlib code typically requires manually computing bar positions and offsets. Not something to demonstrate live necessarily, but a good forward-looking question.)"</aside>
+</section>
+
+<!-- 38. EXERCISE 5 — chart description -->
+<section class="s-out">
+<h3>Expected chart</h3>
+<pre>Chart type : vertical bar chart (Seaborn sns.barplot)
+Title      : "Total Revenue by Region (Seaborn)"
+x-axis     : "Region" — 4 ticks, same order as Q1's sorted frame:
+             East, South, West, North
+y-axis     : "Revenue ($)" — same heights as the Q1 matplotlib chart
+             (East ~158,622; South ~112,041; West ~63,666;
+              North ~60,113), single colour #4C72B0
+Vs. Q1     : same data, same numbers. Visible differences are
+             styling: Seaborn de-spines the top/right axes and
+             applies its own default look; the data=/x=/y= call
+             took column NAMES, not the two raw arrays ax.bar needed.</pre>
+<aside class="notes">The live block cannot render here (Seaborn is not in the browser package set); run locally to see the PNG. This panel describes what it should show — a PNG cannot be byte-diffed. Verified locally: rc=0, non-empty PNG (~25 KB). The bar heights are identical to the Exercise 1 chart (same <code>region_revenue</code> frame) — the teaching point is the <em>call-convention</em> and default-styling difference, not a data difference. Pyodide's matplotlib ~3.5.2 vs local 3.9.2, and Seaborn version differences, would change styling further; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 39. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">You need a chart broken down by region <em>and</em> product category at once — a grouped/stacked bar chart. Which library likely needs less code, based on Exercise 5?</p>
+<button data-opt="A">Seaborn — its <code>hue=</code> parameter adds the second grouping dimension with one argument, where raw matplotlib needs manual bar-position and offset math</button>
+<button data-opt="B">Matplotlib — <code>ax.bar()</code> accepts a second category list directly, while Seaborn cannot group by more than one variable</button>
+<button data-opt="C">Neither — both need exactly the same amount of code for a grouped bar chart</button>
+<p class="why" hidden>Seaborn — its <code>hue=</code> parameter handles this kind of multi-dimensional grouping with one additional argument, where equivalent raw matplotlib code typically requires manually computing bar positions and offsets.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Seaborn — its <code>hue=</code> parameter handles this kind of multi-dimensional grouping with one additional argument, where equivalent raw matplotlib code typically requires manually computing bar positions and offsets. Not something to demonstrate live necessarily, but a good forward-looking question.)"</aside>
+</section>
+
+<!-- 40. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>A comment that only notes an aesthetic difference ("the seaborn one looks nicer") without anything more specific — push for <em>what specifically</em> looks different (default color choices, background gridlines, bar edge styling) or a code-volume observation (how many lines/arguments were needed for equivalent output).</p>
+<p>Forgetting <code>ax=ax</code> and letting Seaborn create its own default figure — not wrong exactly, but breaks the consistent <code>fig, ax</code> pattern the rest of the lab uses, and can cause confusion about which figure ultimately gets saved by <code>plt.savefig(...)</code>.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 41. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 7 min · 0:48–0:55</span>
+<h1>Multiple Aggregations</h1>
+<aside class="notes">
+Teaching goal: <code>.agg()</code> to compute more than one statistic from a single <code>groupby</code> call — and a genuine business insight that "most orders" and "highest average order value" can point to <em>different</em> regions, a distinction worth computing explicitly rather than assuming.
+Say to the class (verbatim): "One <code>groupby</code>, two statistics at once — total revenue and order count, per region. And I want you to genuinely check: does the region with the most orders also have the highest average order value, or are those two different regions? Don't assume — compute it."
+Line-by-line: <code>df.groupby("region").agg(total_revenue=("revenue", "sum"), order_count=("revenue", "count"))</code> — named aggregation syntax: each keyword argument (<code>total_revenue=</code>, <code>order_count=</code>) names a new output column, and its value is a tuple of <code>(source_column, aggregation_function)</code>. This single call does what would otherwise need two separate <code>groupby</code> calls merged back together. <code>("revenue", "count")</code> — counts how many <code>revenue</code> values exist per group; since every row has a revenue value, that equals the number of rows (orders) per region. <code>region_stats["avg_order_value"] = region_stats["total_revenue"] / region_stats["order_count"]</code> — Module 13's vectorized new-column pattern, computing a derived statistic from two columns that were themselves just produced by the aggregation.
+Required comparison (the exercise's real point): South has the <strong>most orders</strong> (<code>403</code>), but <strong>East</strong> has the <strong>highest average order value</strong> (<code>$510.04</code>) — and from Exercise 1, East also has the highest <em>total</em> revenue despite fewer orders than South. East isn't winning on volume, it's winning because each order tends to be much larger. A manager deciding where to grow order count vs. where to grow average order size would want to know these are two different regions with two different opportunities.
+Common mistakes: assuming "most orders" and "highest average value" must be the same region without checking both numbers — exactly the assumption the exercise tests. Computing <code>avg_order_value</code> incorrectly (e.g. <code>total_revenue.mean()</code>) rather than a genuine row-by-row division of the two aggregated columns.
+Check for understanding (guide, verbatim parenthetical): "Why might a region have a high average order value but relatively few total orders — what's a plausible business explanation? (A few genuinely plausible answers: fewer, larger institutional/bulk customers rather than many small individual ones; a regional focus on higher-priced product categories; less overall market penetration but stronger performance where it does sell. No single right answer — the point is generating a plausible, business-grounded hypothesis, not just noticing the number.)"
+</aside>
+</section>
+
+<!-- 42. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6: two statistics from one <code>groupby</code></h3>
+<div class="run" data-lang="python" data-packages="pandas">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+
+df = pd.read_csv('data/clean_sales.csv')
+
+# --- Exercise 6 ---
+region_stats = df.groupby("region").agg(
+    total_revenue=("revenue", "sum"),
+    order_count=("revenue", "count"),
+)
+region_stats["avg_order_value"] = region_stats["total_revenue"] / region_stats["order_count"]
+print(region_stats)
+
+# Most orders: [fill in after reading output]
+# Highest average order value: [fill in after reading output]
+</div>
+<p class="expect">Named aggregation: <code>total_revenue=("revenue", "sum")</code> and <code>order_count=("revenue", "count")</code> each name a new column and give a <code>(column, function)</code> pair — one <code>groupby</code>, two statistics. Then a vectorized division builds a third, derived column. Read the output to fill in the two comment blanks — and check whether they name the <em>same</em> region.</p>
+<aside class="notes">
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> (fresh namespace per block).
+- <code>df.groupby("region").agg(total_revenue=("revenue", "sum"), order_count=("revenue", "count"))</code> — named-aggregation syntax; each kwarg names an output column, each value is a <code>(source_column, aggregation_function)</code> tuple. One pass, two statistics.
+- <code>("revenue", "count")</code> — counts non-null <code>revenue</code> per group; every row has revenue, so it equals the order (row) count.
+- <code>region_stats["avg_order_value"] = region_stats["total_revenue"] / region_stats["order_count"]</code> — vectorized division of two just-computed columns into a derived one.
+Common mistakes: assuming "most orders" and "highest average value" are the same region without checking; computing the average with <code>.mean()</code> instead of the row-by-row division.
+Check for understanding (guide, verbatim parenthetical): "(A few genuinely plausible answers: fewer, larger institutional/bulk customers rather than many small individual ones; a regional focus on higher-priced product categories; less overall market penetration but stronger performance where it does sell. No single right answer — the point is generating a plausible, business-grounded hypothesis, not just noticing the number.)"
+</aside>
+</section>
+
+<!-- 43. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>        total_revenue  order_count  avg_order_value
+region
+East        158621.95          311       510.038424
+North        60112.83          241       249.430830
+South       112040.69          403       278.016600
+West         63666.44          245       259.863020</pre>
+<aside class="notes">Matches the guide's Exercise 6 "Expected output" on every value — deliberately designed so the two questions have different answers: <code>South</code> has the most orders (<code>403</code>), but <code>East</code> has the highest <code>avg_order_value</code> (<code>510.038424</code> ≈ $510.04) <em>and</em> (from Exercise 1) the highest total revenue, despite <code>311</code> orders vs South's <code>403</code>. Verified against local <code>python3</code> (<code>python3 blk6.py</code>, pandas 2.2.0). The guide's printed sample pads the <code>region</code> header line with extra trailing spaces; real output aligns the three numeric columns under their headers as shown. DataFrame formatting may differ slightly by pandas version; the values are the load-bearing content.</aside>
+</section>
+
+<!-- 44. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Reading <code>region_stats</code>, which statement is correct?</p>
+<button data-opt="A">South has both the most orders and the highest average order value</button>
+<button data-opt="B">East has the most orders; South has the highest average order value</button>
+<button data-opt="C">South has the most orders (403), but East has the highest average order value ($510.04) — and East also has the highest total revenue despite fewer orders than South</button>
+<p class="why" hidden>South has the most orders (403), but East has the highest average order value ($510.04) — and, from Exercise 1, East also has the highest total revenue, despite having fewer orders than South. East isn't winning on volume; each East order tends to be much larger.</p>
+</div>
+<aside class="notes">The guide's Check for understanding here — "Why might a region have a high average order value but relatively few total orders?" — is open-ended with "no single right answer," so it is not keyable. Per the rollout's R-conv-3 fallback, this quiz is drawn from a verbatim line in the same segment's required walkthrough: "South has the <strong>most orders</strong> (<code>403</code>), but <strong>East</strong> has the <strong>highest average order value</strong> (<code>$510.04</code>) — and, from Exercise 1, East also has the highest <em>total</em> revenue, despite having <em>fewer</em> orders than South." (guide, Exercise 6 "Walk through the required comparison explicitly"). Keyed option C is that sentence. The open-ended "why" prompt and its plausible-answers parenthetical are preserved in the divider's notes.</aside>
+</section>
+
+<!-- 45. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Assuming "most orders" and "highest average value" must be the same region without actually checking both numbers — this is exactly the assumption the exercise is designed to test; if a student's answer just states one region for both without computing <code>avg_order_value</code> explicitly, have them verify rather than assume.</p>
+<p>Computing <code>avg_order_value</code> incorrectly as <code>total_revenue.mean()</code> or similar, rather than a genuine row-by-row division of the two aggregated columns — sanity check: does the computed average roughly match dividing the printed <code>total_revenue</code> by <code>order_count</code> by hand for at least one region?</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 46. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 4 min · 0:55–0:59</span>
+<h1>Notebook Tidy-Up</h1>
+<aside class="notes">
+Teaching goal: a quick, low-cognitive-load organizational pass — matching Module 15's "capstone dress rehearsal" framing, since the capstone itself will expect a clearly organized, navigable submission, not just correct code buried in one long undifferentiated block.
+Say to the class (verbatim): "Quick housekeeping pass, not new material: organize what you've already built so someone opening this file cold can navigate it."
+Line-by-line: <strong>If working in Jupyter</strong> — add a markdown cell before each chart block with a level-2 heading and a one-sentence business question, e.g. <code>## Q1: Which region generates the most revenue?</code>. <strong>If working in a <code>.py</code> file</strong> — add an equivalent section comment block before each chart, matching the pattern the guide's own answer key uses throughout (<code># --- Exercise N (QN) ---</code>), extended with a one-line business-question restatement.
+Common mistakes: treating this as purely cosmetic and rushing it — a well-organized submission is itself part of the capstone's actual grading standard, not a nice-to-have; five minutes now is genuinely worth it.
+Check for understanding: the guide gives none for this segment ("No dedicated check — this exercise is naturally verified simply by looking at the final file/notebook's readability together as a class, or spot-checking a couple of students' screens as you circulate.").
+</aside>
+</section>
+
+<!-- 47. EXERCISE 7 — the idea -->
+<section class="s-idea">
+<h3>The idea — label every chart block so the file navigates itself</h3>
+<div class="concept">
+<div class="concept-lbl">Not cosmetic — part of the capstone's grading standard</div>
+<p><strong>Jupyter:</strong> a markdown cell before each chart, level-2 heading + one-sentence business question:</p>
+<pre><code class="language-python">## Q1: Which region generates the most revenue?</code></pre>
+<p><strong><code>.py</code> file:</strong> a section comment matching the answer key's own pattern, extended with the business question:</p>
+<pre><code class="language-python"># --- Exercise 1 (Q1): Revenue by region ---
+# Business question: which region generates the most revenue?</code></pre>
+</div>
+<aside class="notes">Condenses the guide's Exercise 7. No code runs here — the exercise is an organizational pass. Verified simply by reading the final file together. Settle <code>.py</code> vs notebook up front (before class), because the tidy-up instructions differ by format.</aside>
+</section>
+
+<!-- 48. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Why does the guide say not to rush Exercise 7's tidy-up?</p>
+<button data-opt="A">Because ungraded code is deleted from the repo automatically if it lacks section headings</button>
+<button data-opt="B">Because a well-organized submission is itself part of the capstone's actual grading standard, not a nice-to-have — five minutes now is genuinely worth it</button>
+<button data-opt="C">Because Jupyter refuses to export a notebook to PDF unless every cell has a markdown heading</button>
+<p class="why" hidden>A well-organized submission is itself part of the capstone's actual grading standard, not a nice-to-have; five minutes now is genuinely worth it.</p>
+</div>
+<aside class="notes">Exercise 7 has no "Check for understanding" in the guide ("No dedicated check ..."). Per the rollout's R-conv-3 fallback, this quiz is drawn from a verbatim line in the same segment's "Common student mistakes to watch for": "worth stating explicitly that a well-organized submission is itself part of the capstone's actual grading standard, not a nice-to-have; five minutes now is genuinely worth it." Keyed option B is that line.</aside>
+</section>
+
+<!-- 49. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Treating this as purely cosmetic and rushing it — worth stating explicitly that a well-organized submission is itself part of the capstone's actual grading standard, not a nice-to-have; five minutes now is genuinely worth it.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 50. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch 1 &amp; 2 · 0:59–1:09 · as time allows</span>
+<h1>Stretch 1 &amp; 2 Preview</h1>
+<aside class="notes">
+Frame both as previews of genuinely dashboard-grade techniques worth seeing even briefly.
+Stretch 1 framing (verbatim, if you demo it): "<code>plt.subplots(1, 2, ...)</code> creates <em>two</em> axes side by side in one figure instead of one — <code>axes</code> is now a small array, and each chart gets built on its own slot (<code>axes[0]</code>, <code>axes[1]</code>) exactly like the single-axes pattern all lab long, just indexed. This two-charts-in-one-figure layout is exactly what executive dashboards use constantly — multiple related views, one glance."
+Stretch 2 framing (verbatim, if you demo it): "<code>.pivot_table()</code> reshapes the data into a full grid — one row per region, one column per month — in a single call, which is genuinely a more direct route to this shape than manually building it from repeated <code>groupby</code> calls; <code>fill_value=0</code> is doing the exact same 'don't silently drop empty combinations' job as Exercise 2's <code>.reindex()</code>, just for a two-dimensional grid instead of a single list of months. <code>annot=True, fmt=\".0f\"</code> prints each cell's actual number directly on the heatmap, which is what makes it genuinely readable rather than just decoratively colorful."
+Stretch segments get the lighter treatment (idea &rarr; code &rarr; out); no separate knowledge-check quiz, matching the Week 12 / 13 / 14 decks. Stretch 2 (Seaborn heatmap) is shown as static reference code — Seaborn is outside this deck's browser package set; run it locally.
+</aside>
+</section>
+
+<!-- 51. STRETCH — the idea -->
+<section class="s-idea">
+<h3>The idea — two views in one figure; one grid from one call</h3>
+<div class="concept">
+<div class="concept-lbl">Both previews build directly on today</div>
+<p><strong>Stretch 1</strong> — <code>fig, axes = plt.subplots(1, 2, figsize=(14, 5))</code> makes two axes side by side; build each chart on its own slot (<code>axes[0]</code>, <code>axes[1]</code>) exactly like the single-axes pattern, just indexed. This is the executive-dashboard layout: multiple related views, one glance.</p>
+<p><strong>Stretch 2</strong> — <code>df.pivot_table(index="region", columns="month", values="revenue", aggfunc="sum", fill_value=0)</code> reshapes to a full region &times; month grid in one call; <code>fill_value=0</code> does Exercise 2's "don't silently drop empty combinations" job in two dimensions. <code>sns.heatmap(..., annot=True, fmt=".0f")</code> prints each cell's number so it's readable, not just colourful.</p>
+</div>
+<aside class="notes">Condenses the guide's Stretch 1 &amp; 2 framing. Stretch 1 reuses <code>region_revenue</code> (Ex 1) and <code>cat_revenue</code> (Ex 4). Stretch 2's <code>fill_value=0</code> is conceptually the same safeguard as <code>.reindex(range(1,13), fill_value=0)</code>, generalized to a 2-D grid.</aside>
+</section>
+
+<!-- 52. STRETCH 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch 1 (side-by-side subplots)</h3>
+<div class="run" data-lang="python" data-packages="pandas,matplotlib">
+# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+Path("data").mkdir(exist_ok=True)
+_rng = np.random.default_rng(99)
+_n = 1200
+_regions = ["North", "South", "East", "West"]
+_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
+
+_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
+_category_arr = _rng.choice(_categories, size=_n)
+_quantity_arr = _rng.integers(1, 15, size=_n)
+
+_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
+_unit_price = np.zeros(_n)
+for _i in range(_n):
+    if _region_arr[_i] == "East":
+        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
+    else:
+        _unit_price[_i] = _rng.choice(_base_prices)
+
+_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
+_weights = np.ones(len(_dates))
+for _i, _d in enumerate(_dates):
+    if _d.month == 12:
+        _weights[_i] = 2.2
+    elif _d.month == 11:
+        _weights[_i] = 1.4
+_weights = _weights / _weights.sum()
+_date_arr = _rng.choice(_dates, size=_n, p=_weights)
+
+_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
+_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
+
+_gen = pd.DataFrame({
+    "order_id": _order_id,
+    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
+    "region": _region_arr,
+    "product_category": _category_arr,
+    "unit_price": _unit_price,
+    "quantity_sold": _quantity_arr,
+    "revenue": _revenue_arr,
+})
+_gen.to_csv("data/clean_sales.csv", index=False)
+# ---- end deck fixture ----
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('data/clean_sales.csv')
+region_revenue = df.groupby("region")["revenue"].sum().reset_index().sort_values("revenue", ascending=False)
+cat_revenue = df.groupby("product_category")["revenue"].sum().sort_values(ascending=False)
+
+# --- Stretch 1: side-by-side subplots ---
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+region_revenue.plot(kind="bar", x="region", y="revenue", ax=axes[0], legend=False, color="#4C72B0")
+axes[0].set_title("Revenue by Region")
+axes[0].set_ylabel("Revenue ($)")
+
+cat_revenue.plot(kind="bar", ax=axes[1], legend=False, color="#DD8452")
+axes[1].set_title("Revenue by Product Category")
+axes[1].set_ylabel("Revenue ($)")
+
+plt.tight_layout()
+</div>
+<p class="expect">A preview. <code>plt.subplots(1, 2, ...)</code> returns a 1&times;2 array of axes; each chart is built on its own slot exactly like the single-axes pattern, just indexed. The guide's trailing <code>plt.savefig("module15/charts/stretch1_subplots.png", dpi=150)</code> is omitted — the framework captures the figure automatically.</p>
+<aside class="notes">
+The live block renders the actual chart as a PNG; the next panel describes what it should show.
+Line-by-line:
+- deck fixture rebuilds <code>data/clean_sales.csv</code> and re-does the Ex 1 + Ex 4 aggregations (fresh namespace per block).
+- <code>fig, axes = plt.subplots(1, 2, figsize=(14, 5))</code> — two axes side by side; <code>axes</code> is a length-2 array.
+- <code>region_revenue.plot(kind="bar", x="region", y="revenue", ax=axes[0], ...)</code> — pandas' own <code>.plot</code>, drawing onto the left axes.
+- <code>cat_revenue.plot(kind="bar", ax=axes[1], ...)</code> — the category Series onto the right axes.
+The guide gives the code but no explicit expected output (framed as a preview). Values below are the real <code>python3</code> run.
+No separate quiz — the Stretch divider's framing notes stand in for a CFU (matching the Week 12–14 decks).
+Pyodide 0.26.4 bundles matplotlib ~3.5.2 vs local 3.9.2 — chart styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.
+</aside>
+</section>
+
+<!-- 53. STRETCH 1 — chart description -->
+<section class="s-out">
+<h3>Expected chart — Stretch 1</h3>
+<pre>Layout     : ONE figure, two bar charts side by side (1 row x 2 cols)
+Left  axes : title "Revenue by Region", blue (#4C72B0)
+             x tick labels East / South / West / North (rotated)
+             y "Revenue ($)"; same heights as the Q1 chart
+Right axes : title "Revenue by Product Category", orange (#DD8452)
+             x tick labels Apparel / Home Goods / Toys / Electronics
+             y "Revenue ($)"; same heights as the Q4 chart
+No suptitle; tight_layout keeps the two panels from overlapping.</pre>
+<aside class="notes">The guide gives the Stretch 1 code but no explicit expected output (a preview). Verified locally: <code>matplotlib.use("AGG")</code> + the guide's plotting code + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~40 KB). Left-panel heights are the Ex 1 values (East 158621.95 … North 60112.83); right-panel heights are the Ex 4 values (Apparel 103886.52 … Electronics 91203.24). The pandas <code>.plot(kind="bar")</code> path rotates the x tick labels by default. Pyodide's matplotlib ~3.5.2 vs local 3.9.2 — styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 54. STRETCH 2 — reference code (not runnable) -->
+<section class="s-code">
+<h3>Reference code — Stretch 2 (regional monthly heatmap; run locally)</h3>
+<pre><code class="language-python"># --- Stretch 2: regional monthly heatmap ---
+import seaborn as sns
+
+pivot = df.pivot_table(index="region", columns="month", values="revenue", aggfunc="sum", fill_value=0)
+
+fig, ax = plt.subplots(figsize=(12, 5))
+sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlOrRd", ax=ax)
+ax.set_title("Revenue by Region and Month")
+plt.tight_layout()
+plt.savefig("module15/charts/stretch2_heatmap.png", dpi=150)</code></pre>
+<p class="expect">Shown for reference — run locally (Seaborn isn't in the browser package set). <code>.pivot_table()</code> reshapes to a region &times; month grid in one call; <code>fill_value=0</code> does Exercise 2's "don't drop empty combinations" job in two dimensions; <code>annot=True, fmt=".0f"</code> prints each cell's number on the heatmap.</p>
+<aside class="notes">Plain <code>&lt;pre&gt;&lt;code&gt;</code>, not a <code>.run</code> div — Seaborn is outside <code>data-packages</code>'s <code>pandas,matplotlib</code> set (recipe §5). Verified locally: <code>matplotlib.use("AGG")</code> + this code (with the running <code>df</code> incl. the <code>month</code> column from Ex 2) + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~69 KB). <code>pivot_table</code> sorts the index alphabetically (East, North, South, West) and columns 1–12. Line-by-line: <code>df.pivot_table(index="region", columns="month", values="revenue", aggfunc="sum", fill_value=0)</code> builds the grid; <code>sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlOrRd", ax=ax)</code> colours each cell by value and writes the integer in it. Guide framing (verbatim): "<code>.pivot_table()</code> reshapes the data into a full grid ... in a single call ... <code>fill_value=0</code> is doing the exact same 'don't silently drop empty combinations' job as Exercise 2's <code>.reindex()</code> ... <code>annot=True, fmt=\".0f\"</code> prints each cell's actual number directly on the heatmap."</aside>
+</section>
+
+<!-- 55. STRETCH 2 — chart description -->
+<section class="s-out">
+<h3>Expected chart — Stretch 2</h3>
+<pre>Chart type : Seaborn heatmap, 4 rows x 12 columns
+Title      : "Revenue by Region and Month"
+Rows       : region — East, North, South, West (alphabetical)
+Columns    : month — 1 through 12
+Cells      : coloured by revenue on the YlOrRd map (pale yellow = low,
+             deep red = high); each cell annotated with its integer
+             revenue (fmt=".0f"); a colourbar on the right.
+Hot spots  : the month-12 (December) column and the East row run
+             hottest — East Dec ~22,651 and South Dec ~21,115 are the
+             deepest red; the North row is the coolest overall.</pre>
+<aside class="notes">The guide gives the Stretch 2 code but no explicit expected output (a preview) and it cannot run in the deck (Seaborn). Verified locally: rc=0, non-empty PNG (~69 KB). Sample pivot cells (rounded): East Dec 22651, North Dec 9453, South Dec 21115, West Dec 10423; East Jan 10653, North Jan 4429. The December column and East row being hottest is consistent with Exercise 2's December peak and Exercise 1/6's East revenue lead. Pyodide's matplotlib ~3.5.2 and Seaborn version differences would change styling; the data shown is the load-bearing content.</aside>
+</section>
+
+<!-- 56. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li><strong>Could someone unfamiliar with the dataset state your key finding from a 10-second look at each chart?</strong> A strong, honest self-assessment names a specific chart that would benefit from a clearer title or a more prominent label — not just "yes, all of them" reflexively.</li>
+<li><strong>Write the "$Y, Z% above average" sentence for each required chart</strong> — rehearsed live for Exercises 1–3; write all three down now, fresh, without looking back at the board.</li>
+<li><strong>What felt difficult or unclear — note it now.</strong> Useful for you heading into the capstone, and for the instructor as a signal for what to reinforce in Module 16's capstone work time.</li>
+</ul>
+<aside class="notes">
+Review the reflection questions out loud in the last ~6 minutes (guide, verbatim):
+1. <em>Could someone unfamiliar with the dataset state your key finding from a 10-second look at each chart?</em> — a strong, honest self-assessment names a specific chart that would benefit from a clearer title or a more prominent label, not just "yes, all of them" reflexively.
+2. <em>Practice writing the "$Y, Z% above average" sentence for each required chart</em> — this has already been rehearsed live for Exercises 1–3 in this session; have students write all three versions down now, fresh, without looking back at the board.
+3. <em>What felt difficult or unclear — note it now</em> — genuinely useful both for the student (heading into the capstone) and for the instructor (a good signal for what to reinforce in Module 16's dedicated capstone work time).
+</aside>
+</section>
+
+<!-- 57. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li><code>aggregate.ipynb</code> (or <code>.py</code>) contains all 7 exercises, clearly organized (Exercise 7's tidy-up)</li>
+<li>All 4 required PNG charts saved in <code>module15/charts/</code>: <code>q1_revenue_by_region.png</code>, <code>q2_monthly_trend.png</code>, <code>q3_order_distribution.png</code>, <code>q4_custom.png</code></li>
+<li>Every required chart has a title, axis labels, and a one-sentence numeric finding</li>
+<li>Q2's chart shows all 12 months, even any with zero revenue</li>
+<li>Pushed to GitHub inside a <code>module15/</code> folder</li>
+<li>Repo URL submitted to Canvas</li>
+</ul>
+<aside class="notes">Review the submission checklist together. Preview Module 16 (verbatim): "This lab was the dress rehearsal — same workflow, same standards, smaller scale. Module 16 is dedicated capstone work time: a longer version of exactly what you just did, on a dataset and set of business questions of your own. Everything that felt unclear today is worth resolving before then, not during."</aside>
+</section>
+
+<!-- 58. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 15</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w15.md (Week 15 facilitation guide — "Aggregate &amp; Chart — Capstone Warm-up"). This is a DATA WEEK with matplotlib charts. Non-chart blocks carry <code>data-packages="pandas"</code>; chart blocks carry <code>data-packages="pandas,matplotlib"</code> (the first Run on the page preloads pandas + numpy, and for chart blocks matplotlib, into Pyodide). Each <code>.run</code> block runs in its OWN fresh namespace, so every block first re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, a full calendar year, a genuine December peak, and a region — East — that wins on revenue and average order value despite not having the most orders; loop/frame variables renamed with a <code>_</code> prefix so the scaffold never shadows the lab's <code>df</code>) and re-runs every prior step, then runs the current exercise's actual lab code — in the real <code>aggregate.py</code> the course's Module 14 output is placed once and each exercise builds on the same <code>df</code>. Chart blocks: the framework forces the <code>AGG</code> backend and captures the current figure to a PNG in the output pane, so each chart block holds only the guide's chart-building code — the guide's own trailing <code>plt.savefig("module15/charts/…")</code> / <code>plt.show()</code> lines (which target the student's real disk and interactive session) are omitted; run the guide's version locally to write the 4 PNG files the submission needs. Each chart <code>s-out</code> is a prose description because a PNG cannot be byte-diffed. Exercise 5 (Seaborn) and Stretch 2 (Seaborn heatmap) are shown as static reference code, not runnable blocks — Seaborn is outside this deck's browser package set (recipe §5). All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / matplotlib 3.9.2; Pyodide 0.26.4 bundles pandas 2.2.0 and matplotlib ~3.5.2, so chart styling/fonts may differ slightly in the browser — the data shown is the load-bearing content. Two Series-repr divergences are disclosed on their slides (Exercises 2 and 4): <code>print()</code> of a Series emits a <code>Name: revenue, dtype: float64</code> trailer the guide's printed samples abbreviate away; every value the guide cites is reproduced exactly. No block uses <code>input()</code>, so there is no <code>data-stdin</code>.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
