@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM2411 Lab Week 12 — Read a Sales CSV, Write a Cleaned Report</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:210px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM2411 &nbsp;·&nbsp; Week 12 &nbsp;·&nbsp; Module 12 &nbsp;·&nbsp; Unit 3 &nbsp;·&nbsp; Data Structures</p>
+<h1>Read a Sales CSV, Write a Cleaned Report</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Intro — ETL pipeline</span>
+<span class="t-item"><strong>0:04–0:08</strong> Ex 1 — Get the File</span>
+<span class="t-item"><strong>0:08–0:16</strong> Ex 2 — Read Raw Rows</span>
+<span class="t-item"><strong>0:16–0:22</strong> Ex 3 — Skip the Header</span>
+<span class="t-item"><strong>0:22–0:31</strong> Ex 4 — Compute Totals</span>
+<span class="t-item"><strong>0:31–0:41</strong> Ex 5 — Filter and Write</span>
+<span class="t-item"><strong>0:41–0:48</strong> Ex 6 — <code>csv.DictReader</code></span>
+<span class="t-item"><strong>0:48–0:56</strong> Ex 7 — Summary by Product</span>
+<span class="t-item"><strong>0:56–1:06</strong> Ex 8 — Append Mode Log</span>
+<span class="t-item"><strong>1:06–1:15</strong> Stretch + Wrap-Up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+75-minute session, live code-along. This is the third lab of Unit 3 and the first lab where a program's <em>inputs and outputs are real files on disk</em> — every prior module's data lived only inside the running script, created fresh each run and gone the moment the program ended. The lab page framing, worth repeating verbatim: this is a first complete <strong>ETL pipeline</strong> (Extract, Transform, Load) — read raw data in, transform it (filter, compute, summarize), and write cleaned results back out. This read–transform–write shape is the skeleton of an enormous fraction of real business data work. Protect real time for the <code>with</code> block (Exercise 2) and the <code>newline=""</code> detail (Exercise 5) — both are easy to wave past but cause genuinely confusing bugs if skipped.
+Prerequisites: Module 11 (dictionaries, <code>.get()</code> accumulate-into-a-dict pattern); Module 10 (lists). Submission: <code>csv_practice.py</code> + the cleaned CSV and other output files, via GitHub (<code>week12/</code> folder), repo URL to Canvas. Before class: confirm <code>sales.csv</code> is on Canvas (or prepare the verified 10-row Appendix B sample), create the <code>week12/data/</code> folder on your demo machine, and run your own script end to end once before live-coding it.
+Deck note: <code>csv</code> and <code>datetime</code> are both Python standard library — they run in Pyodide with no <code>data-packages</code> needed. Every runnable block runs in its OWN fresh Pyodide namespace, so each block re-writes its own <code>week12/data/sales.csv</code> fixture (the Appendix B sample, embedded as a triple-quoted string) at the top before running the guide's actual code. In the real <code>csv_practice.py</code> the file is created once, outside the script, and every exercise reads it. All runnable-block output verified against CPython 3.12 (== Pyodide 0.26.4).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along — <code>csv_practice.py</code> built exercise by exercise; <code>sales.csv</code> provided (or the verified Appendix B sample)</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Module 11: dictionaries, <code>.get()</code> accumulate-into-a-dict pattern; Module 10: lists</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch (as time allows)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>csv_practice.py</code> + the cleaned CSV and other output files, via GitHub (<code>week12/</code> folder), repo URL to Canvas</span></div>
+</div>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week12_lab. Class length 75 minutes, format live code-along. The required exercises fill available time; the Stretch challenge is positioned as a closing preview since it's largely a direct extension of Exercises 5 and 7 rather than new material. Confirm students have a working GitHub repo and know how to add a new <code>week12/</code> folder.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this 75-minute session, students should be able to:</p>
+<ul>
+<li>Open a file safely with a <code>with</code> block, and explain why this is preferred over manually calling <code>open()</code>/<code>close()</code>.</li>
+<li>Read a CSV file with <code>csv.reader</code>, understand that every value comes back as a string, and use <code>next()</code> to separate a header row from data rows.</li>
+<li>Read the same file more robustly with <code>csv.DictReader</code>, accessing fields by column name instead of position, and articulate when each approach is preferable.</li>
+<li>Write a new CSV file with <code>csv.writer</code>, including the <code>newline=""</code> detail required on some platforms to avoid blank rows.</li>
+<li>Combine Module 11's accumulate-into-a-dictionary pattern with file reading to build a summary report from raw data.</li>
+<li>Append to a text log file across multiple separate script runs, using <code>datetime</code> to timestamp each entry.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Protect the most time for the <code>with</code> block (objective 1) and the <code>newline=""</code> detail (objective 4) — the guide flags both as easy to wave past but genuine bug sources. Objective 5 (accumulate into a dictionary while reading a file) is the payoff that ties Module 11 and this module together.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Intro — read, transform, write (ETL)</td><td>4</td></tr>
+<tr><td>0:04–0:08</td><td>Exercise 1 — Get the File</td><td>4</td></tr>
+<tr><td>0:08–0:16</td><td>Exercise 2 — Read and Print Raw Rows</td><td>8</td></tr>
+<tr><td>0:16–0:22</td><td>Exercise 3 — Skip the Header</td><td>6</td></tr>
+<tr><td>0:22–0:31</td><td>Exercise 4 — Compute Totals</td><td>9</td></tr>
+<tr><td>0:31–0:41</td><td>Exercise 5 — Filter and Write</td><td>10</td></tr>
+<tr><td>0:41–0:48</td><td>Exercise 6 — <code>csv.DictReader</code></td><td>7</td></tr>
+<tr><td>0:48–0:56</td><td>Exercise 7 — Sales Summary by Product</td><td>8</td></tr>
+<tr><td>0:56–1:06</td><td>Exercise 8 — Append Mode Log</td><td>10</td></tr>
+<tr><td>1:06–1:15</td><td>Stretch — <code>summary.csv</code> sorted descending + Wrap-Up</td><td>9</td></tr>
+</tbody>
+</table>
+<aside class="notes">The required exercises fill available time at a normal code-along pace. The Stretch is positioned as a closing preview/demo since it's a direct extension of Exercises 5 and 7. Appendix C has two extra-practice items (a second summary dimension — total quantity per product; a stricter <code>total &gt; 200</code> filter written to <code>cleaned_200.csv</code>) if a section moves unusually fast. Wrap-Up runs in the last ~9 minutes: two reflection questions + the submission checklist + the Module 13 (<code>pandas</code>) preview.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Read, transform, write — a full ETL pipeline</h1>
+<aside class="notes">
+Teaching goal: frame today's jump — this is the first lab where a program's inputs and outputs are real files on disk. Name the shape: Extract, Transform, Load.
+Say to the class (verbatim): "Today your program reads a real file from disk, transforms the data inside it, and writes a new file back out — a complete pipeline: Extract, Transform, Load, or ETL for short. This exact pattern — read raw data in, clean or summarize it, save the result — is one of the most common shapes of real business data work, in any language, at any company."
+Do: open <code>csv_practice.py</code>, type the header — <code># csv_practice.py</code> / <code># ISM2411 Module 12 Lab — Read a Sales CSV, Write a Cleaned Report</code>.
+Common mistakes: none yet — this is framing.
+Deck note: every runnable block re-creates <code>week12/data/sales.csv</code> from the embedded Appendix B sample at the top (fresh namespace per block, but the Pyodide virtual filesystem persists across blocks in a page). In the real lab the file is placed once by hand and every exercise just reads it.
+</aside>
+</section>
+
+<!-- 6. EXERCISE 1 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 1 · 4 min · 0:04–0:08</span>
+<h1>Get the File</h1>
+<aside class="notes">
+Teaching goal: confirm the input file exists at the correct relative path before writing any code that depends on it — a genuinely important habit, since "file not found" is the single most common failure mode in this entire lab.
+Say to the class (verbatim): "Before any Python, confirm the file itself is where we expect it. <code>sales.csv</code> needs to live at <code>week12/data/sales.csv</code>, relative to wherever your script runs from — get this path wrong and every exercise from here fails with the same unhelpful-looking error."
+Do: have every student run <code>mkdir -p week12/data</code> and place <code>sales.csv</code> inside <code>week12/data/</code>, then verify with the minimal script on the next slide.
+</aside>
+</section>
+
+<!-- 7. EXERCISE 1 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 1</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 1 ---
+with open("week12/data/sales.csv") as f:
+    print("File opened successfully")
+</div>
+<p class="expect">The first 14 lines are deck scaffolding — they write the verified Appendix B sample into Pyodide's virtual filesystem so the block is self-contained. The guide's Exercise 1 is only the last two lines. <code>"week12/data/sales.csv"</code> is a <strong>relative path</strong> — relative to wherever the script runs <em>from</em>, not to the script file's own location. Get it wrong and you get <code>FileNotFoundError</code>.</p>
+<aside class="notes">
+Line-by-line:
+- The <code>Path("week12/data").mkdir(...)</code> + <code>CSV = """..."""</code> + <code>write_text</code> block is deck-only scaffolding — on a real machine the student created this folder with <code>mkdir -p week12/data</code> and dropped <code>sales.csv</code> in by hand. It is shown here so the runnable block has a file to open.
+- <code>with open("week12/data/sales.csv") as f:</code> — the actual Exercise 1. The path <code>"week12/data/sales.csv"</code> is a <strong>relative path</strong>, exactly like Module 01's directory-tree exercises — relative to wherever the script itself is run <em>from</em>, not relative to the script file's own location. A student running from inside <code>week12/</code> versus from the repo root needs a different relative path — state this explicitly as the single most common setup issue in this lab.
+- <code>print("File opened successfully")</code> — if this line runs at all, the file was found and opened; the <code>with</code> block closes it automatically at the end.
+Common mistakes: running the script from the wrong directory (a callback to Module 02 Exercise 7) — produces <code>FileNotFoundError: [Errno 2] No such file or directory: 'week12/data/sales.csv'</code>. Have students run <code>pwd</code> first and reason about the relative path from there. Placing the file at <code>week12/sales.csv</code> (missing the <code>data/</code> subfolder) or naming it <code>Sales.csv</code> (case mismatch) — both produce the identical <code>FileNotFoundError</code>.
+Check for understanding (guide, verbatim parenthetical): "If I moved <code>sales.csv</code> to sit directly next to my script instead of inside <code>week12/data/</code>, what — if anything — would I need to change in my code? (The path string itself, from <code>"week12/data/sales.csv"</code> to just <code>"sales.csv"</code> — get a student to state explicitly that the code has to match wherever the file actually lives; there's no automatic discovery.)"
+</aside>
+</section>
+
+<!-- 8. EXERCISE 1 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>File opened successfully</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output" for Exercise 1 exactly — one line. If it prints, the relative path resolved and the file opened. Verified against CPython 3.12: <code>python3 blk1.py</code> → <code>File opened successfully</code>.</aside>
+</section>
+
+<!-- 9. EXERCISE 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If you moved <code>sales.csv</code> to sit directly next to your script instead of inside <code>week12/data/</code>, what — if anything — would you need to change in your code?</p>
+<button data-opt="A">Nothing — Python searches parent and child folders automatically until it finds a file with that name</button>
+<button data-opt="B">The path string itself, from <code>"week12/data/sales.csv"</code> to just <code>"sales.csv"</code> — the code has to match wherever the file actually lives; there is no automatic discovery</button>
+<button data-opt="C">Only the <code>open()</code> mode — you would add an explicit <code>"r"</code> argument</button>
+<p class="why" hidden>The path string itself, from <code>"week12/data/sales.csv"</code> to just <code>"sales.csv"</code> — get a student to state explicitly that the code has to match wherever the file actually lives; there's no automatic discovery.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(The path string itself, from <code>"week12/data/sales.csv"</code> to just <code>"sales.csv"</code> — get a student to state explicitly that the code has to match wherever the file actually lives; there's no automatic discovery.)" Option A is the "Python will find it for me" misconception this exercise exists to kill.</aside>
+</section>
+
+<!-- 10. EXERCISE 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running the script from the wrong directory (a direct callback to Module 02 Exercise 7) — produces <code>FileNotFoundError: [Errno 2] No such file or directory: 'week12/data/sales.csv'</code>. Have students run <code>pwd</code> first and reason about the relative path from there, rather than guessing and re-running repeatedly.</p>
+<p>Placing the file at <code>week12/sales.csv</code> (missing the <code>data/</code> subfolder) or naming it something slightly different (<code>Sales.csv</code>, case mismatch on a case-sensitive filesystem) — both produce the identical <code>FileNotFoundError</code>. Worth explicitly checking both possibilities if the error persists after confirming the working directory is correct.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 1. All three failure modes surface as the same unhelpful-looking <code>FileNotFoundError</code>.</aside>
+</section>
+
+<!-- 11. EXERCISE 2 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 2 · 8 min · 0:08–0:16</span>
+<h1>Read and Print Raw Rows</h1>
+<aside class="notes">
+Teaching goal: open a file safely with a <code>with</code> block, read it with <code>csv.reader</code>, and observe — critically — that every value comes back as a <strong>string</strong>, even ones that look numeric.
+Say to the class (verbatim): "New syntax today: <code>with</code>. This is how you open a file safely — it guarantees the file gets closed automatically, even if something goes wrong partway through, without you having to remember to call <code>.close()</code> yourself."
+</aside>
+</section>
+
+<!-- 12. EXERCISE 2 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>with</code> is the modern way to open a file</h3>
+<div class="concept">
+<div class="concept-lbl">Slow down for this — it's the new syntax</div>
+<p><code>with open(...) as f:</code> creates a block where <code>f</code> (the open file) is available, and <strong>automatically closes it the moment the block ends</strong> — even if an error occurs partway through.</p>
+<p>Contrast with the older, error-prone <code>f = open(...); ...; f.close()</code>, where a forgotten or skipped <code>.close()</code> leaves the file open. Say plainly: <strong><code>with</code> is the standard, correct way to open a file in modern Python — there's essentially no reason to use the manual open/close pattern instead.</strong></p>
+</div>
+<aside class="notes">This card condenses the guide's line-by-line for Exercise 2. The <code>with</code> block is the segment to protect time for. <code>import csv</code> gives tools that handle CSV edge cases (commas inside quoted fields) a naive <code>.split(",")</code> would get wrong. <code>csv.reader(f)</code> wraps the open file; <code>for row in reader:</code> yields each row as a <strong>list of strings</strong>, including the header row on the first iteration — this loop doesn't yet distinguish header from data, which is exactly what Exercise 3 fixes.</aside>
+</section>
+
+<!-- 13. EXERCISE 2 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 2</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 2 ---
+import csv
+
+with open("week12/data/sales.csv") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+</div>
+<p class="expect">Each <code>row</code> is a <strong>list of strings</strong> — even <code>'9.99'</code> and <code>'50'</code> print wrapped in quotes. Nothing is a number yet; conversion is a deliberate, separate step in Exercise 4. The header row prints on the first iteration, mixed in with the data — Exercise 3 fixes that.</p>
+<aside class="notes">
+Line-by-line:
+- <code>import csv</code> — standard library (no installation), provides tools for reading/writing CSV correctly, including commas inside quoted fields that a manual <code>.split(",")</code> would get wrong.
+- <code>with open("week12/data/sales.csv") as f:</code> — <strong>the new syntax to slow down for.</strong> <code>with</code> creates a block where <code>f</code> is available and automatically closes the file when the block ends, even on an error. Contrast explicitly with <code>f = open(...); ...; f.close()</code>, where a skipped <code>.close()</code> leaks the file. <code>with</code> is the standard, correct way to open a file in modern Python.
+- <code>reader = csv.reader(f)</code> — wraps the open file in a CSV reader that splits each line into a list of field values per CSV rules.
+- <code>for row in reader:</code> — each <code>row</code> is a <strong>list of strings</strong>, including the header row on the very first iteration.
+Point out explicitly (the exercise's stated goal): every value — even <code>'9.99'</code> and <code>'50'</code> — is a <strong>string</strong>, wrapped in quotes in the printed output. Parallel to <code>input()</code> always returning strings back in Module 03.
+Common mistakes: forgetting <code>import csv</code> — raises <code>NameError: name 'csv' is not defined</code> the moment <code>csv.reader</code> is referenced. Trying math directly on a row's values (<code>row[1] * row[2]</code>) — both are strings, so this raises <code>TypeError</code> or does something unexpected, foreshadowing Exercise 4's required conversions.
+Check for understanding (guide, verbatim parenthetical): "How many total rows print, including the header — and how do you know without counting the printed lines by hand? (Eleven — ten data rows plus one header row; a student who opened the CSV directly in a text editor beforehand and counted lines there has a good independent way to confirm the loop visited every row.)"
+</aside>
+</section>
+
+<!-- 14. EXERCISE 2 — expected output -->
+<section class="s-out">
+<h3>Expected output — all eleven lines</h3>
+<pre>['product', 'price', 'quantity']
+['Widget A', '9.99', '50']
+['Widget B', '24.99', '12']
+['Gadget C', '49.99', '3']
+['Gadget D', '14.99', '20']
+['Gizmo E', '99.99', '2']
+['Doohickey F', '4.99', '80']
+['Widget A', '9.99', '5']
+['Gadget C', '49.99', '1']
+['Widget B', '24.99', '2']
+['Gizmo E', '99.99', '1']</pre>
+<aside class="notes">The guide abbreviates this to "first three of eleven lines shown; header included" with a <code>...</code>. Shown here in full — the real, unabbreviated <code>python3</code> output — so the deck teaches even if Pyodide never loads. Eleven lines total: one header list plus ten data-row lists, every value a quoted string. Verified against CPython 3.12: <code>python3 blk2.py</code> reproduces exactly these eleven lines.</aside>
+</section>
+
+<!-- 15. EXERCISE 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">How many total lines print, including the header — and how could you know without counting the printed output by hand?</p>
+<button data-opt="A">Ten — <code>csv.reader</code> skips the header row automatically, leaving one line per data row</button>
+<button data-opt="B">Twelve — ten data rows, one header, and one blank trailing row from the file's final newline</button>
+<button data-opt="C">Eleven — ten data rows plus one header row; opening the CSV in a text editor and counting its lines is an independent way to confirm the loop visited every row</button>
+<p class="why" hidden>Eleven — ten data rows plus one header row; a student who opened the CSV directly in a text editor beforehand and counted lines there has a good independent way to confirm the loop visited every row.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Eleven — ten data rows plus one header row; a student who opened the CSV directly in a text editor beforehand and counted lines there has a good independent way to confirm the loop visited every row.)" Option A is the trap that confuses <code>csv.reader</code> (no automatic header handling) with <code>csv.DictReader</code> (Exercise 6, which does consume the header).</aside>
+</section>
+
+<!-- 16. EXERCISE 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>import csv</code> at the top of the file — raises <code>NameError: name 'csv' is not defined</code> the moment <code>csv.reader</code> is referenced; a familiar error type from many prior modules, now in a new context (a missing import, not a typo).</p>
+<p>Trying to do math directly on a row's values without conversion (<code>row[1] * row[2]</code>) — since both are strings, this either raises <code>TypeError</code> or does something unexpected depending on the specific values, directly foreshadowing Exercise 4's required <code>float()</code>/<code>int()</code> conversions.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 2.</aside>
+</section>
+
+<!-- 17. EXERCISE 3 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 3 · 6 min · 0:16–0:22</span>
+<h1>Skip the Header</h1>
+<aside class="notes">
+Teaching goal: <code>next()</code> to advance an iterator by exactly one step, pulling the header out of the loop entirely — a small piece of syntax with an outsized payoff for every remaining exercise today.
+Say to the class (verbatim): "One new function, <code>next()</code>, and it solves the 'header row keeps getting mixed in with data' problem for the rest of this lab."
+</aside>
+</section>
+
+<!-- 18. EXERCISE 3 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>next()</code> advances the reader by one</h3>
+<div class="concept">
+<div class="concept-lbl">State this mechanism explicitly</div>
+<p><code>reader</code> is an <strong>iterator</strong>: it hands out one item at a time when asked. <code>next(reader)</code> explicitly asks for "the next item" — called <em>before</em> the loop, it pulls exactly the first row (the header) out and <strong>advances the reader's internal position by one</strong>.</p>
+<p>After that line runs, the reader "remembers" it already gave out the header, so the <code>for</code> loop that follows starts fresh from the <em>second</em> row. A <code>csv.reader</code> only moves forward — never backward, and calling <code>next()</code> again won't "reset" it.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 3. <code>header = next(reader)</code> stores the header row so it can still be used later if needed. <code>print(header)</code> confirms it was captured distinctly from the data rows. <code>for row in reader:</code> then starts at the first genuine data row.</aside>
+</section>
+
+<!-- 19. EXERCISE 3 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 3</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 3 ---
+import csv
+
+with open("week12/data/sales.csv") as f:
+    reader = csv.reader(f)
+    header = next(reader)
+    print(header)
+    for row in reader:
+        print(row)
+</div>
+<p class="expect"><code>next(reader)</code> is called <em>once, before the loop</em>, consuming exactly the header. The loop then starts on the first data row — no repeated header this time. Ten data rows follow the single header line.</p>
+<aside class="notes">
+Line-by-line:
+- <code>header = next(reader)</code> — <code>reader</code> is an <strong>iterator</strong>. <code>next(reader)</code> explicitly asks for "the next item" — here, before the loop starts, so it pulls the <em>first</em> row (the header) and stores it in <code>header</code>, <strong>advancing the reader's position by one</strong>. After this line, the <code>for</code> loop starts fresh from the second row — the header is never seen by the loop.
+- <code>print(header)</code> — printed once, separately, confirming it was captured distinctly from the data rows.
+- <code>for row in reader:</code> — now starts at the first genuine data row, since <code>next(reader)</code> already consumed the header.
+Common mistakes: calling <code>next(reader)</code> <em>inside</em> the loop, expecting it to skip the header on the first iteration — it actually skips a different row each pass; walk through what it really does rather than just saying "move it before the loop." Assuming <code>next()</code> can be called again to "reset" back to the header — it can't; a <code>csv.reader</code> only moves forward. Store the header in a variable instead.
+Check for understanding (guide, verbatim parenthetical): "If I called <code>next(reader)</code> a <em>second</em> time, right after the first, before starting the loop, what would <code>header</code> end up holding, and what would the loop start on? (The second call would actually consume and discard the <em>first data row</em> instead of the header, storing that row's content in <code>header</code> if reassigned, or simply skipping it if not — and the loop would then start from the <em>second</em> data row. A good trace-it-by-hand question confirming students understand <code>next()</code> moves forward one step at a time, unconditionally, regardless of what's "supposed" to be there conceptually.)"
+</aside>
+</section>
+
+<!-- 20. EXERCISE 3 — expected output -->
+<section class="s-out">
+<h3>Expected output — header, then ten data rows</h3>
+<pre>['product', 'price', 'quantity']
+['Widget A', '9.99', '50']
+['Widget B', '24.99', '12']
+['Gadget C', '49.99', '3']
+['Gadget D', '14.99', '20']
+['Gizmo E', '99.99', '2']
+['Doohickey F', '4.99', '80']
+['Widget A', '9.99', '5']
+['Gadget C', '49.99', '1']
+['Widget B', '24.99', '2']
+['Gizmo E', '99.99', '1']</pre>
+<aside class="notes">The guide shows the first three lines plus <code>...</code> and notes "Ten data rows follow the header line, with no repeated header this time." Shown here in full — the real <code>python3</code> output. The printed text is identical to Exercise 2's, because Exercise 2 also printed the header first (just as part of the loop rather than separately) — the difference is structural, not visible in the output. Verified against CPython 3.12: <code>python3 blk3.py</code>.</aside>
+</section>
+
+<!-- 21. EXERCISE 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If you called <code>next(reader)</code> a <em>second</em> time, right after the first, before the loop starts, what would <code>header</code> hold and what would the loop start on?</p>
+<button data-opt="A">The second call consumes and discards the <em>first data row</em>; <code>header</code> would hold that data row (if reassigned) and the loop would start from the <em>second</em> data row</button>
+<button data-opt="B"><code>next()</code> resets the reader, so <code>header</code> holds the header row again and the loop starts on the first data row</button>
+<button data-opt="C">It raises <code>StopIteration</code> — a reader can only be advanced a single time</button>
+<p class="why" hidden>The second call would actually consume and discard the first data row instead of the header, storing that row's content in <code>header</code> if reassigned, or simply skipping it if not — and the loop would then start from the second data row. <code>next()</code> moves forward one step at a time, unconditionally, regardless of what's "supposed" to be there conceptually.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(The second call would actually consume and discard the <em>first data row</em> instead of the header, storing that row's content in <code>header</code> if reassigned, or simply skipping it if not — and the loop would then start from the <em>second</em> data row. A good trace-it-by-hand question confirming students understand <code>next()</code> moves forward one step at a time, unconditionally, regardless of what's "supposed" to be there conceptually.)" Option B is the "reset" misconception the guide explicitly warns against.</aside>
+</section>
+
+<!-- 22. EXERCISE 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Calling <code>next(reader)</code> <em>inside</em> the loop, expecting it to skip the header on the first iteration — this actually skips a <em>different</em> row each time depending on where it's placed, and is a much more confusing, error-prone pattern than calling it once, cleanly, before the loop starts. Walk through what it actually does with the student rather than just saying "put it before the loop instead."</p>
+<p>Assuming <code>next()</code> can be called again later to "reset" back to the header — it can't; a <code>csv.reader</code> only moves forward, never backward. If a script needs the header again later, storing it in a variable (as <code>header = next(reader)</code> does) is the correct approach.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 3.</aside>
+</section>
+
+<!-- 23. EXERCISE 4 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 4 · 9 min · 0:22–0:31</span>
+<h1>Compute Totals</h1>
+<aside class="notes">
+Teaching goal: convert string values to numbers, compute a per-row total, and accumulate an overall total — combining Module 03's type-conversion lesson with Module 06's accumulator pattern, now reading from a real file instead of a hardcoded list.
+Say to the class (verbatim): "Same conversion requirement as <code>input()</code> back in Module 3 — everything from this CSV is a string, and we need real numbers to compute revenue. Then the exact accumulator pattern from Module 6, totaling revenue across every row."
+</aside>
+</section>
+
+<!-- 24. EXERCISE 4 — the idea -->
+<section class="s-idea">
+<h3>The idea — convert, then accumulate</h3>
+<div class="concept">
+<div class="concept-lbl">Two familiar patterns, new source</div>
+<p><code>price = float(price)</code> / <code>quantity = int(quantity)</code> — a CSV's values need type conversion for the <em>same underlying reason</em> <code>input()</code>'s values do: both hand back plain text, regardless of what the text looks like.</p>
+<p><code>total_revenue = 0</code> before the loop; <code>total_revenue += line_total</code> inside it — Module 06's accumulator, unchanged. Only the <em>source</em> of the loop's values is different now (a file, not a hardcoded list).</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 4. <code>product, price, quantity = row</code> is <strong>tuple unpacking</strong> (Module 01) applied to a CSV row — one line assigns all three fields to named variables instead of <code>row[0]</code>, <code>row[1]</code>, <code>row[2]</code> throughout the loop body. The accumulator must exist <em>before</em> the <code>with</code> block opens, same as always.</aside>
+</section>
+
+<!-- 25. EXERCISE 4 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 4</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 4 ---
+import csv
+
+total_revenue = 0                    # initialize
+with open("week12/data/sales.csv") as f:
+    reader = csv.reader(f)
+    header = next(reader)
+    for row in reader:
+        product, price, quantity = row
+        price = float(price)
+        quantity = int(quantity)
+        line_total = price * quantity
+        total_revenue += line_total   # update
+        print(f"{product}: {quantity} units × ${price:.2f} = ${line_total:.2f}")
+
+print(f"Total revenue: ${total_revenue:.2f}")   # use
+</div>
+<p class="expect">Initialize–update–use, exactly like Module 06 — only the loop's source changed. <code>product, price, quantity = row</code> unpacks the three-element list; <code>float()</code> and <code>int()</code> convert; <code>:.2f</code> formats each dollar figure to two decimals. Total revenue: <code>$2098.24</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>total_revenue = 0</code> — the accumulator, initialized <strong>before</strong> the <code>with</code> block even opens — echoing Module 06: it has to exist before the loop starts.
+- <code>product, price, quantity = row</code> — <strong>tuple unpacking</strong> (Module 01) applied to a CSV row for the first time: every row is a three-element list, so this one line names all three fields instead of writing <code>row[0]</code>, <code>row[1]</code>, <code>row[2]</code>.
+- <code>price = float(price)</code> / <code>quantity = int(quantity)</code> — the required conversions, exactly parallel to Module 03/06's <code>input()</code> conversions — a CSV's values need conversion for the same reason <code>input()</code>'s do: both hand back plain text.
+- <code>total_revenue += line_total</code> — the familiar accumulator update, now inside a loop reading from a file rather than a hardcoded list. The pattern itself hasn't changed at all; only the source of the loop's values has.
+Common mistakes: forgetting a conversion. If only <code>quantity</code> is converted, <code>price * quantity</code> (string × int) actually <em>runs</em> — string repetition from Module 03 — producing a bizarre repeated-text result rather than a clean crash; demonstrate this live because it's a <em>silent</em> failure, unlike the <code>TypeError</code> if neither is converted. Reusing <code>total</code> as a variable name (shadowing Module 06's habitual name) — harmless here, but worth a naming-hygiene note now that the file is accumulating many exercises' variables.
+Check for understanding (guide, verbatim parenthetical): "If <code>sales.csv</code> had 500 rows instead of 10, what — if anything — needs to change about this code to still work correctly? (Nothing — the <code>with</code>/<code>csv.reader</code>/<code>for</code> combination processes however many rows exist automatically, exactly like Module 06's loops didn't care how long <code>sales</code> was. This is worth stating explicitly as the real payoff of reading from a file with a loop, rather than, say, manually typing ten separate conversions.)"
+</aside>
+</section>
+
+<!-- 26. EXERCISE 4 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Widget A: 50 units × $9.99 = $499.50
+Widget B: 12 units × $24.99 = $299.88
+Gadget C: 3 units × $49.99 = $149.97
+Gadget D: 20 units × $14.99 = $299.80
+Gizmo E: 2 units × $99.99 = $199.98
+Doohickey F: 80 units × $4.99 = $399.20
+Widget A: 5 units × $9.99 = $49.95
+Gadget C: 1 units × $49.99 = $49.99
+Widget B: 2 units × $24.99 = $49.98
+Gizmo E: 1 units × $99.99 = $99.99
+Total revenue: $2098.24</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output (verified against the sample <code>sales.csv</code> in Appendix B)" exactly. Ten per-row lines using the literal <code>×</code> multiplication sign from the guide's f-string, then the accumulated total. <code>"1 units"</code> (not "unit") is the guide's own wording — no pluralization logic. Verified against CPython 3.12: <code>python3 blk4.py</code> reproduces all eleven lines including <code>Total revenue: $2098.24</code>.</aside>
+</section>
+
+<!-- 27. EXERCISE 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If <code>sales.csv</code> had 500 rows instead of 10, what — if anything — would need to change about this code to still work correctly?</p>
+<button data-opt="A">The loop needs a range limit, e.g. <code>for i in range(500)</code>, so it knows how far to read</button>
+<button data-opt="B">You would need 500 <code>float()</code>/<code>int()</code> conversion lines, one per row</button>
+<button data-opt="C">Nothing — the <code>with</code>/<code>csv.reader</code>/<code>for</code> combination processes however many rows exist automatically</button>
+<p class="why" hidden>Nothing — the <code>with</code>/<code>csv.reader</code>/<code>for</code> combination processes however many rows exist automatically, exactly like Module 06's loops didn't care how long <code>sales</code> was. This is the real payoff of reading from a file with a loop, rather than manually typing ten separate conversions.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Nothing — the <code>with</code>/<code>csv.reader</code>/<code>for</code> combination processes however many rows exist automatically, exactly like Module 06's loops didn't care how long <code>sales</code> was. This is worth stating explicitly as the real payoff of reading from a file with a loop, rather than, say, manually typing ten separate conversions.)" Options A and B both assume the loop needs to be told the row count in advance — it doesn't.</aside>
+</section>
+
+<!-- 28. EXERCISE 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting either conversion (leaving <code>price</code> or <code>quantity</code> as a string) — <code>price * quantity</code> between a string and an int actually <em>runs without error</em> if only <code>quantity</code> is converted (string-times-int means repetition, from Module 03's Exercise 5 extra) producing a bizarre repeated-text result rather than a clean crash; demonstrate this live specifically because it's a <em>silent</em>, not obviously broken, failure mode — distinct from the cleaner <code>TypeError</code> that occurs if <em>neither</em> value is converted.</p>
+<p>Reusing <code>total</code> as a variable name (shadowing Module 06's habitual name) without noticing it collides with nothing here — harmless in isolation, but worth a brief naming-hygiene note now that files this large are accumulating many exercises' worth of variables in one script.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 4.</aside>
+</section>
+
+<!-- 29. EXERCISE 5 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 5 · 10 min · 0:31–0:41</span>
+<h1>Filter and Write</h1>
+<aside class="notes">
+Teaching goal: write a <em>new</em> CSV file, containing only rows that pass a filter — combining <code>csv.writer</code> with the filtering pattern from Module 10 Exercise 8, and encountering the <code>newline=""</code> detail that prevents a genuinely common, confusing bug.
+Say to the class (verbatim): "Now we write, not just read — a brand-new CSV, containing only the orders over $100. One easy-to-miss detail in the <code>open()</code> call that avoids a real, confusing bug: <code>newline=""</code>. I'll show you what goes wrong without it."
+</aside>
+</section>
+
+<!-- 30. EXERCISE 5 — the idea -->
+<section class="s-idea">
+<h3>The idea — two files at once, and the <code>newline=""</code> gotcha</h3>
+<div class="concept">
+<div class="concept-lbl">Two things to explain carefully</div>
+<p><code>with open(...) as infile, open(...) as outfile:</code> — <strong>two files open in one <code>with</code> statement</strong>, separated by a comma; both close automatically at the block's end.</p>
+<p><code>open("...cleaned.csv", "w", newline="")</code> — <code>"w"</code> <strong>creates the file, or completely overwrites it if it exists</strong>. <code>newline=""</code> tells Python's file layer to let the <code>csv</code> module handle line endings on its own — without it, Windows can insert a blank line between every row. Treat it as a <strong>"just always include this" habit</strong>, not something to derive.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 5. <code>csv.writer(outfile)</code> is the parallel of <code>csv.reader</code>. <code>writer.writerow(["Product", "Price", "Qty", "Total"])</code> writes the <em>new</em> file's header with deliberately different column names (capitalized <code>Price</code>, abbreviated <code>Qty</code>). <code>if total &gt; 100: writer.writerow(...)</code> is the filter, exactly parallel to Module 10 Exercise 8's <code>if sale &gt; 300: high_sales.append(sale)</code> — build something new, conditionally, inside a loop, writing to a file instead of appending to a list. On Mac/Linux the missing-<code>newline=""</code> bug often doesn't show at all — say so, since a Mac student may wonder why it matters; the honest answer is it's a cross-platform safety habit.</aside>
+</section>
+
+<!-- 31. EXERCISE 5 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 5</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 5 ---
+import csv
+
+rows_written = 0
+rows_total = 0
+
+with open("week12/data/sales.csv") as infile, \
+     open("week12/data/cleaned.csv", "w", newline="") as outfile:
+    reader = csv.reader(infile)
+    writer = csv.writer(outfile)
+    header = next(reader)
+    writer.writerow(["Product", "Price", "Qty", "Total"])
+
+    for row in reader:
+        rows_total += 1
+        product, price, quantity = row
+        price = float(price)
+        quantity = int(quantity)
+        total = price * quantity
+        if total &gt; 100:
+            writer.writerow([product, price, quantity, round(total, 2)])
+            rows_written += 1
+
+print(f"Wrote {rows_written} of {rows_total} rows")
+print(Path("week12/data/cleaned.csv").read_text())
+</div>
+<p class="expect">The guide's Exercise 5 ends at the <code>print(f"Wrote ...")</code> line. The extra <code>print(Path(...).read_text())</code> is deck-only — it echoes the file just written so the block has visible output. 4 of 10 rows fall at or below $100, so 6 are written.</p>
+<aside class="notes">
+Line-by-line:
+- <code>with open(...) as infile, open(...) as outfile:</code> — <strong>two files open at once</strong> in a single <code>with</code> statement — valid, common syntax: separate them with a comma, both close automatically at the end.
+- <code>open("week12/data/cleaned.csv", "w", newline="")</code> — three arguments: the filename, <code>"w"</code> (write mode — <strong>creates the file if it doesn't exist, completely overwrites it if it does</strong>, a real risk if pointed at a file to keep), and <code>newline=""</code>. On Windows, Python's default text handling plus the <code>csv</code> module's own line-ending handling can insert blank lines between rows; <code>newline=""</code> lets <code>csv</code> manage line endings alone. A "just always include this, it's a known gotcha" detail — not something to derive from first principles.
+- <code>writer = csv.writer(outfile)</code> — parallel structure to <code>csv.reader</code>, for writing.
+- <code>writer.writerow(["Product", "Price", "Qty", "Total"])</code> — writes the <em>new</em> file's header with different column names than the original (<code>Price</code> capitalized, <code>Qty</code> abbreviated) — a deliberate design choice, not something to preserve from the source.
+- <code>if total &gt; 100: writer.writerow(...)</code> — the filter, inside the loop, exactly parallel to Module 10 Exercise 8's <code>if sale &gt; 300: high_sales.append(sale)</code>.
+Common mistakes: omitting <code>newline=""</code> — demonstrate live if your platform shows it (most visible on Windows; Mac/Linux often don't show it — a cross-platform safety habit). Opening the output in <code>"w"</code> when meaning to <em>add</em> to a file — preview Exercise 8's <code>"a"</code> mode. Writing the filtered row with the loop's <code>price</code>/<code>quantity</code> but forgetting <code>total</code> must be freshly computed and passed too — trace the four values <code>writer.writerow([...])</code> needs, matching the four header columns one-to-one.
+Check for understanding (guide, verbatim parenthetical): "If I ran this exact script a second time without changing anything, what would <code>cleaned.csv</code> contain afterward — the same six rows, twelve rows, or something else? (Still exactly six rows — <code>"w"</code> mode overwrites the file completely on each run, rather than adding to what's already there; this is the direct, important contrast with Exercise 8's append mode coming up next.)"
+</aside>
+</section>
+
+<!-- 32. EXERCISE 5 — expected output -->
+<section class="s-out">
+<h3>Expected output — count line, then the file just written</h3>
+<pre>Wrote 6 of 10 rows
+Product,Price,Qty,Total
+Widget A,9.99,50,499.5
+Widget B,24.99,12,299.88
+Gadget C,49.99,3,149.97
+Gadget D,14.99,20,299.8
+Gizmo E,99.99,2,199.98
+Doohickey F,4.99,80,399.2
+</pre>
+<aside class="notes">The guide's stated Exercise 5 output is just the first line, <code>Wrote 6 of 10 rows</code> (verified against the sample where 4 of 10 rows fall at or below $100). The remaining lines are the contents of <code>week12/data/cleaned.csv</code>, echoed by the deck-only <code>print(...read_text())</code> — they match the guide's "<code>week12/data/cleaned.csv</code> should now contain" block exactly: six data rows plus the new capitalized header, with <code>round()</code> trimming trailing zeros (<code>499.5</code>, <code>299.8</code>, <code>399.2</code>). The final blank line is <code>print()</code> adding a newline after file text that already ends in one — shown as it really prints. Verified against CPython 3.12: <code>python3 blk5.py</code>. The four excluded rows are the small orders: Gadget C/3 ($149.97 passes), Widget A/5, Gadget C/1, Widget B/2, Gizmo E/1.</aside>
+</section>
+
+<!-- 33. EXERCISE 5 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If you ran this exact script a second time without changing anything, what would <code>cleaned.csv</code> contain afterward?</p>
+<button data-opt="A">Twelve rows — the six new rows are appended below the six from the first run</button>
+<button data-opt="B">Still exactly six rows — <code>"w"</code> mode overwrites the file completely on each run rather than adding to it</button>
+<button data-opt="C">An error — Python refuses to open an existing file in <code>"w"</code> mode</button>
+<p class="why" hidden>Still exactly six rows — <code>"w"</code> mode overwrites the file completely on each run, rather than adding to what's already there; this is the direct, important contrast with Exercise 8's append mode coming up next.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Still exactly six rows — <code>"w"</code> mode overwrites the file completely on each run, rather than adding to what's already there; this is the direct, important contrast with Exercise 8's append mode coming up next.)" Option A is exactly the behavior you'd get with <code>"a"</code> mode (Exercise 8) — the contrast the guide wants students holding in mind.</aside>
+</section>
+
+<!-- 34. EXERCISE 5 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Omitting <code>newline=""</code> — <strong>demonstrate this live if your demo platform shows the effect</strong> (most visible on Windows; Mac/Linux often don't show the bug at all, which is itself worth mentioning — the honest answer is that it's a cross-platform safety habit, not something every student will witness break on their own machine).</p>
+<p>Opening the output file in <code>"w"</code> mode by accident when they meant to <em>add</em> to an existing file rather than replace it — a good moment to preview Exercise 8's <code>"a"</code> (append) mode, and to flag that <code>"w"</code> mode's overwrite-without-warning behavior is worth real caution.</p>
+<p>Writing the filtered row using the loop's <code>price</code>/<code>quantity</code> but forgetting <code>total</code> must be freshly computed and passed along too — trace through exactly which four values <code>writer.writerow([...])</code> needs, matching the four header columns one-to-one.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 5.</aside>
+</section>
+
+<!-- 35. EXERCISE 6 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 6 · 7 min · 0:41–0:48</span>
+<h1><code>csv.DictReader</code></h1>
+<aside class="notes">
+Teaching goal: re-read the same file using <code>csv.DictReader</code>, accessing fields by column <em>name</em> instead of position — directly parallel to Module 11's dictionaries, and a more robust, readable alternative to <code>csv.reader</code>'s positional tuple-unpacking.
+Say to the class (verbatim): "Same file, same total, different reading style — one that gives you Module 11's dictionary-style <code>row['product']</code> access instead of position-based unpacking."
+</aside>
+</section>
+
+<!-- 36. EXERCISE 6 — the idea -->
+<section class="s-idea">
+<h3>The idea — fields by name, not by position</h3>
+<div class="concept">
+<div class="concept-lbl">The payoff over Exercise 4</div>
+<p><code>csv.DictReader</code> <strong>automatically uses the first row as column names</strong> and hands back each subsequent row as a <em>dictionary</em>, not a list. <strong>No separate <code>next(reader)</code> is needed</strong> — <code>DictReader</code> consumes the header itself.</p>
+<p><code>row["price"]</code>, <code>row["quantity"]</code> — Module 11's dictionary-access syntax. If the CSV's column order ever changed, this code would still work; Exercise 4's <code>product, price, quantity = row</code> would silently assign the wrong values.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 6. The required comparison comment is the exercise's actual deliverable: a good answer names <code>DictReader</code>'s resilience to column reordering and readability (<code>row["price"]</code> vs <code>row[1]</code>) as reasons to prefer it, and <code>csv.reader</code>'s simplicity / slightly better performance on very large files as reasons one might still choose it. The total must match Exercise 4's exactly — both are two interfaces onto the same data.</aside>
+</section>
+
+<!-- 37. EXERCISE 6 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 6</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 6 ---
+import csv
+
+total_revenue = 0
+with open("week12/data/sales.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        price = float(row["price"])
+        quantity = int(row["quantity"])
+        total_revenue += price * quantity
+
+print(f"Total revenue (DictReader): ${total_revenue:.2f}")
+
+# .get() vs bracket notation: DictReader rows behave like Module 11's
+# dictionaries — .get() with a default is safer if a column might be
+# missing from some rows; bracket notation is fine (and more explicit)
+# when you're confident every row has the expected columns, as here.
+</div>
+<p class="expect">No <code>next(reader)</code> here — <code>DictReader</code> consumes the header itself to build the field names. Fields come by name: <code>row["price"]</code>, <code>row["quantity"]</code>. The total must equal Exercise 4's exactly: <code>$2098.24</code>.</p>
+<aside class="notes">
+Line-by-line:
+- <code>reader = csv.DictReader(f)</code> — the key difference from Exercise 2's <code>csv.reader</code>: <code>DictReader</code> <strong>automatically uses the first row as column names</strong> and hands back each subsequent row as a <em>dictionary</em>, not a plain list — <strong>no separate <code>next(reader)</code> call needed</strong>; it consumes the header automatically, and the loop starts directly on the first data row.
+- <code>row["price"]</code>, <code>row["quantity"]</code> — Module 11's exact dictionary-access syntax, now on data read straight from a file. The payoff over Exercise 4's positional unpacking: <strong>if the CSV's column order ever changed, this code would still work correctly</strong>, since it looks fields up by name — <code>product, price, quantity = row</code> would silently assign the wrong values to the wrong variables if columns were reordered.
+- The required comparison comment — the exercise's actual required deliverable: name <code>DictReader</code>'s resilience to column reordering and readability, and <code>csv.reader</code>'s simplicity / slightly better performance on very large files.
+Common mistakes: calling <code>next(reader)</code> before the loop anyway, out of habit from Exercise 3 — this skips the <em>first real data row</em>, since <code>DictReader</code> already handled the header; have the room predict the now-wrong total this produces. Using the <em>output</em> file's capitalized column names (<code>Product</code>, <code>Price</code>) instead of the source file's lowercase ones — <code>DictReader</code>'s keys come from whatever header row is actually in the file being read.
+Check for understanding (guide, verbatim parenthetical): "Both this exercise and Exercise 4 compute the exact same total — what does that consistency actually confirm? (That both reading approaches are correctly processing the same underlying data, just through different-looking code — a good moment to reinforce that <code>csv.reader</code> and <code>csv.DictReader</code> are two <em>interfaces</em> onto the same file, not two different computations.)"
+</aside>
+</section>
+
+<!-- 38. EXERCISE 6 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Total revenue (DictReader): $2098.24</pre>
+<aside class="notes">Matches the guide's Expected output for Exercise 6 exactly, and — as the guide requires — matches Exercise 4's <code>$2098.24</code> total. Same data, different interface. Verified against CPython 3.12: <code>python3 blk6.py</code>.</aside>
+</section>
+
+<!-- 39. EXERCISE 6 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Exercise 4 and Exercise 6 compute the exact same total. What does that consistency actually confirm?</p>
+<button data-opt="A">That both reading approaches process the same underlying data correctly, just through different-looking code — <code>csv.reader</code> and <code>csv.DictReader</code> are two <em>interfaces</em> onto one file, not two different computations</button>
+<button data-opt="B">That <code>csv.DictReader</code> is always faster than <code>csv.reader</code> on files of this size</button>
+<button data-opt="C">That the CSV contains no duplicate product rows</button>
+<p class="why" hidden>That both reading approaches are correctly processing the same underlying data, just through different-looking code — a good moment to reinforce that <code>csv.reader</code> and <code>csv.DictReader</code> are two <em>interfaces</em> onto the same file, not two different computations.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(That both reading approaches are correctly processing the same underlying data, just through different-looking code — a good moment to reinforce that <code>csv.reader</code> and <code>csv.DictReader</code> are two <em>interfaces</em> onto the same file, not two different computations.)"</aside>
+</section>
+
+<!-- 40. EXERCISE 6 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Calling <code>next(reader)</code> before the loop anyway, out of habit from Exercise 3 — this actually skips the <em>first real data row</em> by mistake, since <code>DictReader</code> already handled the header internally; a good moment to have the room predict the (now-wrong, missing-a-row) total this produces and connect it back to why the header-handling difference matters.</p>
+<p>Using the <em>original</em> column names from the source <code>sales.csv</code> (<code>product</code>, <code>price</code>, <code>quantity</code>, all lowercase) when they actually meant to reference Exercise 5's <em>output</em> file's different column names (<code>Product</code>, <code>Price</code>, capitalized) — <code>DictReader</code>'s keys come directly from whatever header row is actually in the file being read, not from any exercise's "standard" naming.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
+</section>
+
+<!-- 41. EXERCISE 7 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 7 · 8 min · 0:48–0:56</span>
+<h1>Sales Summary by Product</h1>
+<aside class="notes">
+Teaching goal: combine Module 11's accumulate-into-a-dictionary pattern with this module's file-reading skills — genuinely the payoff exercise that shows why both modules' techniques matter together.
+Say to the class (verbatim): "This is where Module 11 and today combine directly: build a summary dictionary — one total per product — by reading straight from the file, using the exact <code>.get(key, 0)</code> accumulator pattern from two weeks ago."
+</aside>
+</section>
+
+<!-- 42. EXERCISE 7 — the idea -->
+<section class="s-idea">
+<h3>The idea — two known patterns, composed</h3>
+<div class="concept">
+<div class="concept-lbl">Nothing new here syntactically</div>
+<p>Every line is either Module 11 Exercise 8's dictionary accumulator (<code>summary = {}</code>, <code>summary.get(product, 0) + total</code>) or this module's file reading (<code>csv.DictReader</code>, <code>row["product"]</code>).</p>
+<p><strong>Real programs are usually built by combining a handful of patterns you already know</strong>, not by learning an entirely new technique for every new task. <code>summary[product] = summary.get(product, 0) + total</code> is identical to Module 11's region-summary line, with <code>product</code> for <code>region</code>.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 7. The one honest verification habit worth encouraging: manually re-add the source numbers — Widget A appears in two rows (50 units and 5 units, both at $9.99), and <code>$499.50 + $49.95 = $549.45</code> matches the summary exactly. A concrete way to build trust in the accumulator beyond "the code ran."</aside>
+</section>
+
+<!-- 43. EXERCISE 7 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 7</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 7 ---
+import csv
+
+summary = {}
+with open("week12/data/sales.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        product = row["product"]
+        total = float(row["price"]) * int(row["quantity"])
+        summary[product] = summary.get(product, 0) + total
+
+for product in sorted(summary):
+    print(f"{product}: ${summary[product]:.2f}")
+</div>
+<p class="expect"><code>summary.get(product, 0) + total</code> — the <code>.get()</code>-protected accumulator from Module 11, so a product's first appearance starts from <code>0</code> instead of raising <code>KeyError</code>. <code>sorted(summary)</code> iterates the keys alphabetically. Six products, six totals.</p>
+<aside class="notes">
+Line-by-line:
+- Every line here is either Module 11 Exercise 8's dictionary-accumulator pattern (<code>summary = {}</code>, <code>summary.get(product, 0) + total</code>) or this module's file-reading pattern (<code>csv.DictReader</code>, <code>row["product"]</code>) — <strong>there's nothing new in this exercise syntactically</strong>; it's entirely about recognizing that two previously-separate patterns compose cleanly. Real programs are usually built by combining patterns you already know.
+- <code>summary[product] = summary.get(product, 0) + total</code> — identical logic to Module 11 Exercise 8's region-summary line, with <code>product</code> in place of <code>region</code> and a per-row computed <code>total</code> in place of a pre-existing <code>t["amount"]</code> field.
+- <code>for product in sorted(summary):</code> — iterates the dictionary's keys in alphabetical order (a callback to sorting keys, not insertion order).
+Common mistakes: using <code>+=</code> directly (<code>summary[product] += total</code>) instead of the <code>.get()</code>-protected version — fails with <code>KeyError</code> on a product's first appearance, exactly the failure mode flagged in Module 11 Exercise 8; a quick, honest callback if the room has forgotten it in two weeks (demonstrated on the next slide). Confirming the summary total by manually re-adding source numbers is a genuinely good habit — Widget A: <code>$499.50 + $49.95 = $549.45</code>.
+Check for understanding (guide, verbatim parenthetical): "How would you modify this to also track <em>how many rows</em> contributed to each product's total, not just the revenue sum? (Add a second dictionary — or a nested structure — tracking counts the same way, e.g. <code>counts[product] = counts.get(product, 0) + 1</code> alongside the existing revenue accumulator; getting a student to propose this extension confirms they understand the <em>pattern</em>, not just this one specific instance of it.)"
+</aside>
+</section>
+
+<!-- 44. EXERCISE 7 — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Doohickey F: $399.20
+Gadget C: $199.96
+Gadget D: $299.80
+Gizmo E: $299.97
+Widget A: $549.45
+Widget B: $349.86</pre>
+<aside class="notes">Matches the guide's "Run it. Expected output (sorted alphabetically by product name; verified against the sample <code>sales.csv</code>)" exactly. Six products. Spot-check: Widget A = <code>$499.50 + $49.95 = $549.45</code>; Gadget C = <code>$149.97 + $49.99 = $199.96</code>; Gizmo E = <code>$199.98 + $99.99 = $299.97</code>. Verified against CPython 3.12: <code>python3 blk7.py</code>.</aside>
+</section>
+
+<!-- 45. EXERCISE 7 — broken pass -->
+<section class="s-code">
+<h3>Deliberately broken — <code>+=</code> with no <code>.get()</code> default</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 7 (broken) ---
+import csv
+
+summary = {}
+with open("week12/data/sales.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        product = row["product"]
+        total = float(row["price"]) * int(row["quantity"])
+        summary[product] += total
+
+for product in sorted(summary):
+    print(f"{product}: ${summary[product]:.2f}")
+</div>
+<p class="expect">The guide flags this: "<code>+=</code> directly (<code>summary[product] += total</code>) instead of the <code>.get()</code>-protected version — fails with <code>KeyError</code> on a product's first appearance." <code>+=</code> expands to <code>summary[product] = summary[product] + total</code>, and that right-hand read has nothing to fall back on. Run it: <code>KeyError: 'Widget A'</code>. Fix: restore <code>summary.get(product, 0) + total</code>.</p>
+<aside class="notes">
+Teaching goal: land <em>why</em> the <code>.get(product, 0)</code> step is required by removing it and letting the room see the failure — exactly the Module 11 Exercise 8 failure mode, now in a file-reading context.
+Line-by-line: <code>summary[product] += total</code> expands to <code>summary[product] = summary[product] + total</code>. The right-hand <code>summary[product]</code> tries to read a key that was never set (<code>summary</code> starts empty), raising <code>KeyError: 'Widget A'</code> on the first row. Fix: <code>summary[product] = summary.get(product, 0) + total</code>.
+Common mistakes: this <em>is</em> the mistake. A related one — <code>summary.get(product)</code> with no <code>0</code> — returns <code>None</code>, then <code>None + total</code> raises <code>TypeError: unsupported operand type(s) for +: 'NoneType' and 'float'</code>.
+</aside>
+</section>
+
+<!-- 46. EXERCISE 7 — broken output -->
+<section class="s-out">
+<h3>What the broken version raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 26, in &lt;module&gt;
+    summary[product] += total
+    ~~~~~~~^^^^^^^^^
+KeyError: 'Widget A'</pre>
+<aside class="notes">Verified against CPython 3.12 (Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match). The file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path on a real machine, and the line number depends on the embedded-fixture lines above it — neither is load-bearing. The load-bearing last line is identical: <code>KeyError: 'Widget A'</code> (the first product in the file). Restoring <code>summary.get(product, 0)</code> produces the correct six-line summary from the previous slide.</aside>
+</section>
+
+<!-- 47. EXERCISE 7 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">How would you modify this to also track <em>how many rows</em> contributed to each product's total, not just the revenue sum?</p>
+<button data-opt="A">Add <code>summary[product] += 1</code> after the revenue line — the same dictionary can hold both the sum and the count</button>
+<button data-opt="B">Add a second dictionary tracking counts the same way, e.g. <code>counts[product] = counts.get(product, 0) + 1</code>, alongside the existing revenue accumulator</button>
+<button data-opt="C">Switch from <code>.get()</code> to bracket notation so missing keys raise instead of defaulting</button>
+<p class="why" hidden>Add a second dictionary — or a nested structure — tracking counts the same way, e.g. <code>counts[product] = counts.get(product, 0) + 1</code> alongside the existing revenue accumulator; proposing this extension confirms you understand the <em>pattern</em>, not just this one specific instance of it.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(Add a second dictionary — or a nested structure — tracking counts the same way, e.g. <code>counts[product] = counts.get(product, 0) + 1</code> alongside the existing revenue accumulator; getting a student to propose this extension confirms they understand the <em>pattern</em>, not just this one specific instance of it.)" Option A would corrupt the revenue sum by adding 1 to it; the count needs its own storage.</aside>
+</section>
+
+<!-- 48. EXERCISE 7 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using <code>+=</code> directly (<code>summary[product] += total</code>) instead of the <code>.get()</code>-protected version — fails with <code>KeyError</code> on a product's first appearance, exactly the same failure mode flagged in Module 11 Exercise 8; if a student has forgotten this lesson in the two weeks since, this is a good moment for a quick, honest callback rather than re-deriving it from scratch.</p>
+<p>Confirming the summary total is correct by manually re-adding the source numbers — a genuinely good habit worth encouraging explicitly: e.g., Widget A appears in two rows (50 units and 5 units, both at $9.99), and <code>$499.50 + $49.95 = $549.45</code> matches the summary exactly — a real, concrete way to build trust in the accumulator logic beyond just "the code ran without error."</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
+</section>
+
+<!-- 49. EXERCISE 8 — divider -->
+<section class="s-sec">
+<span class="chip">Exercise 8 · 10 min · 0:56–1:06</span>
+<h1>Append Mode Log</h1>
+<aside class="notes">
+Teaching goal: append mode (<code>"a"</code>) versus write mode (<code>"w"</code>) — and <code>datetime</code> for real timestamps — producing a log file that accumulates history across multiple separate runs of the same script, rather than being overwritten each time.
+Say to the class (verbatim): "Every file write so far has used <code>'w'</code> mode — overwrite completely, every time. Now: append mode, <code>'a'</code> — add to the end, keeping everything that was already there. We're building a run log: every time this script executes, one new line gets added, with a timestamp and the computed total. I'm going to run this three separate times and we'll watch the log grow."
+Do: run the script three separate times, live, from the terminal, narrating between runs.
+</aside>
+</section>
+
+<!-- 50. EXERCISE 8 — the idea -->
+<section class="s-idea">
+<h3>The idea — <code>"a"</code> adds, <code>"w"</code> erases</h3>
+<div class="concept">
+<div class="concept-lbl">The single detail the exercise is built around</div>
+<p><code>open("week12/data/run_log.txt", "a")</code> — <strong><code>"a"</code> for append</strong>: adds a new line at the end, preserving everything every prior run wrote. <code>"w"</code> would erase the log's previous contents every single run, defeating the entire purpose.</p>
+<p><code>f.write(f"...\n")</code> uses <code>.write()</code>, not <code>print()</code> — <code>.write()</code> writes exactly the string given, with <strong>no automatic newline</strong>, which is why the f-string explicitly ends with <code>\n</code>. Omit it and every run's entry runs together on one line.</p>
+</div>
+<aside class="notes">Condenses the guide's line-by-line for Exercise 8. <code>from datetime import datetime</code> pulls the <code>datetime</code> <em>class</em> from the <code>datetime</code> <em>module</em> (same name) — so you write <code>datetime.now()</code>, not <code>datetime.datetime.now()</code>. <code>datetime.now().strftime("%Y-%m-%d %H:%M:%S")</code> formats the current time; the format codes (<code>%Y</code> year, <code>%m</code> month, <code>%d</code> day, <code>%H:%M:%S</code> time) are a mini-language to recognize, not memorize. <code>compute_total_revenue()</code> wraps Exercise 7's read-and-accumulate logic in a function (Module 07) so it's called cleanly once per run.</aside>
+</section>
+
+<!-- 51. EXERCISE 8 — live code -->
+<section class="s-code">
+<h3>Live-code — Exercise 8 (looped 3× here to mimic three terminal runs)</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Exercise 8 ---
+import csv
+from datetime import datetime
+
+def compute_total_revenue():
+    total = 0
+    with open("week12/data/sales.csv") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            total += float(row["price"]) * int(row["quantity"])
+    return total
+
+# The guide runs the script 3 separate times from the terminal;
+# here one loop does the same so the log has 3 lines to show.
+for _ in range(3):
+    total_revenue = compute_total_revenue()
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("week12/data/run_log.txt", "a") as f:
+        f.write(f"{timestamp} | Total revenue: ${total_revenue:.2f}\n")
+
+print(Path("week12/data/run_log.txt").read_text())
+</div>
+<p class="expect">The guide's Exercise 8 has <strong>no console output</strong> — it just appends one line to <code>run_log.txt</code>. This block wraps the guide's write in a 3× loop (mimicking "run it three times") and adds a deck-only <code>print(...read_text())</code> so you can see the log. Every click of <strong>Run</strong> appends three <em>more</em> lines — that growth is the whole point of <code>"a"</code> mode.</p>
+<aside class="notes">
+Line-by-line:
+- <code>from datetime import datetime</code> — a new import style: this pulls the <code>datetime</code> <em>class</em> directly from the <code>datetime</code> <em>module</em> (confusingly, same name). <code>import datetime</code> alone would require <code>datetime.datetime.now()</code>; <code>from datetime import datetime</code> lets you write just <code>datetime.now()</code>.
+- <code>def compute_total_revenue():</code> — Exercise 7's total-computing logic, wrapped in a function (Module 07) so it can be called cleanly, once, each run, without duplicating the read-and-accumulate code.
+- <code>datetime.now().strftime("%Y-%m-%d %H:%M:%S")</code> — <code>datetime.now()</code> captures current date/time; <code>.strftime(...)</code> formats it into a readable string. The format codes (<code>%Y</code> four-digit year, <code>%m</code> month, <code>%d</code> day, <code>%H:%M:%S</code>) are a mini-language — recognize, don't memorize.
+- <code>open("week12/data/run_log.txt", "a")</code> — <strong><code>"a"</code> for append</strong>, not <code>"w"</code> — the single detail the whole exercise is built around. <code>"w"</code> would <strong>erase the log every run</strong>; <code>"a"</code> adds a new line at the end, preserving every prior run.
+- <code>f.write(f"...\n")</code> — uses <code>.write()</code>, not <code>print()</code> — <code>.write()</code> writes exactly the string given, no automatic newline, which is why the f-string ends with <code>\n</code>. Omit it and every run's entry runs together on one line.
+- The <code>for _ in range(3):</code> wrapper and the final <code>print(...read_text())</code> are deck-only, standing in for the guide's "run the script three separate times, live, from the terminal, narrating between runs."
+Point out explicitly: three separate lines, three timestamps, same total revenue each time (since <code>sales.csv</code> didn't change) — the expected, correct behavior. Ask the room what a <em>changing</em> total across runs would imply (that <code>sales.csv</code> was modified between runs — a useful diagnostic signal a real operations log provides).
+Check for understanding (guide, verbatim parenthetical): "What would happen if <code>run_log.txt</code> didn't exist yet at all, the very first time this script ran — would append mode fail? (No — <code>"a"</code> mode, like <code>"w"</code> mode, creates the file if it doesn't already exist; the <em>only</em> difference between the two modes is what happens when the file <em>does</em> already exist: <code>"w"</code> erases it first, <code>"a"</code> doesn't. Worth stating this explicitly, since it resolves a reasonable "but what about the very first run" question a careful student might raise.)"
+</aside>
+</section>
+
+<!-- 52. EXERCISE 8 — expected output -->
+<section class="s-out">
+<h3>Expected output — the log after one Run (3 appended lines)</h3>
+<pre>2026-09-07 14:05:58 | Total revenue: $2098.24
+2026-09-07 14:05:58 | Total revenue: $2098.24
+2026-09-07 14:05:58 | Total revenue: $2098.24
+</pre>
+<aside class="notes">The guide's expected <code>run_log.txt</code> after three runs is three lines of <code>&lt;timestamp&gt; | Total revenue: $2098.24</code>, and it says explicitly "timestamps will differ per actual run time." Only the <code>| Total revenue: $2098.24</code> text and the <strong>line count (3 per Run)</strong> are load-bearing; the timestamp reflects the moment the block runs. The three timestamps shown are from the verification run (<code>python3 blk8.py</code>, CPython 3.12) — they're identical because the loop runs in well under a second, whereas the guide's instructor pauses between three separate terminal runs so those differ by a few seconds. Clicking <strong>Run</strong> again appends three more lines (append mode — the point of the exercise). The trailing blank line is <code>print()</code> adding a newline after file text that already ends in one.</aside>
+</section>
+
+<!-- 53. EXERCISE 8 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">What would happen if <code>run_log.txt</code> didn't exist at all, the very first time this script ran — would append mode fail?</p>
+<button data-opt="A">No — <code>"a"</code> mode, like <code>"w"</code> mode, creates the file if it doesn't exist; the only difference between the two is what happens when the file <em>already</em> exists (<code>"w"</code> erases it first, <code>"a"</code> doesn't)</button>
+<button data-opt="B">Yes — <code>"a"</code> mode requires the file to already exist; you must create it first with <code>"w"</code></button>
+<button data-opt="C">It fails silently — writing nothing and raising no error until the second run</button>
+<p class="why" hidden>No — <code>"a"</code> mode, like <code>"w"</code> mode, creates the file if it doesn't already exist; the <em>only</em> difference between the two modes is what happens when the file <em>does</em> already exist: <code>"w"</code> erases it first, <code>"a"</code> doesn't.</p>
+</div>
+<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(No — <code>"a"</code> mode, like <code>"w"</code> mode, creates the file if it doesn't already exist; the <em>only</em> difference between the two modes is what happens when the file <em>does</em> already exist: <code>"w"</code> erases it first, <code>"a"</code> doesn't. Worth stating this explicitly, since it resolves a reasonable "but what about the very first run" question a careful student might raise.)"</aside>
+</section>
+
+<!-- 54. EXERCISE 8 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using <code>"w"</code> instead of <code>"a"</code> — the single most consequential mistake in this exercise; running the script three times would leave <code>run_log.txt</code> with only the <em>most recent</em> run's single line, silently destroying the history the exercise explicitly asks students to build and observe. If this happens, have the student run it three times, look at the file, and diagnose why there's only one line themselves, rather than immediately naming the fix.</p>
+<p>Forgetting the trailing <code>\n</code> in the write string — all three runs' text ends up concatenated onto one visually confusing single line in the file, technically present but hard to read; a good moment to open the file and look at it directly to see the difference.</p>
+</div>
+<aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
+</section>
+
+<!-- 55. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:06–1:15 · as time allows</span>
+<h1><code>summary.csv</code>, sorted descending</h1>
+<aside class="notes">
+Frame as a quick preview/demo if time is short — a direct extension of Exercises 5 and 7 rather than new material.
+Say to the class: build on Exercise 7's <code>summary</code> dictionary — write it out to a new CSV, highest revenue first.
+Two things worth saying explicitly if you demo this live:
+- <code>sorted(summary.items(), key=lambda item: item[1], reverse=True)</code> — genuinely new syntax (a <code>lambda</code>, and a sort <code>key</code>): <code>summary.items()</code> gives <code>(product, total)</code> pairs; <code>key=lambda item: item[1]</code> tells <code>sorted()</code> to sort by each pair's <em>second</em> element (the total), not the product name; <code>reverse=True</code> flips it to descending. If time is short, present it as "a working recipe for sorting a dictionary's items by value" without deriving <code>lambda</code> from first principles.
+- The bonus on the lab page — <code>csv.DictWriter</code> instead of <code>csv.writer</code> — mirrors Exercise 6's reading-side choice on the writing side: <code>DictWriter</code> takes a dictionary per row (matched to a declared <code>fieldnames</code> list) instead of a positional list, safer for wide files, since a <code>writer.writerow([...])</code> with values in the wrong order fails silently while a misspelled key in a <code>DictWriter</code> row raises a clear error.
+No "Check for understanding" in the guide for this segment — quiz omitted, matching the lighter treatment stretch segments get.
+</aside>
+</section>
+
+<!-- 56. STRETCH — the idea -->
+<section class="s-idea">
+<h3>The idea — sort a dictionary's items by value</h3>
+<div class="concept">
+<div class="concept-lbl">One line doing real, non-obvious work</div>
+<p><code>sorted(summary.items(), key=lambda item: item[1], reverse=True)</code>: <code>summary.items()</code> yields <code>(product, total)</code> pairs; <code>key=lambda item: item[1]</code> sorts by the <em>second</em> element (the total), not the product name; <code>reverse=True</code> makes it descending — highest revenue first.</p>
+<p>Contrast with Exercise 7's <code>sorted(summary)</code>, which sorted the <em>keys</em> alphabetically. Same function, different instruction about <em>what</em> to sort on.</p>
+</div>
+<aside class="notes">The guide presents this as a "working recipe" — deriving <code>lambda</code> from first principles is explicitly out of scope for today. The lab-page bonus, <code>csv.DictWriter</code>, is the writing-side mirror of Exercise 6's <code>DictReader</code>: a row dictionary matched to a declared <code>fieldnames</code> list, safer for wide files because a misspelled key raises rather than silently writing data under the wrong header.</aside>
+</section>
+
+<!-- 57. STRETCH — live code -->
+<section class="s-code">
+<h3>Live-code — Stretch</h3>
+<div class="run" data-lang="python">
+from pathlib import Path
+Path("week12/data").mkdir(parents=True, exist_ok=True)
+CSV = """product,price,quantity
+Widget A,9.99,50
+Widget B,24.99,12
+Gadget C,49.99,3
+Gadget D,14.99,20
+Gizmo E,99.99,2
+Doohickey F,4.99,80
+Widget A,9.99,5
+Gadget C,49.99,1
+Widget B,24.99,2
+Gizmo E,99.99,1
+"""
+Path("week12/data/sales.csv").write_text(CSV)
+
+# --- Stretch --- (rebuild Exercise 7's summary first, fresh namespace)
+import csv
+
+summary = {}
+with open("week12/data/sales.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        product = row["product"]
+        total = float(row["price"]) * int(row["quantity"])
+        summary[product] = summary.get(product, 0) + total
+
+with open("week12/data/summary.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Product", "TotalRevenue"])
+    for product, total in sorted(summary.items(), key=lambda item: item[1], reverse=True):
+        writer.writerow([product, round(total, 2)])
+
+print(Path("week12/data/summary.csv").read_text())
+</div>
+<p class="expect">The guide's Stretch snippet assumes <code>summary</code> already exists from Exercise 7; this block rebuilds it first (fresh namespace per block). The <code>print(...read_text())</code> is deck-only, echoing the file written. Rows come out highest-revenue-first: Widget A, then Doohickey F, then Widget B.</p>
+<aside class="notes">
+Line-by-line:
+- The <code>summary = {}</code> ... accumulator block re-derives Exercise 7's result, because each <code>.run</code> block runs in its own fresh namespace; in the real <code>csv_practice.py</code> the <code>summary</code> dictionary already exists from Exercise 7.
+- <code>with open("week12/data/summary.csv", "w", newline="")</code> — Exercise 5's write pattern, including the <code>newline=""</code> habit.
+- <code>writer.writerow(["Product", "TotalRevenue"])</code> — the new file's header.
+- <code>sorted(summary.items(), key=lambda item: item[1], reverse=True)</code> — <code>summary.items()</code> gives <code>(product, total)</code> pairs; <code>key=lambda item: item[1]</code> sorts by the total (the pair's second element); <code>reverse=True</code> makes it descending. A working recipe — don't derive <code>lambda</code> from scratch today.
+- <code>writer.writerow([product, round(total, 2)])</code> — <code>round()</code> trims float noise (<code>399.2</code>, not <code>399.20000000000005</code>).
+Common mistakes: forgetting <code>reverse=True</code> (ascending instead of descending); sorting on <code>item[0]</code> (back to alphabetical, same as Exercise 7).
+No "Check for understanding" in the guide for this segment.
+</aside>
+</section>
+
+<!-- 58. STRETCH — expected output -->
+<section class="s-out">
+<h3>Expected output — <code>summary.csv</code>, highest revenue first</h3>
+<pre>Product,TotalRevenue
+Widget A,549.45
+Doohickey F,399.2
+Widget B,349.86
+Gizmo E,299.97
+Gadget D,299.8
+Gadget C,199.96
+</pre>
+<aside class="notes">The guide gives the Stretch code but no explicit expected output; this is the real <code>python3</code> result (<code>python3 blk9.py</code>, CPython 3.12), derived from Exercise 7's verified totals sorted descending by revenue: 549.45 &gt; 399.2 &gt; 349.86 &gt; 299.97 &gt; 299.8 &gt; 199.96. <code>round(total, 2)</code> trims trailing zeros (<code>399.2</code>, <code>299.8</code>). The trailing blank line is <code>print()</code> adding a newline after file text that already ends in one.</aside>
+</section>
+
+<!-- 59. WRAP — reflection -->
+<section class="s-wrap">
+<h3>Reflection</h3>
+<ul>
+<li>ETL in Python vs. Excel — what can each do that the other can't easily? Push for specifics: Python handles far larger files without manual scrolling, and the same script re-runs instantly on updated data (Exercise 8's whole premise); Excel offers immediate visual inspection and ad-hoc exploration with no code.</li>
+<li>A real append-mode log use case — something genuinely specific: an inventory system logging every stock change, a customer-service tool logging every ticket resolution, a nightly batch job logging its own success/failure. The common thread: <strong>a process that runs repeatedly over time, where each run's outcome is worth preserving, not just the most recent one.</strong></li>
+</ul>
+<aside class="notes">
+Answered as a comment at the top of the file, per this lab's submission format.
+Strong-answer guidance (guide):
+1. <em>ETL in Python vs. Excel</em> — a strong answer names concrete tradeoffs, not just "Python is more powerful": Python scales to large files and re-runs instantly on new data; Excel gives immediate visual inspection and code-free ad-hoc exploration.
+2. <em>A real append-mode log use case</em> — push for a specific scenario, and name the common thread explicitly: a process that runs repeatedly over time where each run's outcome is worth keeping.
+</aside>
+</section>
+
+<!-- 60. WRAP — submission + next module -->
+<section class="s-wrap">
+<h3>Submission checklist &amp; what's next</h3>
+<ul>
+<li>File is named <code>csv_practice.py</code></li>
+<li>Contains Exercises 1–8, each clearly separated</li>
+<li>Reflection comment at the top of the file, answering both questions</li>
+<li><code>week12/data/</code> contains <code>sales.csv</code>, <code>cleaned.csv</code>, and <code>run_log.txt</code> (with 3+ entries)</li>
+<li>Pushed to GitHub inside a <code>week12/</code> folder</li>
+<li>Repo URL submitted to Canvas</li>
+</ul>
+<aside class="notes">Review the checklist together in the last few minutes. Preview Module 13 (verbatim): "Everything today used the built-in <code>csv</code> module, reading and writing one row at a time by hand. Next module introduces <code>pandas</code>, a library purpose-built for exactly this kind of tabular data work — today's whole ETL pipeline collapses into a handful of much shorter, more powerful lines."</aside>
+</section>
+
+<!-- 61. END -->
+<section class="s-end">
+<div class="sec-n">ISM2411 · Week 12</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w12.md (Week 12 facilitation guide — "Read a Sales CSV, Write a Cleaned Report"). All runnable-block output verified against CPython 3.12 / Pyodide 0.26.4. Every runnable block embeds the verified Appendix B sample <code>sales.csv</code> and writes it to Pyodide's virtual filesystem before running the guide's actual code — <code>csv</code> and <code>datetime</code> are stdlib, so no <code>data-packages</code> is needed anywhere. No block uses <code>input()</code>, so there is no <code>data-stdin</code>.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
