@@ -46,7 +46,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:42–0:50</strong> Ex 6 — List of Dicts</span>
 <span class="t-item"><strong>0:50–0:58</strong> Ex 7 — Nested Catalog</span>
 <span class="t-item"><strong>0:58–1:07</strong> Ex 8 — Sales by Region</span>
-<span class="t-item"><strong>1:07–1:15</strong> Stretch + Wrap-Up</span>
+<span class="t-item"><strong>1:07–1:15</strong> Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -62,10 +62,10 @@ Every runnable block in this deck runs in its OWN fresh Pyodide namespace, so ea
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>customers.py</code> starts empty except the header comment; build every exercise live</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 10: lists, indexing; Modules 05–06: conditionals, loops, accumulator pattern</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>customers.py</code> via GitHub (<code>week11/</code> folder), repo URL submitted to Canvas — reflection answered as a comment at the top of the file</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week11_lab. Class length 75 minutes, format live code-along. The required exercises fill available time; the Stretch challenge is positioned as a closing preview since it's primarily Module 07 function-writing applied to this module's dictionary vocabulary rather than new material. Confirm students already have a working GitHub repo from Module 08.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week11_lab. Class length 75 minutes, format live code-along. The required exercises fill the available time. Confirm students already have a working GitHub repo from Module 08.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -97,10 +97,10 @@ Every runnable block in this deck runs in its OWN fresh Pyodide namespace, so ea
 <tr><td>0:42–0:50</td><td>Exercise 6 — List of Dicts</td><td>8</td></tr>
 <tr><td>0:50–0:58</td><td>Exercise 7 — Nested Catalog</td><td>8</td></tr>
 <tr><td>0:58–1:07</td><td>Exercise 8 — Sales by Region</td><td>9</td></tr>
-<tr><td>1:07–1:15</td><td>Stretch — <code>customer_report</code> function + Wrap-Up</td><td>8</td></tr>
+<tr><td>1:07–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>8</td></tr>
 </tbody>
 </table>
-<aside class="notes">The required exercises fill available time. The Stretch challenge is positioned as a closing preview since it's primarily Module 07 function-writing applied to this module's dictionary/lookup-table vocabulary rather than new material. Appendix B has two extra practice items (a second lookup table — <code>shipping_speeds</code>; a second accumulate-into-a-dict exercise — <code>category_totals</code>) if a section moves unusually fast.</aside>
+<aside class="notes">The required exercises fill the available time. Appendix B has two extra practice items (a second lookup table — <code>shipping_speeds</code>; a second accumulate-into-a-dict exercise — <code>category_totals</code>) if a section moves unusually fast.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -485,7 +485,7 @@ Line-by-line:
 - <code>for key in customer:</code> (no <code>.items()</code>) — looping over a dictionary <strong>directly</strong> gives you only the <strong>keys</strong>, one per pass — not the values, not pairs. Easy to assume a bare <code>for x in some_dict:</code> would give values or pairs; it only ever gives keys.
 Have students write the required explanatory comment (the exercise's deliverable): iterating without <code>.items()</code> gives keys only; with <code>.items()</code> gives both keys and values together.
 Common mistakes: <code>for key, value in customer:</code> (forgetting <code>.items()</code> but still unpacking two variables) — raises <code>ValueError: too many values to unpack (expected 2)</code>, since a bare dictionary iteration yields single keys, not pairs. Assuming the printed key order is alphabetical — it's <strong>insertion order</strong>; <code>sorted()</code> is a separate, deliberate step (Exercise 8).
-Check for understanding (guide, verbatim parenthetical): "If I wanted keys sorted alphabetically instead of in insertion order, what one built-in function from Module 10's Stretch challenge could help? (<code>sorted()</code> — e.g. <code>for key in sorted(customer):</code> — a good callback confirming <code>sorted()</code> works generally on any iterable, not just lists, which previews Exercise 8's own use of <code>sorted()</code> on dictionary keys later in this same lab.)"
+Check for understanding (guide, verbatim parenthetical): "If I wanted keys sorted alphabetically instead of in insertion order, what one built-in function could help? (<code>sorted()</code> — e.g. <code>for key in sorted(customer):</code> — a good callback confirming <code>sorted()</code> works generally on any iterable, not just lists, which previews Exercise 8's own use of <code>sorted()</code> on dictionary keys later in this same lab.)"
 </aside>
 </section>
 
@@ -540,7 +540,7 @@ ValueError: too many values to unpack (expected 2)</pre>
 <section class="s-quiz">
 <h3>Knowledge check</h3>
 <div class="quiz" data-answer="C">
-<p class="q">To iterate <code>customer</code>'s keys in alphabetical order instead of insertion order, which one built-in function (from Module 10's Stretch challenge) helps?</p>
+<p class="q">To iterate <code>customer</code>'s keys in alphabetical order instead of insertion order, which one built-in function helps?</p>
 <button data-opt="A"><code>customer.sort()</code> — dictionaries have a <code>.sort()</code> method like lists</button>
 <button data-opt="B"><code>reversed()</code> — <code>for key in reversed(customer):</code></button>
 <button data-opt="C"><code>sorted()</code> — <code>for key in sorted(customer):</code>; it works on any iterable, not just lists</button>
@@ -940,72 +940,7 @@ KeyError: 'South'</pre>
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
 </section>
 
-<!-- 63. STRETCH — divider -->
-<section class="s-sec">
-<span class="chip">Stretch · 1:07–1:15 · as time allows</span>
-<h1><code>customer_report</code> function</h1>
-<aside class="notes">
-Frame as a quick preview/demo if time is short — Module 07 function-writing, applied to this module's dictionary/lookup-table vocabulary rather than new material.
-Say to the class: "One function that takes a list of customers, the lookup table, and a purchase amount, and prints a formatted report row per customer. We pass the lookup table <em>in</em> as a parameter rather than reaching out to a global."
-</aside>
-</section>
-
-<!-- 64. STRETCH — the idea -->
-<section class="s-idea">
-<h3>The idea — pass dependencies in, don't reach out for them</h3>
-<div class="concept">
-<div class="concept-lbl">Worth saying explicitly if you demo this live</div>
-<p><code>customer_report</code> takes <strong>three</strong> parameters — the list of customers, the lookup table, and the purchase amount — rather than assuming <code>tier_discounts</code> is a fixed global the function can just reach out and use.</p>
-<p>A function that only works by silently depending on a specific variable existing <em>outside</em> it is fragile and hard to reuse or test in isolation. Passing it explicitly, exactly like <code>customers</code> and <code>purchase</code>, makes the function self-contained and its real dependencies visible from the <code>def</code> line alone.</p>
-</div>
-<aside class="notes">The guide's "one thing worth saying explicitly": ask the room "why pass <code>tier_discounts</code> in as a parameter, instead of just referencing the <code>tier_discounts</code> variable that already exists earlier in the file?" (Because a function that only works by silently depending on a specific outside variable, under one specific name, is fragile and hard to reuse or test in isolation — passing it explicitly makes the function self-contained and makes its real dependencies visible just by reading its <code>def</code> line. A genuinely important software-engineering habit worth naming.) No "Check for understanding" in the guide for this segment — quiz omitted, matching the lighter treatment stretch segments get.</aside>
-</section>
-
-<!-- 65. STRETCH — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch</h3>
-<div class="run" data-lang="python">
-# --- Stretch ---
-tier_discounts = {"bronze": 0, "silver": .05, "gold": .10, "platinum": .15}
-
-def customer_report(customers, tier_discounts, purchase):
-    for c in customers:
-        discount = tier_discounts.get(c["tier"], 0)
-        final_price = purchase * (1 - discount)
-        print(f"{c['name']:&lt;10} {c['tier']:&lt;10} {discount*100:&gt;5.0f}%   ${final_price:&lt;10.2f}")
-
-customers = [
-    {"name": "Alice", "tier": "platinum"},
-    {"name": "Bob", "tier": "gold"},
-    {"name": "Carol", "tier": "silver"},
-    {"name": "Dan", "tier": "bronze"},
-]
-customer_report(customers, tier_discounts, 300)
-</div>
-<p class="expect">This block re-declares <code>tier_discounts</code> (fresh namespace per block). The function takes the lookup table as a parameter, not a global. The f-string alignment specs (<code>:&lt;10</code>, <code>:&gt;5.0f</code>, <code>:&lt;10.2f</code>) pad each column; the trailing <code>:&lt;10.2f</code> left-aligns the price, so each line ends with a few padding spaces.</p>
-<aside class="notes">
-Line-by-line:
-- <code>tier_discounts = {...}</code> — re-declared here because each <code>.run</code> block runs in its own fresh namespace; in the real <code>customers.py</code> this name already refers to Exercise 5's lookup table.
-- <code>def customer_report(customers, tier_discounts, purchase):</code> — Module 07 function definition with <strong>three</strong> parameters. Passing <code>tier_discounts</code> in explicitly (rather than relying on the outer variable) makes the function self-contained and its dependencies visible from the <code>def</code> line.
-- <code>discount = tier_discounts.get(c["tier"], 0)</code> / <code>final_price = purchase * (1 - discount)</code> — Exercise 5's lookup-and-price pattern, now inside a reusable function and driven by the <code>purchase</code> parameter instead of a hardcoded <code>200</code>.
-- <code>f"{c['name']:&lt;10} {c['tier']:&lt;10} {discount*100:&gt;5.0f}%   ${final_price:&lt;10.2f}"</code> — column formatting: <code>:&lt;10</code> left-justifies in a 10-wide field, <code>:&gt;5.0f</code> right-justifies a no-decimal number in a 5-wide field, <code>:&lt;10.2f</code> left-justifies a 2-decimal number in a 10-wide field (leaving trailing spaces).
-- <code>customer_report(customers, tier_discounts, 300)</code> — one call, four customers, <code>$300</code> purchase.
-Common mistakes: referencing <code>tier_discounts</code> as a global instead of the parameter (works here only by accident of the same name existing); forgetting that <code>:&lt;10.2f</code> leaves trailing whitespace on each line.
-No "Check for understanding" in the guide for this segment.
-</aside>
-</section>
-
-<!-- 66. STRETCH — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>Alice      platinum      15%   $255.00
-Bob        gold          10%   $270.00
-Carol      silver         5%   $285.00
-Dan        bronze         0%   $300.00    </pre>
-<aside class="notes">Verified against a real <code>python3</code> run of this exact block. Four rows: <code>platinum</code> 15% off $300 → $255.00; <code>gold</code> 10% → $270.00; <code>silver</code> 5% → $285.00; <code>bronze</code> 0% → $300.00. Each line ends with four trailing spaces because <code>${final_price:&lt;10.2f}</code> left-aligns <code>255.00</code> etc. in a 10-wide field — an artifact of the format spec, not an error; shown here as it really prints. The guide's Appendix A shows the same Stretch code. Verified against CPython 3.12.</aside>
-</section>
-
-<!-- 67. WRAP — reflection -->
+<!-- 63. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -1020,7 +955,7 @@ Strong-answer guidance (guide):
 </aside>
 </section>
 
-<!-- 68. WRAP — submission + next module -->
+<!-- 64. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -1033,7 +968,7 @@ Strong-answer guidance (guide):
 <aside class="notes">Review the checklist together. Preview Module 12 (verbatim): "Every dictionary and list today lived only inside your running script — the moment the program ends, it's gone. Next module, you learn to read and write actual files, so the data your programs work with can outlive the program itself."</aside>
 </section>
 
-<!-- 69. END -->
+<!-- 65. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 11</div>
 <h1>End of lab</h1>

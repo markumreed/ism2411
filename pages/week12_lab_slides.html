@@ -46,7 +46,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:41–0:48</strong> Ex 6 — <code>csv.DictReader</code></span>
 <span class="t-item"><strong>0:48–0:56</strong> Ex 7 — Summary by Product</span>
 <span class="t-item"><strong>0:56–1:06</strong> Ex 8 — Append Mode Log</span>
-<span class="t-item"><strong>1:06–1:15</strong> Stretch + Wrap-Up</span>
+<span class="t-item"><strong>1:06–1:15</strong> Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -62,10 +62,10 @@ Deck note: <code>csv</code> and <code>datetime</code> are both Python standard l
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>csv_practice.py</code> built exercise by exercise; <code>sales.csv</code> provided (or the verified Appendix B sample)</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 11: dictionaries, <code>.get()</code> accumulate-into-a-dict pattern; Module 10: lists</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>csv_practice.py</code> + the cleaned CSV and other output files, via GitHub (<code>week12/</code> folder), repo URL to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week12_lab. Class length 75 minutes, format live code-along. The required exercises fill available time; the Stretch challenge is positioned as a closing preview since it's largely a direct extension of Exercises 5 and 7 rather than new material. Confirm students have a working GitHub repo and know how to add a new <code>week12/</code> folder.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week12_lab. Class length 75 minutes, format live code-along. The required exercises fill the available time. Confirm students have a working GitHub repo and know how to add a new <code>week12/</code> folder.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -98,10 +98,10 @@ Deck note: <code>csv</code> and <code>datetime</code> are both Python standard l
 <tr><td>0:41–0:48</td><td>Exercise 6 — <code>csv.DictReader</code></td><td>7</td></tr>
 <tr><td>0:48–0:56</td><td>Exercise 7 — Sales Summary by Product</td><td>8</td></tr>
 <tr><td>0:56–1:06</td><td>Exercise 8 — Append Mode Log</td><td>10</td></tr>
-<tr><td>1:06–1:15</td><td>Stretch — <code>summary.csv</code> sorted descending + Wrap-Up</td><td>9</td></tr>
+<tr><td>1:06–1:15</td><td>Wrap-Up — reflection + submission + Module 13 preview</td><td>9</td></tr>
 </tbody>
 </table>
-<aside class="notes">The required exercises fill available time at a normal code-along pace. The Stretch is positioned as a closing preview/demo since it's a direct extension of Exercises 5 and 7. Appendix C has two extra-practice items (a second summary dimension — total quantity per product; a stricter <code>total &gt; 200</code> filter written to <code>cleaned_200.csv</code>) if a section moves unusually fast. Wrap-Up runs in the last ~9 minutes: two reflection questions + the submission checklist + the Module 13 (<code>pandas</code>) preview.</aside>
+<aside class="notes">The required exercises fill available time at a normal code-along pace. Appendix C has two extra-practice items (a second summary dimension — total quantity per product; a stricter <code>total &gt; 200</code> filter written to <code>cleaned_200.csv</code>) if a section moves unusually fast. Wrap-Up runs in the last ~9 minutes: two reflection questions + the submission checklist + the Module 13 (<code>pandas</code>) preview.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -999,98 +999,7 @@ Check for understanding (guide, verbatim parenthetical): "What would happen if <
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
 </section>
 
-<!-- 55. STRETCH — divider -->
-<section class="s-sec">
-<span class="chip">Stretch · 1:06–1:15 · as time allows</span>
-<h1><code>summary.csv</code>, sorted descending</h1>
-<aside class="notes">
-Frame as a quick preview/demo if time is short — a direct extension of Exercises 5 and 7 rather than new material.
-Say to the class: build on Exercise 7's <code>summary</code> dictionary — write it out to a new CSV, highest revenue first.
-Two things worth saying explicitly if you demo this live:
-- <code>sorted(summary.items(), key=lambda item: item[1], reverse=True)</code> — genuinely new syntax (a <code>lambda</code>, and a sort <code>key</code>): <code>summary.items()</code> gives <code>(product, total)</code> pairs; <code>key=lambda item: item[1]</code> tells <code>sorted()</code> to sort by each pair's <em>second</em> element (the total), not the product name; <code>reverse=True</code> flips it to descending. If time is short, present it as "a working recipe for sorting a dictionary's items by value" without deriving <code>lambda</code> from first principles.
-- The bonus on the lab page — <code>csv.DictWriter</code> instead of <code>csv.writer</code> — mirrors Exercise 6's reading-side choice on the writing side: <code>DictWriter</code> takes a dictionary per row (matched to a declared <code>fieldnames</code> list) instead of a positional list, safer for wide files, since a <code>writer.writerow([...])</code> with values in the wrong order fails silently while a misspelled key in a <code>DictWriter</code> row raises a clear error.
-No "Check for understanding" in the guide for this segment — quiz omitted, matching the lighter treatment stretch segments get.
-</aside>
-</section>
-
-<!-- 56. STRETCH — the idea -->
-<section class="s-idea">
-<h3>The idea — sort a dictionary's items by value</h3>
-<div class="concept">
-<div class="concept-lbl">One line doing real, non-obvious work</div>
-<p><code>sorted(summary.items(), key=lambda item: item[1], reverse=True)</code>: <code>summary.items()</code> yields <code>(product, total)</code> pairs; <code>key=lambda item: item[1]</code> sorts by the <em>second</em> element (the total), not the product name; <code>reverse=True</code> makes it descending — highest revenue first.</p>
-<p>Contrast with Exercise 7's <code>sorted(summary)</code>, which sorted the <em>keys</em> alphabetically. Same function, different instruction about <em>what</em> to sort on.</p>
-</div>
-<aside class="notes">The guide presents this as a "working recipe" — deriving <code>lambda</code> from first principles is explicitly out of scope for today. The lab-page bonus, <code>csv.DictWriter</code>, is the writing-side mirror of Exercise 6's <code>DictReader</code>: a row dictionary matched to a declared <code>fieldnames</code> list, safer for wide files because a misspelled key raises rather than silently writing data under the wrong header.</aside>
-</section>
-
-<!-- 57. STRETCH — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch</h3>
-<div class="run" data-lang="python">
-from pathlib import Path
-Path("week12/data").mkdir(parents=True, exist_ok=True)
-CSV = """product,price,quantity
-Widget A,9.99,50
-Widget B,24.99,12
-Gadget C,49.99,3
-Gadget D,14.99,20
-Gizmo E,99.99,2
-Doohickey F,4.99,80
-Widget A,9.99,5
-Gadget C,49.99,1
-Widget B,24.99,2
-Gizmo E,99.99,1
-"""
-Path("week12/data/sales.csv").write_text(CSV)
-
-# --- Stretch --- (rebuild Exercise 7's summary first, fresh namespace)
-import csv
-
-summary = {}
-with open("week12/data/sales.csv") as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        product = row["product"]
-        total = float(row["price"]) * int(row["quantity"])
-        summary[product] = summary.get(product, 0) + total
-
-with open("week12/data/summary.csv", "w", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["Product", "TotalRevenue"])
-    for product, total in sorted(summary.items(), key=lambda item: item[1], reverse=True):
-        writer.writerow([product, round(total, 2)])
-
-print(Path("week12/data/summary.csv").read_text())
-</div>
-<p class="expect">The guide's Stretch snippet assumes <code>summary</code> already exists from Exercise 7; this block rebuilds it first (fresh namespace per block). The <code>print(...read_text())</code> is deck-only, echoing the file written. Rows come out highest-revenue-first: Widget A, then Doohickey F, then Widget B.</p>
-<aside class="notes">
-Line-by-line:
-- The <code>summary = {}</code> ... accumulator block re-derives Exercise 7's result, because each <code>.run</code> block runs in its own fresh namespace; in the real <code>csv_practice.py</code> the <code>summary</code> dictionary already exists from Exercise 7.
-- <code>with open("week12/data/summary.csv", "w", newline="")</code> — Exercise 5's write pattern, including the <code>newline=""</code> habit.
-- <code>writer.writerow(["Product", "TotalRevenue"])</code> — the new file's header.
-- <code>sorted(summary.items(), key=lambda item: item[1], reverse=True)</code> — <code>summary.items()</code> gives <code>(product, total)</code> pairs; <code>key=lambda item: item[1]</code> sorts by the total (the pair's second element); <code>reverse=True</code> makes it descending. A working recipe — don't derive <code>lambda</code> from scratch today.
-- <code>writer.writerow([product, round(total, 2)])</code> — <code>round()</code> trims float noise (<code>399.2</code>, not <code>399.20000000000005</code>).
-Common mistakes: forgetting <code>reverse=True</code> (ascending instead of descending); sorting on <code>item[0]</code> (back to alphabetical, same as Exercise 7).
-No "Check for understanding" in the guide for this segment.
-</aside>
-</section>
-
-<!-- 58. STRETCH — expected output -->
-<section class="s-out">
-<h3>Expected output — <code>summary.csv</code>, highest revenue first</h3>
-<pre>Product,TotalRevenue
-Widget A,549.45
-Doohickey F,399.2
-Widget B,349.86
-Gizmo E,299.97
-Gadget D,299.8
-Gadget C,199.96
-</pre>
-<aside class="notes">The guide gives the Stretch code but no explicit expected output; this is the real <code>python3</code> result (<code>python3 blk9.py</code>, CPython 3.12), derived from Exercise 7's verified totals sorted descending by revenue: 549.45 &gt; 399.2 &gt; 349.86 &gt; 299.97 &gt; 299.8 &gt; 199.96. <code>round(total, 2)</code> trims trailing zeros (<code>399.2</code>, <code>299.8</code>). The trailing blank line is <code>print()</code> adding a newline after file text that already ends in one.</aside>
-</section>
-
-<!-- 59. WRAP — reflection -->
+<!-- 55. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -1105,7 +1014,7 @@ Strong-answer guidance (guide):
 </aside>
 </section>
 
-<!-- 60. WRAP — submission + next module -->
+<!-- 56. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -1119,7 +1028,7 @@ Strong-answer guidance (guide):
 <aside class="notes">Review the checklist together in the last few minutes. Preview Module 13 (verbatim): "Everything today used the built-in <code>csv</code> module, reading and writing one row at a time by hand. Next module introduces <code>pandas</code>, a library purpose-built for exactly this kind of tabular data work — today's whole ETL pipeline collapses into a handful of much shorter, more powerful lines."</aside>
 </section>
 
-<!-- 61. END -->
+<!-- 57. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 12</div>
 <h1>End of lab</h1>

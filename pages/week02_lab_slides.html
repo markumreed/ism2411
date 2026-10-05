@@ -45,12 +45,11 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:32–0:40</strong> Ex 5 — Make a Sub-Project</span>
 <span class="t-item"><strong>0:40–0:50</strong> Ex 6 — Deliberate Error Experiment</span>
 <span class="t-item"><strong>0:50–0:58</strong> Ex 7 — Run from the Wrong Directory</span>
-<span class="t-item"><strong>0:58–1:08</strong> Stretch A — Multi-Print <code>intro.py</code></span>
-<span class="t-item"><strong>1:08–1:15</strong> Wrap-up</span>
+<span class="t-item"><strong>0:58–1:15</strong> Catch-up + Wrap-up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
-75-minute session, live code-along — but in the terminal rather than an editor for most of the session: students type every command themselves, on their own machine, in real time. This is the highest-variance lab of the semester to run, because it is the first time every student's <em>environment</em> — not just their code — is on the critical path. A perfectly typed command fails for a student whose PATH isn't set up correctly. Budget real slack for environment troubleshooting; "my terminal says command not found" will eat real minutes for 10–20% of a typical room, and this timing plan already assumes that friction. Prerequisites: Module 01 vocabulary (file, directory, path); Python and VS Code already installed per the precourse setup page. Submission: screenshot of both <code>hello.py</code> outputs (Exercises 3 and 5) plus <code>python3 --version</code> output, to Canvas. Exercises 1–7 are required; Stretch A as time allows, Stretch B is a genuine bonus — do not sacrifice Exercise 6 or 7 to reach it, since those two carry this lab's most important ideas (reading errors, understanding why current directory matters).
+75-minute session, live code-along — but in the terminal rather than an editor for most of the session: students type every command themselves, on their own machine, in real time. This is the highest-variance lab of the semester to run, because it is the first time every student's <em>environment</em> — not just their code — is on the critical path. A perfectly typed command fails for a student whose PATH isn't set up correctly. Budget real slack for environment troubleshooting; "my terminal says command not found" will eat real minutes for 10–20% of a typical room, and this timing plan already assumes that friction. Prerequisites: Module 01 vocabulary (file, directory, path); Python and VS Code already installed per the precourse setup page. Submission: screenshot of both <code>hello.py</code> outputs (Exercises 3 and 5) plus <code>python3 --version</code> output, to Canvas. Exercises 1–7 are all required; Exercises 6 and 7 carry this lab's most important ideas (reading errors, understanding why current directory matters), so protect their time if the room runs slow.
 This deck mixes two runnable block types: <code>data-lang="shell"</code> blocks (a real zsh emulator) for the terminal-navigation exercises, and <code>data-lang="python"</code> blocks (Pyodide) for the first <code>hello.py</code> and every later script. Every runnable block is paired with a static "Expected output" slide, so the deck still teaches fully if Pyodide never loads.
 </aside>
 </section>
@@ -61,7 +60,7 @@ This deck mixes two runnable block types: <code>data-lang="shell"</code> blocks 
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along, mostly in the terminal — students type every command themselves, on their own machine, in real time</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 01 vocabulary (file, directory, path); Python and VS Code installed per the precourse setup page</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch A/B (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required)</span></div>
 <div><span class="k">Submission</span><span class="v">Screenshot of both <code>hello.py</code> outputs (Exercises 3 and 5) plus <code>python3 --version</code> output, to Canvas</span></div>
 </div>
 <aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week02_lab. Before class: run every exercise yourself first on the platform you'll demo (Mac and Windows command differences are real — know both, since your room will have both). Have the precourse setup page open in a tab to route any student with a broken install to office hours rather than debugging a from-scratch broken install live. File-explorer policy for this lab: no GUI file management — if a student opens Finder/Explorer to make a folder instead of using <code>mkdir</code>, redirect them back to the terminal; the entire point is muscle memory for terminal navigation.</aside>
@@ -95,11 +94,10 @@ This deck mixes two runnable block types: <code>data-lang="shell"</code> blocks 
 <tr><td>0:32–0:40</td><td>Exercise 5 — Make a Sub-Project</td><td>8</td></tr>
 <tr><td>0:40–0:50</td><td>Exercise 6 — Deliberate Error Experiment</td><td>10</td></tr>
 <tr><td>0:50–0:58</td><td>Exercise 7 — Run from the Wrong Directory</td><td>8</td></tr>
-<tr><td>0:58–1:08</td><td>Stretch A — Multi-Print <code>intro.py</code></td><td>10</td></tr>
-<tr><td>1:08–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>7</td></tr>
+<tr><td>0:58–1:15</td><td>Catch-up + Wrap-Up — reflection + submission checklist (last ~7 min)</td><td>17</td></tr>
 </tbody>
 </table>
-<aside class="notes">This plan uses all 75 minutes across the seven required exercises plus Stretch A. Stretch B (installing <code>requests</code> with pip) is intentionally light-touch — Module 02's real teaching goal is terminal fluency, not package management — so treat it as a genuine bonus and don't sacrifice Exercise 6 or 7 to reach it. The timing already budgets slack for environment troubleshooting during Exercise 2.</aside>
+<aside class="notes">This plan covers the seven required exercises. Exercises 6 and 7 carry this lab's most important ideas (reading errors, understanding why the current directory matters), so protect their time if the room runs slow — the block after Exercise 7 is catch-up time, with Wrap-Up in the last ~7 minutes. The timing already budgets slack for environment troubleshooting during Exercise 2.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -215,7 +213,7 @@ pip3 --version</div>
 <aside class="notes">
 Line by line:
 - <code>python3 --version</code> — asks the Python interpreter installed on this machine to report its own version. The explicit <code>3</code> matters: on many systems plain <code>python</code> either doesn't exist or points at an old Python 2 — this course standardizes on <code>python3</code> everywhere to sidestep that trap.
-- <code>pip3 --version</code> — <code>pip</code> is Python's package installer (used again in Stretch B); confirming it's present now means Stretch B doesn't hit a surprise failure later.
+- <code>pip3 --version</code> — <code>pip</code> is Python's package installer; confirming it works now means it won't surprise you with a failure the first time the course needs it.
 </aside>
 </section>
 
@@ -247,7 +245,7 @@ pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)</pre>
 <div class="warn-lbl">Watch for</div>
 <p><code>command not found: python3</code> — almost always a PATH problem from an install that didn't add Python to the system PATH, or (on Mac) only the Xcode Command Line Tools' minimal Python stub is present. Do not debug from scratch live; route to the precourse setup page and flag for follow-up.</p>
 <p>A version below 3.10 reported successfully — the command <em>works</em>, so this slips past a quick glance. Tell the room to read the number, not just confirm "something printed."</p>
-<p>Treating <code>pip3</code> and <code>python3</code> as interchangeable — they're two different programs installed together; a 10-second clarification here prevents confusion when Stretch B introduces <code>pip3 install</code>.</p>
+<p>Treating <code>pip3</code> and <code>python3</code> as interchangeable — they're two different programs installed together; a 10-second clarification here prevents confusion the first time the course uses <code>pip3 install</code>.</p>
 </div>
 <aside class="notes">The PATH failure is the one that eats time — triage and route, don't debug live.</aside>
 </section>
@@ -649,91 +647,7 @@ Alex Chen — Finance major</pre>
 <aside class="notes">The silent-wrong-file check is the whole point of the exercise — poll the room explicitly on which result they got.</aside>
 </section>
 
-<!-- 50. STRETCH A — divider -->
-<section class="s-sec">
-<span class="chip">Stretch A · 10 min · 0:58–1:08</span>
-<h1>Multi-Print <code>intro.py</code></h1>
-<aside class="notes">
-Teaching goal: practice multiple <code>print()</code> calls in one script, each with a label — light repetition of Exercise 3/5's save-and-run loop, now with five lines instead of one.
-Say to the class (verbatim): "Five lines this time, each labeled — this is good practice for the exact save/run loop we've been doing all class, just with more content."
-Live-code it, or have students build it independently while you circulate. Run with <code>python3 intro.py</code>.
-</aside>
-</section>
-
-<!-- 51. STRETCH A — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch A (<code>ism2411/intro.py</code>)</h3>
-<div class="run" data-lang="python">
-# --- Stretch A — intro.py ---
-print("Name: Alex Chen")
-print("Major: Finance")
-print("Hometown: Tampa, FL")
-print("Hobby: rock climbing")
-print("Why this course: I want to automate the reporting I do in my internship")
-</div>
-<p class="expect">Five <code>print()</code> calls, one per line, each following the <code>Label: value</code> pattern. Students substitute their own details. Save as <code>intro.py</code> alongside <code>hello.py</code> in <code>ism2411/</code>, then run <code>python3 intro.py</code> from <code>ism2411/</code>.</p>
-<aside class="notes">
-Nothing new syntactically — five independent <code>print()</code> statements execute top to bottom, each producing one line. The teaching value is that a script can now have more than one line of real content.
-Verified against CPython 3.12.2: the five lines print in source order, exactly matching the guide's Expected output and the paired s-out.
-</aside>
-</section>
-
-<!-- 52. STRETCH A — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>Name: Alex Chen
-Major: Finance
-Hometown: Tampa, FL
-Hobby: rock climbing
-Why this course: I want to automate the reporting I do in my internship</pre>
-<aside class="notes">Five lines, each following the <code>Label: value</code> pattern, in source order. Matches the guide's Expected output for Stretch A (with each student's own details substituted).</aside>
-</section>
-
-<!-- 53. STRETCH A — quiz -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="B">
-<p class="q">Structurally, how does Stretch A's <code>intro.py</code> differ from Exercise 5's script?</p>
-<button data-opt="A">it reads user input instead of printing</button>
-<button data-opt="B">it has multiple <code>print()</code> calls in one file instead of just one — the first multi-line script this semester</button>
-<button data-opt="C">it uses a different command to run</button>
-<p class="why" hidden>Multiple <code>print()</code> calls in one file instead of one — a small step, but it's the first time this semester a script has more than a single line of real content, foreshadowing every future lab.</p>
-</div>
-<aside class="notes">Check for understanding (guide): "How is this exercise different from Exercise 5, structurally?" (Multiple <code>print()</code> calls in one file instead of one — a small step, but it's the first time this semester a script has more than a single line of real content, foreshadowing every future lab.) That parenthetical is the <code>data-answer</code> (B).</aside>
-</section>
-
-<!-- 54. STRETCH B — divider -->
-<section class="s-sec">
-<span class="chip">Stretch B · as time allows</span>
-<h1>Install and Test a Package</h1>
-<aside class="notes">
-Frame it as a quick demo rather than full hands-on time if the clock is tight — and don't sacrifice Exercise 6 or 7 to reach it.
-Say to the class (verbatim): "<code>pip3 install</code> downloads and installs a package that isn't part of Python's built-in toolkit — <code>requests</code> is a genuinely popular one for talking to web APIs, and you'll use it later this semester. All we're confirming today is that the install pipeline itself works on your machine before you need it for something real."
-</aside>
-</section>
-
-<!-- 55. STRETCH B — reference code (cannot run in-browser) -->
-<section class="s-code">
-<h3>Reference only — run this on your own machine</h3>
-<div class="run" data-lang="shell" data-readonly>pip3 install requests</div>
-<pre><code class="language-python"># test_requests.py
-import requests; print("requests version:", requests.__version__)</code></pre>
-<p class="expect">Neither snippet runs in the browser: <code>pip3</code> installs from the network, and <code>requests</code> is not bundled with the in-page Python. Demo it locally — <code>pip3 install requests</code>, then <code>python3 test_requests.py</code>.</p>
-<aside class="notes">
-- <code>pip3 install requests</code> — downloads and installs the <code>requests</code> package (and its dependencies) from PyPI.
-- <code>import requests; print("requests version:", requests.__version__)</code> — imports the freshly installed package and prints its version, confirming the install worked. Two statements on one line separated by a semicolon.
-The exact version number varies by install date.
-</aside>
-</section>
-
-<!-- 56. STRETCH B — expected output -->
-<section class="s-out">
-<h3>Expected output — exact version varies</h3>
-<pre>requests version: 2.31.0</pre>
-<aside class="notes">The guide's illustrative output; the version number depends on when the package is installed. All we're checking is that the line prints at all — that means the install pipeline works.</aside>
-</section>
-
-<!-- 57. WRAP — reflection -->
+<!-- 50. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -749,7 +663,7 @@ Strong-answer guidance (from the guide's Wrap-Up):
 </aside>
 </section>
 
-<!-- 58. WRAP — submission checklist + next module -->
+<!-- 51. WRAP — submission checklist + next module -->
 <section class="s-wrap">
 <h3>Submission checklist</h3>
 <ul>
@@ -761,11 +675,11 @@ Strong-answer guidance (from the guide's Wrap-Up):
 <aside class="notes">Review this on screen together in the last few minutes. Preview Module 03 (verbatim): "Today was almost entirely about the environment around your code — the terminal, the file system, running scripts. Starting next module, we focus entirely on the code itself: variables, types, and formatted output. The save-run-read loop you built today is the loop you'll run for the rest of the semester — it just gets more interesting content inside it."</aside>
 </section>
 
-<!-- 59. END -->
+<!-- 52. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 2</div>
 <h1>End of lab</h1>
-<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w02.md (Week 2 facilitation guide). Shell blocks (Exercises 1, 4, 5-part-1, 7) verified against ism2411/assets/lab-shell.mjs; Python blocks (Exercises 3, 5-part-2, 6, Stretch A) verified against CPython 3.12.2 / Pyodide 0.26.4. Exercise 2 and Stretch B are shown as reference-only because they query the local machine / network and cannot run in the browser.</aside>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w02.md (Week 2 facilitation guide). Shell blocks (Exercises 1, 4, 5-part-1, 7) verified against ism2411/assets/lab-shell.mjs; Python blocks (Exercises 3, 5-part-2, 6) verified against CPython 3.12.2 / Pyodide 0.26.4. Exercise 2 is shown as reference-only because it queries the local machine and cannot run in the browser.</aside>
 </section>
 
 </div></div>

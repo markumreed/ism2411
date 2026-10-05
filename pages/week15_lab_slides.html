@@ -45,14 +45,13 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:41–0:48</strong> Ex 5 — Seaborn Version</span>
 <span class="t-item"><strong>0:48–0:55</strong> Ex 6 — Multiple Aggregations</span>
 <span class="t-item"><strong>0:55–0:59</strong> Ex 7 — Notebook Tidy-Up</span>
-<span class="t-item"><strong>0:59–1:09</strong> Stretch 1 &amp; 2 Preview</span>
-<span class="t-item"><strong>1:09–1:15</strong> Wrap-Up</span>
+<span class="t-item"><strong>0:59–1:15</strong> Catch-up + Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
 Teaching goal (session): this lab is the capstone dress rehearsal — the workflow, standards, and deliverable format are identical, and everything graded loosely in earlier modules (vague comments, unlabeled output) is graded strictly here, on purpose. Two things deserve outsized attention: the "state your finding as a sentence with a number" discipline (every required chart needs a one-sentence, numeric finding beneath it) and Exercise 2's "all 12 months" requirement, which contains a genuine, easy-to-miss gotcha — <code>groupby</code> silently omits any month with zero orders unless explicitly told not to.
 75-minute session, live code-along. Prerequisites: Module 14's <code>clean_sales.csv</code>; Module 13's <code>groupby</code>-adjacent filtering and aggregation basics. Submission: <code>aggregate.ipynb</code> (or <code>.py</code>) + all 4 PNG chart files via GitHub in a <code>module15/</code> folder, URL to Canvas.
-Deck note: this is a <strong>DATA WEEK with matplotlib charts</strong>. Non-chart blocks (groupby / aggregate / pivot) carry <code>data-packages="pandas"</code>; chart blocks (<code>.plot(...)</code> / <code>plt.*</code>) carry <code>data-packages="pandas,matplotlib"</code> — the first Run on the page pays a one-time multi-MB download to bring pandas (and numpy, and for chart blocks matplotlib) into Pyodide; later Runs reuse it. Each <code>.run</code> block executes in its OWN fresh Pyodide namespace, so every block first re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, a full calendar year, a genuine December peak, and a region — East — that wins on revenue and average order value despite <em>not</em> having the most orders; loop/frame variables renamed with a <code>_</code> prefix so the scaffold never shadows the lab's <code>df</code>) and rebuilds <code>df</code> through every prior step, then runs the current exercise's actual lab code. In the real <code>aggregate.py</code> the course's own Module 14 output is placed once and every exercise builds on the same running <code>df</code>. <strong>Use your course's real Module 14 output with students</strong> — the numbers here are verified against the Appendix B synthetic version for preparation. Chart blocks: the framework forces the headless <code>AGG</code> backend and, after the block's plotting code runs, captures the current figure to a PNG shown in the output pane — so each chart block holds only the guide's chart-building code (the guide's own trailing <code>plt.savefig("module15/charts/…")</code> / <code>plt.show()</code> lines, which target the student's real disk and interactive session, are omitted; run the guide's version locally to write the actual PNG files the submission needs). Each chart <code>s-out</code> describes the expected chart in prose because a PNG cannot be byte-diffed. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / matplotlib 3.9.2; Pyodide 0.26.4 bundles pandas 2.2.0 and matplotlib ~3.5.2, so chart styling/fonts may differ slightly in the browser — the data shown is the load-bearing content. Exercise 5 (Seaborn) and Stretch 2 (Seaborn heatmap) are shown as static reference code, not runnable blocks — Seaborn is outside this deck's browser package set; run those locally.
+Deck note: this is a <strong>DATA WEEK with matplotlib charts</strong>. Non-chart blocks (groupby / aggregate / pivot) carry <code>data-packages="pandas"</code>; chart blocks (<code>.plot(...)</code> / <code>plt.*</code>) carry <code>data-packages="pandas,matplotlib"</code> — the first Run on the page pays a one-time multi-MB download to bring pandas (and numpy, and for chart blocks matplotlib) into Pyodide; later Runs reuse it. Each <code>.run</code> block executes in its OWN fresh Pyodide namespace, so every block first re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, a full calendar year, a genuine December peak, and a region — East — that wins on revenue and average order value despite <em>not</em> having the most orders; loop/frame variables renamed with a <code>_</code> prefix so the scaffold never shadows the lab's <code>df</code>) and rebuilds <code>df</code> through every prior step, then runs the current exercise's actual lab code. In the real <code>aggregate.py</code> the course's own Module 14 output is placed once and every exercise builds on the same running <code>df</code>. <strong>Use your course's real Module 14 output with students</strong> — the numbers here are verified against the Appendix B synthetic version for preparation. Chart blocks: the framework forces the headless <code>AGG</code> backend and, after the block's plotting code runs, captures the current figure to a PNG shown in the output pane — so each chart block holds only the guide's chart-building code (the guide's own trailing <code>plt.savefig("module15/charts/…")</code> / <code>plt.show()</code> lines, which target the student's real disk and interactive session, are omitted; run the guide's version locally to write the actual PNG files the submission needs). Each chart <code>s-out</code> describes the expected chart in prose because a PNG cannot be byte-diffed. All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / matplotlib 3.9.2; Pyodide 0.26.4 bundles pandas 2.2.0 and matplotlib ~3.5.2, so chart styling/fonts may differ slightly in the browser — the data shown is the load-bearing content. Exercise 5 (Seaborn) is shown as static reference code, not a runnable block — Seaborn is outside this deck's browser package set; run it locally.
 </aside>
 </section>
 
@@ -62,10 +61,10 @@ Deck note: this is a <strong>DATA WEEK with matplotlib charts</strong>. Non-char
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>aggregate.py</code> (or a notebook) built exercise by exercise on Module 14's cleaned <code>data/clean_sales.csv</code>; the course provides the real cleaned dataset (Appendix B's seeded 1,200-row generator stands in for instructor rehearsal)</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 14's <code>clean_sales.csv</code>; Module 13's <code>groupby</code>-adjacent filtering and aggregation basics</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>aggregate.ipynb</code> (or <code>.py</code>) + all 4 PNG chart files via GitHub (<code>module15/</code> folder), URL to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week15_lab. Class length 75 minutes, format live code-along. The lab page's own framing is worth stating verbatim: "this is the capstone dress rehearsal — the workflow, standards, and deliverable format are identical." The required exercises fill most of available time; both Stretch challenges are positioned as previews of genuinely dashboard-grade techniques worth seeing even briefly. Before class: confirm <code>matplotlib</code> and <code>seaborn</code> are installed on the demo machine and rehearse Exercises 1–3 once end to end (chart-heavy live coding has more moving parts — figure setup, saving, closing — than most prior labs); obtain or generate <code>data/clean_sales.csv</code> as the direct output of Module 14; create a <code>module15/charts/</code> folder and decide up front whether the section works in a <code>.py</code> file or a Jupyter notebook, since Exercise 7's tidy-up instructions differ slightly by format.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week15_lab. Class length 75 minutes, format live code-along. The lab page's own framing is worth stating verbatim: "this is the capstone dress rehearsal — the workflow, standards, and deliverable format are identical." The required exercises fill most of the available time. Before class: confirm <code>matplotlib</code> and <code>seaborn</code> are installed on the demo machine and rehearse Exercises 1–3 once end to end (chart-heavy live coding has more moving parts — figure setup, saving, closing — than most prior labs); obtain or generate <code>data/clean_sales.csv</code> as the direct output of Module 14; create a <code>module15/charts/</code> folder and decide up front whether the section works in a <code>.py</code> file or a Jupyter notebook, since Exercise 7's tidy-up instructions differ slightly by format.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -97,11 +96,10 @@ Deck note: this is a <strong>DATA WEEK with matplotlib charts</strong>. Non-char
 <tr><td>0:41–0:48</td><td>Exercise 5 — Seaborn Version</td><td>7</td></tr>
 <tr><td>0:48–0:55</td><td>Exercise 6 — Multiple Aggregations</td><td>7</td></tr>
 <tr><td>0:55–0:59</td><td>Exercise 7 — Notebook Tidy-Up</td><td>4</td></tr>
-<tr><td>0:59–1:09</td><td>Stretch 1 &amp; 2 Preview (as time allows)</td><td>10</td></tr>
-<tr><td>1:09–1:15</td><td>Wrap-Up — reflection + submission + Module 16 preview</td><td>6</td></tr>
+<tr><td>0:59–1:15</td><td>Catch-up + Wrap-Up — reflection + submission + Module 16 preview (last ~6 min)</td><td>16</td></tr>
 </tbody>
 </table>
-<aside class="notes">The required exercises fill most of available time at a normal code-along pace. Both Stretch challenges are framed as previews of genuinely dashboard-grade techniques: Stretch 1 (side-by-side subplots) is exactly what executive dashboards use constantly; Stretch 2 (a regional monthly heatmap via <code>.pivot_table()</code>) reshapes the data into a full grid in one call. Appendix C has two extra-practice items (a second single-dimension aggregation by <code>product_category</code> with <code>.agg()</code>; a day-of-week chart via <code>df['order_date'].dt.day_name()</code>) if a section moves unusually fast. Wrap-Up runs in the last ~6 minutes: three reflection questions + the submission checklist + the Module 16 (dedicated capstone work time) preview.</aside>
+<aside class="notes">The required exercises fill most of available time at a normal code-along pace. The block after Exercise 7 is catch-up time. Appendix C has two extra-practice items (a second single-dimension aggregation by <code>product_category</code> with <code>.agg()</code>; a day-of-week chart via <code>df['order_date'].dt.day_name()</code>) if a section moves unusually fast. Wrap-Up runs in the last ~6 minutes: three reflection questions + the submission checklist + the Module 16 (dedicated capstone work time) preview.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -1284,162 +1282,7 @@ Check for understanding: the guide gives none for this segment ("No dedicated ch
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
 </section>
 
-<!-- 50. STRETCH — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 &amp; 2 · 0:59–1:09 · as time allows</span>
-<h1>Stretch 1 &amp; 2 Preview</h1>
-<aside class="notes">
-Frame both as previews of genuinely dashboard-grade techniques worth seeing even briefly.
-Stretch 1 framing (verbatim, if you demo it): "<code>plt.subplots(1, 2, ...)</code> creates <em>two</em> axes side by side in one figure instead of one — <code>axes</code> is now a small array, and each chart gets built on its own slot (<code>axes[0]</code>, <code>axes[1]</code>) exactly like the single-axes pattern all lab long, just indexed. This two-charts-in-one-figure layout is exactly what executive dashboards use constantly — multiple related views, one glance."
-Stretch 2 framing (verbatim, if you demo it): "<code>.pivot_table()</code> reshapes the data into a full grid — one row per region, one column per month — in a single call, which is genuinely a more direct route to this shape than manually building it from repeated <code>groupby</code> calls; <code>fill_value=0</code> is doing the exact same 'don't silently drop empty combinations' job as Exercise 2's <code>.reindex()</code>, just for a two-dimensional grid instead of a single list of months. <code>annot=True, fmt=\".0f\"</code> prints each cell's actual number directly on the heatmap, which is what makes it genuinely readable rather than just decoratively colorful."
-Stretch segments get the lighter treatment (idea &rarr; code &rarr; out); no separate knowledge-check quiz, matching the Week 12 / 13 / 14 decks. Stretch 2 (Seaborn heatmap) is shown as static reference code — Seaborn is outside this deck's browser package set; run it locally.
-</aside>
-</section>
-
-<!-- 51. STRETCH — the idea -->
-<section class="s-idea">
-<h3>The idea — two views in one figure; one grid from one call</h3>
-<div class="concept">
-<div class="concept-lbl">Both previews build directly on today</div>
-<p><strong>Stretch 1</strong> — <code>fig, axes = plt.subplots(1, 2, figsize=(14, 5))</code> makes two axes side by side; build each chart on its own slot (<code>axes[0]</code>, <code>axes[1]</code>) exactly like the single-axes pattern, just indexed. This is the executive-dashboard layout: multiple related views, one glance.</p>
-<p><strong>Stretch 2</strong> — <code>df.pivot_table(index="region", columns="month", values="revenue", aggfunc="sum", fill_value=0)</code> reshapes to a full region &times; month grid in one call; <code>fill_value=0</code> does Exercise 2's "don't silently drop empty combinations" job in two dimensions. <code>sns.heatmap(..., annot=True, fmt=".0f")</code> prints each cell's number so it's readable, not just colourful.</p>
-</div>
-<aside class="notes">Condenses the guide's Stretch 1 &amp; 2 framing. Stretch 1 reuses <code>region_revenue</code> (Ex 1) and <code>cat_revenue</code> (Ex 4). Stretch 2's <code>fill_value=0</code> is conceptually the same safeguard as <code>.reindex(range(1,13), fill_value=0)</code>, generalized to a 2-D grid.</aside>
-</section>
-
-<!-- 52. STRETCH 1 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 1 (side-by-side subplots)</h3>
-<div class="run" data-lang="python" data-packages="pandas,matplotlib">
-# ---- deck fixture: the guide's Appendix B generator (numpy default_rng(99), fully reproducible) ----
-from pathlib import Path
-import numpy as np
-import pandas as pd
-
-Path("data").mkdir(exist_ok=True)
-_rng = np.random.default_rng(99)
-_n = 1200
-_regions = ["North", "South", "East", "West"]
-_categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
-
-_region_arr = _rng.choice(_regions, size=_n, p=[0.22, 0.34, 0.24, 0.20])
-_category_arr = _rng.choice(_categories, size=_n)
-_quantity_arr = _rng.integers(1, 15, size=_n)
-
-_base_prices = np.array([9.99, 14.99, 19.99, 24.99, 49.99, 99.99])
-_unit_price = np.zeros(_n)
-for _i in range(_n):
-    if _region_arr[_i] == "East":
-        _unit_price[_i] = _rng.choice([19.99, 24.99, 49.99, 99.99, 149.99])
-    else:
-        _unit_price[_i] = _rng.choice(_base_prices)
-
-_dates = pd.date_range("2024-01-01", "2024-12-31", freq="D")
-_weights = np.ones(len(_dates))
-for _i, _d in enumerate(_dates):
-    if _d.month == 12:
-        _weights[_i] = 2.2
-    elif _d.month == 11:
-        _weights[_i] = 1.4
-_weights = _weights / _weights.sum()
-_date_arr = _rng.choice(_dates, size=_n, p=_weights)
-
-_revenue_arr = np.round(_quantity_arr * _unit_price, 2)
-_order_id = [f"ORD{100001+_i}" for _i in range(_n)]
-
-_gen = pd.DataFrame({
-    "order_id": _order_id,
-    "order_date": pd.to_datetime(_date_arr).strftime("%Y-%m-%d"),
-    "region": _region_arr,
-    "product_category": _category_arr,
-    "unit_price": _unit_price,
-    "quantity_sold": _quantity_arr,
-    "revenue": _revenue_arr,
-})
-_gen.to_csv("data/clean_sales.csv", index=False)
-# ---- end deck fixture ----
-import pandas as pd
-import matplotlib.pyplot as plt
-
-df = pd.read_csv('data/clean_sales.csv')
-region_revenue = df.groupby("region")["revenue"].sum().reset_index().sort_values("revenue", ascending=False)
-cat_revenue = df.groupby("product_category")["revenue"].sum().sort_values(ascending=False)
-
-# --- Stretch 1: side-by-side subplots ---
-fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-
-region_revenue.plot(kind="bar", x="region", y="revenue", ax=axes[0], legend=False, color="#4C72B0")
-axes[0].set_title("Revenue by Region")
-axes[0].set_ylabel("Revenue ($)")
-
-cat_revenue.plot(kind="bar", ax=axes[1], legend=False, color="#DD8452")
-axes[1].set_title("Revenue by Product Category")
-axes[1].set_ylabel("Revenue ($)")
-
-plt.tight_layout()
-</div>
-<p class="expect">A preview. <code>plt.subplots(1, 2, ...)</code> returns a 1&times;2 array of axes; each chart is built on its own slot exactly like the single-axes pattern, just indexed. The guide's trailing <code>plt.savefig("module15/charts/stretch1_subplots.png", dpi=150)</code> is omitted — the framework captures the figure automatically.</p>
-<aside class="notes">
-The live block renders the actual chart as a PNG; the next panel describes what it should show.
-Line-by-line:
-- deck fixture rebuilds <code>data/clean_sales.csv</code> and re-does the Ex 1 + Ex 4 aggregations (fresh namespace per block).
-- <code>fig, axes = plt.subplots(1, 2, figsize=(14, 5))</code> — two axes side by side; <code>axes</code> is a length-2 array.
-- <code>region_revenue.plot(kind="bar", x="region", y="revenue", ax=axes[0], ...)</code> — pandas' own <code>.plot</code>, drawing onto the left axes.
-- <code>cat_revenue.plot(kind="bar", ax=axes[1], ...)</code> — the category Series onto the right axes.
-The guide gives the code but no explicit expected output (framed as a preview). Values below are the real <code>python3</code> run.
-No separate quiz — the Stretch divider's framing notes stand in for a CFU (matching the Week 12–14 decks).
-Pyodide 0.26.4 bundles matplotlib ~3.5.2 vs local 3.9.2 — chart styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.
-</aside>
-</section>
-
-<!-- 53. STRETCH 1 — chart description -->
-<section class="s-out">
-<h3>Expected chart — Stretch 1</h3>
-<pre>Layout     : ONE figure, two bar charts side by side (1 row x 2 cols)
-Left  axes : title "Revenue by Region", blue (#4C72B0)
-             x tick labels East / South / West / North (rotated)
-             y "Revenue ($)"; same heights as the Q1 chart
-Right axes : title "Revenue by Product Category", orange (#DD8452)
-             x tick labels Apparel / Home Goods / Toys / Electronics
-             y "Revenue ($)"; same heights as the Q4 chart
-No suptitle; tight_layout keeps the two panels from overlapping.</pre>
-<aside class="notes">The guide gives the Stretch 1 code but no explicit expected output (a preview). Verified locally: <code>matplotlib.use("AGG")</code> + the guide's plotting code + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~40 KB). Left-panel heights are the Ex 1 values (East 158621.95 … North 60112.83); right-panel heights are the Ex 4 values (Apparel 103886.52 … Electronics 91203.24). The pandas <code>.plot(kind="bar")</code> path rotates the x tick labels by default. Pyodide's matplotlib ~3.5.2 vs local 3.9.2 — styling/fonts may differ slightly in the browser; the data shown is the load-bearing content.</aside>
-</section>
-
-<!-- 54. STRETCH 2 — reference code (not runnable) -->
-<section class="s-code">
-<h3>Reference code — Stretch 2 (regional monthly heatmap; run locally)</h3>
-<pre><code class="language-python"># --- Stretch 2: regional monthly heatmap ---
-import seaborn as sns
-
-pivot = df.pivot_table(index="region", columns="month", values="revenue", aggfunc="sum", fill_value=0)
-
-fig, ax = plt.subplots(figsize=(12, 5))
-sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlOrRd", ax=ax)
-ax.set_title("Revenue by Region and Month")
-plt.tight_layout()
-plt.savefig("module15/charts/stretch2_heatmap.png", dpi=150)</code></pre>
-<p class="expect">Shown for reference — run locally (Seaborn isn't in the browser package set). <code>.pivot_table()</code> reshapes to a region &times; month grid in one call; <code>fill_value=0</code> does Exercise 2's "don't drop empty combinations" job in two dimensions; <code>annot=True, fmt=".0f"</code> prints each cell's number on the heatmap.</p>
-<aside class="notes">Plain <code>&lt;pre&gt;&lt;code&gt;</code>, not a <code>.run</code> div — Seaborn is outside <code>data-packages</code>'s <code>pandas,matplotlib</code> set (recipe §5). Verified locally: <code>matplotlib.use("AGG")</code> + this code (with the running <code>df</code> incl. the <code>month</code> column from Ex 2) + <code>savefig</code> ran <code>rc=0</code> and produced a non-empty PNG (~69 KB). <code>pivot_table</code> sorts the index alphabetically (East, North, South, West) and columns 1–12. Line-by-line: <code>df.pivot_table(index="region", columns="month", values="revenue", aggfunc="sum", fill_value=0)</code> builds the grid; <code>sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlOrRd", ax=ax)</code> colours each cell by value and writes the integer in it. Guide framing (verbatim): "<code>.pivot_table()</code> reshapes the data into a full grid ... in a single call ... <code>fill_value=0</code> is doing the exact same 'don't silently drop empty combinations' job as Exercise 2's <code>.reindex()</code> ... <code>annot=True, fmt=\".0f\"</code> prints each cell's actual number directly on the heatmap."</aside>
-</section>
-
-<!-- 55. STRETCH 2 — chart description -->
-<section class="s-out">
-<h3>Expected chart — Stretch 2</h3>
-<pre>Chart type : Seaborn heatmap, 4 rows x 12 columns
-Title      : "Revenue by Region and Month"
-Rows       : region — East, North, South, West (alphabetical)
-Columns    : month — 1 through 12
-Cells      : coloured by revenue on the YlOrRd map (pale yellow = low,
-             deep red = high); each cell annotated with its integer
-             revenue (fmt=".0f"); a colourbar on the right.
-Hot spots  : the month-12 (December) column and the East row run
-             hottest — East Dec ~22,651 and South Dec ~21,115 are the
-             deepest red; the North row is the coolest overall.</pre>
-<aside class="notes">The guide gives the Stretch 2 code but no explicit expected output (a preview) and it cannot run in the deck (Seaborn). Verified locally: rc=0, non-empty PNG (~69 KB). Sample pivot cells (rounded): East Dec 22651, North Dec 9453, South Dec 21115, West Dec 10423; East Jan 10653, North Jan 4429. The December column and East row being hottest is consistent with Exercise 2's December peak and Exercise 1/6's East revenue lead. Pyodide's matplotlib ~3.5.2 and Seaborn version differences would change styling; the data shown is the load-bearing content.</aside>
-</section>
-
-<!-- 56. WRAP — reflection -->
+<!-- 50. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -1455,7 +1298,7 @@ Review the reflection questions out loud in the last ~6 minutes (guide, verbatim
 </aside>
 </section>
 
-<!-- 57. WRAP — submission + next module -->
+<!-- 51. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -1469,11 +1312,11 @@ Review the reflection questions out loud in the last ~6 minutes (guide, verbatim
 <aside class="notes">Review the submission checklist together. Preview Module 16 (verbatim): "This lab was the dress rehearsal — same workflow, same standards, smaller scale. Module 16 is dedicated capstone work time: a longer version of exactly what you just did, on a dataset and set of business questions of your own. Everything that felt unclear today is worth resolving before then, not during."</aside>
 </section>
 
-<!-- 58. END -->
+<!-- 52. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 15</div>
 <h1>End of lab</h1>
-<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w15.md (Week 15 facilitation guide — "Aggregate &amp; Chart — Capstone Warm-up"). This is a DATA WEEK with matplotlib charts. Non-chart blocks carry <code>data-packages="pandas"</code>; chart blocks carry <code>data-packages="pandas,matplotlib"</code> (the first Run on the page preloads pandas + numpy, and for chart blocks matplotlib, into Pyodide). Each <code>.run</code> block runs in its OWN fresh namespace, so every block first re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, a full calendar year, a genuine December peak, and a region — East — that wins on revenue and average order value despite not having the most orders; loop/frame variables renamed with a <code>_</code> prefix so the scaffold never shadows the lab's <code>df</code>) and re-runs every prior step, then runs the current exercise's actual lab code — in the real <code>aggregate.py</code> the course's Module 14 output is placed once and each exercise builds on the same <code>df</code>. Chart blocks: the framework forces the <code>AGG</code> backend and captures the current figure to a PNG in the output pane, so each chart block holds only the guide's chart-building code — the guide's own trailing <code>plt.savefig("module15/charts/…")</code> / <code>plt.show()</code> lines (which target the student's real disk and interactive session) are omitted; run the guide's version locally to write the 4 PNG files the submission needs. Each chart <code>s-out</code> is a prose description because a PNG cannot be byte-diffed. Exercise 5 (Seaborn) and Stretch 2 (Seaborn heatmap) are shown as static reference code, not runnable blocks — Seaborn is outside this deck's browser package set (recipe §5). All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / matplotlib 3.9.2; Pyodide 0.26.4 bundles pandas 2.2.0 and matplotlib ~3.5.2, so chart styling/fonts may differ slightly in the browser — the data shown is the load-bearing content. Two Series-repr divergences are disclosed on their slides (Exercises 2 and 4): <code>print()</code> of a Series emits a <code>Name: revenue, dtype: float64</code> trailer the guide's printed samples abbreviate away; every value the guide cites is reproduced exactly. No block uses <code>input()</code>, so there is no <code>data-stdin</code>.</aside>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism2411/lab_w15.md (Week 15 facilitation guide — "Aggregate &amp; Chart — Capstone Warm-up"). This is a DATA WEEK with matplotlib charts. Non-chart blocks carry <code>data-packages="pandas"</code>; chart blocks carry <code>data-packages="pandas,matplotlib"</code> (the first Run on the page preloads pandas + numpy, and for chart blocks matplotlib, into Pyodide). Each <code>.run</code> block runs in its OWN fresh namespace, so every block first re-generates <code>data/clean_sales.csv</code> from the guide's Appendix B generator (numpy <code>default_rng(99)</code>, 1,200 rows, a full calendar year, a genuine December peak, and a region — East — that wins on revenue and average order value despite not having the most orders; loop/frame variables renamed with a <code>_</code> prefix so the scaffold never shadows the lab's <code>df</code>) and re-runs every prior step, then runs the current exercise's actual lab code — in the real <code>aggregate.py</code> the course's Module 14 output is placed once and each exercise builds on the same <code>df</code>. Chart blocks: the framework forces the <code>AGG</code> backend and captures the current figure to a PNG in the output pane, so each chart block holds only the guide's chart-building code — the guide's own trailing <code>plt.savefig("module15/charts/…")</code> / <code>plt.show()</code> lines (which target the student's real disk and interactive session) are omitted; run the guide's version locally to write the 4 PNG files the submission needs. Each chart <code>s-out</code> is a prose description because a PNG cannot be byte-diffed. Exercise 5 (Seaborn) is shown as static reference code, not a runnable block — Seaborn is outside this deck's browser package set (recipe §5). All runnable-block output verified against local <code>python3</code> with pandas 2.2.0 / matplotlib 3.9.2; Pyodide 0.26.4 bundles pandas 2.2.0 and matplotlib ~3.5.2, so chart styling/fonts may differ slightly in the browser — the data shown is the load-bearing content. Two Series-repr divergences are disclosed on their slides (Exercises 2 and 4): <code>print()</code> of a Series emits a <code>Name: revenue, dtype: float64</code> trailer the guide's printed samples abbreviate away; every value the guide cites is reproduced exactly. No block uses <code>input()</code>, so there is no <code>data-stdin</code>.</aside>
 </section>
 
 </div></div>

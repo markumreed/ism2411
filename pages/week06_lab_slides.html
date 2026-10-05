@@ -45,8 +45,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:36–0:46</strong> Ex 5 — <code>break</code> / <code>continue</code></span>
 <span class="t-item"><strong>0:46–0:54</strong> Ex 6 — <code>while</code> Loop Rewrite</span>
 <span class="t-item"><strong>0:54–1:02</strong> Ex 7 — Discount Applied to All Items</span>
-<span class="t-item"><strong>1:02–1:10</strong> Stretch 1 — Running Total Report</span>
-<span class="t-item"><strong>1:10–1:15</strong> Stretch 2 Preview + Wrap-Up</span>
+<span class="t-item"><strong>1:02–1:15</strong> Catch-up + Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -61,10 +60,10 @@ Prerequisites: Module 05 — <code>if</code>/<code>elif</code>/<code>else</code>
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>sales_loop.py</code> starts empty except the header comment and the shared <code>sales</code> list; build every exercise live</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 05: <code>if</code>/<code>elif</code>/<code>else</code>; Modules 01–04: variables, operators, f-strings</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch 1 / 2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>sales_loop.py</code> to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week06_lab. Class length 75 minutes, format live code-along. The required exercises and Stretch 1 provide comprehensive coverage; Stretch 2 (nested loops / multiplication table) is a separate topic — loops <em>inside</em> loops — rather than a variation on the accumulator pattern, so it is positioned as optional take-home content. The same list <code>sales = [120, 80, 250, 175, 90, 410, 60, 215]</code> is reused across all seven exercises on purpose.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week06_lab. Class length 75 minutes, format live code-along. The required exercises provide comprehensive coverage of the accumulator pattern and its variations. The same list <code>sales = [120, 80, 250, 175, 90, 410, 60, 215]</code> is reused across all seven exercises on purpose.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -95,11 +94,10 @@ Prerequisites: Module 05 — <code>if</code>/<code>elif</code>/<code>else</code>
 <tr><td>0:36–0:46</td><td>Exercise 5 — <code>break</code> / <code>continue</code></td><td>10</td></tr>
 <tr><td>0:46–0:54</td><td>Exercise 6 — <code>while</code> Loop Rewrite</td><td>8</td></tr>
 <tr><td>0:54–1:02</td><td>Exercise 7 — Discount Applied to All Items</td><td>8</td></tr>
-<tr><td>1:02–1:10</td><td>Stretch 1 — Running Total Report</td><td>8</td></tr>
-<tr><td>1:10–1:15</td><td>Stretch 2 Preview — Nested Loops + Wrap-Up</td><td>5</td></tr>
+<tr><td>1:02–1:15</td><td>Catch-up + Wrap-Up — reflection + submission checklist (last ~5 min)</td><td>13</td></tr>
 </tbody>
 </table>
-<aside class="notes">Seven required exercises plus Stretch 1 fill the full 75 minutes at a normal pace. Stretch 2 (nested loops / multiplication table) is framed as a preview/take-home. If a section moves unusually fast, Appendix B has two extra practice items (a second accumulator pass over <code>expenses = [45, 120, 15, 300, 60, 90]</code>; a second <code>break</code>/<code>continue</code> scenario).</aside>
+<aside class="notes">The required exercises provide comprehensive coverage of the accumulator pattern and its variations. The block after Exercise 7 is catch-up time, with Wrap-Up in the last ~5 minutes. If a section moves unusually fast, Appendix B has two extra practice items (a second accumulator pass over <code>expenses = [45, 120, 15, 300, 60, 90]</code>; a second <code>break</code>/<code>continue</code> scenario).</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -708,153 +706,7 @@ $215 → 10% discount → $193.50</pre>
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
 </section>
 
-<!-- 50. STRETCH 1 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 · 8 min · 1:02–1:10</span>
-<h1>Running Total Report</h1>
-<aside class="notes">
-Teaching goal: a bank-statement-style running total — print the accumulator's value <em>during</em> the loop, at every step, not just at the end — plus a genuinely interesting discussion point about what "count how many times it crossed $500" even means for strictly increasing data.
-Say to the class (verbatim): "One more accumulator variation: print the running total after <em>every single</em> transaction, like a bank statement, instead of only printing the final sum once at the end."
-</aside>
-</section>
-
-<!-- 51. STRETCH 1 — the idea -->
-<section class="s-idea">
-<h3>The idea — a flag is a new accumulator shape</h3>
-<div class="concept">
-<div class="concept-lbl">What's new here</div>
-<p><code>running_total += sale</code> then immediately <code>print(...)</code> <em>inside</em> the loop — the printed value updates on every pass, unlike Exercise 1 where the total was revealed once at the end.</p>
-<p><code>crossed_500</code> is a <strong>flag</strong>: a boolean that starts <code>False</code> and flips to <code>True</code> the first (and only the first) time the total exceeds $500. Not a running sum or a count of values — a one-time "has this happened yet" tracker. Because every sale is positive, <code>running_total</code> only ever goes up, so it can cross $500 exactly once — <code>crossings</code> will always be <code>1</code> for this dataset.</p>
-</div>
-<aside class="notes">Worth raising as an explicit discussion point: since every sale is positive, <code>running_total</code> is monotonically increasing. Ask the room: "under what circumstances could this count be something other than 1?" (If the list contained negative values — refunds/returns — the running total could dip back below $500 after crossing, then cross again. With all-positive data the flag guard is still good practice, but the "count" is a bit of a red herring on this dataset — a good moment for honest critique of an exercise's design.)</aside>
-</section>
-
-<!-- 52. STRETCH 1 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 1</h3>
-<div class="run" data-lang="python">
-# --- Stretch 1 ---
-sales = [120, 80, 250, 175, 90, 410, 60, 215]
-running_total = 0
-crossed_500 = False
-crossings = 0
-
-for sale in sales:
-    running_total += sale
-    print(f"${sale} -> running total: ${running_total}")
-    if running_total &gt; 500 and not crossed_500:
-        crossings += 1
-        crossed_500 = True
-
-print(f"Number of transactions that first pushed the running total above $500: {crossings}")
-</div>
-<p class="expect">Without the <code>not crossed_500</code> guard, <code>crossings</code> would increment on <em>every</em> pass after the total first crosses $500 (five of the eight passes), reporting <code>5</code> instead of <code>1</code>.</p>
-<aside class="notes">
-Line-by-line:
-- <code>running_total += sale</code> then immediately <code>print(...)</code> — <strong>inside the loop</strong>, so the printed value updates on every single pass, unlike Exercise 1 where the total was only revealed once, at the very end.
-- <code>crossed_500 = False</code> — a <strong>flag</strong> variable: a boolean that starts <code>False</code> and gets set to <code>True</code> the first time (and only the first time) the running total exceeds $500. A new accumulator <em>shape</em> — not a running sum or count of values, but a one-time "has this happened yet" tracker.
-- <code>if running_total &gt; 500 and not crossed_500:</code> — combines a numeric check with the flag, using <code>and not</code> (Module 05's Exercise 6 pattern) so this only fires once — without the <code>not crossed_500</code> guard, <code>crossings</code> would increment on <em>every remaining pass</em> once the total first crosses $500, since <code>running_total &gt; 500</code> stays <code>True</code> for every sale after that point.
-- Discussion point: every sale is positive, so <code>running_total</code> is monotonically increasing — it can only cross $500 exactly once, which is why <code>crossings</code> always reports <code>1</code> here. Ask: "under what circumstances could this count be something other than 1?" (Negative values — refunds/returns — let the total dip back below $500 and cross again.)
-Common mistakes: omitting the <code>crossed_500</code> flag and just counting every pass where <code>running_total &gt; 500</code> — overcounts badly (five of the eight passes have a running total over $500, so <code>crossings</code> would report <code>5</code> instead of <code>1</code>).
-Check for understanding (guide, verbatim parenthetical): "Which specific sale caused the running total to first cross $500? ... it's the <strong>fourth</strong> sale, <code>$175</code>, that pushes the running total over $500, from <code>$450</code> to <code>$625</code>."
-</aside>
-</section>
-
-<!-- 53. STRETCH 1 — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>$120 -> running total: $120
-$80 -> running total: $200
-$250 -> running total: $450
-$175 -> running total: $625
-$90 -> running total: $715
-$410 -> running total: $1125
-$60 -> running total: $1185
-$215 -> running total: $1400
-Number of transactions that first pushed the running total above $500: 1</pre>
-<aside class="notes">Matches the guide's Expected output for Stretch 1 exactly. The running total crosses $500 on the fourth sale (<code>$175</code>, <code>$450 → $625</code>); the flag guard means <code>crossings</code> stays <code>1</code> even though five later passes also have <code>running_total &gt; 500</code>. Verified against CPython 3.12.2.</aside>
-</section>
-
-<!-- 54. STRETCH 1 — quiz -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="C">
-<p class="q">Which specific sale caused the running total to first cross $500? (Trace it, don't guess.)</p>
-<button data-opt="A">The third sale, <code>$250</code> — it takes the total from <code>$200</code> to <code>$450</code></button>
-<button data-opt="B">The sixth sale, <code>$410</code> — the biggest single sale in the list</button>
-<button data-opt="C">The fourth sale, <code>$175</code> — it takes the total from <code>$450</code> to <code>$625</code></button>
-<p class="why" hidden>Trace it: <code>$120→$120</code>, <code>$80→$200</code>, <code>$250→$450</code>, <code>$175→$625</code> — it's the fourth sale, <code>$175</code>, that pushes the running total over $500, from <code>$450</code> to <code>$625</code>. An easy one to get wrong by guessing instead of tracing.</p>
-</div>
-<aside class="notes">Check for understanding (guide, verbatim parenthetical): "Have the room trace it together rather than eyeballing it: <code>$120→$120</code>, <code>$80→$200</code>, <code>$250→$450</code>, <code>$175→$625</code> — it's the <strong>fourth</strong> sale, <code>$175</code>, that pushes the running total over $500, from <code>$450</code> to <code>$625</code>."</aside>
-</section>
-
-<!-- 55. STRETCH 1 — pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>Omitting the <code>crossed_500</code> flag entirely and just counting every pass where <code>running_total &gt; 500</code> — this overcounts badly (five of the eight passes have a running total over $500, so <code>crossings</code> would incorrectly report <code>5</code> instead of <code>1</code>), a good concrete illustration of why the flag is necessary.</p>
-</div>
-<aside class="notes">From the guide's "Common student mistakes to watch for" for Stretch 1.</aside>
-</section>
-
-<!-- 56. STRETCH 2 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 2 Preview · 1:10–1:15</span>
-<h1>Nested Loops — preview / take-home</h1>
-<aside class="notes">
-Frame as a quick preview if time is short — this is a separate topic (loops <em>inside</em> loops) rather than a variation on the accumulator pattern, so it's optional take-home content.
-Say to the class (verbatim): "One loop inside another — a nested loop. Classic first example: a multiplication table. For every row <code>i</code> from 1 to 5, and for every column <code>j</code> from 1 to 5, print <code>i × j</code>. That's 25 total multiplications from just two short loops."
-State the business extension verbally even without coding it: "swap the multiplication table for 5 products × 3 quantity tiers, and you have a full price list generated by the exact same nested-loop shape — the answer key has the working version if you want to explore it before next class."
-</aside>
-</section>
-
-<!-- 57. STRETCH 2 — the idea -->
-<section class="s-idea">
-<h3>The idea — a loop inside a loop</h3>
-<div class="concept">
-<div class="concept-lbl">Read the shape</div>
-<p>The outer loop runs once per <strong>row</strong> (<code>i</code> from 1 to 5). For each row, the inner loop runs completely — once per <strong>column</strong> (<code>j</code> from 1 to 5) — before the outer loop moves on. 5 × 5 = 25 inner iterations total.</p>
-<p><code>row += f"{i*j:4}"</code> builds one row as a string (the <code>:4</code> pads each number to 4 characters so columns line up), and <code>print(row)</code> — <em>outside</em> the inner loop, <em>inside</em> the outer — emits it once per row.</p>
-</div>
-<aside class="notes">Business-relevant extension, stated verbally: swap the multiplication table for 5 products × 3 quantity tiers and the same nested-loop shape generates a full price list. Appendix A has the working price-list version. This whole segment is optional take-home — a separate topic from the accumulator pattern.</aside>
-</section>
-
-<!-- 58. STRETCH 2 — live code -->
-<section class="s-code">
-<h3>Live demo (if time allows) — Stretch 2</h3>
-<div class="run" data-lang="python">
-for i in range(1, 6):
-    row = ""
-    for j in range(1, 6):
-        row += f"{i*j:4}"
-    print(row)
-</div>
-<p class="expect">Five rows, five columns, right-aligned in 4-character fields. The inner loop finishes entirely for each value of <code>i</code> before <code>print(row)</code> runs and the outer loop advances.</p>
-<aside class="notes">
-Line-by-line:
-- <code>for i in range(1, 6):</code> — the outer loop, <code>i</code> taking <code>1, 2, 3, 4, 5</code> (<code>range(1, 6)</code> stops before <code>6</code>).
-- <code>row = ""</code> — reset the row string at the start of each outer pass (an accumulator, re-initialized once per row — same "initialize before the loop that updates it" rule as Exercise 1).
-- <code>for j in range(1, 6):</code> — the inner loop, running fully (<code>j = 1..5</code>) for every single value of <code>i</code>.
-- <code>row += f"{i*j:4}"</code> — append <code>i*j</code> formatted into a 4-wide field so columns align.
-- <code>print(row)</code> — outside the inner loop, inside the outer: one printed line per row.
-Common mistakes: putting <code>print(row)</code> inside the inner loop (prints a partial row 25 times); forgetting to reset <code>row = ""</code> each outer pass (every row keeps growing).
-No "Check for understanding" in the guide for this segment — the quiz is omitted here, matching the lighter treatment stretch/preview segments get.
-</aside>
-</section>
-
-<!-- 59. STRETCH 2 — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>   1   2   3   4   5
-   2   4   6   8  10
-   3   6   9  12  15
-   4   8  12  16  20
-   5  10  15  20  25</pre>
-<aside class="notes">Matches the guide's Stretch 2 demo code exactly (each cell right-aligned in a 4-character field via <code>f"{i*j:4}"</code>). Verified against CPython 3.12.2. The guide's Appendix A also has a price-list variant using the same nested shape — take-home only.</aside>
-</section>
-
-<!-- 60. WRAP — reflection -->
+<!-- 50. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -870,7 +722,7 @@ Strong-answer guidance (guide):
 </aside>
 </section>
 
-<!-- 61. WRAP — submission + next module -->
+<!-- 51. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -883,7 +735,7 @@ Strong-answer guidance (guide):
 <aside class="notes">Review the checklist together. Preview Module 07 (verbatim): "Every exercise today repeated a very similar block of code — declare some variables, loop, accumulate. Next module introduces functions, which let you package that logic up once and reuse it by name, instead of retyping it every time you need it."</aside>
 </section>
 
-<!-- 62. END -->
+<!-- 52. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 6</div>
 <h1>End of lab</h1>

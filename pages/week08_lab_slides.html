@@ -44,8 +44,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:35–0:43</strong> Ex 4 — Add Module 7 Work</span>
 <span class="t-item"><strong>0:43–0:51</strong> Ex 5 — Write a README</span>
 <span class="t-item"><strong>0:51–0:59</strong> Ex 6 — Three Commits</span>
-<span class="t-item"><strong>0:59–1:07</strong> Stretch 1 — Back-fill Earlier Modules</span>
-<span class="t-item"><strong>1:07–1:15</strong> Wrap-up</span>
+<span class="t-item"><strong>0:59–1:15</strong> Catch-up + Wrap-up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -61,10 +60,10 @@ Prerequisites: Module 02 terminal fluency; a <code>functions.py</code> file from
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live terminal/browser code-along — no new Python syntax today; the "code" is Git commands and Markdown</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 02 terminal fluency; a <code>functions.py</code> file from Module 07 to add to the new repo</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required)</span></div>
 <div><span class="k">Submission</span><span class="v">The URL to the student's GitHub repo, submitted to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week08_lab. If account creation happens live for several students, expect Exercise 1 to run long; treat Stretch exercises as the first items to compress or cut, not Exercises 2–6, which establish the workflow all remaining labs depend on. Before class: confirm <code>git</code> is installed and configured on your demo machine (<code>git config --global user.name</code> / <code>user.email</code> set); decide your authentication strategy for <code>git push</code> in advance (personal access token or SSH keys — GitHub no longer accepts a plain password over HTTPS) and standardize one method for the whole room; have your own example repo ready to demo the full sequence end to end.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week08_lab. If account creation happens live for several students, expect Exercise 1 to run long; protect the time for Exercises 2–6, which establish the workflow all remaining labs depend on. Before class: confirm <code>git</code> is installed and configured on your demo machine (<code>git config --global user.name</code> / <code>user.email</code> set); decide your authentication strategy for <code>git push</code> in advance (personal access token or SSH keys — GitHub no longer accepts a plain password over HTTPS) and standardize one method for the whole room; have your own example repo ready to demo the full sequence end to end.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -94,11 +93,10 @@ Prerequisites: Module 02 terminal fluency; a <code>functions.py</code> file from
 <tr><td>0:35–0:43</td><td>Exercise 4 — Add Module 7 Work</td><td>8</td></tr>
 <tr><td>0:43–0:51</td><td>Exercise 5 — Write a README</td><td>8</td></tr>
 <tr><td>0:51–0:59</td><td>Exercise 6 — Three Commits (read <code>git log</code>)</td><td>8</td></tr>
-<tr><td>0:59–1:07</td><td>Stretch 1 — Back-fill Earlier Modules</td><td>8</td></tr>
-<tr><td>1:07–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>8</td></tr>
+<tr><td>0:59–1:15</td><td>Catch-up + Wrap-Up — reflection + submission checklist (last ~8 min)</td><td>16</td></tr>
 </tbody>
 </table>
-<aside class="notes">Six required exercises plus Stretch 1 fill the full 75 minutes at a normal pace, including realistic account-setup and authentication friction. Stretch 2 (simulate a bug and roll back) is a preview / quick demo "as time allows" — one sentence of framing is worth more than a full live demo if time is tight. If Exercise 1 runs long because of live account creation, compress or cut the Stretch exercises first — never Exercises 2–6.</aside>
+<aside class="notes">Six required exercises fill the session at a normal pace, including realistic account-setup and authentication friction. The block after Exercise 6 is catch-up time, with Wrap-Up in the last ~8 minutes. If Exercise 1 runs long because of live account creation, protect the time for Exercises 2–6, which establish the workflow all remaining labs depend on.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -290,7 +288,7 @@ existing on your machine. It tells Git "don't track
 changes to these," so they never get staged, committed,
 or pushed — keeping the repo's real history focused on
 files that actually matter.</pre>
-<aside class="notes">Reproduced verbatim from the guide's "general principle to state explicitly" for Exercise 3. There is no terminal output for creating the file itself — the observable effect is that ignored files (e.g. a <code>__pycache__/</code> folder) never appear in <code>git status</code> as trackable, which Stretch 1 uses as a live check.</aside>
+<aside class="notes">Reproduced verbatim from the guide's "general principle to state explicitly" for Exercise 3. There is no terminal output for creating the file itself — the observable effect is that ignored files (e.g. a <code>__pycache__/</code> folder) never appear in <code>git status</code> as trackable.</aside>
 </section>
 
 <!-- 20. EXERCISE 3 — read-only code (cycle) -->
@@ -431,7 +429,7 @@ nothing to commit, working tree clean</pre>
 Teaching goal: Markdown syntax (headings, bold, bullet lists) in a genuinely functional context — a README is the first thing anyone (a grader, a future employer, a collaborator) sees when visiting a repo, and GitHub renders it automatically on the repo's front page.
 Say to the class (verbatim): "The README is your repo's front door — GitHub automatically displays it, formatted, right on the main page. We're writing it in Markdown, a lightweight formatting language you've actually already seen — every lab guide and reading in this course is written in it."
 Do, live: edit <code>README.md</code> with the content on the next slide, then commit and push it reusing the exact cycle from Exercises 3–4.
-Check for understanding (guide): "If I add a fifth module folder next week, what exactly do I need to update in this README to keep it accurate?" (Add one more bullet line under <code>## Modules</code> — get a student to notice this file needs ongoing maintenance as the semester progresses, not just a one-time setup; this directly previews Exercise 6/Stretch 1's back-filling work.)
+Check for understanding (guide): "If I add a fifth module folder next week, what exactly do I need to update in this README to keep it accurate?" (Add one more bullet line under <code>## Modules</code> — get a student to notice this file needs ongoing maintenance as the semester progresses, not just a one-time setup.)
 </aside>
 </section>
 
@@ -525,9 +523,9 @@ To https://github.com/YOURUSERNAME/ism2411.git
 <button data-opt="A">Nothing — GitHub regenerates the README automatically from your folders</button>
 <button data-opt="B">Rewrite the whole <code>## How to Run</code> section</button>
 <button data-opt="C">Add one more bullet line under <code>## Modules</code></button>
-<p class="why" hidden>Add one more bullet line under <code>## Modules</code> — this file needs ongoing maintenance as the semester progresses, not just a one-time setup. This directly previews Exercise 6 / Stretch 1's back-filling work.</p>
+<p class="why" hidden>Add one more bullet line under <code>## Modules</code> — this file needs ongoing maintenance as the semester progresses, not just a one-time setup.</p>
 </div>
-<aside class="notes">Check for understanding (guide): "If I add a fifth module folder next week, what exactly do I need to update in this README to keep it accurate?" (Add one more bullet line under <code>## Modules</code> — get a student to notice this file needs ongoing maintenance as the semester progresses, not just a one-time setup; this directly previews Exercise 6/Stretch 1's back-filling work.) That parenthetical is the <code>data-answer</code> (C).</aside>
+<aside class="notes">Check for understanding (guide): "If I add a fifth module folder next week, what exactly do I need to update in this README to keep it accurate?" (Add one more bullet line under <code>## Modules</code> — get a student to notice this file needs ongoing maintenance as the semester progresses, not just a one-time setup.) That parenthetical is the <code>data-answer</code> (C).</aside>
 </section>
 
 <!-- 35. EXERCISE 5 — pitfalls -->
@@ -599,124 +597,7 @@ f7c2b3e add README with module listing and run instructions</pre>
 <aside class="notes">Recognizing good commit granularity is a skill independent of whether it was followed perfectly today — so the fewer-than-three-commits case is a teaching moment, not a failure. Newest-first ordering is the other point to state plainly.</aside>
 </section>
 
-<!-- 41. STRETCH 1 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 · 8 min · 0:59–1:07</span>
-<h1>Back-fill Earlier Modules</h1>
-<aside class="notes">
-Teaching goal: repeat the full add-a-module cycle independently, twice, without step-by-step guidance — the real test of whether the workflow actually transferred, not just whether students could follow along live.
-Say to the class (verbatim): "Now do Exercise 4's process again, on your own, twice — once for Module 5's <code>discount.py</code>, once for Module 6's <code>sales_loop.py</code>. Separate commits for each, not one combined commit for both. Then update the README's module list."
-Facilitation notes (guide): circulate and check specifically for <strong>commit granularity</strong> — a student who does <code>git add week05/ week06/</code> and commits both in one shot has technically completed the task but missed the actual point. "Can you undo that and do it as two separate commits instead?" is a fine, low-stakes correction. The README update is easy to forget entirely — worth an explicit reminder mid-exercise, since a README that lists Modules 7–8 but not 5–6 is a subtle but real inconsistency a careful grader would notice.
-Check for understanding: the guide gives no Q&amp;A parenthetical here, so the paired quiz uses the R-conv-3 fallback — its answer is the verbatim same-segment line "Separate commits for each, not one combined commit for both."
-</aside>
-</section>
-
-<!-- 42. STRETCH 1 — read-only code -->
-<section class="s-code">
-<h3>Run in your own terminal — Stretch 1 (repeat per module)</h3>
-<div class="run" data-lang="shell" data-readonly>mkdir week05
-cp /path/to/your/discount.py week05/
-git add week05/
-git commit -m "add module 5 discount tier calculator"
-git push
-
-mkdir week06
-cp /path/to/your/sales_loop.py week06/
-git add week06/
-git commit -m "add module 6 sales loop: sum, average, max"
-git push</div>
-<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. Two independent runs of Exercise 4's cycle — a separate commit for each module, then update the README's module list. Illustrative result on the next slide.</p>
-<aside class="notes">
-Line by line (guide, Appendix A): the same <code>mkdir</code> → <code>cp</code> → <code>git add</code> → <code>git commit</code> → <code>git push</code> cycle as Exercise 4, run once for <code>week05/</code> (<code>discount.py</code>, "add module 5 discount tier calculator") and once for <code>week06/</code> (<code>sales_loop.py</code>, "add module 6 sales loop: sum, average, max"). The two commits stay separate — <code>git add week05/ week06/</code> followed by a single commit misses the point of the exercise. After both, add two more bullet lines under <code>## Modules</code> in the README and commit that too.
-Read-only: <code>git</code> cannot run in the browser.
-</aside>
-</section>
-
-<!-- 43. STRETCH 1 — illustrative result -->
-<section class="s-out">
-<h3>Illustrative result — not run here</h3>
-<pre>$ git log --oneline
-b8e2c19 add module 6 sales loop: sum, average, max
-7a1f4d3 add module 5 discount tier calculator
-a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price
-9d4e1a0 add .gitignore for Python and OS files
-f7c2b3e add README with module listing and run instructions</pre>
-<aside class="notes">Guide, verbatim: "<code>git log --oneline</code> should now show five total commits (the original three plus two more), and the README should list all modules covered so far." The commit messages "add module 5 discount tier calculator" and "add module 6 sales loop: sum, average, max" are verbatim from the guide's Appendix A. Short hashes are illustrative — students' will differ. Common student mistake to watch for (guide): copying <code>discount.py</code>/<code>sales_loop.py</code> from their original folders but also dragging along an old <code>__pycache__/</code> folder — a good live check that Exercise 3's <code>.gitignore</code> is doing its job: those files should <em>not</em> show up as trackable in <code>git status</code>. Not run here.</aside>
-</section>
-
-<!-- 44. STRETCH 1 — quiz -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="C">
-<p class="q">In Stretch 1, how should the two new modules be committed?</p>
-<button data-opt="A">One combined commit for <code>week05/</code> and <code>week06/</code> together</button>
-<button data-opt="B">No commit until the README is updated to list both</button>
-<button data-opt="C">Separate commits for each — not one combined commit for both</button>
-<p class="why" hidden>Separate commits for each, not one combined commit for both. A student who does <code>git add week05/ week06/</code> and commits both in one shot has technically completed the task but missed the actual point — practicing the discipline of separate, coherent commits.</p>
-</div>
-<aside class="notes">The guide gives no Q&amp;A parenthetical for a Stretch 1 CFU, so per R-conv-3 the <code>data-answer</code> (C) is a verbatim same-segment line: "Separate commits for each, not one combined commit for both." The guide reinforces it in the facilitation notes: combining both into one <code>git add</code>/commit "has technically completed the task but missed the actual point."</aside>
-</section>
-
-<!-- 45. STRETCH 1 — pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>Copying <code>discount.py</code>/<code>sales_loop.py</code> from their original Module 05/06 project folders but accidentally also copying unrelated files alongside them (like an old <code>__pycache__/</code> folder) — a good live check that <code>.gitignore</code> from Exercise 3 is actually doing its job: those files should <em>not</em> show up as trackable in <code>git status</code>, even if physically present in the folder.</p>
-<p>Forgetting the README update entirely — a README that lists Modules 7–8 but not 5–6 is a subtle but real inconsistency a careful grader (or a future employer) would notice. Give an explicit reminder mid-exercise.</p>
-</div>
-<aside class="notes">The <code>__pycache__/</code> check is the satisfying payoff of Exercise 3 — ignored files staying invisible in <code>git status</code> proves the ignore rules work. The forgotten README update is the quiet one to prompt for.</aside>
-</section>
-
-<!-- 46. STRETCH 2 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 2 · preview · as time allows</span>
-<h1>Simulate a Bug and Roll Back</h1>
-<aside class="notes">
-Frame as a quick demo if time is short — it's genuinely one of the more valuable "why Git matters" moments in the whole lab.
-One sentence of framing, said out loud, is worth more than a full live demo here if time is tight (verbatim): "This is the entire reason version control exists: your mistake is never actually lost, and neither is the fix. <code>git revert</code> creates a <em>new</em> commit that undoes a previous one — the broken version stays visible in history (which is honest and often useful later), but the working code is restored. Confirm with <code>git log --oneline</code> afterward: you'll see <em>both</em> the 'introduce bug' commit and a new 'Revert ...' commit, not a history with the bug simply erased." If you demo it live, verify with the class that the file's content is genuinely restored by re-running the script, not just trusting the command succeeded silently.
-Guide, verified with a scratch repo: <code>git revert HEAD</code> (with no other flags) opens an editor for the revert commit's message — <code>git revert --no-edit HEAD</code> skips that prompt and accepts Git's auto-generated "Revert '...'" message, a fine option to mention if a student gets stuck in an unfamiliar editor prompt (the same Vim-escape guidance from Exercise 3 applies here too).
-</aside>
-</section>
-
-<!-- 47. STRETCH 2 — read-only code -->
-<section class="s-code">
-<h3>Run in your own terminal — Stretch 2 (simulate a bug, then roll back)</h3>
-<div class="run" data-lang="shell" data-readonly># Deliberately break something
-git add functions.py
-git commit -m "introduce bug for rollback exercise"
-git push
-
-# Then restore the working version
-git revert HEAD
-git push</div>
-<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. <code>git revert HEAD</code> opens an editor for the revert message; <code>git revert --no-edit HEAD</code> skips that prompt. Illustrative result on the next slide.</p>
-<aside class="notes">
-Line by line (guide):
-- <code>git add functions.py</code> / <code>git commit -m "introduce bug for rollback exercise"</code> / <code>git push</code> — deliberately record and publish a broken version.
-- <code>git revert HEAD</code> — creates a <em>new</em> commit that undoes the previous one (<code>HEAD</code>). The broken version stays visible in history; the working code is restored. With no flags it opens an editor for the revert commit's message; <code>git revert --no-edit HEAD</code> accepts Git's auto-generated "Revert '...'" message.
-- <code>git push</code> — publishes the revert so github.com matches the restored local state.
-Read-only: <code>git</code> cannot run in the browser.
-</aside>
-</section>
-
-<!-- 48. STRETCH 2 — illustrative result -->
-<section class="s-out">
-<h3>Illustrative result — not run here</h3>
-<pre>$ git revert HEAD
-$ git push
-To https://github.com/YOURUSERNAME/ism2411.git
-   1a2b3c4..c4d5e6f  main -> main
-$ git log --oneline
-c4d5e6f Revert "introduce bug for rollback exercise"
-1a2b3c4 introduce bug for rollback exercise
-b8e2c19 add module 6 sales loop: sum, average, max
-7a1f4d3 add module 5 discount tier calculator
-a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price</pre>
-<aside class="notes">Guide, verbatim: "you'll see <em>both</em> the 'introduce bug' commit and a new 'Revert ...' commit, not a history with the bug simply erased." The commit message "introduce bug for rollback exercise" is verbatim from the guide (Appendix A). Short hashes and the <code>To …/main -&gt; main</code> push confirmation are illustrative Git output shown for realism (the push line shows <code>git push</code> is not silent). If demoed live, the guide says to verify the file's content is genuinely restored by re-running the script, not just trusting the command succeeded silently. Not run here — <code>git</code> is unavailable in the browser.</aside>
-</section>
-
-<!-- 49. WRAP — reflection -->
+<!-- 41. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -732,7 +613,7 @@ Review the reflection questions out loud (guide's Wrap-Up):
 </aside>
 </section>
 
-<!-- 50. WRAP — submission checklist + next module -->
+<!-- 42. WRAP — submission checklist + next module -->
 <section class="s-wrap">
 <h3>Submission checklist</h3>
 <ul>
@@ -746,7 +627,7 @@ Review the reflection questions out loud (guide's Wrap-Up):
 <aside class="notes">Review this on screen together in the last few minutes. Preview Module 09 (verbatim): "Module 9 is the midterm — no new lab content, but the Git workflow you built today is exactly what you'll use to submit it, and every remaining assignment for the rest of the semester." Extra practice if the class finishes early (Appendix B): a fourth, deliberately small commit (add one README bullet, commit it on its own); or <code>git show</code> with no arguments to read the most recent commit's diff (<code>+</code> lines added, <code>-</code> lines removed).</aside>
 </section>
 
-<!-- 51. END -->
+<!-- 43. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 8</div>
 <h1>End of lab</h1>

@@ -43,8 +43,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:21–0:31</strong> Ex 3 — Input Version</span>
 <span class="t-item"><strong>0:31–0:43</strong> Ex 4 — Product Card</span>
 <span class="t-item"><strong>0:43–0:55</strong> Ex 5 — Type Investigation (REPL)</span>
-<span class="t-item"><strong>0:55–1:10</strong> Stretch A — Three-Product Comparison</span>
-<span class="t-item"><strong>1:10–1:15</strong> Wrap-up</span>
+<span class="t-item"><strong>0:55–1:15</strong> Catch-up + Wrap-up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -58,10 +57,10 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 02: terminal navigation, running a <code>.py</code> file, reading a basic error message</span></div>
-<div><span class="k">Exercises covered</span><span class="v">1–5 (required) + Stretch A/B (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">1–5 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>pricer.py</code> to Canvas — Exercises 1–4 as one runnable script, a comment separating each exercise</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week03_lab. Five required exercises plus Stretch A comfortably fill 75 minutes at a code-along pace; Stretch B is a fast, discussion-style closer. If the room is behind, cut Stretch B to a one-sentence teaser rather than skipping Exercise 5 or Stretch A. Pre-create an empty <code>pricer.py</code> — everything is typed live. Have <code>python3</code> with no filename ready for Exercise 5's REPL demo.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week03_lab. Five required exercises fill the session at a code-along pace. If the room is ahead of schedule, use the Extra Practice items in Appendix B rather than skipping or rushing Exercise 5. Pre-create an empty <code>pricer.py</code> — everything is typed live. Have <code>python3</code> with no filename ready for Exercise 5's REPL demo.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -90,11 +89,10 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <tr><td>0:21–0:31</td><td>Exercise 3 — Input Version</td><td>10</td></tr>
 <tr><td>0:31–0:43</td><td>Exercise 4 — Multi-Variable Product Card</td><td>12</td></tr>
 <tr><td>0:43–0:55</td><td>Exercise 5 — Type Investigation in the REPL</td><td>12</td></tr>
-<tr><td>0:55–1:10</td><td>Stretch A — Three-Product Comparison</td><td>15</td></tr>
-<tr><td>1:10–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>5</td></tr>
+<tr><td>0:55–1:15</td><td>Catch-up + Wrap-Up — reflection + submission checklist (last ~5 min)</td><td>20</td></tr>
 </tbody>
 </table>
-<aside class="notes">Five required exercises plus Stretch A fill the full 75 minutes at a normal teaching pace. Stretch B (format-spec exploration) is a fast, discussion-style closer rather than a full block — if the room is behind schedule, cut Stretch B to a single one-sentence teaser rather than skipping Exercise 5 or Stretch A.</aside>
+<aside class="notes">Five required exercises fill the session at a code-along pace. The block after Exercise 5 is catch-up time, with Wrap-Up in the last ~5 minutes. If the room is ahead of schedule, use the Extra Practice items in Appendix B rather than skipping or rushing Exercise 5.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -475,102 +473,7 @@ Connective idea (say verbatim): "Same symbol, <code>+</code>, two completely dif
 <aside class="notes">The auto-echo vs explicit-<code>print()</code> distinction is the reason scripts always need <code>print()</code> — worth making explicit here.</aside>
 </section>
 
-<!-- 33. STRETCH A — divider -->
-<section class="s-sec">
-<span class="chip">Stretch A · 15 min · 0:55–1:10</span>
-<h1>Three-Product Comparison</h1>
-<aside class="notes">
-Teaching goal: scale Exercise 4's single product card to three products using parallel variable naming, and use comparison operators to pick a winner — direct rehearsal for the "many records" processing that loops (a later module) will handle more elegantly.
-Say to the class: "Three products, three full sets of variables, three margins — and a final line declaring the winner. This previews a real pain point: right now, with no loops yet, three products means typing almost the same code three times. Notice that discomfort — it's setting up why we'll want a better tool for this soon."
-</aside>
-</section>
-
-<!-- 34. STRETCH A — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch A (loop version)</h3>
-<div class="run" data-lang="python">
-# --- Stretch A ---
-product1, price1, cost1, qty1 = "Notebook", 4.99, 3.29, 12
-product2, price2, cost2, qty2 = "Pen", 1.99, 0.85, 50
-product3, price3, cost3, qty3 = "Stapler", 12.49, 7.10, 5
-
-margin1 = (price1 - cost1) / price1
-margin2 = (price2 - cost2) / price2
-margin3 = (price3 - cost3) / price3
-
-for name, price, qty, margin in [
-    (product1, price1, qty1, margin1),
-    (product2, price2, qty2, margin2),
-    (product3, price3, qty3, margin3),
-]:
-    print(f"Product: {name} | Price: ${price:.2f} | Qty: {qty} | "
-          f"Revenue: ${price * qty:.2f} | Margin: {margin:.1%}")
-
-best_margin, best_product = max([(margin1, product1), (margin2, product2), (margin3, product3)])
-print(f"Highest margin: {best_product} at {best_margin:.1%}")
-</div>
-<p class="expect">If your section hasn't covered <code>for</code> loops yet, replace the loop with three explicit, separately-typed <code>print()</code> calls (one per product) — the appendix answer key shows both versions, and both give the same first three output lines.</p>
-<aside class="notes">
-Line by line:
-- The three <code>productN, priceN, costN, qtyN = ...</code> lines — tuple unpacking, scaled to three parallel sets. <strong>Numbered variable names like this are a known anti-pattern</strong> — the exercise is teaching students to feel that pain, not endorsing it. Honest answer to "isn't there a better way": "yes, a list of dictionaries or a loop-friendly structure — that's a later module; today is intentionally the 'hard way' so the better way lands harder."
-- The <code>for</code> loop over a list of tuples is one legitimate way to avoid three near-identical <code>print()</code> calls. If <code>for</code> loops aren't in scope for your section, use three explicit <code>print()</code> calls instead so the loop syntax doesn't introduce an unannounced concept.
-- <code>max([(margin1, product1), ...])</code> — <code>max()</code> on a list of tuples compares tuples element by element, so it compares the <em>margins first</em> (margin is listed first in each tuple) and only looks at the product name to break ties. Tuple comparison does the comparison logic for you.
-Check for understanding (guide): "If I added a fourth product, what has to change?" (Every numbered-variable line needs a new set — <code>product4, price4, cost4, qty4</code> — and the loop's list or the manual print calls need a fourth entry. Get someone to say out loud that this doesn't scale — that's the intended discomfort.)
-</aside>
-</section>
-
-<!-- 35. STRETCH A — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>Product: Notebook | Price: $4.99 | Qty: 12 | Revenue: $59.88 | Margin: 34.1%
-Product: Pen | Price: $1.99 | Qty: 50 | Revenue: $99.50 | Margin: 57.3%
-Product: Stapler | Price: $12.49 | Qty: 5 | Revenue: $62.45 | Margin: 43.2%
-Highest margin: Pen at 57.3%</pre>
-<aside class="notes">Four lines: one per product, then the winner. Pen has the highest margin (57.3%) even though it has the lowest unit price — a nice "margin and price are different questions" aside. Common mistake to watch for: mixing up which numbered variable belongs to which product mid-script (e.g. using <code>cost2</code> in a formula meant for product 3) — the classic consequence of the numbered-variable anti-pattern.</aside>
-</section>
-
-<!-- 36. STRETCH B — divider -->
-<section class="s-sec">
-<span class="chip">Stretch B · as time allows</span>
-<h1>Format Spec Exploration</h1>
-<aside class="notes">
-Frame it as a quick, verbal walkthrough rather than a full live-coded block if time is short — designed as REPL exploration, not a script. If time is genuinely tight, this closing line alone is worth saying: "Everything in that <code>:</code> after the value in an f-string is its own small formatting language — you've now seen currency, percentages, thousands separators, zero-padding, and alignment. That's most of what you'll need all semester."
-</aside>
-</section>
-
-<!-- 37. STRETCH B — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch B (format specs)</h3>
-<div class="run" data-lang="python">
-print(f"{1234567:.2f}")
-print(f"{1234567:,.0f}")
-print(f"{0.3456:.1%}")
-print(f"{42:05d}")
-print(f"{'hello':>20}")
-</div>
-<p class="expect">In the REPL each bare f-string auto-echoes with surrounding quotes; via <code>print()</code> here you see the string contents directly.</p>
-<aside class="notes">
-One sentence each, said out loud:
-- <code>.2f</code> forces two decimals even on a whole number.
-- <code>,.0f</code> adds thousands separators with zero decimals.
-- <code>.1%</code> multiplies by 100 and appends a percent sign, one decimal digit.
-- <code>05d</code> pads an integer with leading zeros to a total width of 5 characters (order numbers, zip codes).
-- <code>&gt;20</code> right-aligns text within a 20-character-wide field (the "columns that line up" problem Exercise 4's manual spacing was working around by hand).
-</aside>
-</section>
-
-<!-- 38. STRETCH B — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>1234567.00
-1,234,567
-34.6%
-00042
-               hello</pre>
-<aside class="notes">Line 5 is <code>hello</code> right-aligned in a 20-char field — 15 leading spaces then the 5 letters. In the bare REPL these show as <code>'1234567.00'</code>, <code>'1,234,567'</code>, <code>'34.6%'</code>, <code>'00042'</code>, <code>'               hello'</code> (with quotes).</aside>
-</section>
-
-<!-- 39. WRAP — reflection -->
+<!-- 33. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -586,7 +489,7 @@ Strong-answer guidance:
 </aside>
 </section>
 
-<!-- 40. WRAP — submission checklist -->
+<!-- 34. WRAP — submission checklist -->
 <section class="s-wrap">
 <h3>Submission checklist</h3>
 <ul>
@@ -599,7 +502,7 @@ Strong-answer guidance:
 <aside class="notes">Review this on screen together in the last few minutes. Preview Module 04: "Today's <code>unit_price * quantity</code> and margin formulas come back next module, at real business scale — revenue, discounts, and the operators that combine into full financial logic. You'll also meet the <em>other</em> division operator, <code>//</code>, and see exactly how a missing parenthesis can silently break a formula like today's margin calculation."</aside>
 </section>
 
-<!-- 41. END -->
+<!-- 35. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 3</div>
 <h1>End of lab</h1>

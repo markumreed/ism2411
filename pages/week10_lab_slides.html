@@ -46,7 +46,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:45–0:52</strong> Ex 6 — Average with Built-ins</span>
 <span class="t-item"><strong>0:52–1:00</strong> Ex 7 — Build a New List</span>
 <span class="t-item"><strong>1:00–1:08</strong> Ex 8 — Filter Above Threshold</span>
-<span class="t-item"><strong>1:08–1:15</strong> Stretch + Wrap-Up</span>
+<span class="t-item"><strong>1:08–1:15</strong> Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -61,10 +61,10 @@ Prerequisites: Modules 05–08 — conditionals, loops, functions, Git/GitHub (t
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>inventory.py</code> starts empty except the header comment; build every exercise live</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Modules 05–08: conditionals, loops, functions, Git/GitHub (this module's submission goes through GitHub)</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>inventory.py</code> via GitHub (<code>week10/</code> folder), repo URL submitted to Canvas — reflection answered as a comment at the top of the file</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week10_lab. Class length 75 minutes, format live code-along. The required exercises comfortably fill available time; the Stretch challenge is positioned as a closing preview since it's primarily Module 07 function skills applied to this module's list operations rather than new material. Confirm students already have a working GitHub repo from Module 08, since this module's submission format changes (GitHub, not a bare Canvas file upload) — a quick reminder at the start avoids surprise at the end.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week10_lab. Class length 75 minutes, format live code-along. The required exercises comfortably fill the available time. Confirm students already have a working GitHub repo from Module 08, since this module's submission format changes (GitHub, not a bare Canvas file upload) — a quick reminder at the start avoids surprise at the end.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -96,10 +96,10 @@ Prerequisites: Modules 05–08 — conditionals, loops, functions, Git/GitHub (t
 <tr><td>0:45–0:52</td><td>Exercise 6 — Average of a List of Sales</td><td>7</td></tr>
 <tr><td>0:52–1:00</td><td>Exercise 7 — Accumulator Pattern: Build a New List</td><td>8</td></tr>
 <tr><td>1:00–1:08</td><td>Exercise 8 — Filter Above Threshold</td><td>8</td></tr>
-<tr><td>1:08–1:15</td><td>Stretch — <code>inventory_report</code> function + Wrap-Up</td><td>7</td></tr>
+<tr><td>1:08–1:15</td><td>Wrap-Up — reflection + submission checklist</td><td>7</td></tr>
 </tbody>
 </table>
-<aside class="notes">The required exercises comfortably fill available time. The Stretch challenge is positioned as a closing preview since it's primarily Module 07 review (writing a function, calling it more than once with different inputs) applied to this module's new list vocabulary, not new material. Appendix B has two extra practice items (a second indexing/slicing round on <code>colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]</code>; a second filtered-list build on <code>temps = [58, 72, 91, 45, 88, 63, 95, 70]</code>) if a section moves unusually fast.</aside>
+<aside class="notes">The required exercises comfortably fill the available time. Appendix B has two extra practice items (a second indexing/slicing round on <code>colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]</code>; a second filtered-list build on <code>temps = [58, 72, 91, 45, 88, 63, 95, 70]</code>) if a section moves unusually fast.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -779,72 +779,7 @@ Check for understanding (guide, verbatim parenthetical): "How is this exercise s
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
 </section>
 
-<!-- 56. STRETCH — divider -->
-<section class="s-sec">
-<span class="chip">Stretch · 1:08–1:15 · as time allows</span>
-<h1><code>inventory_report</code> function</h1>
-<aside class="notes">
-Frame as a quick preview/demo if time is short — this is primarily Module 07 review (writing a function, calling it more than once with different inputs) applied to this module's new list vocabulary, not new material.
-Say to the class: "One function that takes any list of items and prints a small report — count, alphabetical first and last, sorted copy. Then we call it twice, on two different lists, to prove it isn't hardcoded to the <code>inventory</code> from earlier."
-</aside>
-</section>
-
-<!-- 57. STRETCH — the idea -->
-<section class="s-idea">
-<h3>The idea — <code>sorted()</code> the function vs <code>.sort()</code> the method</h3>
-<div class="concept">
-<div class="concept-lbl">Two things worth saying if you demo this live</div>
-<p><code>min(items)</code> / <code>max(items)</code> on a list of <strong>strings</strong> return the alphabetically first/last item, not a numeric minimum/maximum — a nice generalization of Exercise 6's numeric <code>min()</code>/<code>max()</code>: these work on any type that can be meaningfully ordered.</p>
-<p><code>sorted(items)</code> (a <strong>function</strong>) returns a <em>new</em>, sorted list and leaves the original untouched; Exercise 4's <code>.sort()</code> (a <strong>method</strong>) modifies the original in place and returns nothing.</p>
-</div>
-<aside class="notes">The guide's two "worth saying explicitly" points for the Stretch. Calling <code>inventory_report</code> a second time, on a completely different list, is what confirms the function genuinely generalizes rather than being hardcoded to the specific <code>inventory</code> list from earlier in the file. No "Check for understanding" in the guide for this segment — quiz omitted, matching the lighter treatment stretch segments get (as the Week 6 pilot does for its Stretch 2).</aside>
-</section>
-
-<!-- 58. STRETCH — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch</h3>
-<div class="run" data-lang="python">
-# --- Stretch ---
-inventory = ["envelope", "marker", "notebook", "pen", "stapler"]
-
-def inventory_report(items):
-    print(f"Count: {len(items)}")
-    print(f"First (alphabetically): {min(items)}")
-    print(f"Last (alphabetically): {max(items)}")
-    print(f"Sorted: {sorted(items)}")
-
-inventory_report(inventory)
-inventory_report(["zebra", "apple", "mango"])
-</div>
-<p class="expect">This block re-declares <code>inventory</code> as the sorted five-item list Exercise 4 ended with (each <code>.run</code> block starts fresh). The function is called twice — once on <code>inventory</code>, once on a brand-new three-item list — to show it generalizes.</p>
-<aside class="notes">
-Line-by-line:
-- <code>inventory = ["envelope", "marker", "notebook", "pen", "stapler"]</code> — re-declared here because each <code>.run</code> block runs in its own fresh namespace; this is the list Exercise 4 produced after <code>.append()</code> / <code>.remove()</code> / <code>.sort()</code>. In the real <code>inventory.py</code> the name still refers to that mutated list from earlier in the file.
-- <code>def inventory_report(items):</code> — Module 07 function definition; <code>items</code> is the parameter, so the body works on whatever list is passed in.
-- <code>print(f"Count: {len(items)}")</code> — <code>len()</code> from Exercise 1.
-- <code>min(items)</code> / <code>max(items)</code> — on a list of <strong>strings</strong>, these return the alphabetically first/last item, not a numeric min/max — these functions work on any type that can be meaningfully compared/ordered, strings included.
-- <code>sorted(items)</code> — a <strong>function</strong>, called as <code>sorted(items)</code>: returns a <em>new</em>, sorted list and leaves the original untouched, unlike Exercise 4's <code>.sort()</code> <strong>method</strong> which modifies in place and returns nothing.
-- <code>inventory_report(inventory)</code> then <code>inventory_report(["zebra", "apple", "mango"])</code> — calling it a second time, on a completely different list, is what confirms the function genuinely generalizes rather than being hardcoded.
-Common mistakes: confusing <code>sorted(items)</code> (function, new list) with <code>items.sort()</code> (method, in place); expecting <code>min</code>/<code>max</code> on strings to error because "they're not numbers."
-No "Check for understanding" in the guide for this segment.
-</aside>
-</section>
-
-<!-- 59. STRETCH — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>Count: 5
-First (alphabetically): envelope
-Last (alphabetically): stapler
-Sorted: ['envelope', 'marker', 'notebook', 'pen', 'stapler']
-Count: 3
-First (alphabetically): apple
-Last (alphabetically): zebra
-Sorted: ['apple', 'mango', 'zebra']</pre>
-<aside class="notes">Verified against a real <code>python3</code> run. First four lines: the report for the five-item <code>inventory</code> (already alphabetical, so <code>sorted()</code> matches). Last four lines: the report for <code>["zebra", "apple", "mango"]</code> — <code>min</code> is <code>apple</code>, <code>max</code> is <code>zebra</code>, and <code>sorted()</code> returns <code>['apple', 'mango', 'zebra']</code> without mutating the argument. The guide's Appendix A shows the same Stretch code. Verified against CPython 3.12.</aside>
-</section>
-
-<!-- 60. WRAP — reflection -->
+<!-- 56. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -859,7 +794,7 @@ Strong-answer guidance (guide):
 </aside>
 </section>
 
-<!-- 61. WRAP — submission + next module -->
+<!-- 57. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -872,7 +807,7 @@ Strong-answer guidance (guide):
 <aside class="notes">Review the checklist together. Preview Module 11 (verbatim): "Lists gave you an ordered collection, reached by position. Next module, dictionaries give you a collection reached by <em>name</em> — a customer's data organized as <code>name</code>, <code>email</code>, <code>tier</code>, not position <code>0</code>, <code>1</code>, <code>2</code>. This is the structure behind every real CRM and analytics system you'll ever touch professionally."</aside>
 </section>
 
-<!-- 62. END -->
+<!-- 58. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 10</div>
 <h1>End of lab</h1>

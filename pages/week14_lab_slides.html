@@ -45,8 +45,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:38–0:44</strong> Ex 5 — Check Duplicates</span>
 <span class="t-item"><strong>0:44–0:53</strong> Ex 6 — Describe</span>
 <span class="t-item"><strong>0:53–1:01</strong> Ex 7 — Save</span>
-<span class="t-item"><strong>1:01–1:10</strong> Stretch 1/2 Preview</span>
-<span class="t-item"><strong>1:10–1:15</strong> Wrap-Up</span>
+<span class="t-item"><strong>1:01–1:15</strong> Catch-up + Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -62,10 +61,10 @@ Deck note: this is a <strong>DATA WEEK</strong> and this lab cleans a deliberate
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>clean.py</code> built exercise by exercise on a deliberately messy sales CSV; the course provides the real <code>data/messy_sales.csv</code> (Appendix B's seeded generator stands in for instructor rehearsal)</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 13: DataFrames, boolean filtering, <code>.dtypes</code></span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–7 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>clean.py</code> (or <code>clean.ipynb</code>) + <code>clean_sales.csv</code> via GitHub in a <code>module14/</code> folder, URL to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week14_lab. Class length 75 minutes, format live code-along. The required exercises fill most of available time; both Stretch challenges are positioned as previews — Stretch 1 is genuinely new statistical content (IQR outlier detection) worth unhurried treatment, and Stretch 2 (a reusable <code>clean_sales(filepath)</code> function) is best done once the pipeline itself is solid. Before class: obtain or generate the messy dataset; rehearse Exercise 7's save-then-reload sequence yourself (the dtype-loss-on-reload behavior surprises instructors too); decide in advance which missing-value columns you will fill vs. drop for your actual dataset and be ready to explain your own reasoning as a model answer.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week14_lab. Class length 75 minutes, format live code-along. The required exercises fill most of the available time. Before class: obtain or generate the messy dataset; rehearse Exercise 7's save-then-reload sequence yourself (the dtype-loss-on-reload behavior surprises instructors too); decide in advance which missing-value columns you will fill vs. drop for your actual dataset and be ready to explain your own reasoning as a model answer.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -97,11 +96,10 @@ Deck note: this is a <strong>DATA WEEK</strong> and this lab cleans a deliberate
 <tr><td>0:38–0:44</td><td>Exercise 5 — Check Duplicates</td><td>6</td></tr>
 <tr><td>0:44–0:53</td><td>Exercise 6 — Describe</td><td>9</td></tr>
 <tr><td>0:53–1:01</td><td>Exercise 7 — Save</td><td>8</td></tr>
-<tr><td>1:01–1:10</td><td>Stretch 1 &amp; 2 Preview (as time allows)</td><td>9</td></tr>
-<tr><td>1:10–1:15</td><td>Wrap-Up — reflection + submission + Module 15 preview</td><td>5</td></tr>
+<tr><td>1:01–1:15</td><td>Catch-up + Wrap-Up — reflection + submission + Module 15 preview (last ~5 min)</td><td>14</td></tr>
 </tbody>
 </table>
-<aside class="notes">The required exercises fill most of available time at a normal code-along pace. Both Stretch challenges are framed as previews — Stretch 1 (IQR outlier detection) is genuinely new statistical content; Stretch 2 (a reusable cleaning function) wraps Exercises 2–7 in one callable. Appendix C has two extra-practice items (inspect <code>quantity_sold</code> for a <code>min</code> of <code>0</code>; a subset-column duplicate check <code>df.duplicated(subset=["order_id"])</code>) if a section moves unusually fast. Wrap-Up runs in the last ~5 minutes: three reflection questions + the submission checklist + the Module 15 (grouping / aggregation / charts) preview.</aside>
+<aside class="notes">The required exercises fill most of available time at a normal code-along pace. The block after Exercise 7 is catch-up time. Appendix C has two extra-practice items (inspect <code>quantity_sold</code> for a <code>min</code> of <code>0</code>; a subset-column duplicate check <code>df.duplicated(subset=["order_id"])</code>) if a section moves unusually fast. Wrap-Up runs in the last ~5 minutes: three reflection questions + the submission checklist + the Module 15 (grouping / aggregation / charts) preview.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -1073,200 +1071,7 @@ dtype: object</pre>
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 7.</aside>
 </section>
 
-<!-- 45. STRETCH — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 &amp; 2 · 1:01–1:10 · as time allows</span>
-<h1>Stretch 1 &amp; 2 Preview</h1>
-<aside class="notes">
-Frame both as previews. Stretch 1 (IQR outlier detection) is genuinely new statistical content worth unhurried treatment; Stretch 2 (a reusable <code>clean_sales(filepath)</code> function) is best done once the pipeline itself is solid.
-Stretch 1 observation worth surfacing, verified against the synthetic sample: the IQR method flags the <code>999.99</code> extreme value as an outlier, but <strong>not</strong> the <code>-25.00</code> negative price from Exercise 6 — because <code>lower_bound</code> computes out to roughly <code>-73</code> (pulled that low <em>because</em> the <code>999.99</code> outlier widens <code>Q3</code> and the IQR itself). Ask the room: "does this mean the negative price <em>isn't</em> actually a problem, since the IQR method didn't flag it?" (No — this is a genuinely important limitation to name explicitly: <strong>the IQR method is a statistical rule of thumb about a value's position relative to the rest of the data's spread, not a business-logic check</strong> — it has no concept that a negative price is nonsensical regardless of statistical position. Exercise 6's manual, human read of <code>.describe()</code>'s <code>min</code> value caught something this automated method alone would have missed entirely — a genuinely good argument for why "look at the numbers yourself" and "run an automated check" are complementary, not substitutable.)
-Stretch 2 framing (verbatim): "This is Module 07's function-writing applied to today's whole pipeline — wrapping steps 2 through 7 in one callable function means next semester's messy dataset, or next month's updated export, gets cleaned with one line, not by re-running eight cells by hand."
-Stretch segments get the lighter treatment (idea → code → out); no separate knowledge-check quiz, matching the Week 12 / Week 13 decks — the Stretch 1 discussion above stands in for a CFU.
-</aside>
-</section>
-
-<!-- 46. STRETCH — the idea -->
-<section class="s-idea">
-<h3>The idea — one automated check, one reusable function</h3>
-<div class="concept">
-<div class="concept-lbl">Two previews, both built on today</div>
-<p><strong>Stretch 1</strong> — flag outliers with the IQR method: <code>q1</code>, <code>q3</code> = the 25th / 75th percentiles; <code>iqr = q3 - q1</code>; anything below <code>q1 - 1.5*iqr</code> or above <code>q3 + 1.5*iqr</code> is an outlier. It flags the <code>999.99</code> price — but <em>not</em> the <code>-25.00</code>, because the bounds are statistical, not business rules.</p>
-<p><strong>Stretch 2</strong> — wrap Exercises 2–7 in <code>clean_sales(filepath)</code>: Module 07's function-writing applied to today's whole pipeline, so the next messy export is cleaned with one call, not eight cells re-run by hand.</p>
-</div>
-<aside class="notes">Stretch 1's real payoff is the contrast with Exercise 6: the IQR rule is about a value's position in the distribution's spread, with no concept that a negative price is nonsensical. The manual read of <code>.describe()</code>'s <code>min</code> caught what the automated check missed — the two approaches are complementary, not substitutable. Stretch 2 needs nothing beyond Module 07 plus today's pipeline.</aside>
-</section>
-
-<!-- 47. STRETCH 1 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 1 (IQR outlier detection)</h3>
-<div class="run" data-lang="python" data-packages="pandas">
-# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
-import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
-from pathlib import Path
-import numpy as np
-import pandas as pd
-
-Path("data").mkdir(exist_ok=True)
-rng = np.random.default_rng(7)
-regions = ["North", "South", "East", "West"]
-categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
-
-rows = []
-for _i in range(1, 41):
-    _oid = f"ORD{1000 + _i}"
-    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
-    rows.append([
-        _oid, _dt.strftime("%Y-%m-%d"),
-        rng.choice(categories), rng.choice(regions),
-        round(float(rng.uniform(5, 150)), 2),
-        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
-    ])
-
-_g = pd.DataFrame(rows, columns=[
-    "Order ID", "Order Date", "Product Category", "Region",
-    "Unit Price", "Quantity Sold", "Customer ID",
-])
-for _i in [2, 5, 9, 14, 20]:
-    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
-for _i in [7, 22]:
-    _g.loc[_i, "Unit Price"] = np.nan
-_g.loc[12, "Order ID"] = np.nan
-_g.loc[30, "Order Date"] = np.nan
-_g.loc[18, "Order Date"] = "not_a_date"
-_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
-_g.loc[_g.index[-1], "Unit Price"] = 999.99
-_g.loc[35, "Unit Price"] = -25.00
-_g.to_csv("data/messy_sales.csv", index=False)
-# ---- end deck fixture ----
-df = pd.read_csv('data/messy_sales.csv')
-df.columns = df.columns.str.lower().str.replace(' ', '_')
-df = df.dropna(subset=["order_id", "order_date"])
-df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
-df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
-df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
-df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
-df["quantity_sold"] = df["quantity_sold"].astype(int)
-df = df.drop_duplicates()
-
-# --- Stretch 1: IQR outlier detection ---
-q1 = df["unit_price"].quantile(0.25)
-q3 = df["unit_price"].quantile(0.75)
-iqr = q3 - q1
-lower_bound = q1 - 1.5 * iqr
-upper_bound = q3 + 1.5 * iqr
-
-df["is_outlier"] = (df["unit_price"] &lt; lower_bound) | (df["unit_price"] &gt; upper_bound)
-print(f"Outliers: {df['is_outlier'].sum()}")
-print(f"Average price of outliers: ${df[df['is_outlier']]['unit_price'].mean():.2f}")
-</div>
-<p class="expect">A preview. The IQR rule flags <strong>1</strong> outlier — the <code>999.99</code> price. It does <em>not</em> flag the <code>-25.00</code>: <code>lower_bound</code> works out to roughly <code>-73</code> (widened by the <code>999.99</code> value itself), so <code>-25.00</code> sits inside the "normal" band. The IQR method knows about statistical spread, not about prices being nonsensical when negative.</p>
-<aside class="notes">
-Line-by-line:
-- deck fixture rebuilds the CSV and re-runs the Exercise 2–5 cleaning pipeline (fresh namespace per block).
-- <code>q1</code>, <code>q3</code> — the 25th and 75th percentiles of <code>unit_price</code>; <code>iqr = q3 - q1</code>.
-- <code>lower_bound</code> / <code>upper_bound</code> — <code>q1 - 1.5*iqr</code> and <code>q3 + 1.5*iqr</code>, the standard Tukey fences.
-- <code>df["is_outlier"] = (...) | (...)</code> — a boolean column, <code>True</code> outside either fence.
-- the two <code>print</code>s — the count of outliers and their average price.
-The guide gives the code but no explicit expected output (framed as a preview). The values below are the real <code>python3</code> run. The teaching payoff is the contrast with Exercise 6: this automated rule misses the negative price the manual read caught.
-No separate quiz — the guide's discussion here (IQR is statistical, not a business-logic check) stands in for a CFU and is captured in the Stretch divider's notes.
-</aside>
-</section>
-
-<!-- 48. STRETCH 1 — expected output -->
-<section class="s-out">
-<h3>Expected output — Stretch 1</h3>
-<pre>Outliers: 1
-Average price of outliers: $999.99</pre>
-<aside class="notes">The guide gives the Stretch 1 code but no explicit expected output (it is an IQR preview, not a walked-through exercise). This is the real <code>python3</code> result (<code>python3 blkS1.py</code>) against the guide's Appendix B generator: exactly <code>1</code> outlier (the <code>999.99</code> value), average <code>$999.99</code>. Consistent with the guide's stated behavior — "the IQR method flags the <code>999.99</code> extreme value as an outlier, but not the <code>-25.00</code> negative price ... lower_bound computes out to roughly <code>-73</code>" (the real run: <code>lower_bound</code> ≈ <code>-72.95</code>). Both printed lines are exact scalars/strings, not a DataFrame repr — no version caveat.</aside>
-</section>
-
-<!-- 49. STRETCH 2 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 2 (reusable cleaning function)</h3>
-<div class="run" data-lang="python" data-packages="pandas">
-# ---- deck fixture: the guide's Appendix B messy-CSV generator (reproducible, seed 7) ----
-import warnings; warnings.simplefilter("ignore", FutureWarning)   # deck-only: silence the generator's dtype-cast notice
-from pathlib import Path
-import numpy as np
-import pandas as pd
-
-Path("data").mkdir(exist_ok=True)
-rng = np.random.default_rng(7)
-regions = ["North", "South", "East", "West"]
-categories = ["Electronics", "Home Goods", "Apparel", "Toys"]
-
-rows = []
-for _i in range(1, 41):
-    _oid = f"ORD{1000 + _i}"
-    _dt = pd.Timestamp("2024-01-01") + pd.Timedelta(days=int(rng.integers(0, 200)))
-    rows.append([
-        _oid, _dt.strftime("%Y-%m-%d"),
-        rng.choice(categories), rng.choice(regions),
-        round(float(rng.uniform(5, 150)), 2),
-        int(rng.integers(1, 15)), f"CUST{rng.integers(100, 999)}",
-    ])
-
-_g = pd.DataFrame(rows, columns=[
-    "Order ID", "Order Date", "Product Category", "Region",
-    "Unit Price", "Quantity Sold", "Customer ID",
-])
-for _i in [2, 5, 9, 14, 20]:
-    _g.loc[_i, "Unit Price"] = f"${_g.loc[_i, 'Unit Price']}"
-for _i in [7, 22]:
-    _g.loc[_i, "Unit Price"] = np.nan
-_g.loc[12, "Order ID"] = np.nan
-_g.loc[30, "Order Date"] = np.nan
-_g.loc[18, "Order Date"] = "not_a_date"
-_g = pd.concat([_g, pd.DataFrame([_g.loc[3].copy(), _g.loc[25].copy()])], ignore_index=True)
-_g.loc[_g.index[-1], "Unit Price"] = 999.99
-_g.loc[35, "Unit Price"] = -25.00
-_g.to_csv("data/messy_sales.csv", index=False)
-# ---- end deck fixture ----
-
-# --- Stretch 2: reusable clean_sales(filepath) ---
-def clean_sales(filepath):
-    df = pd.read_csv(filepath)
-    df.columns = df.columns.str.lower().str.replace(' ', '_')
-    df = df.dropna(subset=["order_id", "order_date"])
-    df["unit_price"] = df["unit_price"].astype(str).str.replace("$", "", regex=False)
-    df["unit_price"] = pd.to_numeric(df["unit_price"], errors="coerce")
-    df["unit_price"] = df["unit_price"].fillna(df["unit_price"].mean())
-    df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
-    df["quantity_sold"] = df["quantity_sold"].astype(int)
-    df = df.drop_duplicates()
-    return df
-
-result = clean_sales('data/messy_sales.csv')
-print(result.shape)
-print(result.dtypes)
-</div>
-<p class="expect">Exercises 2–7's steps, wrapped in one callable function — Module 07's function-writing applied to the whole pipeline. <code>result.shape</code> is <code>(39, 7)</code> (same as after Exercise 5) and <code>result.dtypes</code> shows the fully typed frame. Next month's updated export is now one <code>clean_sales(path)</code> call away.</p>
-<aside class="notes">
-Line-by-line:
-- deck fixture rebuilds <code>data/messy_sales.csv</code> (fresh namespace per block).
-- <code>def clean_sales(filepath):</code> — takes a path, returns a cleaned DataFrame; the body is Exercises 2–5's pipeline verbatim (the guide's Stretch 2 wraps "steps 2 through 7").
-- <code>result = clean_sales('data/messy_sales.csv')</code> then <code>print(result.shape)</code> / <code>print(result.dtypes)</code> — confirms the function reproduces the pipeline: <code>(39, 7)</code> and the correct dtypes.
-The guide gives the code but no explicit expected output (a preview). Values below are the real <code>python3</code> run.
-No "Check for understanding" in the guide for this segment — no quiz.
-</aside>
-</section>
-
-<!-- 50. STRETCH 2 — expected output -->
-<section class="s-out">
-<h3>Expected output — Stretch 2</h3>
-<pre>(39, 7)
-order_id                    object
-order_date          datetime64[ns]
-product_category            object
-region                      object
-unit_price                 float64
-quantity_sold                int64
-customer_id                 object
-dtype: object</pre>
-<aside class="notes">The guide gives the Stretch 2 code but no explicit expected output (a preview). This is the real <code>python3</code> result (<code>python3 blkS2.py</code>): <code>clean_sales()</code> reproduces the pipeline — <code>(39, 7)</code>, matching the shape after Exercise 5, and the same fully-typed dtypes as Exercise 7's fix (<code>order_date</code> as <code>datetime64[ns]</code> since the function returns the in-memory frame, no CSV round trip). The <code>(39, 7)</code> is an exact scalar tuple; the dtype listing is a Series repr — formatting may differ slightly by pandas version, the shape and dtypes are the load-bearing content.</aside>
-</section>
-
-<!-- 51. WRAP — reflection -->
+<!-- 45. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -1282,7 +1087,7 @@ Review the reflection questions out loud in the last ~5 minutes. Strong-answer g
 </aside>
 </section>
 
-<!-- 52. WRAP — submission + next module -->
+<!-- 46. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -1296,7 +1101,7 @@ Review the reflection questions out loud in the last ~5 minutes. Strong-answer g
 <aside class="notes">Review the submission checklist together. Preview Module 15 (verbatim): "Today's cleaned data becomes next module's direct input — Module 15 groups it, aggregates it, and turns it into charts answering real business questions, using the exact workflow and standards the capstone itself will grade you on."</aside>
 </section>
 
-<!-- 53. END -->
+<!-- 47. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 14</div>
 <h1>End of lab</h1>

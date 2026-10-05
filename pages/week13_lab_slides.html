@@ -46,7 +46,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:44–0:51</strong> Ex 6 — Unique Values</span>
 <span class="t-item"><strong>0:51–0:57</strong> Ex 7 — Select Columns</span>
 <span class="t-item"><strong>0:57–1:02</strong> Ex 8 — Save</span>
-<span class="t-item"><strong>1:02–1:15</strong> Stretch 1/2 + Wrap-Up</span>
+<span class="t-item"><strong>1:02–1:15</strong> Catch-up + Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -62,10 +62,10 @@ Deck note: this is a <strong>DATA WEEK</strong>. Every runnable block carries <c
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>explore.py</code> built exercise by exercise; <code>data/retail_sales.csv</code> provided by the course (Appendix B's seeded generator stands in for instructor rehearsal)</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Module 12: CSV files, the general read-transform-write shape; Modules 10–11: lists, dictionaries, boolean logic</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–8 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>explore.py</code> (or <code>explore.ipynb</code>) via GitHub in a <code>module13/</code> folder, URL to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week13_lab. Class length 75 minutes, format live code-along. The required exercises fill most of available time; both Stretch challenges are positioned as previews since Stretch 1 explicitly depends on <code>groupby</code>, a later-module concept. Confirm <code>pandas</code> is installed on the demo machine before class (first <code>import pandas</code> of the semester — budget two minutes for <code>pip install pandas</code> if needed) and that students have a working GitHub repo ready for a new <code>module13/</code> folder.</aside>
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week13_lab. Class length 75 minutes, format live code-along. The required exercises fill most of the available time. Confirm <code>pandas</code> is installed on the demo machine before class (first <code>import pandas</code> of the semester — budget two minutes for <code>pip install pandas</code> if needed) and that students have a working GitHub repo ready for a new <code>module13/</code> folder.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -98,11 +98,10 @@ Deck note: this is a <strong>DATA WEEK</strong>. Every runnable block carries <c
 <tr><td>0:44–0:51</td><td>Exercise 6 — Unique Values</td><td>7</td></tr>
 <tr><td>0:51–0:57</td><td>Exercise 7 — Select Columns</td><td>6</td></tr>
 <tr><td>0:57–1:02</td><td>Exercise 8 — Save</td><td>5</td></tr>
-<tr><td>1:02–1:10</td><td>Stretch 1 &amp; 2 Preview (as time allows)</td><td>8</td></tr>
-<tr><td>1:10–1:15</td><td>Wrap-Up — reflection + submission + Module 14 preview</td><td>5</td></tr>
+<tr><td>1:02–1:15</td><td>Catch-up + Wrap-Up — reflection + submission + Module 14 preview (last ~5 min)</td><td>13</td></tr>
 </tbody>
 </table>
-<aside class="notes">The required exercises fill most of available time at a normal code-along pace. Both Stretch challenges are framed as previews — Stretch 1 explicitly uses <code>groupby</code> (a Module 15 concept); Stretch 2 is fully within today's toolkit and worth doing live if time allows. Appendix C has two extra-practice items (a third single-condition filter cross-checked against <code>.value_counts()</code>; a two-condition filter on different columns) if a section moves unusually fast. Wrap-Up runs in the last ~5 minutes: three reflection questions + the submission checklist + the Module 14 (missing data / cleaning) preview.</aside>
+<aside class="notes">The required exercises fill most of available time at a normal code-along pace. The block after Exercise 8 is catch-up time. Appendix C has two extra-practice items (a third single-condition filter cross-checked against <code>.value_counts()</code>; a two-condition filter on different columns) if a section moves unusually fast. Wrap-Up runs in the last ~5 minutes: three reflection questions + the submission checklist + the Module 14 (missing data / cleaning) preview.</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -1101,146 +1100,7 @@ order_id,date,region,product,quantity,revenue,per_unit</pre>
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 8.</aside>
 </section>
 
-<!-- 55. STRETCH — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 &amp; 2 · 1:02–1:10 · as time allows</span>
-<h1>Stretch 1 &amp; 2 Preview</h1>
-<aside class="notes">
-Frame both as previews rather than full live-coded content — Stretch 1 explicitly uses <code>groupby</code>, which the lab page itself flags as a Module 15 concept, ahead of this lab's normal sequence. Stretch 2 is fully within today's toolkit and worth doing live if time allows.
-Say to the class (Stretch 1, verbatim): "<code>.groupby('product')</code> splits the South data into one group per product name; <code>['per_unit'].mean()</code> then computes the average per-unit price <em>within each group separately</em>; the rest is Exercise 3's familiar sort-and-head pattern. Don't worry about fully understanding <code>groupby</code> today — Module 15 covers it properly; this is just a preview that today's filtering and column-creation skills combine directly with tools you'll learn soon."
-No "Check for understanding" in the guide for either Stretch segment — quiz omitted, matching the lighter treatment stretch segments get (same as the Week 12 deck).
-</aside>
-</section>
-
-<!-- 56. STRETCH — the idea -->
-<section class="s-idea">
-<h3>The idea — today's skills + one preview tool</h3>
-<div class="concept">
-<div class="concept-lbl">Two previews, both built on today</div>
-<p><strong>Stretch 1</strong> — top 3 products by average per-unit price in the South: filter (Exercise 2) → <code>.groupby('product')['per_unit'].mean()</code> (Module 15 preview) → <code>.sort_values(ascending=False).head(3)</code> (Exercise 3). Only <code>groupby</code> is new.</p>
-<p><strong>Stretch 2</strong> — what fraction of revenue comes from orders above $500: filter (Exercise 2) → <code>.sum()</code> (parallel to Exercise 5's <code>.mean()</code>) → an f-string format spec from Module 03. Nothing beyond today.</p>
-</div>
-<aside class="notes">Stretch 1: <code>.groupby('product')</code> splits the South data into one group per product name; <code>['per_unit'].mean()</code> computes the average per-unit price within each group; then Exercise 3's sort-and-head. One sentence of framing is enough if you demo it — don't teach <code>groupby</code> properly today. Stretch 2 requires nothing beyond what's already been taught this session: Exercise 2's filtering, plus <code>.sum()</code>, plus an f-string format spec. The guide verifies Stretch 2 against the synthetic sample at <code>59.7%</code>.</aside>
-</section>
-
-<!-- 57. STRETCH 1 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 1 (<code>groupby</code> preview)</h3>
-<div class="run" data-lang="python" data-packages="pandas">
-# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
-from pathlib import Path
-import numpy as np
-import pandas as pd
-
-Path("data").mkdir(exist_ok=True)
-rng = np.random.default_rng(42)
-n = 5000
-regions = ["North", "South", "East", "West"]
-products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
-region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
-product_arr = rng.choice(products, size=n)
-quantity_arr = rng.integers(1, 21, size=n)
-unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
-revenue_arr = np.round(quantity_arr * unit_price, 2)
-dates = pd.date_range("2024-01-01", periods=200, freq="D")
-date_arr = rng.choice(dates, size=n)
-order_id = np.arange(100001, 100001 + n)
-pd.DataFrame({
-    "order_id": order_id,
-    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
-    "region": region_arr,
-    "product": product_arr,
-    "quantity": quantity_arr,
-    "revenue": revenue_arr,
-}).to_csv("data/retail_sales.csv", index=False)
-# ---- end deck fixture ----
-df = pd.read_csv('data/retail_sales.csv')
-df['per_unit'] = df['revenue'] / df['quantity']   # rebuilt from Exercise 5 (fresh namespace)
-
-south = df[df['region'] == 'South']
-print(south.groupby('product')['per_unit'].mean().sort_values(ascending=False).head(3))
-</div>
-<p class="expect">A preview only. <code>.groupby('product')</code> splits the South rows into one group per product; <code>['per_unit'].mean()</code> averages within each group; then Exercise 3's <code>.sort_values(ascending=False).head(3)</code>. Module 15 covers <code>groupby</code> properly.</p>
-<aside class="notes">
-Line-by-line:
-- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>; <code>df['per_unit'] = ...</code> re-adds Exercise 5's column (fresh namespace per block). In the real script <code>per_unit</code> already exists.
-- <code>south = df[df['region'] == 'South']</code> — Exercise 2's filter.
-- <code>south.groupby('product')['per_unit'].mean()</code> — <code>.groupby('product')</code> splits the South data into one group per product name; <code>['per_unit'].mean()</code> computes the average per-unit price <em>within each group separately</em>.
-- <code>.sort_values(ascending=False).head(3)</code> — Exercise 3's familiar "top N" pattern applied to the grouped result.
-The guide gives the Stretch 1 code but no expected output (it is framed as a preview). The values below are the real <code>python3</code> run.
-Common mistakes: none called out in the guide for a preview segment. Do not derive <code>groupby</code> from first principles today.
-No "Check for understanding" in the guide for this segment — no quiz.
-</aside>
-</section>
-
-<!-- 58. STRETCH 1 — expected output -->
-<section class="s-out">
-<h3>Expected output — Stretch 1</h3>
-<pre>product
-Gizmo E     40.105741
-Widget A    39.659421
-Gadget D    37.578235
-Name: per_unit, dtype: float64</pre>
-<aside class="notes">The guide gives the Stretch 1 code but no explicit expected output (it is a <code>groupby</code> preview, not a walked-through exercise). This is the real <code>python3</code> result (<code>python3 fS1.py</code>) against the guide's Appendix B generator: the three South products with the highest average per-unit price, descending. Series formatting and float display precision may differ slightly by pandas version; the product ranking and approximate values are the load-bearing content.</aside>
-</section>
-
-<!-- 59. STRETCH 2 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 2 (within today's toolkit)</h3>
-<div class="run" data-lang="python" data-packages="pandas">
-# ---- deck fixture: the guide's Appendix B generator (reproducible, seed 42) ----
-from pathlib import Path
-import numpy as np
-import pandas as pd
-
-Path("data").mkdir(exist_ok=True)
-rng = np.random.default_rng(42)
-n = 5000
-regions = ["North", "South", "East", "West"]
-products = ["Widget A", "Widget B", "Gadget C", "Gadget D", "Gizmo E", "Doohickey F"]
-region_arr = rng.choice(regions, size=n, p=[0.28, 0.27, 0.23, 0.22])
-product_arr = rng.choice(products, size=n)
-quantity_arr = rng.integers(1, 21, size=n)
-unit_price = rng.choice([9.99, 14.99, 19.99, 24.99, 49.99, 99.99], size=n)
-revenue_arr = np.round(quantity_arr * unit_price, 2)
-dates = pd.date_range("2024-01-01", periods=200, freq="D")
-date_arr = rng.choice(dates, size=n)
-order_id = np.arange(100001, 100001 + n)
-pd.DataFrame({
-    "order_id": order_id,
-    "date": pd.to_datetime(date_arr).strftime("%Y-%m-%d"),
-    "region": region_arr,
-    "product": product_arr,
-    "quantity": quantity_arr,
-    "revenue": revenue_arr,
-}).to_csv("data/retail_sales.csv", index=False)
-# ---- end deck fixture ----
-df = pd.read_csv('data/retail_sales.csv')
-
-big_orders = df[df['revenue'] &gt; 500]
-fraction = big_orders['revenue'].sum() / df['revenue'].sum() * 100
-print(f"{fraction:.1f}%")
-</div>
-<p class="expect">Exercise 2's filter, plus <code>.sum()</code> (parallel to Exercise 5's <code>.mean()</code>), plus a Module 03 f-string format spec (<code>:.1f</code>). Nothing beyond today. The guide states <code>59.7%</code> against the synthetic sample.</p>
-<aside class="notes">
-Line-by-line:
-- deck fixture rebuilds <code>data/retail_sales.csv</code> and <code>df</code>.
-- <code>big_orders = df[df['revenue'] &gt; 500]</code> — Exercise 2's filtering pattern.
-- <code>big_orders['revenue'].sum() / df['revenue'].sum() * 100</code> — the filtered revenue total over the whole revenue total, times 100 for a percentage; <code>.sum()</code> is parallel to Exercise 5's <code>.mean()</code>.
-- <code>print(f"{fraction:.1f}%")</code> — a Module 03 f-string format spec, one decimal place, literal <code>%</code>.
-This is the one Stretch worth doing live if time allows — unlike Stretch 1, it needs nothing beyond what's been taught this session. Verified against the guide's Appendix B generator: <code>59.7%</code>.
-No "Check for understanding" in the guide for this segment — no quiz.
-</aside>
-</section>
-
-<!-- 60. STRETCH 2 — expected output -->
-<section class="s-out">
-<h3>Expected output — Stretch 2</h3>
-<pre>59.7%</pre>
-<aside class="notes">Matches the guide's stated Stretch 2 result exactly: "(Verified against the synthetic sample: <code>59.7%</code>.)" The output is an <code>f"{fraction:.1f}%"</code> string — an exact scalar, not a DataFrame repr — so no version caveat applies. Verified against local <code>python3</code> (<code>python3 fS2.py</code>).</aside>
-</section>
-
-<!-- 61. WRAP — reflection -->
+<!-- 55. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -1256,7 +1116,7 @@ Review the reflection questions out loud in the last ~5 minutes. Strong-answer g
 </aside>
 </section>
 
-<!-- 62. WRAP — submission + next module -->
+<!-- 56. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -1269,7 +1129,7 @@ Review the reflection questions out loud in the last ~5 minutes. Strong-answer g
 <aside class="notes">Review the submission checklist together. Preview Module 14 (verbatim): "Today assumed the data was already clean — no missing values, no weird formatting. Next module tackles the reality that real data almost never starts that clean: missing values, duplicate rows, and descriptive statistics to understand a dataset's overall shape before analyzing it further."</aside>
 </section>
 
-<!-- 63. END -->
+<!-- 57. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 13</div>
 <h1>End of lab</h1>

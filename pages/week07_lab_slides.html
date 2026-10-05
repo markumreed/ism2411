@@ -44,8 +44,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:26–0:34</strong> Ex 4 — Loop + Function</span>
 <span class="t-item"><strong>0:34–0:54</strong> Ex 5 — Debug First, Then Ask</span>
 <span class="t-item"><strong>0:54–1:02</strong> Ex 6 — Scope Experiment</span>
-<span class="t-item"><strong>1:02–1:10</strong> Stretch 1 — Summarize a List</span>
-<span class="t-item"><strong>1:10–1:15</strong> Stretch 2 Preview + Wrap-Up</span>
+<span class="t-item"><strong>1:02–1:15</strong> Catch-up + Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -60,10 +59,10 @@ Prerequisites: Modules 05–06 — <code>if</code>/<code>elif</code>/<code>else<
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along, with one structured 20-minute debugging-protocol block (Exercise 5) run individually/in pairs on a timer</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Modules 05–06: <code>if</code>/<code>elif</code>/<code>else</code>, <code>for</code>/<code>while</code> loops, the accumulator pattern</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required) + Stretch 1/2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>functions.py</code> + the Canvas reflection</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Class length 75 minutes. Exercise 5 covers debugging habit formation — do not compress it; it's arguably the most important exercise of the semester for long-term skill development. Six required exercises plus Exercise 5's full 20-minute protocol and Stretch 1 already fill the full 75 minutes at a normal pace. Appendix C has extra practice (one more composed function; a second scope trace raising <code>UnboundLocalError</code>) only if the class finishes early.</aside>
+<aside class="notes">From the Session Snapshot. Class length 75 minutes. Exercise 5 covers debugging habit formation — do not compress it; it's arguably the most important exercise of the semester for long-term skill development. Six required exercises, including Exercise 5's full 20-minute protocol, fill most of the 75 minutes at a normal pace. Appendix C has extra practice (one more composed function; a second scope trace raising <code>UnboundLocalError</code>) only if the class finishes early.</aside>
 </section>
 
 <!-- 3. OBJECTIVES -->
@@ -93,8 +92,7 @@ Prerequisites: Modules 05–06 — <code>if</code>/<code>elif</code>/<code>else<
 <tr><td>0:26–0:34</td><td>Exercise 4 — Loop + Function</td><td>8</td></tr>
 <tr><td>0:34–0:54</td><td>Exercise 5 — Debug First, Then Ask (four timed 5-min steps)</td><td>20</td></tr>
 <tr><td>0:54–1:02</td><td>Exercise 6 — Scope Experiment</td><td>8</td></tr>
-<tr><td>1:02–1:10</td><td>Stretch 1 — Summarize a List with a Function</td><td>8</td></tr>
-<tr><td>1:10–1:15</td><td>Stretch 2 Preview — Default Parameters + Wrap-Up</td><td>5</td></tr>
+<tr><td>1:02–1:15</td><td>Catch-up + Wrap-Up — reflection + submission checklist (last ~5 min)</td><td>13</td></tr>
 </tbody>
 </table>
 <aside class="notes">Exercise 5 covers debugging habit formation — do not compress it; it's arguably the most important exercise of the semester for long-term skill development. Its four steps run on an actual timer, out loud. If a section moves unusually fast, Appendix C has two extra practice items (a <code>shipping_cost</code> / <code>order_total_with_shipping</code> composed pair; a second scope trace that raises <code>UnboundLocalError</code>).</aside>
@@ -1093,192 +1091,7 @@ Check for understanding (guide, verbatim parenthetical): "If I renamed the local
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6. The required deliverable: every student writes a one-sentence, own-words explanation of scope as a comment in their file.</aside>
 </section>
 
-<!-- 64. STRETCH 1 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 · 8 min · 1:02–1:10</span>
-<h1>Summarize a List with a Function</h1>
-<aside class="notes">
-Teaching goal: package Module 06's entire accumulator-pattern lab into a single reusable function that returns a <strong>dictionary</strong> — a new data structure, holding several named results from one function call.
-Say to the class (verbatim): "Everything from last module's sum/count/average/max exercises, wrapped into one function that returns all four results — plus a minimum — bundled together in a dictionary."
-</aside>
-</section>
-
-<!-- 65. STRETCH 1 — the idea -->
-<section class="s-idea">
-<h3>The idea — one loop, several accumulators, a dictionary out</h3>
-<div class="concept">
-<div class="concept-lbl">Two firsts this semester</div>
-<p><code>current_max</code> and <code>current_min</code> are initialized to the list's <strong>first actual element</strong> (<code>sales_list[0]</code>), not a hardcoded <code>0</code> — the "more robust" version promised back in Module 06, genuinely correct even for a list with negative numbers.</p>
-<p>The function returns a <strong>dictionary literal</strong>: curly braces, <code>"key": value</code> pairs. First time this semester a function returns something other than a single number or string — a small bundle of <em>named</em> results the caller accesses by key.</p>
-</div>
-<aside class="notes">This card is the guide's line-by-line for Stretch 1, condensed. The loop body runs all four accumulator updates (<code>total</code>, <code>count</code>, <code>current_max</code>, <code>current_min</code>) together in one pass — that's the exercise's real point. <code>for key, value in result.items():</code> uses the same unpacking idea as Exercise 4's <code>for price, tier in orders:</code>.</aside>
-</section>
-
-<!-- 66. STRETCH 1 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 1</h3>
-<div class="run" data-lang="python">
-# --- Stretch 1 ---
-def summarize(sales_list):
-    total = 0
-    count = 0
-    current_max = sales_list[0]
-    current_min = sales_list[0]
-    for sale in sales_list:
-        total += sale
-        count += 1
-        if sale &gt; current_max:
-            current_max = sale
-        if sale &lt; current_min:
-            current_min = sale
-    return {
-        "total": total,
-        "count": count,
-        "average": total / count,
-        "max": current_max,
-        "min": current_min,
-    }
-
-result = summarize([120, 80, 250, 175, 90, 410, 60, 215])
-for key, value in result.items():
-    print(f"{key}: {value}")
-</div>
-<p class="expect">One loop maintains four accumulators at once. <code>.items()</code> hands back each key/value pair together, unpacked into two loop variables in one step.</p>
-<aside class="notes">
-Line-by-line:
-- <code>current_max = sales_list[0]</code> and <code>current_min = sales_list[0]</code> — initialized to the list's <strong>first actual element</strong>, not a hardcoded <code>0</code> — recall Module 06 Exercise 3's flagged limitation: initializing to <code>0</code> breaks if the list could contain values below zero. This function is genuinely correct for any list, including one with negatives — the "more robust" version promised back in Module 06.
-- The loop body runs all four accumulator updates (<code>total</code>, <code>count</code>, <code>current_max</code>, <code>current_min</code>) together, in one pass — one loop can maintain several accumulators simultaneously.
-- <code>return {"total": total, "count": count, ...}</code> — a <strong>dictionary literal</strong>: curly braces, <code>"key": value</code> pairs separated by commas. First time this semester a function returns something other than a single number or string — a small bundle of <em>named</em> results the caller accesses by key.
-- <code>for key, value in result.items():</code> — <code>.items()</code> gives back each key/value pair together, unpacked into two loop variables in one step, the same unpacking idea as Exercise 4's <code>for price, tier in orders:</code>.
-Common mistakes: initializing <code>current_max</code>/<code>current_min</code> to <code>0</code> out of habit rather than <code>sales_list[0]</code> — harmless for this all-positive dataset but the exact limitation flagged in Module 06; removing a comma <em>between</em> two dictionary entries by mistake — a real <code>SyntaxError</code> (a trailing comma after the last entry is fine, optional).
-Check for understanding (guide, verbatim parenthetical): "If I call <code>summarize([])</code> — an empty list — what happens? (<code>sales_list[0]</code> raises <code>IndexError: list index out of range</code>, since there's no first element to initialize <code>current_max</code>/<code>current_min</code> from — a good moment to note that this function, while more robust than Module 06's original, still isn't bulletproof against every possible input.)"
-</aside>
-</section>
-
-<!-- 67. STRETCH 1 — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>total: 1400
-count: 8
-average: 175.0
-max: 410
-min: 60</pre>
-<aside class="notes">Matches the guide's "Run it. Expected output" for Stretch 1 exactly. <code>120+80+250+175+90+410+60+215 = 1400</code>; <code>8</code> items; <code>1400 / 8 = 175.0</code> (a bare <code>print</code>, so <code>175.0</code>, not <code>175.00</code>); <code>max</code> <code>410</code>, <code>min</code> <code>60</code>. Verified against CPython 3.12.2.</aside>
-</section>
-
-<!-- 68. STRETCH 1 — broken pass -->
-<section class="s-code">
-<h3>Deliberately broken — <code>summarize([])</code> on an empty list</h3>
-<div class="run" data-lang="python">
-# --- Stretch 1 (BROKEN: empty list has no first element) ---
-def summarize(sales_list):
-    total = 0
-    count = 0
-    current_max = sales_list[0]
-    current_min = sales_list[0]
-    for sale in sales_list:
-        total += sale
-        count += 1
-        if sale &gt; current_max:
-            current_max = sale
-        if sale &lt; current_min:
-            current_min = sale
-    return {"total": total, "count": count, "average": total / count,
-            "max": current_max, "min": current_min}
-
-result = summarize([])
-print(result)
-</div>
-<p class="expect">Call <code>summarize([])</code>. There's no first element to initialize <code>current_max</code>/<code>current_min</code> from, so <code>sales_list[0]</code> raises <code>IndexError</code> — the function is more robust than Module 06's original, but still not bulletproof.</p>
-<aside class="notes">
-Teaching goal: the guide's check-for-understanding, shown live — even the "robust" version has an unhandled edge.
-Line-by-line: <code>current_max = sales_list[0]</code> executes before the loop; for an empty list there is no index <code>0</code>, so it raises <code>IndexError: list index out of range</code> immediately, inside <code>summarize</code>. Handling an empty list gracefully would need an explicit check at the top of the function.
-Common mistakes: this is the guide's CFU, not a student error per se — a "what would you add?" discussion prompt if time allows.
-</aside>
-</section>
-
-<!-- 69. STRETCH 1 — broken output -->
-<section class="s-out">
-<h3>What <code>summarize([])</code> raises</h3>
-<pre>Traceback (most recent call last):
-  File "&lt;exec&gt;", line 17, in &lt;module&gt;
-    result = summarize([])
-             ^^^^^^^^^^^^^
-  File "&lt;exec&gt;", line 5, in summarize
-    current_max = sales_list[0]
-                  ~~~~~~~~~~^^^
-IndexError: list index out of range</pre>
-<aside class="notes">Verified against CPython 3.12.2. The <code>&lt;exec&gt;</code> paths and line numbers are not load-bearing; the load-bearing content is the two-frame traceback (call site → inside <code>summarize</code> at <code>current_max = sales_list[0]</code>) and the final <code>IndexError: list index out of range</code>, exactly as the guide's Stretch 1 check-for-understanding parenthetical states.</aside>
-</section>
-
-<!-- 70. STRETCH 1 — quiz -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="B">
-<p class="q">If I call <code>summarize([])</code> — an empty list — what happens?</p>
-<button data-opt="A">It returns a dictionary with every value <code>0</code></button>
-<button data-opt="B"><code>sales_list[0]</code> raises <code>IndexError: list index out of range</code></button>
-<button data-opt="C">The <code>for</code> loop never runs, so <code>average</code> is <code>None</code></button>
-<p class="why" hidden><code>sales_list[0]</code> raises <code>IndexError: list index out of range</code>, since there's no first element to initialize <code>current_max</code>/<code>current_min</code> from — a good moment to note that this function, while more robust than Module 06's original, still isn't bulletproof against every possible input; handling an empty list gracefully would need an explicit check.</p>
-</div>
-<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(<code>sales_list[0]</code> raises <code>IndexError: list index out of range</code>, since there's no first element to initialize <code>current_max</code>/<code>current_min</code> from — a good moment to note that this function, while more robust than Module 06's original, still isn't bulletproof against every possible input; handling an empty list gracefully would need an explicit check, which is a good "what would you add" discussion prompt if time allows.)"</aside>
-</section>
-
-<!-- 71. STRETCH 1 — pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>Initializing <code>current_max</code>/<code>current_min</code> to <code>0</code> out of habit from Module 06's original version, rather than <code>sales_list[0]</code> — harmless for this specific all-positive dataset, but worth pointing out explicitly as the exact limitation flagged back in Module 06, now finally worth fixing properly since this function is meant to be reusable on data the author doesn't control in advance.</p>
-<p>Forgetting the trailing comma after the last dictionary entry — actually valid Python (a trailing comma is optional, not required), but if a student <em>removes</em> a comma between two entries by mistake instead, that's a real <code>SyntaxError</code> worth reading together if it comes up.</p>
-</div>
-<aside class="notes">From the guide's "Common student mistakes to watch for" for Stretch 1.</aside>
-</section>
-
-<!-- 72. STRETCH 2 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 2 Preview · as time allows</span>
-<h1>Default Parameters</h1>
-<aside class="notes">
-Frame as a quick demo if time is short.
-Two things worth saying explicitly if you demo this live:
-- <code>rate=0.07</code> in the parameter list gives <code>rate</code> a <strong>default value</strong>, used only when the caller doesn't supply one — <code>calculate_tax(100)</code> uses <code>0.07</code> automatically; <code>calculate_tax(100, 0.1)</code> overrides it with <code>0.1</code>.
-- A genuinely worthwhile "gotcha" if you have two spare minutes: <code>print(calculate_tax(100))</code> shows <code>7.000000000000001</code>, not exactly <code>7.0</code> — a real floating-point precision quirk (<code>100 * 0.07</code> cannot be represented exactly in binary floating point), not a bug. Demonstrate <code>100 * 0.07 == 7.0</code> directly and show it evaluates to <code>False</code> — a useful real-world caveat about comparing floats for exact equality.
-- The triple-quoted string immediately under <code>def</code> is a <strong>docstring</strong> — a description of what the function does, callable later with <code>help(calculate_tax)</code> or visible in most editors' hover tooltips. Genuinely how professional Python code documents functions, not a classroom-only convention.
-</aside>
-</section>
-
-<!-- 73. STRETCH 2 — live code -->
-<section class="s-code">
-<h3>Live demo (if time allows) — Stretch 2</h3>
-<div class="run" data-lang="python">
-def calculate_tax(price, rate=0.07):
-    """Return the tax owed on a price at a given rate (default 7%)."""
-    return price * rate
-
-print(calculate_tax(100))        # uses the default rate
-print(calculate_tax(100, 0.1))   # overrides it
-</div>
-<p class="expect"><code>calculate_tax(100)</code> supplies no rate, so <code>rate</code> falls back to its default <code>0.07</code>; <code>calculate_tax(100, 0.1)</code> passes <code>0.1</code> and overrides the default.</p>
-<aside class="notes">
-Line-by-line:
-- <code>def calculate_tax(price, rate=0.07):</code> — <code>rate=0.07</code> gives <code>rate</code> a <strong>default value</strong>, used only when the caller doesn't supply one.
-- The triple-quoted string is a <strong>docstring</strong> — callable with <code>help(calculate_tax)</code>, visible in editor tooltips; how professional Python documents functions.
-- <code>return price * rate</code> — <code>calculate_tax(100)</code> → <code>100 * 0.07</code> → <code>7.000000000000001</code> (raw float precision — <em>not</em> a bug); <code>calculate_tax(100, 0.1)</code> → <code>100 * 0.1</code> → <code>10.0</code>.
-Common mistakes: none flagged — this is a preview. If you have two spare minutes, show <code>100 * 0.07 == 7.0</code> evaluates to <code>False</code> as a floats-and-exact-equality caveat.
-No "Check for understanding" in the guide for this preview segment — the quiz is omitted here, matching the lighter treatment stretch/preview segments get.
-</aside>
-</section>
-
-<!-- 74. STRETCH 2 — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>7.000000000000001
-10.0</pre>
-<aside class="notes">Matches the guide's Appendix A answer-key comments for Stretch 2: <code>print(calculate_tax(100))</code> → <code>7.000000000000001</code> ("float precision, not a bug"); <code>print(calculate_tax(100, 0.1))</code> → <code>10.0</code>. These are bare <code>print()</code>s of raw float results — no <code>:.2f</code> rounding is applied, which is exactly the guide's floating-point-precision teaching point. Verified against CPython 3.12.2.</aside>
-</section>
-
-<!-- 75. WRAP — reflection -->
+<!-- 64. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -1294,7 +1107,7 @@ Strong-answer guidance (guide):
 </aside>
 </section>
 
-<!-- 76. WRAP — submission + next module -->
+<!-- 65. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -1307,7 +1120,7 @@ Strong-answer guidance (guide):
 <aside class="notes">Review the checklist together. Preview Module 08 (verbatim): "Today you wrote genuinely substantial code — six functions' worth. Next module has zero new Python syntax; instead, you learn Git and GitHub, the version-control workflow every remaining assignment this semester will use to submit your work, and that most software teams use professionally."</aside>
 </section>
 
-<!-- 77. END -->
+<!-- 66. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 7</div>
 <h1>End of lab</h1>

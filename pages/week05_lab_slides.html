@@ -44,8 +44,7 @@ table.grid td:last-child{text-align:right;color:var(--mu);}
 <span class="t-item"><strong>0:29–0:37</strong> Ex 4 — Refactor Nested <code>if</code></span>
 <span class="t-item"><strong>0:37–0:45</strong> Ex 5 — Anomaly Flagging</span>
 <span class="t-item"><strong>0:45–0:53</strong> Ex 6 — <code>or</code> and <code>not</code></span>
-<span class="t-item"><strong>0:53–1:05</strong> Stretch 1 — Pricing Engine</span>
-<span class="t-item"><strong>1:05–1:15</strong> Stretch 2 + Wrap-Up</span>
+<span class="t-item"><strong>0:53–1:15</strong> Catch-up + Wrap-Up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
@@ -60,10 +59,10 @@ Prerequisites: Modules 01–04 — variables, types, f-strings, arithmetic/compa
 <div class="kv">
 <div><span class="k">Format</span><span class="v">Live code-along — <code>discount.py</code> starts empty except for the header comment; build every exercise live</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Modules 01–04: variables, types, f-strings, arithmetic / comparison / logical operators</span></div>
-<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required) + Stretch 1 / 2 (as time allows)</span></div>
+<div><span class="k">Exercises covered</span><span class="v">Exercises 1–6 (required)</span></div>
 <div><span class="k">Submission</span><span class="v"><code>discount.py</code> to Canvas</span></div>
 </div>
-<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week05_lab. Class length 75 minutes, format live code-along. Six required exercises plus Stretch 1 provide comprehensive coverage; Stretch 2 (tax brackets) is intentionally positioned as a preview/take-home rather than full live-coded content, since marginal taxation is genuinely tricky to build correctly in real time. Before class: work through Stretch 2 yourself; decide test values in advance — this guide uses <code>total = 250</code> throughout so students aren't recomputing a new mental model each exercise.
+<aside class="notes">From the Session Snapshot. Student-facing lab page: markumreed.github.io/ism2411 — week05_lab. Class length 75 minutes, format live code-along. Six required exercises provide comprehensive coverage of today's conditional-logic material. Before class: decide test values in advance — this guide uses <code>total = 250</code> throughout so students aren't recomputing a new mental model each exercise.
 </aside>
 </section>
 
@@ -78,7 +77,7 @@ Prerequisites: Modules 01–04 — variables, types, f-strings, arithmetic/compa
 <li>Refactor a nested <code>if</code> into a flat one using <code>and</code>, and explain why the flat version is easier to read and test.</li>
 <li>Use <code>or</code> and <code>not</code> to express "either/or" and "unless" business rules.</li>
 </ul>
-<aside class="notes">The verbs are lifted verbatim from the guide's Learning Objectives. Objective 1 (only one branch runs, checked top to bottom) is the conceptual spine — Exercise 1 establishes it, and every later exercise either reinforces it or deliberately contrasts with it (Stretch 1 is the case where independent <code>if</code>s are <em>correct</em> and <code>elif</code> would be the bug).</aside>
+<aside class="notes">The verbs are lifted verbatim from the guide's Learning Objectives. Objective 1 (only one branch runs, checked top to bottom) is the conceptual spine — Exercise 1 establishes it, and every later exercise either reinforces it or deliberately contrasts with it.</aside>
 </section>
 
 <!-- 4. TIMING -->
@@ -94,11 +93,10 @@ Prerequisites: Modules 01–04 — variables, types, f-strings, arithmetic/compa
 <tr><td>0:29–0:37</td><td>Exercise 4 — Refactor a Nested <code>if</code></td><td>8</td></tr>
 <tr><td>0:37–0:45</td><td>Exercise 5 — Anomaly Flagging</td><td>8</td></tr>
 <tr><td>0:45–0:53</td><td>Exercise 6 — Boolean Logic: <code>or</code> and <code>not</code></td><td>8</td></tr>
-<tr><td>0:53–1:05</td><td>Stretch 1 — Full Pricing Engine</td><td>12</td></tr>
-<tr><td>1:05–1:15</td><td>Stretch 2 Preview — Tax Brackets + Wrap-Up</td><td>10</td></tr>
+<tr><td>0:53–1:15</td><td>Catch-up + Wrap-Up — reflection + submission checklist (last ~10 min)</td><td>22</td></tr>
 </tbody>
 </table>
-<aside class="notes">Six required exercises plus Stretch 1 fill the full 75 minutes at a normal pace. Stretch 2 is framed as a preview/take-home, not full live-coded content. If a section moves unusually fast, Appendix B has two extra practice items (shipping-cost tiers; one more <code>and</code>/<code>or</code>/<code>not</code> combination).</aside>
+<aside class="notes">Six required exercises provide comprehensive coverage of today's conditional-logic material. The block after Exercise 6 is catch-up time, with Wrap-Up in the last ~10 minutes. If a section moves unusually fast, Appendix B has two extra practice items (shipping-cost tiers; one more <code>and</code>/<code>or</code>/<code>not</code> combination).</aside>
 </section>
 
 <!-- 5. INTRO — divider -->
@@ -622,7 +620,7 @@ Say to the class (verbatim): "VIP upgrade: spent more than $2000 this year, OR p
 <div class="concept">
 <div class="concept-lbl">Read the whole line as one sentence</div>
 <p>"Qualifies on spending <strong>or</strong> order count, <strong>and</strong> does <strong>not</strong> have an outstanding balance." <code>or</code> is <code>True</code> if <em>either</em> side is true; <code>not</code> flips a boolean.</p>
-<p>The parentheses around <code>(total_spent &gt; 2000 or orders_placed &gt; 10)</code> are <strong>required</strong>: <code>and</code> binds tighter than <code>or</code> in Python, so without them the expression groups as <code>total_spent &gt; 2000 or (orders_placed &gt; 10 and not (...))</code> — a different, wrong rule. Same precedence trap flagged since Module 04's Stretch B.</p>
+<p>The parentheses around <code>(total_spent &gt; 2000 or orders_placed &gt; 10)</code> are <strong>required</strong>: <code>and</code> binds tighter than <code>or</code> in Python, so without them the expression groups as <code>total_spent &gt; 2000 or (orders_placed &gt; 10 and not (...))</code> — a different, wrong rule. Same precedence trap flagged since Module 04.</p>
 </div>
 <aside class="notes">This card is the guide's line-by-line for Exercise 6, condensed. The parenthesis point connects back explicitly to Module 04's precedence-trap lesson.</aside>
 </section>
@@ -644,7 +642,7 @@ print(f"VIP upgrade: {vip}")
 Line-by-line:
 - <code>(total_spent &gt; 2000 or orders_placed &gt; 10)</code> — <code>or</code> returns <code>True</code> if <strong>either</strong> side is <code>True</code> (or both) — contrast explicitly with Exercise 3/4's <code>and</code>, which required <strong>all</strong> sides true. Here, a customer with <code>total_spent = 2200</code> and <code>orders_placed = 3</code> still qualifies, because the spending condition alone is enough.
 - <code>not (outstanding_balance &gt; 0)</code> — <code>not</code> flips a boolean: if <code>outstanding_balance &gt; 0</code> is <code>True</code> (they owe money), <code>not</code> makes it <code>False</code>, and the whole <code>and</code> clause becomes <code>False</code>, disqualifying an otherwise-qualifying customer.
-- The parentheses around the <code>or</code> clause are required for order-of-operations: <code>and</code> binds tighter than <code>or</code> in Python, so without them this would group as <code>total_spent &gt; 2000 or (orders_placed &gt; 10 and not (...))</code> — a different, wrong rule. Connect back to Module 04's Stretch B precedence trap.
+- The parentheses around the <code>or</code> clause are required for order-of-operations: <code>and</code> binds tighter than <code>or</code> in Python, so without them this would group as <code>total_spent &gt; 2000 or (orders_placed &gt; 10 and not (...))</code> — a different, wrong rule. Connect back to Module 04's precedence-trap lesson.
 Check for understanding (guide, verbatim parenthetical): "Name a customer (spending, orders, balance) who qualifies on orders alone, not spending, and confirm the balance rule still applies to them the same way. (E.g., <code>total_spent = 100</code>, <code>orders_placed = 15</code>, <code>outstanding_balance = 0</code> &rarr; VIP <code>True</code>; same customer with <code>outstanding_balance = 50</code> &rarr; <code>False</code>. The point is confirming <code>not (...)</code> applies uniformly regardless of <em>which</em> side of the <code>or</code> qualified them.)"
 </aside>
 </section>
@@ -705,157 +703,7 @@ print(f"VIP upgrade: {vip}")
 <aside class="notes">From the guide's "Common student mistakes to watch for" for Exercise 6.</aside>
 </section>
 
-<!-- 49. STRETCH 1 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 1 · 12 min · 0:53–1:05</span>
-<h1>Full Pricing Engine</h1>
-<aside class="notes">
-Teaching goal: combine every rule from Exercises 1–3 into one script that also layers in two new discounts (wholesale, first-order), with a printed breakdown of each step — the closest this lab gets to a realistic, complete business script.
-Say to the class (verbatim): "Everything from today, combined, plus two new rules, applied in a specific order, with a full breakdown printed at the end — like a receipt showing exactly how the final price was reached."
-</aside>
-</section>
-
-<!-- 50. STRETCH 1 — live code -->
-<section class="s-code">
-<h3>Live-code — Stretch 1</h3>
-<div class="run" data-lang="python">
-# --- Stretch 1 ---
-cart_total = 600
-region = "South"
-customer_type = "wholesale"
-first_order = True
-
-breakdown = []
-
-if cart_total &gt;= 500:
-    discount = 0.15
-elif cart_total &gt;= 200:
-    discount = 0.10
-elif cart_total &gt;= 100:
-    discount = 0.05
-else:
-    discount = 0
-breakdown.append(f"Tier discount: {discount*100:.0f}%")
-
-if region == "South":
-    discount += 0.02
-    breakdown.append("Regional bonus (South): +2%")
-
-if customer_type == "wholesale":
-    discount += 0.05
-    breakdown.append("Wholesale extra: +5%")
-
-if first_order:
-    discount += 0.03
-    breakdown.append("First-order welcome discount: +3%")
-
-final = cart_total * (1 - discount)
-breakdown.append(f"Total discount: {discount*100:.0f}%")
-breakdown.append(f"Final price: ${final:.2f}")
-
-for line in breakdown:
-    print(line)
-</div>
-<p class="expect">Three separate <code>if</code>s follow the tier block — <strong>not <code>elif</code>s</strong> — because a single order can qualify for all three bonuses at once, unlike Exercise 1's mutually-exclusive tiers. If your section hasn't covered <code>for</code> loops yet, replace the loop with explicit <code>print(breakdown[0])</code>, <code>print(breakdown[1])</code>, etc.</p>
-<aside class="notes">
-Line-by-line (highlighting what's new relative to Exercises 1–3):
-- <code>breakdown = []</code> — an empty list that will collect one string per applied rule, so the final printout shows every step, not just the end result. This one accumulates messages and prints them all at the end — a small preview of the accumulator pattern coming in Module 06.
-- The tier <code>if</code>/<code>elif</code>/<code>else</code> block is identical to Exercise 1, with one addition: <code>breakdown.append(...)</code> records which tier applied.
-- Three separate <code>if</code> blocks follow — South bonus, wholesale extra, first-order discount — <strong>note these are three independent <code>if</code>s, not <code>elif</code>s</strong>, because a single order can qualify for <em>all three</em> simultaneously. Mutually exclusive outcomes need <code>elif</code>; independently-stackable bonuses need separate <code>if</code>s.
-- <code>for line in breakdown: print(line)</code> — a <code>for</code> loop over the list, printing each recorded line in order. If <code>for</code> loops aren't in scope, replace with explicit indexed prints or <code>print(breakdown)</code>.
-Common mistakes: writing the three bonus rules as <code>elif</code> instead of independent <code>if</code>s — this silently caps the order at receiving only <em>one</em> bonus even when it qualifies for several. This is the exercise's central "gotcha," directly extending Exercise 1's lesson to a case where the <em>opposite</em> choice is now correct. Also applying the bonuses in a different order — mathematically this particular script produces the same total regardless of order (<code>+=</code> is commutative), but say explicitly that this is a coincidence of this specific additive formula, not a general rule.
-Check for understanding (guide, verbatim parenthetical): "If this customer were <em>not</em> on their first order, which line disappears from the breakdown, and does the final price change? (The 'First-order welcome discount: +3%' line disappears, <code>discount</code> becomes <code>22%</code> instead of <code>25%</code>, and the final price increases from <code>$450.00</code> to <code>$468.00</code> — a good quick mental-math check that the room is actually tracking the accumulation, not just pattern-matching the output.)"
-</aside>
-</section>
-
-<!-- 51. STRETCH 1 — expected output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>Tier discount: 15%
-Regional bonus (South): +2%
-Wholesale extra: +5%
-First-order welcome discount: +3%
-Total discount: 25%
-Final price: $450.00</pre>
-<aside class="notes">Matches the guide's Expected output for Stretch 1 exactly. <code>discount = 0.15 + 0.02 + 0.05 + 0.03 = 0.25</code>; <code>final = 600 * (1 - 0.25) = 450.00</code>. (Floating-point accumulation lands at <code>0.25000000000000006</code> internally, but <code>{discount*100:.0f}</code> renders <code>25</code> and <code>{final:.2f}</code> renders <code>450.00</code>.) Verified against CPython 3.12.2.</aside>
-</section>
-
-<!-- 52. STRETCH 1 — quiz -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="B">
-<p class="q">If this customer were <em>not</em> on their first order, which line disappears, and does the final price change?</p>
-<button data-opt="A">The "First-order" line disappears, but the final price stays <code>$450.00</code></button>
-<button data-opt="B">The "First-order welcome discount: +3%" line disappears; discount becomes <code>22%</code> and the price rises to <code>$468.00</code></button>
-<button data-opt="C">Nothing changes — the bonuses are independent</button>
-<p class="why" hidden>The "First-order welcome discount: +3%" line disappears, <code>discount</code> becomes <code>22%</code> instead of <code>25%</code>, and the final price increases from <code>$450.00</code> to <code>$468.00</code> — a good quick mental-math check that the room is actually tracking the accumulation, not just pattern-matching the output.</p>
-</div>
-<aside class="notes">Check for understanding (guide, verbatim parenthetical): "(The 'First-order welcome discount: +3%' line disappears, <code>discount</code> becomes <code>22%</code> instead of <code>25%</code>, and the final price increases from <code>$450.00</code> to <code>$468.00</code> — a good quick mental-math check that the room is actually tracking the accumulation, not just pattern-matching the output.)" Verified: <code>600 * (1 - 0.22) = 468.00</code> under CPython 3.12.2.</aside>
-</section>
-
-<!-- 53. STRETCH 2 — divider -->
-<section class="s-sec">
-<span class="chip">Stretch 2 Preview · 1:05–1:15</span>
-<h1>Tax Brackets — preview / take-home</h1>
-<aside class="notes">
-Frame this as a preview/take-home rather than full live-coded content — marginal taxation is genuinely easy to get subtly wrong live, and rewarding to work through carefully rather than rushed.
-Say to the class (verbatim): "One more example of tiered logic, from a completely different domain: federal income tax brackets. The trick is that this is <strong>marginal</strong> taxation — each bracket only taxes the income that falls <em>within</em> that bracket, not your whole income at that bracket's rate. Someone earning $60,000 does not pay 22% tax on all $60,000 — only the portion above $47,150 is taxed at 22%; the portion from $11,600 to $47,150 is taxed at 12%; the first $11,600 is taxed at 10%."
-If you do walk through it live, the answer key in Appendix A has a verified, working version; the key teaching moment is that a naive "if income is in the 22% bracket, multiply the <em>whole</em> income by 22%" approach is wrong and worth explicitly contrasting against the correct marginal calculation.
-</aside>
-</section>
-
-<!-- 54. STRETCH 2 — the idea -->
-<section class="s-idea">
-<h3>The idea — marginal, not flat</h3>
-<div class="concept">
-<div class="concept-lbl">Why the naive version is wrong</div>
-<p>Naive (wrong): "income is in the 22% bracket, so tax = income &times; 0.22." Correct (marginal): each bracket taxes <em>only the slice of income inside it</em>. The code peels income off the top bracket first, taxes that slice, then drops <code>remaining</code> down to the next bracket ceiling and repeats.</p>
-</div>
-<aside class="notes">This is the guide's Stretch 2 framing. Marginal taxation is the "genuinely tricky to build correctly in real time" logic the Session Snapshot warns about — hence preview/take-home, not live-code.</aside>
-</section>
-
-<!-- 55. STRETCH 2 — code (readonly) -->
-<section class="s-code">
-<h3>Answer key — Stretch 2 (verified, single filer, 2024 simplified brackets)</h3>
-<div class="run" data-lang="python" data-readonly>
-income = 60000
-
-tax = 0
-remaining = income
-
-if remaining &gt; 47150:
-    tax += (min(remaining, 100525) - 47150) * 0.22
-    remaining = 47150
-
-if remaining &gt; 11600:
-    tax += (remaining - 11600) * 0.12
-    remaining = 11600
-
-tax += remaining * 0.10
-
-print(f"Tax owed on ${income:,.2f}: ${tax:,.2f}")
-</div>
-<p class="expect">Shown read-only (code + Run + output) — this is take-home material, not a live-coded block. Two independent <code>if</code>s peel the top brackets; whatever is left is taxed at the base 10% rate.</p>
-<aside class="notes">
-Line-by-line:
-- <code>remaining = income</code> — a running "income not yet taxed" counter.
-- <code>if remaining &gt; 47150:</code> — if any income is above the 22% bracket floor, tax the slice between $47,150 and either the 24% floor ($100,525) or the person's actual income, whichever is lower — hence <code>min(remaining, 100525)</code>. Then set <code>remaining = 47150</code> so the next check only sees income at or below that ceiling.
-- <code>if remaining &gt; 11600:</code> — tax the slice from $11,600 up to $47,150 at 12%, then drop <code>remaining</code> to $11,600.
-- <code>tax += remaining * 0.10</code> — everything left (the first $11,600, or less) is taxed at 10%.
-- These are independent <code>if</code>s, not <code>elif</code>s, because a high earner's income passes through <em>every</em> bracket — same "stackable, not mutually exclusive" structure as Stretch 1's bonuses.
-Verified results (guide): income <code>$10,000</code> &rarr; tax <code>$1,000.00</code>; income <code>$30,000</code> &rarr; tax <code>$3,368.00</code>; income <code>$60,000</code> &rarr; tax <code>$8,253.00</code>. All three reproduced under CPython 3.12.2.
-Common mistakes: the naive flat-rate approach (multiply whole income by the top bracket's rate); forgetting the <code>min(remaining, 100525)</code> cap so a very high income over-taxes the 22% band.
-</aside>
-</section>
-
-<!-- 56. STRETCH 2 — expected output -->
-<section class="s-out">
-<h3>Expected output (<code>income = 60000</code>)</h3>
-<pre>Tax owed on $60,000.00: $8,253.00</pre>
-<aside class="notes">Matches the guide's verified result for <code>$60,000</code> exactly. Other verified checks: <code>$10,000</code> &rarr; <code>$1,000.00</code>; <code>$30,000</code> &rarr; <code>$3,368.00</code>. Verified against CPython 3.12.2.</aside>
-</section>
-
-<!-- 57. WRAP — reflection -->
+<!-- 49. WRAP — reflection -->
 <section class="s-wrap">
 <h3>Reflection</h3>
 <ul>
@@ -871,7 +719,7 @@ Strong-answer guidance (guide):
 </aside>
 </section>
 
-<!-- 58. WRAP — submission + next module -->
+<!-- 50. WRAP — submission + next module -->
 <section class="s-wrap">
 <h3>Submission checklist &amp; what's next</h3>
 <ul>
@@ -880,10 +728,10 @@ Strong-answer guidance (guide):
 <li><code>if</code>/<code>elif</code>/<code>else</code> used correctly for mutually exclusive tiers; separate <code>if</code>s used for independently-stackable bonuses</li>
 <li>Script runs top to bottom with no errors given valid input</li>
 </ul>
-<aside class="notes">Review the checklist together. Preview Module 06 (verbatim): "Today's scripts all handled <em>one</em> transaction at a time. Next module, you'll process a whole <em>list</em> of sales with a <code>for</code> loop — and Stretch 1's <code>breakdown.append(...)</code> pattern you just saw is a direct preview of the accumulator pattern that's coming."</aside>
+<aside class="notes">Review the checklist together. Preview Module 06 (verbatim): "Today's scripts all handled <em>one</em> transaction at a time. Next module, you'll process a whole <em>list</em> of sales with a <code>for</code> loop, building up a running result as you go with <code>.append(...)</code> — the accumulator pattern."</aside>
 </section>
 
-<!-- 59. END -->
+<!-- 51. END -->
 <section class="s-end">
 <div class="sec-n">ISM2411 · Week 5</div>
 <h1>End of lab</h1>
