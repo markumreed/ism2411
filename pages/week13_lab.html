@@ -267,20 +267,6 @@ footer {
 <div style="color:var(--muted);font-size:15px;">Run <code>df.to_csv('data/explored.csv', index=False)</code>. Verify the file exists. Open it in a text editor to confirm the header row looks correct.</div>
 </div>
 
-<h2>Stretch Challenge</h2>
-
-<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 1 · CHALLENGE</div>
-<div style="font-weight:700;margin-bottom:6px;">Top 3 products by average per-unit price in the South</div>
-<div style="color:var(--muted);font-size:15px;">Chain together: filter to South, group by product, compute mean per_unit, sort descending, take top 3. You will need concepts from Module 15 (<code>groupby</code>), but try to reason through it. Hint: <code>south.groupby('product')['per_unit'].mean().sort_values(ascending=False).head(3)</code>.</div>
-</div>
-
-<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 2 · CHALLENGE</div>
-<div style="font-weight:700;margin-bottom:6px;">What fraction of total revenue comes from orders above $500?</div>
-<div style="color:var(--muted);font-size:15px;">Filter to big orders, sum their revenue, divide by total revenue, multiply by 100. Express your answer as a percentage rounded to 1 decimal place. Use an f-string to print it cleanly.</div>
-</div>
-
 <h2>Reflection</h2>
 <div class="callout blue">
 <div class="callout-title">Self-assessment</div>

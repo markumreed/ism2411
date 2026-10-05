@@ -177,20 +177,6 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div style="color:var(--muted);font-size:15px;">Export the cleaned data to <code>data/clean_sales.csv</code> with <code>index=False</code>. Then reload it with <code>pd.read_csv()</code> and print <code>.info()</code> to verify the types were preserved correctly.</div>
 </div>
 
-<h2>Stretch Challenge</h2>
-
-<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 1 · CHALLENGE</div>
-<div style="font-weight:700;margin-bottom:6px;">Detect and flag outliers</div>
-<div style="color:var(--muted);font-size:15px;">Use the IQR method to flag outliers in the <code>unit_price</code> column. Compute Q1, Q3, and IQR. Create a new column <code>is_outlier</code> that is True when a price is more than 1.5 × IQR above Q3 or below Q1. Print how many outliers there are and their average price.</div>
-</div>
-
-<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">STRETCH 2 · CHALLENGE</div>
-<div style="font-weight:700;margin-bottom:6px;">Write a reusable cleaning function</div>
-<div style="color:var(--muted);font-size:15px;">Wrap your entire cleaning pipeline (steps 2–7) in a function called <code>clean_sales(filepath)</code> that takes a file path and returns a clean DataFrame. Call the function and print the result's shape and <code>.dtypes</code> to verify it works.</div>
-</div>
-
 <h2>Reflection</h2>
 <div class="callout blue">
 <div class="callout-title">Self-assessment</div>
