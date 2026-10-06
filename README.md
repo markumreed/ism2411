@@ -41,7 +41,7 @@ ism2411/
     ├── week02_reading.html    week02_lecture.html    week02_lab.html
     │   …
     ├── week08_reading.html    week08_lecture.html    week08_lab.html
-    ├── week09_midterm.html
+    ├── week09_midterm.html    week09_study_guide.html
     ├── week10_reading.html    week10_lecture.html    week10_lab.html
     │   …
     ├── week15_reading.html    week15_lecture.html    week15_lab.html

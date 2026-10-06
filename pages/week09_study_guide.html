@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var t=localStorage.getItem('ism2411-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam Study Guide — Module 9 — ISM2411</title>
+<link rel="stylesheet" id="ism-site-css" href="../assets/css/site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --bug:       #f87171;
+  --fix:       #34d399;
+  --code-bg:   #0a0a12;
+  --code-bg2:  #1a1a26;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #4a4a5a;
+  --dim:     #7a7a8c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+  --accent:  #b45309;
+  --bug:     #dc2626;
+  --fix:     #047857;
+  --code-bg:  #1a1a26;
+  --code-bg2: #15151f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px;
+}
+h2 {
+  font-size: 22px; font-weight: 700; margin: 48px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  letter-spacing: -.01em; scroll-margin-top: 72px;
+}
+h3 {
+  font-size: 16px; font-weight: 700; margin: 28px 0 10px;
+  letter-spacing: -.005em;
+}
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede {
+  font-size: 17.5px; color: var(--muted); line-height: 1.6;
+  margin: 0 0 28px; max-width: 720px;
+}
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+
+/* code blocks */
+code {
+  font-family: var(--mono); font-size: .92em;
+  background: var(--bg2); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+  color: #f0f0f5;
+}
+pre code { background: none; padding: 0; border: 0; color: inherit; }
+pre .hl { background: rgba(52,211,153,.2); border-radius: 3px; padding: 1px 0; }
+.out-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--dim); margin: 14px 0 -8px;
+}
+
+/* meta bar */
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 8px 0 28px; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  font-family: var(--mono); font-size: 12px;
+}
+.meta .chip {
+  padding: 4px 10px; border: 1px solid var(--border2); border-radius: 999px;
+  color: var(--muted);
+}
+.meta .chip.accent { color: var(--accent); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.07); }
+
+/* week jump bar — quick switch between the module's pages */
+.weekjump {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 0 0 14px; padding: 10px 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+}
+.weekjump-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--dim); text-transform: uppercase; margin-right: 4px;
+}
+.weekjump-link {
+  padding: 5px 12px; border-radius: 999px; text-decoration: none;
+  font-size: 13px; color: var(--muted); border: 1px solid var(--border2);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.weekjump-link:hover { color: var(--text); border-color: var(--accent); }
+.weekjump-link.current {
+  background: rgba(251,191,36,.12); color: var(--accent);
+  border-color: rgba(251,191,36,.4);
+}
+
+/* callout boxes */
+.callout {
+  margin: 22px 0; padding: 16px 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+}
+.callout-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.callout p { margin: 0 0 10px; }
+.callout p:last-child { margin-bottom: 0; }
+.callout.pink { border-left-color: #f472b6; }
+.callout.pink .callout-title { color: #f472b6; }
+
+/* topic list */
+.topic-list {
+  list-style: none; padding: 0; margin: 16px 0;
+}
+.topic-list li {
+  position: relative; padding: 8px 0 8px 28px;
+  border-bottom: 1px dashed var(--border);
+}
+.topic-list li:last-child { border-bottom: 0; }
+.topic-list li::before {
+  content: '▸'; position: absolute; left: 6px; color: var(--accent);
+  font-size: 12px; top: 10px;
+}
+
+/* tables */
+.table-wrap { overflow-x: auto; margin: 18px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+thead th {
+  background: var(--bg2); color: var(--muted); font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border2);
+}
+tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: var(--bg2); }
+th.num, td.num { text-align: right; font-family: var(--mono); }
+
+/* bug teasers — the three bug reports, linked from the top of the page */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 12px; margin: 18px 0 8px;
+}
+a.concept-card {
+  display: block; text-decoration: none;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  transition: border-color .15s, transform .15s;
+}
+a.concept-card:hover { border-color: var(--bug); transform: translateY(-2px); }
+.concept-card h4 {
+  margin: 0 0 6px; font-size: 11px; font-family: var(--mono);
+  color: var(--bug); letter-spacing: .12em; text-transform: uppercase;
+}
+.concept-card p { margin: 0; font-size: 14.5px; font-weight: 600; color: var(--text); }
+
+/* bug report — broken code first, explanation behind a reveal */
+.bug {
+  margin: 26px 0 8px; padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(248,113,113,.08), rgba(251,191,36,.05));
+  border: 1px solid rgba(248,113,113,.28); border-radius: 12px;
+}
+.bug-tag {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--bug); margin-bottom: 6px;
+}
+.bug h3 { margin: 0 0 10px; font-size: 19px; letter-spacing: -.01em; }
+.bug p { margin: 0 0 12px; }
+.bug pre { margin: 12px 0; }
+.reveal {
+  margin-top: 12px; padding: 10px 14px;
+  background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px;
+}
+.reveal summary {
+  cursor: pointer; user-select: none; list-style: none;
+  font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--accent);
+}
+.reveal summary::-webkit-details-marker { display: none; }
+.reveal summary::before { content: '▸ '; }
+.reveal[open] summary::before { content: '▾ '; }
+.reveal p { margin: 10px 0 2px; font-size: 15px; }
+.fix-tag {
+  display: inline-block; margin-right: 8px; padding: 2px 8px; border-radius: 999px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--fix); border: 1px solid rgba(52,211,153,.4); background: rgba(52,211,153,.08);
+  vertical-align: 2px;
+}
+
+/* diagrams — inline SVG, coloured from the theme tokens */
+.diagram {
+  margin: 22px 0; padding: 16px 16px 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+}
+.diagram-title { font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+.diagram-scroll { overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 560px; height: auto; font-family: var(--sans); }
+.diagram figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
+.diagram-hint {
+  display: none; margin-top: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--dim);
+}
+.d-box { fill: none; stroke: var(--dim); stroke-width: 1.25; }
+.d-box.off, .d-line.off { stroke-dasharray: 4 4; }
+.d-box.on { fill: rgba(251,191,36,.12); stroke: var(--accent); stroke-width: 2; }
+.d-chip { fill: var(--bg3); stroke: var(--dim); stroke-width: 1.25; }
+.d-line { fill: none; stroke: var(--dim); stroke-width: 1.25; }
+.d-line.on { stroke: var(--accent); stroke-width: 2; }
+.d-arrow { fill: var(--dim); }
+.d-arrow-on { fill: var(--accent); }
+.d-t { fill: var(--text); font-size: 13px; }
+.d-b { font-weight: 700; }
+.d-m { font-family: var(--mono); font-size: 12.5px; }
+.d-q { fill: var(--muted); font-size: 11.5px; }
+
+/* mistakes — predict, then open to check */
+.mistakes {
+  margin: 16px 0; border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.mistakes details { background: var(--bg2); border-bottom: 1px solid var(--border); }
+.mistakes details:last-child { border-bottom: 0; }
+.mistakes summary {
+  cursor: pointer; list-style: none; padding: 11px 16px 11px 38px;
+  position: relative; font-weight: 600; font-size: 15px;
+}
+.mistakes summary::-webkit-details-marker { display: none; }
+.mistakes summary::before {
+  content: '▸'; position: absolute; left: 16px; top: 13px;
+  color: var(--accent); font-size: 12px;
+}
+.mistakes details[open] summary::before { content: '▾'; }
+.mistakes .m-body { padding: 0 16px 14px 38px; }
+.mistakes .m-body p { margin: 4px 0; font-size: 14.5px; color: var(--muted); }
+.mistakes .m-body strong { color: var(--text); }
+
+/* practice cards */
+.quiz-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+}
+.quiz-q {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--accent); margin-bottom: 8px; text-transform: uppercase;
+}
+.quiz-question { font-weight: 600; margin-bottom: 10px; }
+.quiz-item pre { margin: 8px 0 10px; font-size: 12.5px; }
+.quiz-item p:last-child, .quiz-item ol:last-child { margin-bottom: 0; }
+
+/* readiness checklist — ticks are remembered in this browser */
+.check-count { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.checklist { list-style: none; padding: 0; margin: 12px 0; }
+.checklist li { margin: 0; border-bottom: 1px dashed var(--border); }
+.checklist li:last-child { border-bottom: 0; }
+.checklist label { display: flex; gap: 12px; align-items: flex-start; padding: 9px 4px; cursor: pointer; }
+.checklist input { flex: none; width: 16px; height: 16px; margin-top: 5px; accent-color: var(--accent); }
+.checklist input:checked + span { color: var(--muted); text-decoration: line-through; }
+
+/* prev/next nav */
+.pn {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 60px;
+}
+.pn a {
+  display: block; padding: 14px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  transition: background .15s, transform .15s;
+}
+.pn a:hover { background: var(--bg3); transform: translateY(-1px); }
+.pn .label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 4px;
+}
+.pn .title { font-weight: 600; font-size: 14px; }
+.pn .next { text-align: right; }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em; margin-top: 60px;
+}
+/* ism-mobile */
+@media(max-width:600px){
+  .pn{grid-template-columns:1fr}
+  pre{font-size:12px;padding:12px 14px}
+  .concept-grid{grid-template-columns:1fr}
+  .diagram-hint{display:block}
+  table{font-size:13.5px}
+  thead th, tbody td{padding:9px 10px}
+}
+</style>
+</head>
+<body>
+
+<main id="main"><div class="wrap">
+<div class="page-eyebrow">MODULE 9 · MIDTERM · STUDY GUIDE</div>
+<h1>Exam Study Guide</h1>
+<p class="lede">Practice for the Python Business Process Exam. Every question asks for the same move: someone describes a business rule in plain English, and you turn it into Python that gets the right answer.</p>
+<div class="meta">
+<span class="chip accent">Module 09</span>
+<span class="chip">100 points</span>
+<span class="chip">Handwritten</span>
+<span class="chip">One page of notes</span>
+<span class="chip">Loop only · no sum(), max(), min()</span>
+</div>
+<div class="weekjump">
+<span class="weekjump-label">This module:</span>
+<a href="week09_midterm.html" class="weekjump-link">Exam Guide</a>
+<a href="week09_study_guide.html" class="weekjump-link current">Study Guide</a>
+</div>
+<div class="weekjump">
+<span class="weekjump-label">On this page:</span>
+<a href="#conditionals" class="weekjump-link">Conditionals</a>
+<a href="#loops" class="weekjump-link">Loops</a>
+<a href="#functions" class="weekjump-link">Functions</a>
+<a href="#tracing" class="weekjump-link">Tracing</a>
+<a href="#mistakes" class="weekjump-link">Mistakes</a>
+<a href="#practice" class="weekjump-link">Practice</a>
+<a href="#notes" class="weekjump-link">Note sheet</a>
+</div>
+
+<p>This guide trains that move with three bugs to catch, three patterns to learn, and three problems to solve. Start with the bugs:</p>
+<div class="concept-grid">
+<a class="concept-card" href="#conditionals"><h4>Bug 1 · Conditionals</h4><p>The biggest customer got the cheapest rate.</p></a>
+<a class="concept-card" href="#loops"><h4>Bug 2 · Loops</h4><p>The 15-minute wait that vanished.</p></a>
+<a class="concept-card" href="#functions"><h4>Bug 3 · Functions</h4><p>Four packages shipped for $0.00.</p></a>
+</div>
+
+<h2 id="exam">What the exam tests</h2>
+<p>The exam is 100 points, handwritten, with three questions and one page of notes allowed.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Question</th><th>Skills</th><th class="num">Points</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Conditionals and business rules</td><td class="num">30</td></tr>
+<tr><td>2</td><td>Loops with conditionals</td><td class="num">35</td></tr>
+<tr><td>3</td><td>Functions, loops, and conditionals together</td><td class="num">35</td></tr>
+</tbody>
+</table>
+</div>
+<p>Because notes are allowed, grading rewards logic over memorized syntax. Copying valid Python from your notes will not earn full credit by itself. You earn points for showing you can:</p>
+<ul class="topic-list">
+<li>Translate a written business process into Python logic</li>
+<li>Choose the right control structure for the job</li>
+<li>Organize the steps in the correct order</li>
+<li>Trace how data moves through the program</li>
+<li>Combine conditionals, loops, and functions in one solution</li>
+</ul>
+<p>Minor handwritten syntax slips can still earn partial credit when your intended logic is clear. Your solution must still show that you understand how the program should work.</p>
+
+<h2 id="method">Turn a business process into code in four steps</h2>
+<p>Plan on paper before you write any Python, because the points go to structure and logic.</p>
+<ol>
+<li><strong>Mark up the prompt.</strong> Underline each input, circle each rule, and box each value you must print.</li>
+<li><strong>Name your variables.</strong> Write one variable name for every value you must calculate or print.</li>
+<li><strong>Pick the structure.</strong> Match the wording of the prompt to a tool using the table below.</li>
+<li><strong>Order the steps, then trace.</strong> Each value must be calculated on a line above any line that uses it. Then run the given numbers through your code by hand.</li>
+</ol>
+<div class="table-wrap">
+<table>
+<thead><tr><th>The prompt says</th><th>The job</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>"below", "from X through Y", "or more", "if"</td><td>Choose one outcome from several</td><td><code>if</code> / <code>elif</code> / <code>else</code></td></tr>
+<tr><td>"each", "every", "total", "count", "highest" about a list</td><td>Repeat the same steps for every item</td><td><code>for</code> loop, with variables set up before it</td></tr>
+<tr><td>"write a function", or one rule applied to many items</td><td>Package a calculation for reuse</td><td><code>def</code> with a parameter and <code>return</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="conditionals">Conditionals: tiered business rules</h2>
+<p>A tiered rule is one decision with several possible outcomes, so write it as one <code>if</code> / <code>elif</code> / <code>else</code> chain.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 1</div>
+<h3>The biggest customer got the cheapest rate</h3>
+<p>A utility bills electricity by monthly usage. Usage below 500 kWh costs $0.10 per kWh, 500 through 999 kWh costs $0.12, and 1,000 kWh or more costs $0.15. A factory used 1,200 kWh, and this code billed it at the lowest rate.</p>
+<pre><code>usage = 1200
+
+if usage &gt;= 1000:
+    rate = 0.15
+if usage &gt;= 500:
+    rate = 0.12
+if usage &gt;= 0:
+    rate = 0.10
+
+print(rate)    # prints 0.1</code></pre>
+<p><strong>Find the bug before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p>All three tests are true for 1,200, so all three lines run and the last one wins. The code makes three separate decisions, but the business rule is one decision. Only a chain lets exactly one tier win.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>One chain, highest tier first</h3>
+<p>Turn the three <code>if</code> statements into one chain, so Python stops at the first true test. This version also applies the utility's second rule: a $20 service fee is added when the usage charge is less than $40.</p>
+<pre><code>usage = 620
+
+# Decision 1: choose the rate
+if usage &gt;= 1000:
+    rate = 0.15
+<span class="hl">elif usage &gt;= 500:</span>
+    rate = 0.12
+<span class="hl">else:</span>
+    rate = 0.10
+
+# Calculate once, after the chain
+usage_charge = usage * rate
+
+# Decision 2: a separate rule gets its own if
+if usage_charge &lt; 40:
+    service_fee = 20
+else:
+    service_fee = 0
+
+total_bill = usage_charge + service_fee
+
+print(f"Usage charge: ${usage_charge:.2f}")
+print(f"Service fee: ${service_fee:.2f}")
+print(f"Total bill: ${total_bill:.2f}")</code></pre>
+<div class="out-label">Output</div>
+<pre><code>Usage charge: $74.40
+Service fee: $0.00
+Total bill: $74.40</code></pre>
+
+<figure class="diagram">
+<div class="diagram-title">Python stops at the first true test</div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="40 0 620 304" role="img" aria-label="How Python walks the chain when usage is 620: the first test is false, the second is true, so the rate is 0.12 and the else is never checked">
+<defs>
+<marker id="chain-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="d-chip" x="70" y="10" width="200" height="32" rx="16"/>
+<text class="d-t d-m" x="170" y="31" text-anchor="middle">usage = 620</text>
+<path class="d-line" d="M170 42V74" marker-end="url(#chain-arrow)"/>
+<path class="d-line" d="M170 118V162" marker-end="url(#chain-arrow)"/>
+<path class="d-line" d="M270 184H450" marker-end="url(#chain-arrow)"/>
+<path class="d-line off" d="M270 96H450"/>
+<path class="d-line off" d="M170 206V250"/>
+<path class="d-line off" d="M270 272H450"/>
+<rect class="d-box" x="70" y="74" width="200" height="44" rx="8"/>
+<text class="d-t d-m" x="170" y="100" text-anchor="middle">usage &gt;= 1000?</text>
+<rect class="d-box" x="70" y="162" width="200" height="44" rx="8"/>
+<text class="d-t d-m d-b" x="170" y="188" text-anchor="middle">usage &gt;= 500?</text>
+<rect class="d-box off" x="70" y="250" width="200" height="44" rx="8"/>
+<text class="d-q d-m" x="170" y="276" text-anchor="middle">else</text>
+<rect class="d-box off" x="450" y="74" width="180" height="44" rx="8"/>
+<text class="d-q d-m" x="540" y="100" text-anchor="middle">rate = 0.15</text>
+<rect class="d-box on" x="450" y="162" width="180" height="44" rx="8"/>
+<text class="d-t d-m d-b" x="540" y="188" text-anchor="middle">rate = 0.12</text>
+<rect class="d-box off" x="450" y="250" width="180" height="44" rx="8"/>
+<text class="d-q d-m" x="540" y="276" text-anchor="middle">rate = 0.10</text>
+<text class="d-q" x="182" y="144">False, so keep going</text>
+<text class="d-t d-b" x="360" y="176" text-anchor="middle" style="font-size:11.5px">True, so stop here</text>
+<text class="d-q" x="360" y="88" text-anchor="middle">skipped</text>
+<text class="d-q" x="182" y="232">never checked</text>
+<text class="d-q" x="360" y="264" text-anchor="middle">skipped</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>With 620 kWh, the first test fails and the second passes, so the rate is $0.12 and the <code>else</code> is never reached.</figcaption>
+</figure>
+
+<p>Five habits keep any tiered rule safe:</p>
+<ul>
+<li><strong>Check the highest tier first and work down.</strong> Python stops at the first true condition, so each <code>elif</code> runs only when the tiers above it failed. That is why <code>elif usage &gt;= 500</code> needs no upper limit.</li>
+<li><strong>The chain only chooses the rate.</strong> Do the multiplication once, after the chain.</li>
+<li><strong>A separate rule gets its own <code>if</code>.</strong> The service fee is not another tier, so it is not another <code>elif</code>.</li>
+<li><strong>Read which value the rule names.</strong> The fee depends on the usage charge, a calculated value, not on the original kWh. Calculate a value before you test it.</li>
+<li><strong>Give every variable a value on every path.</strong> The <code>else</code> sets <code>service_fee = 0</code>, so the final calculation always has a number to add.</li>
+</ul>
+
+<h3>Translate boundary words exactly</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>The rule says</th><th>Write</th></tr></thead>
+<tbody>
+<tr><td>below 500, less than 500, under 500</td><td><code>&lt; 500</code></td></tr>
+<tr><td>500 or more, at least 500</td><td><code>&gt;= 500</code></td></tr>
+<tr><td>more than 500, over 500, exceeds 500</td><td><code>&gt; 500</code></td></tr>
+<tr><td>500 or less, up to 500, no more than 500</td><td><code>&lt;= 500</code></td></tr>
+<tr><td>from 500 through 999</td><td><code>&gt;= 500</code>, with the tier above it checked first</td></tr>
+</tbody>
+</table>
+</div>
+<p>Test your chain with the exact boundary numbers. Here, a usage of 500 must land in the $0.12 tier and 1,000 in the $0.15 tier.</p>
+
+<div class="callout">
+<div class="callout-title">🦆 Tell the duck</div>
+<p>Say out loud, in one sentence, why <code>elif usage &gt;= 500</code> needs no upper limit. If you cannot, reread the bug report.</p>
+</div>
+
+<h2 id="loops">Loops: total, count, and highest</h2>
+<p>Every list-processing answer has three parts: set up variables before the loop, update them inside it, and print after it.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Goal</th><th>Before the loop</th><th>Inside the loop</th></tr></thead>
+<tbody>
+<tr><td>Total</td><td><code>total = 0</code></td><td><code>total += value</code></td></tr>
+<tr><td>Count the items that meet a rule</td><td><code>count = 0</code></td><td><code>if value &gt;= limit:</code> then <code>count += 1</code></td></tr>
+<tr><td>Highest</td><td><code>highest = 0</code></td><td><code>if value &gt; highest:</code> then <code>highest = value</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>total += value</code> means the same as <code>total = total + value</code>.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 2</div>
+<h3>The 15-minute wait that vanished</h3>
+<p>A call center logs six wait times in minutes, and a wait of 10 minutes or more counts as long. One caller waited 15 minutes, but the manager's report says the longest wait was 9.</p>
+<pre><code>wait_times = [4, 12, 7, 15, 10, 9]
+
+long_waits = 0
+longest = 0
+
+for wait in wait_times:
+    if wait &gt;= 10:
+        long_waits += 1
+    elif wait &gt; longest:
+        longest = wait
+
+print(f"Longest wait: {longest} minutes")    # Longest wait: 9 minutes</code></pre>
+<p><strong>Find the bug before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p><code>elif</code> means "only if the test above failed". Every long wait passes the first test, so Python never asks whether it is also the longest. This is the utility bug in reverse: there, one decision was split into three, and here, two decisions were chained into one.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>A separate if for each job</h3>
+<p>Counting long waits and finding the longest are two jobs, so give each its own <code>if</code>. The corrected loop also keeps a running total, so all three patterns work in one pass.</p>
+<pre><code>wait_times = [4, 12, 7, 15, 10, 9]
+
+# Set up before the loop
+total_wait = 0
+long_waits = 0
+longest = 0
+
+# Update inside the loop
+for wait in wait_times:
+    total_wait += wait
+    if wait &gt;= 10:
+        long_waits += 1
+<span class="hl">    if wait &gt; longest:</span>
+        longest = wait
+
+# Print after the loop
+print(f"Total wait: {total_wait} minutes")
+print(f"Long waits: {long_waits}")
+print(f"Longest wait: {longest} minutes")</code></pre>
+<div class="out-label">Output</div>
+<pre><code>Total wait: 57 minutes
+Long waits: 3
+Longest wait: 15 minutes</code></pre>
+
+<p>Five checks work on any list:</p>
+<ul>
+<li><strong>Set up before the loop.</strong> A variable set to 0 inside the loop is erased on every pass.</li>
+<li><strong>Indent what repeats; un-indent what happens once.</strong> The <code>print</code> lines sit at the left margin, so they run once, after the loop.</li>
+<li><strong>Use a separate <code>if</code> for each thing you track.</strong> One wait can be both a long wait and the new longest, so these checks are not an <code>if</code> / <code>elif</code> pair.</li>
+<li><strong>Some items match no rule.</strong> A value in the middle changes no counter, so a counter often needs no <code>else</code>.</li>
+<li><strong>Let the loop do the math.</strong> Writing <code>total_wait = 57</code> because you added the numbers yourself is hard-coding, and it is not allowed.</li>
+</ul>
+
+<div class="callout pink">
+<div class="callout-title">Loop only</div>
+<p>Built-in shortcuts such as <code>sum()</code>, <code>max()</code>, and <code>min()</code> are not accepted on the exam. The total, every count, and the highest value must all come from your loop.</p>
+</div>
+
+<p>Starting <code>highest</code> at 0 works because these amounts are never negative. To find a lowest value, start from the first item instead, such as <code>lowest = wait_times[0]</code>.</p>
+
+<div class="callout">
+<div class="callout-title">🦆 Tell the duck</div>
+<p>Explain why <code>longest = 0</code> goes above the loop while <code>longest = wait</code> goes inside it.</p>
+</div>
+
+<h2 id="functions">Functions: write the rule once</h2>
+<p>A function packages one calculation behind a name, so you write the rule once and call it for every item.</p>
+<p><strong>Example.</strong> A shipper charges $1.50 per pound under 5 lb, $1.00 per pound from 5 lb through 19.99 lb, and $0.75 per pound at 20 lb or more.</p>
+<pre><code>def calculate_shipping(weight):      # weight is the parameter
+    if weight &gt;= 20:
+        rate = 0.75
+    elif weight &gt;= 5:
+        rate = 1.00
+    else:
+        rate = 1.50
+
+    cost = weight * rate
+    return cost                      # send the answer back</code></pre>
+
+<figure class="diagram">
+<div class="diagram-title">A call sends one value in, and return hands one answer back</div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="0 0 760 168" role="img" aria-label="The calling line sends 12 into the function as weight, and return sends 12.0 back to the calling line, where cost stores it">
+<defs>
+<marker id="call-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker>
+<marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow-on" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="d-box" x="24" y="12" width="276" height="144" rx="8"/>
+<text class="d-t d-b" x="40" y="40">The calling line</text>
+<text class="d-t d-m" x="40" y="68">cost = calculate_shipping(12)</text>
+<text class="d-q" x="40" y="128">cost now holds 12.0</text>
+<rect class="d-box" x="460" y="12" width="276" height="144" rx="8"/>
+<text class="d-t d-b" x="476" y="40">The function</text>
+<text class="d-t d-m" x="476" y="68">weight = 12</text>
+<text class="d-t d-m" x="476" y="88">rate = 1.00</text>
+<text class="d-t d-m" x="476" y="108">cost = 12.0</text>
+<text class="d-t d-m d-b" x="476" y="128">return cost</text>
+<path class="d-line" d="M300 60H460" marker-end="url(#call-arrow)"/>
+<text class="d-q" x="380" y="52" text-anchor="middle">12 goes in as weight</text>
+<path class="d-line on" d="M460 120H300" marker-end="url(#return-arrow)"/>
+<text class="d-t d-b" x="380" y="112" text-anchor="middle" style="font-size:11.5px">return sends 12.0 back</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>The calling line is where the answer lands, so that line must store it or use it.</figcaption>
+</figure>
+
+<div class="bug">
+<div class="bug-tag">Bug report 3</div>
+<h3>Four packages shipped for $0.00</h3>
+<p>The company ran this loop over four packages, and the report showed no shipping cost at all.</p>
+<pre><code>package_weights = [3, 12, 25, 8]
+total_shipping = 0
+
+for weight in package_weights:
+    calculate_shipping(weight)
+
+print(f"Total shipping: ${total_shipping:.2f}")    # Total shipping: $0.00</code></pre>
+<p><strong>Find the bug before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p>The function ran four times and returned four correct answers, and nobody caught them. A returned value disappears unless the calling line stores it or uses it.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Catch the answer</h3>
+<p>Store each answer in a variable, then add it to the running total. The function handles one package, and the loop supplies them one at a time.</p>
+<pre><code>package_weights = [3, 12, 25, 8]
+total_shipping = 0
+
+for weight in package_weights:
+<span class="hl">    cost = calculate_shipping(weight)</span>
+    print(f"Weight: {weight} lb   Shipping: ${cost:.2f}")
+<span class="hl">    total_shipping += cost</span>
+
+print(f"Total shipping: ${total_shipping:.2f}")</code></pre>
+<div class="out-label">Output</div>
+<pre><code>Weight: 3 lb   Shipping: $4.50
+Weight: 12 lb   Shipping: $12.00
+Weight: 25 lb   Shipping: $18.75
+Weight: 8 lb   Shipping: $8.00
+Total shipping: $43.25</code></pre>
+
+<p>Check five things on any function answer:</p>
+<ul>
+<li><strong>The parameter stands for one item.</strong> Inside the function, use <code>weight</code>. Never mention the list there.</li>
+<li><strong><code>return</code> hands the answer back; <code>print</code> only displays it.</strong> A function that prints but does not return gives the caller <code>None</code>, which cannot be added to a total.</li>
+<li><strong>Catch the returned value.</strong> <code>cost = calculate_shipping(weight)</code> stores the answer so you can print it and add it.</li>
+<li><strong>Define first, call later.</strong> Write the <code>def</code> above the loop, never inside it.</li>
+<li><strong>The total belongs to the loop.</strong> Set it to 0 before the loop, add to it inside, and print it after.</li>
+</ul>
+
+<div class="callout">
+<div class="callout-title">🦆 Tell the duck</div>
+<p>Explain what happens to the value after a function reaches <code>return</code>.</p>
+</div>
+
+<h3>Why a function is better than repeated code</h3>
+<p>Expect to explain this in a sentence or two. Three reasons are worth knowing:</p>
+<ul>
+<li><strong>One place to change.</strong> If a rate changes, you edit one function instead of every copy of the rule.</li>
+<li><strong>Consistency.</strong> Every item goes through identical logic, so no copy can drift or contain its own typo.</li>
+<li><strong>Readability.</strong> The loop shrinks to a few lines that say what happens, and the function can be checked with a single value.</li>
+</ul>
+
+<h2 id="tracing">Tracing: be the computer</h2>
+<p>Tracing means running the code on paper one line at a time and writing down each variable as it changes. It is how you check a handwritten answer without a computer.</p>
+
+<h3>Trace a loop with a table</h3>
+<p>Give each variable a column and each pass through the loop a row. This table traces the corrected wait-time loop above.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Pass</th><th class="num">wait</th><th class="num">total_wait</th><th class="num">long_waits</th><th class="num">longest</th></tr></thead>
+<tbody>
+<tr><td>Before the loop</td><td class="num">none yet</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+<tr><td>1</td><td class="num">4</td><td class="num">4</td><td class="num">0</td><td class="num">4</td></tr>
+<tr><td>2</td><td class="num">12</td><td class="num">16</td><td class="num">1</td><td class="num">12</td></tr>
+<tr><td>3</td><td class="num">7</td><td class="num">23</td><td class="num">1</td><td class="num">12</td></tr>
+<tr><td>4</td><td class="num">15</td><td class="num">38</td><td class="num">2</td><td class="num">15</td></tr>
+<tr><td>5</td><td class="num">10</td><td class="num">48</td><td class="num">3</td><td class="num">15</td></tr>
+<tr><td>6</td><td class="num">9</td><td class="num">57</td><td class="num">3</td><td class="num">15</td></tr>
+</tbody>
+</table>
+</div>
+<p>The last row holds the values the <code>print</code> lines display. Pass 5 is the boundary check: 10 counts as a long wait because the rule says "10 or more".</p>
+
+<h3>Trace a function call in four moves</h3>
+<p>Follow the line <code>cost = calculate_shipping(12)</code>:</p>
+<ol>
+<li>The call copies 12 into the parameter <code>weight</code>.</li>
+<li><code>12 &gt;= 20</code> is false, so Python moves on. <code>12 &gt;= 5</code> is true, so <code>rate = 1.00</code>.</li>
+<li><code>cost = 12 * 1.00</code>, which is 12.0.</li>
+<li><code>return cost</code> sends 12.0 back to the calling line, where it is stored in <code>cost</code>.</li>
+</ol>
+
+<h2 id="mistakes">Mistakes that cost points</h2>
+<p>These thirteen mistakes break the logic or the rules of the exam, so clear handwriting will not save them. Read each one, predict what goes wrong, then open it to check.</p>
+<div class="mistakes">
+<details><summary>Separate <code>if</code> statements for tiers</summary><div class="m-body"><p><strong>What goes wrong:</strong> Several can be true, and the last one overwrites the rest.</p><p><strong>Fix:</strong> One <code>if</code> / <code>elif</code> / <code>else</code> chain.</p></div></details>
+<details><summary>Lowest tier checked first with <code>&gt;=</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> Every large value stops at the first test.</p><p><strong>Fix:</strong> Check the highest tier first.</p></div></details>
+<details><summary><code>&gt;</code> where the rule says "or more"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The boundary value lands in the wrong tier.</p><p><strong>Fix:</strong> Translate the words, then test the boundary number.</p></div></details>
+<details><summary>Testing the original input when the rule names a calculated value</summary><div class="m-body"><p><strong>What goes wrong:</strong> The second decision uses the wrong number.</p><p><strong>Fix:</strong> Reread which value the rule names.</p></div></details>
+<details><summary>Using a value above the line that calculates it</summary><div class="m-body"><p><strong>What goes wrong:</strong> The program stops with an error.</p><p><strong>Fix:</strong> Order lines so each value exists before it is used.</p></div></details>
+<details><summary><code>total = 0</code> or <code>count = 0</code> inside the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> The variable resets on every pass.</p><p><strong>Fix:</strong> Set it up above the <code>for</code> line.</p></div></details>
+<details><summary>Final <code>print</code> indented inside the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> It prints on every pass.</p><p><strong>Fix:</strong> Un-indent it to the left margin.</p></div></details>
+<details><summary><code>sum()</code>, <code>max()</code>, or <code>min()</code> instead of the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> Built-in shortcuts are not accepted.</p><p><strong>Fix:</strong> Add, count, and compare inside the loop.</p></div></details>
+<details><summary><code>print</code> instead of <code>return</code> in a function</summary><div class="m-body"><p><strong>What goes wrong:</strong> The caller receives <code>None</code>.</p><p><strong>Fix:</strong> End the function with <code>return</code>.</p></div></details>
+<details><summary>Calling a function without storing the result</summary><div class="m-body"><p><strong>What goes wrong:</strong> The answer is thrown away.</p><p><strong>Fix:</strong> <code>amount = my_function(value)</code></p></div></details>
+<details><summary>Rewriting the rule inside the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> The function is never used.</p><p><strong>Fix:</strong> Call the function once per item.</p></div></details>
+<details><summary>Writing an answer you worked out in your head</summary><div class="m-body"><p><strong>What goes wrong:</strong> Hard-coded results are not allowed.</p><p><strong>Fix:</strong> Let the code calculate every result.</p></div></details>
+<details><summary><code>=</code> inside a condition</summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>=</code> assigns a value; it does not compare.</p><p><strong>Fix:</strong> Use <code>==</code> to compare.</p></div></details>
+</div>
+
+<h2 id="practice">Practice problems</h2>
+<p>Write every answer by hand, using only your note sheet. Then trace each answer with the given numbers to check your own work.</p>
+
+<h3>Warm-up: trace these</h3>
+<p>Each snippet contains one common mistake. Write the exact output, then name the mistake.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Warm-up A · Code trace</div>
+<pre><code>miles = 600
+
+if miles &gt;= 50:
+    rate = 0.40
+elif miles &gt;= 200:
+    rate = 0.50
+elif miles &gt;= 500:
+    rate = 0.60
+
+print(rate)</code></pre>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Warm-up B · Code trace</div>
+<pre><code>count = 0
+
+for n in [3, 8, 5, 10]:
+    count = 0
+    if n &gt;= 5:
+        count += 1
+
+print(count)</code></pre>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Warm-up C · Code trace</div>
+<pre><code>def add_tax(price):
+    total = price * 1.07
+    print(total)
+
+result = add_tax(100)
+print(result)</code></pre>
+</div>
+
+<h3>Practice 1: Travel reimbursement</h3>
+<div class="quiz-item">
+<div class="quiz-q">Practice 1 · Conditionals</div>
+<p>A company reimburses employee travel by trip mileage:</p>
+<ul>
+<li>Trips under 50 miles are not reimbursed.</li>
+<li>Trips from 50 through 199 miles are paid $0.40 per mile.</li>
+<li>Trips from 200 through 499 miles are paid $0.50 per mile.</li>
+<li>Trips of 500 miles or more are paid $0.60 per mile.</li>
+</ul>
+<p>The company also adds a $30 meal allowance if the mileage reimbursement is $100 or more.</p>
+<p>Assume:</p>
+<pre><code>miles = 240</code></pre>
+<p>Write Python code that:</p>
+<ol>
+<li>Determines the correct per-mile rate.</li>
+<li>Calculates the mileage reimbursement.</li>
+<li>Determines whether the $30 meal allowance applies.</li>
+<li>Calculates the total paid to the employee.</li>
+<li>Prints the mileage reimbursement, the meal allowance, and the total paid.</li>
+</ol>
+<p>When you finish, trace your code again with <code>miles = 120</code> and <code>miles = 200</code>.</p>
+</div>
+
+<h3>Practice 2: Delivery performance</h3>
+<div class="quiz-item">
+<div class="quiz-q">Practice 2 · Loops and conditionals</div>
+<p>A restaurant reviews six delivery times, in minutes:</p>
+<pre><code>delivery_minutes = [38, 52, 30, 61, 45, 27]</code></pre>
+<p>A delivery is <strong>late</strong> if it takes more than 45 minutes. It is <strong>express</strong> if it takes 30 minutes or less.</p>
+<p>Write Python code that uses a loop to:</p>
+<ol>
+<li>Calculate the total delivery minutes.</li>
+<li>Count the late deliveries.</li>
+<li>Count the express deliveries.</li>
+<li>Find the longest delivery time.</li>
+<li>Calculate the average delivery time.</li>
+<li>Print all five results.</li>
+</ol>
+<p>Your loop must do the work. Do not work out any result by hand, and do not use <code>sum()</code>, <code>max()</code>, or <code>min()</code>.</p>
+</div>
+
+<h3>Practice 3: Loyalty points</h3>
+<div class="quiz-item">
+<div class="quiz-q">Practice 3 · Functions, loops, and conditionals</div>
+<p>A coffee chain awards loyalty points by purchase size:</p>
+<ul>
+<li>Purchases below $20 earn 1 point per dollar.</li>
+<li>Purchases from $20 through $49.99 earn 2 points per dollar.</li>
+<li>Purchases of $50 or more earn 3 points per dollar.</li>
+</ul>
+<pre><code>purchases = [12, 35, 60, 48]</code></pre>
+<p><strong>Part A.</strong> Write a function named <code>calculate_points(amount)</code> that receives one purchase amount, determines the points per dollar, calculates the points, and returns them.</p>
+<p><strong>Part B.</strong> Write code that creates a variable for total points, loops through <code>purchases</code>, and calls <code>calculate_points()</code> for each one. Print each purchase amount with its points, add the points to the total, and print the total after the loop.</p>
+<p><strong>Part C.</strong> In one or two sentences, explain why the points rule belongs in a function instead of being rewritten for each purchase.</p>
+</div>
+
+<h3>Explain it</h3>
+<p>Answer each in one or two sentences.</p>
+<ol>
+<li>Why is a tiered rule written as one <code>if</code> / <code>elif</code> / <code>else</code> chain instead of separate <code>if</code> statements?</li>
+<li>Why must <code>total = 0</code> sit above the loop instead of inside it?</li>
+<li>What is the difference between <code>return</code> and <code>print</code> inside a function?</li>
+</ol>
+
+<h2 id="notes">Your note sheet and final check</h2>
+<p>Fill your one page with patterns and reminders, not finished programs, because the exam uses scenarios you have not seen.</p>
+
+<h3>What to put on the page</h3>
+<ul>
+<li>The <code>if</code> / <code>elif</code> / <code>else</code> skeleton, highest tier first</li>
+<li>The boundary-word table: below, or more, more than, or less, from X through Y</li>
+<li>The loop skeleton: set up, update, print after</li>
+<li>The three loop patterns: total, count, highest</li>
+<li>The function skeleton with <code>def</code>, a parameter, and <code>return</code></li>
+<li>A loop that calls a function and adds the result to a running total</li>
+<li>The print format: <code>print(f"Label: ${value:.2f}")</code></li>
+<li>Your own three most frequent mistakes from the practice problems</li>
+</ul>
+
+<h3>During the exam</h3>
+<ul>
+<li>Mark up the prompt before you write: inputs, rules, and values to print.</li>
+<li>Make indentation obvious. On paper, indentation is the only thing that shows what is inside a loop, a branch, or a function.</li>
+<li>Trace your finished answer with the numbers given in the question.</li>
+</ul>
+
+<h3>Readiness checklist</h3>
+<p class="check-count" id="check-count" aria-live="polite">Tick each item when it is true. Your ticks are saved in this browser.</p>
+<ul class="checklist">
+<li><label><input type="checkbox" id="chk-boundary"><span>I can turn "below", "or more", and "from X through Y" into the correct comparison</span></label></li>
+<li><label><input type="checkbox" id="chk-chain"><span>I can write a four-tier <code>if</code> / <code>elif</code> / <code>else</code> chain without looking at my notes</span></label></li>
+<li><label><input type="checkbox" id="chk-second"><span>I can make a second decision that uses a value I calculated</span></label></li>
+<li><label><input type="checkbox" id="chk-loop"><span>I can total, count, and find the highest value in one loop</span></label></li>
+<li><label><input type="checkbox" id="chk-setup"><span>I can explain why set-up lines go above the loop</span></label></li>
+<li><label><input type="checkbox" id="chk-def"><span>I can write a function with a parameter and a <code>return</code></span></label></li>
+<li><label><input type="checkbox" id="chk-call"><span>I can call a function inside a loop and add its result to a running total</span></label></li>
+<li><label><input type="checkbox" id="chk-trace"><span>I can build a trace table for a loop</span></label></li>
+<li><label><input type="checkbox" id="chk-why"><span>I can explain in two sentences why a function beats repeated code</span></label></li>
+<li><label><input type="checkbox" id="chk-practice"><span>I solved all three practice problems by hand and traced each answer</span></label></li>
+</ul>
+
+<div class="pn">
+<a href="week09_midterm.html"><div class="label">← Previous</div><div class="title">Module 9 — Exam Guide</div></a>
+<a class="next" href="week10_reading.html"><div class="label">Next →</div><div class="title">Module 10 — Lists &amp; Tuples</div></a>
+</div>
+</div></main>
+
+<footer>ISM2411 · PYTHON FOR BUSINESS · USF MUMA COLLEGE OF BUSINESS</footer>
+<script>
+/* readiness checklist — remember ticks per browser; the page works without storage */
+(function(){
+  var KEY='ism2411-w09-study-checklist';
+  var boxes=document.querySelectorAll('.checklist input[type=checkbox]');
+  var count=document.getElementById('check-count');
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
+  function update(){
+    var n=0;
+    boxes.forEach(function(b){if(b.checked)n++});
+    count.textContent=n+' of '+boxes.length+' ticked · saved in this browser';
+  }
+  boxes.forEach(function(b){
+    if(saved[b.id])b.checked=true;
+    b.addEventListener('change',function(){
+      saved[b.id]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}
+      update();
+    });
+  });
+  update();
+})();
+</script>
+<script id="ism-site-js" src="../assets/js/site.js"></script>
+</body>
+</html>

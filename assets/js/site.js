@@ -82,6 +82,7 @@
         <a href="${pg}week07_reading.html">Module 7 · Functions &amp; AI Literacy</a>
         <a href="${pg}week08_reading.html">Module 8 · Git &amp; GitHub</a>
         <a href="${pg}week09_midterm.html">Module 9 · Midterm</a>
+        <a href="${pg}week09_study_guide.html">Module 9 · Study Guide</a>
       </div>
     </div>
 
@@ -168,6 +169,7 @@
       <a href="${pg}week07_reading.html">Module 7 · Functions &amp; AI Literacy</a>
       <a href="${pg}week08_reading.html">Module 8 · Git &amp; GitHub</a>
       <a href="${pg}week09_midterm.html">Module 9 · Midterm</a>
+      <a href="${pg}week09_study_guide.html">Module 9 · Study Guide</a>
     </div>
     <div class="mob-section">
       <div class="mob-section-label">Unit 3 · Data Structures</div>
