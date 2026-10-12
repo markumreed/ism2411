@@ -118,6 +118,13 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div style="color:var(--muted);font-size:15px;">If you do not have one, create a github.com account using your USF email. Set a professional username — this will appear on your portfolio. Enable two-factor authentication while you are there.</div>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">VERIFICATION</p>
 <pre><code># You should be able to log in at github.com and see your profile page</code></pre>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">ONE-TIME SETUP: TELL GIT WHO YOU ARE</p>
+<pre><code># Run once per computer. Use the email on your GitHub account.
+# Without this, your first commit stops with "Author identity unknown".
+git config --global user.name "Your Name"
+git config --global user.email "you@usf.edu"
+
+git config --global --list     # confirm both are set</code></pre>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -127,6 +134,15 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 </div>
 <div style="font-weight:700;margin-bottom:6px;">New repo</div>
 <div style="color:var(--muted);font-size:15px;">On github.com, click New repository. Name it <code>ism2411</code>. Make it Public. Add a README. Clone it to your local machine.</div>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">ALREADY HAVE AN ism2411 FOLDER?</p>
+<pre><code># In Module 2 you made a folder named ism2411. Git will not clone into a
+# folder that already has files in it. You would see:
+#   fatal: destination path 'ism2411' already exists and is not an empty directory.
+#
+# Rename the old folder first. Nothing is deleted. Your earlier work is
+# still inside ism2411-old. Run this from the folder that contains it
+# (usually your home folder):
+mv ism2411 ism2411-old</code></pre>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">COMMANDS</p>
 <pre><code># Clone the repo to your local machine
 git clone https://github.com/YOURUSERNAME/ism2411.git
@@ -164,6 +180,14 @@ Thumbs.db
 <pre><code>git add .gitignore
 git commit -m "add .gitignore for Python and OS files"
 git push</code></pre>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">FIRST PUSH: SIGNING IN</p>
+<div style="color:var(--muted);font-size:15px;">Your first <code>git push</code> asks you to prove who you are. If a browser window opens, sign in to GitHub and approve. If the terminal asks for a username and password, type your GitHub username and paste a <strong>personal access token</strong> as the password. GitHub stopped accepting account passwords for Git in 2021.</div>
+<ol style="margin:8px 0 4px;padding-left:20px;color:var(--muted);font-size:15px;">
+<li>Go to github.com &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic).</li>
+<li>Click Generate new token (classic). Give it a name (for example, &ldquo;ISM2411 laptop&rdquo;) and check the <strong>repo</strong> scope.</li>
+<li>Click Generate token and copy it right away. It is shown only once.</li>
+<li>Paste it when Git asks for your password. Nothing appears on screen while you paste. That is normal.</li>
+</ol>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -176,6 +200,9 @@ git push</code></pre>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">COMMANDS</p>
 <pre><code># From inside ism2411/:
 mkdir week07
+
+# Replace the path with wherever your Module 7 file is. If you renamed
+# your old folder in Exercise 2, look inside it:  ls ../ism2411-old
 cp /path/to/your/functions.py week07/
 
 git status            # confirm Git sees the new file
@@ -198,7 +225,9 @@ git push</code></pre>
 <pre><code># ISM2411 — Python for Business
 
 **Name:** Your Name Here
-**Semester:** Fall 2025
+
+**Semester:** Fall 2026
+
 **Instructor:** [Course Instructor]
 
 ## About This Repo
@@ -228,18 +257,24 @@ python week07/functions.py
 </div>
 <div style="font-weight:700;margin-bottom:6px;">Three commits</div>
 <div style="color:var(--muted);font-size:15px;">Make at least 3 separate commits this module with descriptive messages. Each commit should be for a distinct, coherent change — not "update everything at once." Run <code>git log --oneline</code> to verify all three appear. Confirm each shows up on github.com.</div>
-<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">EXPECTED git log OUTPUT</p>
-<pre><code>a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">EXPECTED git log OUTPUT (NEWEST FIRST)</p>
+<pre><code>f7c2b3e add README with module listing and run instructions
+a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price
 9d4e1a0 add .gitignore for Python and OS files
-f7c2b3e add README with module listing and run instructions</code></pre>
+4b8d2c1 Initial commit</code></pre>
+<div style="color:var(--muted);font-size:15px;margin-top:8px;">Your hashes will be different. The bottom line, <code>Initial commit</code>, is the one GitHub made when you checked Add a README. It does not count toward your three.</div>
 </div>
 
 <h2>Reflection</h2>
 <div class="callout blue">
 <div class="callout-title">Self-Assessment</div>
-<p><strong>1.</strong> Run <code>git log --oneline</code> in your repo and copy the output here (as a comment in your submitted file). Look at your commit messages — if you were hiring someone and saw this history, what would it tell you about how they work?</p>
+<p><strong>Where your answers go:</strong> add a <code>## Reflection</code> section at the bottom of your <code>README.md</code> and answer all three questions there. Then commit and push it, the same way as every other change.</p>
+<p><strong>1.</strong> Run <code>git log --oneline</code> in your repo and paste the output into your answer. Put a line of three backticks above it and another below it so it shows as a code block. Look at your commit messages — if you were hiring someone and saw this history, what would it tell you about how they work?</p>
 <p><strong>2.</strong> Describe in 2–3 sentences how using Git changes (or should change) how you approach making edits to a working script. What would you do differently now compared to before this module?</p>
 <p><strong>3.</strong> What is one thing you would add to your .gitignore that is specific to your own machine or workflow that was not in the starter template? Why should that file not be tracked?</p>
+<pre><code>git add README.md
+git commit -m "add lab 8 reflection to README"
+git push</code></pre>
 </div>
 
 <h2>What to Submit to Canvas</h2>
@@ -248,9 +283,9 @@ f7c2b3e add README with module listing and run instructions</code></pre>
 <p><strong>Submit to Canvas:</strong> your GitHub repository URL only (e.g., <code>https://github.com/yourusername/ism2411</code>). Do not upload any files directly to Canvas.</p>
 <p>Your repo must show, visible on github.com:</p>
 <ol style="margin:8px 0 10px;padding-left:18px;">
-<li>A <code>.gitignore</code> file, committed before any other file.</li>
+<li>A <code>.gitignore</code> file, committed before any of your own files. (GitHub&rsquo;s <code>Initial commit</code> with the README comes first. That is expected.)</li>
 <li>A <code>week07/</code> folder containing your <code>functions.py</code> from Module 7.</li>
-<li>A <code>README.md</code> with a title, your name, semester, and a description of the repo.</li>
+<li>A <code>README.md</code> with a title, your name, semester, and a description of the repo, plus a <code>## Reflection</code> section answering all three Self-Assessment questions.</li>
 <li>At least 3 separate commits with descriptive messages in the repo's commit history (visible via <code>git log --oneline</code> or the GitHub &ldquo;commits&rdquo; view).</li>
 </ol>
 </div>
