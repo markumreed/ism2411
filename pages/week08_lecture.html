@@ -155,6 +155,36 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p>More than just backup, version control is how you communicate intent. A commit message like "fix off-by-one error in discount tier calculation" tells a future reader (often your future self) exactly what changed and why — much more useful than "updated file" or no message at all. In professional settings, commit messages are part of your code documentation.</p>
 <p>For data analytics work specifically, Git solves the reproducibility problem: if a colleague or regulator asks "what does this script do, and how has it changed?", a Git repository gives you a precise, auditable answer. Every line change, every date, every author is permanently recorded.</p>
 
+<h3>Setting up Git and GitHub</h3>
+<p>Git and GitHub are two different things, and you need both. <strong>Git</strong> is a program that runs on your laptop and records snapshots of your files. <strong>GitHub</strong> is a website that stores a copy of those snapshots online. Installing Git does not give you a GitHub account, and a GitHub account does not put Git on your laptop. Setup happens once per computer, and it takes about ten minutes.</p>
+
+<p><strong>Step 1: confirm Git is installed.</strong> Open a terminal and ask Git for its version. On a Mac, if Git is missing, this command opens a window offering to install the Command Line Developer Tools. Click Install. On Windows, download Git for Windows from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com</a> and accept the default options.</p>
+<pre><code>git --version        # any version 2.x is fine, e.g. git version 2.45.1</code></pre>
+
+<p><strong>Step 2: tell Git who you are.</strong> Every commit is stamped with an author name and email. Git refuses to commit until you set them, and stops with "Author identity unknown." Use the same email that is on your GitHub account, so GitHub can link your commits to your profile. The <code>--global</code> flag means "for every repo on this computer," so you only do this once.</p>
+<pre><code>git config --global user.name "Your Name"
+git config --global user.email "you@usf.edu"</code></pre>
+
+<p><strong>Step 3: set two sensible defaults.</strong> Older versions of Git name the first branch <code>master</code>. GitHub names it <code>main</code>, and so does every command on this site. Setting the default keeps the two in agreement. The second setting matters when Git needs you to type a message and you did not use <code>-m</code>. Without it, Git opens Vim, a terminal editor that many students cannot figure out how to exit. With it, Git opens VS Code instead. Save and close the tab, and Git continues.</p>
+<pre><code>git config --global init.defaultBranch main
+git config --global core.editor "code --wait"</code></pre>
+
+<p><strong>Step 4: check your settings.</strong> Git saves global settings in a small text file in your home folder named <code>.gitconfig</code>. You can list everything Git knows about you at any time. If a value is wrong, run the same <code>git config</code> command again with the right value. The new value replaces the old one.</p>
+<pre><code>git config --global --list
+# user.name=Your Name
+# user.email=you@usf.edu
+# init.defaultbranch=main
+# core.editor=code --wait</code></pre>
+
+<p><strong>Step 5: set up your GitHub account.</strong> Pick a professional username, because it appears in every repo URL you share with an employer. <code>jsmith-analytics</code> works. <code>xXcoderXx</code> does not. Turn on two-factor authentication under Settings &rarr; Password and authentication. GitHub requires it for accounts that push code.</p>
+
+<p><strong>Step 6: authenticate your first push.</strong> GitHub stopped accepting account passwords for Git in 2021. The first time you push, Git has to prove that you are you. On Windows, Git for Windows opens a browser window. Sign in and approve. On a Mac, the terminal asks for a username and password. Type your GitHub username, and paste a <strong>personal access token</strong> as the password. The lab walks through creating one. Either way, your computer saves the credential, so this happens only once.</p>
+
+<div class="callout">
+<div class="callout-title">Setup is per computer, not per repo</div>
+<p>Steps 1 through 6 happen once on each laptop you use. Commands like <code>git init</code> and <code>git remote add</code> happen once in each repo. If you change laptops halfway through the semester, repeat Steps 1 through 4 and 6 on the new one. Your GitHub account and repos stay the same.</p>
+</div>
+
 <h3>The four commands you need this semester</h3>
 <p>You only need four commands to submit assignments in this course. Memorize them in order — they always go in this sequence: initialize once, then for every change you make, stage it, commit it with a message, and push it to GitHub.</p>
 <p><code>git status</code> is your compass — run it before and after every other command to understand where you are. It tells you which files have changed, which are staged, and whether you are ahead of or behind GitHub.</p>
@@ -286,8 +316,34 @@ git add functions.py
 git commit -m "update discount logic"</code></pre>
 </div>
 
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 4 — "Author identity unknown"</div>
+<pre><code># Your first commit stops with:
+#   Author identity unknown
+#   *** Please tell me who you are.
+
+# Git does not know your name and email yet (Setup Step 2).
+# Fix: set them once, then run the commit again
+git config --global user.name "Your Name"
+git config --global user.email "you@usf.edu"
+git commit -m "add initial sales analysis script"</code></pre>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#f472b6;margin-bottom:4px;">ERROR 5 — "Password authentication is not supported"</div>
+<pre><code># git push asks for a password, you type your GitHub password, and get:
+#   remote: Support for password authentication was removed on August 13, 2021.
+#   fatal: Authentication failed
+
+# GitHub wants a personal access token, not your account password (Setup Step 6).
+# Fix: create a token on github.com (see the lab), run git push again,
+# and paste the token when Git asks for your password
+git push</code></pre>
+</div>
+
 <h2>Discussion Questions</h2>
 <ol>
+<li>Git asks for your name and email before your first commit, but GitHub asks you to prove who you are before your first push. Why are these two separate steps? What could go wrong if a commit's author email did not match your GitHub account?</li>
 <li>A colleague says "I just email my Python files back and forth with the team — what does Git add that email doesn't?" Make the case for Git in terms they would find compelling given their workflow.</li>
 <li>Why is "add calculate_tax function" a better commit message than "update file"? What information does each version preserve, and how does that matter in a team context 6 months from now?</li>
 <li>What should and should not go in a .gitignore? Give three examples of each, with reasoning.</li>

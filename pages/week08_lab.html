@@ -70,6 +70,22 @@ pre code { background: none; padding: 0; border: 0; color: inherit; }
 .callout.pink .callout-title { color: #f472b6; }
 .callout.purple { border-left-color: #c084fc; }
 .callout.purple .callout-title { color: #c084fc; }
+.hint { margin-top: 10px; padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; }
+.hint summary { cursor: pointer; user-select: none; list-style: none; font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--accent); }
+.hint summary::-webkit-details-marker { display: none; }
+.hint summary::before { content: '▸ '; }
+.hint[open] summary::before { content: '▾ '; }
+.hint p, .hint li { font-size: 15px; color: var(--muted); }
+.hint p { margin: 10px 0 2px; }
+.hint ul, .hint ol { margin: 8px 0 2px; }
+.hint pre { margin: 10px 0 2px; }
+.fixes { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14.5px; }
+.fixes th { text-align: left; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); padding: 8px 10px; border-bottom: 1px solid var(--border2); }
+.fixes td { vertical-align: top; padding: 10px; border-bottom: 1px solid var(--border); color: var(--muted); }
+.fixes td:first-child { width: 34%; }
+.fixes td:first-child code { color: #f472b6; white-space: normal; word-break: break-word; }
+.checklist { list-style: none; padding-left: 0; }
+.checklist li::before { content: '☐  '; color: var(--accent); }
 .pn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 60px; }
 .pn a { display: block; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: background .15s, transform .15s; }
 .pn a:hover { background: var(--bg3); transform: translateY(-1px); }
@@ -86,6 +102,9 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
   .sched-row{grid-template-columns:80px 1fr;font-size:12.5px}
   .sched-row span:last-child{display:none}
   .concept-grid{grid-template-columns:1fr}
+  .fixes,.fixes tbody,.fixes tr,.fixes td{display:block;width:100%}
+  .fixes thead{display:none}
+  .fixes td:first-child{width:100%;padding-bottom:2px;border-bottom:0}
 }
 </style>
 </head>
@@ -107,6 +126,33 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <a href="week08_lab.html" class="weekjump-link current">Lab</a>
 </div>
 
+<h2>Before You Start</h2>
+<p>This lab sets up the GitHub workflow you will use for every remaining assignment. Plan on about an hour. The first push is the slow part, and after this lab each submission takes a couple of minutes. Read <a href="week08_lecture.html">Setting up Git and GitHub</a> in the lecture first. It explains why each setup step exists.</p>
+
+<div class="callout blue">
+<div class="callout-title">The big picture</div>
+<p>You make an empty repo on github.com, <strong>clone</strong> it to your laptop, add files, <strong>commit</strong> them (a snapshot saved on your laptop), and <strong>push</strong> them (send the snapshots to GitHub). Then you submit the repo's URL to Canvas. Your instructor grades what is on github.com, not what is on your laptop.</p>
+</div>
+
+<h3>What you need</h3>
+<ul class="checklist">
+<li>A laptop with Git installed. You check this in Exercise 1.</li>
+<li>Your USF email, for the GitHub account.</li>
+<li>Your Module 7 <code>functions.py</code>. If you can't find it, download it from your Module 7 submission in Canvas.</li>
+<li>VS Code, which you installed during <a href="precourse.html">Pre-Course Setup</a>.</li>
+</ul>
+
+<h3>Where to type the commands</h3>
+<p>Open VS Code, then choose <strong>View &rarr; Terminal</strong>. The terminal opens at the bottom of the window. Every command in this lab goes there. Mac users can use the Terminal app instead. Windows users can use PowerShell or Git Bash. All the commands in this lab work in any of them.</p>
+
+<h3>How to read the command boxes</h3>
+<ul>
+<li><strong>Type one line at a time</strong>, and press Enter after each one.</li>
+<li><strong>Lines that start with <code>#</code> are notes for you.</strong> Do not type them. The same goes for anything after a <code>#</code> at the end of a line.</li>
+<li><strong>Replace the placeholders.</strong> <code>YOURUSERNAME</code>, <code>Your Name</code>, and <code>you@usf.edu</code> stand for your own information. Leave the quotation marks in place.</li>
+<li><strong>Lost? Run <code>git status</code>.</strong> It changes nothing. It tells you which folder you are in, what has changed, and whether GitHub is behind your laptop.</li>
+</ul>
+
 <h2>Exercises</h2>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -118,13 +164,35 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div style="color:var(--muted);font-size:15px;">If you do not have one, create a github.com account using your USF email. Set a professional username — this will appear on your portfolio. Enable two-factor authentication while you are there.</div>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">VERIFICATION</p>
 <pre><code># You should be able to log in at github.com and see your profile page</code></pre>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">CHECK THAT GIT IS INSTALLED</p>
+<pre><code>git --version     # you should see something like: git version 2.45.1</code></pre>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">ONE-TIME SETUP: TELL GIT WHO YOU ARE</p>
 <pre><code># Run once per computer. Use the email on your GitHub account.
 # Without this, your first commit stops with "Author identity unknown".
 git config --global user.name "Your Name"
 git config --global user.email "you@usf.edu"
+git config --global init.defaultBranch main
+git config --global core.editor "code --wait"
 
-git config --global --list     # confirm both are set</code></pre>
+git config --global --list     # confirm all four are set</code></pre>
+<details class="hint"><summary>Hint: "git: command not found" or "'git' is not recognized"</summary>
+<p>Git is not installed yet, or your terminal opened before you installed it.</p>
+<ul>
+<li><strong>Mac:</strong> run <code>xcode-select --install</code>, click Install in the window that appears, and wait for it to finish.</li>
+<li><strong>Windows:</strong> download Git for Windows from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com/downloads</a> and keep every default option in the installer.</li>
+</ul>
+<p>Then <strong>quit and reopen VS Code</strong>, or your terminal app, and run <code>git --version</code> again. A terminal that was already open will not find the new install.</p>
+</details>
+<details class="hint"><summary>Hint: I already have a personal GitHub account</summary>
+<p>Keep it. You don't need a second account. Add your USF email under GitHub &rarr; Settings &rarr; Emails. Make sure the <code>user.email</code> you give Git is one of the emails listed there, so your commits show up under your name.</p>
+</details>
+<details class="hint"><summary>Hint: setting up two-factor authentication</summary>
+<p>Use an authenticator app on your phone, such as Google Authenticator, Microsoft Authenticator, or Duo Mobile, to scan the QR code GitHub shows you. <strong>Download or screenshot the recovery codes</strong> when GitHub offers them. If you lose your phone, those codes are the only way back into your account.</p>
+</details>
+<details class="hint"><summary>Hint: what do the last two config lines do?</summary>
+<p><code>init.defaultBranch main</code> makes Git name the first branch <code>main</code>, which matches GitHub. <code>core.editor "code --wait"</code> makes Git open VS Code when it needs you to type a message, instead of an editor you can't exit. The lecture explains both.</p>
+<p><strong>Mac users:</strong> the editor setting needs the <code>code</code> command. Test it by typing <code>code --version</code>. If you see "command not found," open VS Code, press <strong>Cmd+Shift+P</strong>, type <code>shell command</code>, and choose <strong>Install 'code' command in PATH</strong>. Windows installs this command automatically. If you ever end up in the other editor anyway, the Troubleshooting table below shows how to get out.</p>
+</details>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -144,14 +212,35 @@ git config --global --list     # confirm both are set</code></pre>
 # (usually your home folder):
 mv ism2411 ism2411-old</code></pre>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">COMMANDS</p>
-<pre><code># Clone the repo to your local machine
+<pre><code># Go to your home folder first, so the repo lands somewhere easy to find
+cd ~
+
+# Clone the repo to your local machine
 git clone https://github.com/YOURUSERNAME/ism2411.git
 
 # Navigate into it
 cd ism2411
 
 # Verify Git is tracking it
-git status</code></pre>
+git status       # should say: On branch main ... nothing to commit, working tree clean
+
+# Open the repo in VS Code (or use File → Open Folder and pick ism2411)
+code .</code></pre>
+<details class="hint"><summary>Hint: which boxes do I check on the New repository page?</summary>
+<ul>
+<li><strong>Repository name:</strong> <code>ism2411</code>, all lowercase.</li>
+<li><strong>Public</strong>. Your instructor can't grade a private repo.</li>
+<li><strong>Add a README file:</strong> check it. This gives the repo its first commit, so you can clone it.</li>
+<li><strong>Add .gitignore:</strong> leave it at <em>None</em>. You write your own in Exercise 3.</li>
+<li><strong>License:</strong> leave it at <em>None</em>.</li>
+</ul>
+</details>
+<details class="hint"><summary>Hint: where do I get the URL for git clone?</summary>
+<p>On your repo's page on github.com, click the green <strong>Code</strong> button, make sure the <strong>HTTPS</strong> tab is selected, and click the copy icon. The URL ends in <code>.git</code>. Paste it after <code>git clone</code>.</p>
+</details>
+<details class="hint"><summary>Hint: don't clone inside another repo</summary>
+<p>Run <code>git clone</code> from your home folder (<code>cd ~</code>), not from inside <code>ism2411-old</code> or any other project folder. If you're not sure where you are, <code>pwd</code> prints the folder your terminal is in. Every command in Exercises 3 through 6 must be run from inside the new <code>ism2411</code> folder.</p>
+</details>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -188,6 +277,23 @@ git push</code></pre>
 <li>Click Generate token and copy it right away. It is shown only once.</li>
 <li>Paste it when Git asks for your password. Nothing appears on screen while you paste. That is normal.</li>
 </ol>
+<details class="hint"><summary>Hint: how do I create a file that starts with a dot?</summary>
+<p>Use VS Code, not Finder or Notepad. In the Explorer panel on the left, hover over the <code>ISM2411</code> heading, click the <strong>New File</strong> icon, and type <code>.gitignore</code> exactly: a dot first, then no extension. Paste in the starter content and <strong>save with Cmd+S or Ctrl+S</strong>.</p>
+<ul>
+<li>The file must sit at the top level of <code>ism2411/</code>, next to <code>README.md</code>, not inside a subfolder.</li>
+<li>Notepad on Windows secretly saves it as <code>.gitignore.txt</code>, and then Git ignores it. Run <code>ls -a</code> (or <code>ls -Force</code> in PowerShell) to see the real name.</li>
+<li>Mac Finder hides files that start with a dot. The file is there. Press <strong>Cmd+Shift+.</strong> in Finder to show hidden files.</li>
+</ul>
+</details>
+<details class="hint"><summary>Hint: git status shows nothing after I made the file</summary>
+<p>The file probably isn't saved yet. In VS Code, an unsaved file has a white dot on its tab instead of an ×. Save it, then run <code>git status</code> again. You should see <code>.gitignore</code> listed under "Untracked files".</p>
+</details>
+<details class="hint"><summary>Hint: setting the token's expiration date</summary>
+<p>GitHub sets new tokens to expire in 30 days. That date falls before the end of the semester. When a token expires, <code>git push</code> fails with "Authentication failed". To avoid that, open the <strong>Expiration</strong> menu and choose <strong>Custom</strong>, then pick a date after finals week. Keep the token somewhere private, such as a password manager. Never paste it into a file in your repo.</p>
+</details>
+<details class="hint"><summary>Hint: how do I paste into the terminal?</summary>
+<p>In VS Code's terminal, press <strong>Cmd+V</strong> on a Mac or <strong>Ctrl+V</strong> on Windows. In Git Bash, right-click and choose Paste, or press <strong>Shift+Insert</strong>. Paste once and press Enter. Nothing appears on screen while you paste, so don't paste a second time.</p>
+</details>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -212,6 +318,16 @@ git push</code></pre>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">VERIFICATION</p>
 <pre><code># Visit https://github.com/YOURUSERNAME/ism2411
 # You should see the week07/ folder and your commit message</code></pre>
+<details class="hint"><summary>Hint: I don't know the path to my functions.py</summary>
+<p>Type <code>cp </code> (with a space after it), then drag <code>functions.py</code> from Finder or File Explorer into the terminal window. The terminal fills in the full path for you. Then type a space and <code>week07/</code>, and press Enter.</p>
+<p>You can also skip the terminal for this step. Drag the file into the <code>week07</code> folder in VS Code's Explorer panel, then continue with <code>git status</code>.</p>
+</details>
+<details class="hint"><summary>Hint: I can't find my Module 7 file at all</summary>
+<p>Open Canvas, go to your Module 7 lab submission, and download the <code>functions.py</code> you uploaded. Move it into <code>ism2411/week07/</code>. Make sure the file is named exactly <code>functions.py</code>, not <code>functions (1).py</code> or <code>functions.py.txt</code>.</p>
+</details>
+<details class="hint"><summary>Hint: git status doesn't show week07/</summary>
+<p>Git ignores empty folders. If the copy did not work, <code>week07/</code> is empty and Git acts as if it isn't there. Run <code>ls week07</code>. If <code>functions.py</code> is not listed, repeat the copy step.</p>
+</details>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -248,6 +364,17 @@ Each script is standalone. Open a terminal and run:
 ```
 python week07/functions.py
 ```</code></pre>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">COMMIT COMMANDS</p>
+<pre><code>git add README.md
+git commit -m "add README with module listing and run instructions"
+git push</code></pre>
+<details class="hint"><summary>Hint: edit the README in VS Code, not on github.com</summary>
+<p>GitHub lets you edit files on the website. Don't do that in this lab. An edit on the website creates a commit that your laptop doesn't have, and your next <code>git push</code> is rejected. If that already happened, run <code>git pull</code>, then <code>git push</code>. The Troubleshooting table covers this.</p>
+</details>
+<details class="hint"><summary>Hint: what goes in the README?</summary>
+<p>Open <code>README.md</code> in VS Code. GitHub already put a single line in it. Select everything, delete it, and paste the template above. Then replace <code>Your Name Here</code> and <code>[Course Instructor]</code> with real names. Only list folders that actually exist in your repo. If you don't have <code>week05/</code> or <code>week06/</code> folders, delete those lines.</p>
+<p>To see the formatted version while you type, press <strong>Cmd+Shift+V</strong> on a Mac or <strong>Ctrl+Shift+V</strong> on Windows. VS Code opens a preview.</p>
+</details>
 </div>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
@@ -263,6 +390,37 @@ a3f1b2c add module 7 functions: calculate_tax, apply_discount, final_price
 9d4e1a0 add .gitignore for Python and OS files
 4b8d2c1 Initial commit</code></pre>
 <div style="color:var(--muted);font-size:15px;margin-top:8px;">Your hashes will be different. The bottom line, <code>Initial commit</code>, is the one GitHub made when you checked Add a README. It does not count toward your three.</div>
+<details class="hint"><summary>Hint: do I need to make new commits for this exercise?</summary>
+<p>Probably not. If you finished Exercises 3, 4, and 5, you already have three commits: <code>.gitignore</code>, <code>week07/</code>, and the README. This exercise checks that they are there and that each one has a clear message.</p>
+</details>
+<details class="hint"><summary>Hint: git log shows my commits, but github.com doesn't</summary>
+<p>You committed but didn't push. Run <code>git status</code>. If it says <code>Your branch is ahead of 'origin/main' by 2 commits</code>, run <code>git push</code> and refresh the page on github.com.</p>
+</details>
+<details class="hint"><summary>Hint: git log filled the screen and I can't type</summary>
+<p>Git is showing the log one page at a time. Press <strong>q</strong> to quit and return to the prompt.</p>
+</details>
+</div>
+
+<h2>Troubleshooting</h2>
+<p>Read the last line of an error first. It usually says what went wrong. Find it in the left column below.</p>
+<table class="fixes">
+<thead><tr><th>You see</th><th>What it means and how to fix it</th></tr></thead>
+<tbody>
+<tr><td><code>fatal: not a git repository</code></td><td>Your terminal is not inside the <code>ism2411</code> folder. Run <code>cd ~/ism2411</code>, then try again. <code>pwd</code> shows where you are.</td></tr>
+<tr><td><code>Author identity unknown</code></td><td>Git doesn't know your name and email yet. Run the two <code>git config --global user...</code> lines from Exercise 1, then commit again.</td></tr>
+<tr><td><code>Support for password authentication was removed</code></td><td>You typed your GitHub password. Git needs a personal access token instead. Make one (Exercise 3), run <code>git push</code> again, and paste the token as the password.</td></tr>
+<tr><td><code>Authentication failed</code> or <code>403</code> or <code>Permission denied</code></td><td>The token was typed wrong, has expired, or is missing the <strong>repo</strong> scope. Or your computer saved the wrong login. Clear the saved login, then push again and paste a fresh token.<br><strong>Mac:</strong> open Keychain Access, search <code>github.com</code>, and delete the entry.<br><strong>Windows:</strong> open Credential Manager &rarr; Windows Credentials, and remove <code>git:https://github.com</code>.</td></tr>
+<tr><td><code>! [rejected] main -&gt; main (fetch first)</code></td><td>GitHub has a commit your laptop doesn't have, usually from editing a file on the website. Run <code>git pull</code>, then <code>git push</code>. If VS Code opens with a merge message, save and close that tab.</td></tr>
+<tr><td><code>nothing added to commit but untracked files present</code></td><td>You skipped <code>git add</code>. Run <code>git add</code> with the file or folder name, then commit again.</td></tr>
+<tr><td><code>nothing to commit, working tree clean</code></td><td>Git sees no changes. Either the change is already committed, or the file isn't saved. Save in VS Code and run <code>git status</code>.</td></tr>
+<tr><td><code>fatal: destination path 'ism2411' already exists</code></td><td>An <code>ism2411</code> folder is already there. Rename the old one with <code>mv ism2411 ism2411-old</code> (Exercise 2), then clone again.</td></tr>
+<tr><td>The terminal fills with <code>~</code> lines and won't let you type normally</td><td>You ran <code>git commit</code> without <code>-m</code>, and Git opened the Vim editor. Press <strong>Esc</strong>, type <code>:q!</code>, and press Enter to get out. Then commit again with <code>-m "your message"</code>. To keep it from happening again, run the <code>core.editor</code> line from Exercise 1.</td></tr>
+<tr><td>The terminal shows <code>(END)</code> or a <code>:</code> at the bottom</td><td>Git is showing long output one page at a time. Press <strong>q</strong> to quit.</td></tr>
+</tbody>
+</table>
+<div class="callout pink">
+<div class="callout-title">Still stuck?</div>
+<p>Copy three things: the exact command you ran, the full error message, and the output of <code>git status</code>. Paste them as text, not a screenshot. Post them to the Canvas discussion board, or bring them to office hours. With those three things, most Git problems take two minutes to fix. Never share your personal access token, not even with your instructor.</p>
 </div>
 
 <h2>Reflection</h2>
@@ -288,6 +446,19 @@ git push</code></pre>
 <li>A <code>README.md</code> with a title, your name, semester, and a description of the repo, plus a <code>## Reflection</code> section answering all three Self-Assessment questions.</li>
 <li>At least 3 separate commits with descriptive messages in the repo's commit history (visible via <code>git log --oneline</code> or the GitHub &ldquo;commits&rdquo; view).</li>
 </ol>
+</div>
+
+<div class="callout green">
+<div class="callout-title">Check before you submit</div>
+<p>Your instructor sees exactly what a stranger sees. Check your repo the same way:</p>
+<ul class="checklist">
+<li>Open a private or incognito browser window and go to <code>https://github.com/YOURUSERNAME/ism2411</code>. If you get a 404 page, the repo is private or the URL is wrong. To make it public, go to Settings &rarr; General &rarr; Danger Zone &rarr; Change visibility.</li>
+<li>The file list shows <code>.gitignore</code>, <code>README.md</code>, and <code>week07/</code>. Click <code>week07/</code> to make sure <code>functions.py</code> is inside it.</li>
+<li>The README shows at the bottom of the page with your name and a Reflection section.</li>
+<li>Click the commit count (the clock icon above the file list). You should see at least three commits besides <code>Initial commit</code>.</li>
+<li>Run <code>git status</code> on your laptop. It should say <code>Your branch is up to date with 'origin/main'</code>. If it says "ahead", run <code>git push</code>.</li>
+<li>Copy the URL from your browser's address bar on the repo's main page, and paste it into Canvas. Don't use the link to a single file.</li>
+</ul>
 </div>
 
 <div class="pn">
