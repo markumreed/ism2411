@@ -157,6 +157,15 @@ footer {
   text-align: center; font-family: var(--mono); font-size: 11px;
   color: var(--dim); letter-spacing: .08em; margin-top: 60px;
 }
+.hint { margin-top: 10px; padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; }
+.hint summary { cursor: pointer; user-select: none; list-style: none; font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--accent); }
+.hint summary::-webkit-details-marker { display: none; }
+.hint summary::before { content: '▸ '; }
+.hint[open] summary::before { content: '▾ '; }
+.hint p, .hint li { font-size: 15px; color: var(--muted); }
+.hint p { margin: 10px 0 2px; }
+.hint ul, .hint ol { margin: 8px 0 2px; }
+.hint pre { margin: 10px 0 2px; }
 /* ism-mobile */
 @media(max-width:600px){
   .pn{grid-template-columns:1fr}
@@ -185,6 +194,27 @@ footer {
 <a href="week13_reading.html" class="weekjump-link">Reading</a>
 <a href="week13_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week13_lab.html" class="weekjump-link current">Lab</a>
+</div>
+
+<h2 id="repo-setup">Before You Start: Set Up This Lab&rsquo;s Repo</h2>
+
+<p>This lab gets its own GitHub repo, <code>ism2411-lab13</code>. The steps are the same for every lab from Lab 11 on. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup review</a> explains each one and has hints for the usual errors.</p>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP</div>
+<div style="font-weight:700;margin-bottom:6px;">Set up <code>ism2411-lab13</code></div>
+<div style="color:var(--muted);font-size:15px;">On github.com, make a new <strong>Public</strong> repo named <code>ism2411-lab13</code> and check <strong>Add a README file</strong>. Then, in VS Code&rsquo;s terminal:</div>
+<pre><code>cd ~
+git clone https://github.com/YOURUSERNAME/ism2411-lab13.git
+cd ism2411-lab13
+cp ~/ism2411/.gitignore .
+git add .gitignore
+git commit -m "add .gitignore for Python and OS files"
+git push
+mkdir data
+code .</code></pre>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">Replace the line in <code>README.md</code> with a title, <code># ISM2411 Lab 13 — First DataFrame — Retail Sales Explorer</code>, your name, and the command that runs your work. Commit and push it. Put <code>retail_sales.csv</code> in the <code>data</code> folder, and make <code>explore.py</code> or <code>explore.ipynb</code> at the top level, so <code>data/retail_sales.csv</code> is found.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><code>pwd</code> should end in <code>/ism2411-lab13</code>, and <code>git remote -v</code> should show <code>ism2411-lab13.git</code>. Commit and push after each exercise or two.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -278,7 +308,7 @@ footer {
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Push <code>explore.py</code> (or <code>explore.ipynb</code>) and the <code>data/explored.csv</code> it produces into a <code>module13/</code> folder in your <code>ism2411</code> repo, with a commit message describing the change. The file must include Exercises 1–8 and answer all 3 Self-Assessment questions in a comment block at the top. Your script must run from top to bottom without errors. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Push <code>explore.py</code> (or <code>explore.ipynb</code>) and the <code>data/explored.csv</code> it produces to your <code>ism2411-lab13</code> repo, with the script or notebook at the top level and the CSV files in <code>data/</code>, and commit messages describing each change. The file must include Exercises 1–8 and answer all 3 Self-Assessment questions in a comment block at the top. Your script must run from top to bottom without errors. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
 </div>
 
 <div class="pn">
