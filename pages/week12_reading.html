@@ -463,7 +463,7 @@ with open("sales.csv", "r") as f:
         product, price, qty = row
         revenue = price * qty
         print(product, revenue)</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">csv.reader returns all values as strings. Multiplying two strings produces string repetition, not arithmetic. Fix: convert types before computing: <code>revenue = float(price) * int(qty)</code>.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">csv.reader returns all values as strings, and Python cannot multiply two strings: <code>price * qty</code> stops with <code>TypeError: can't multiply sequence by non-int of type 'str'</code>. Fix: convert types before computing: <code>revenue = float(price) * int(qty)</code>. The loop also reads the header row first, so add <code>next(reader)</code> before it, or <code>float("price")</code> raises a <code>ValueError</code>.</div></details>
 </div>
 
 <div class="pn">

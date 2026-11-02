@@ -292,7 +292,7 @@ open("file.csv", "r", encoding="utf-8")      # read with explicit encoding</code
 
 <h3>Reading a CSV with the csv module</h3>
 <p>Don't parse commas by hand — the csv module handles quoted strings, escaped commas, and all the edge cases. A cell that contains a comma (like an address: "123 Main St, Suite 4") would break a naive <code>line.split(",")</code> approach. The csv module reads the file format correctly per the CSV specification.</p>
-<p><code>csv.reader(f)</code> returns an iterator — each iteration gives you one row as a list of strings. All values are strings regardless of what they look like; you must convert to <code>int</code> or <code>float</code> yourself when doing arithmetic. This is the most common csv bug: multiplying two strings gives string repetition, not a number.</p>
+<p><code>csv.reader(f)</code> returns an iterator — each iteration gives you one row as a list of strings. All values are strings regardless of what they look like; you must convert to <code>int</code> or <code>float</code> yourself when doing arithmetic. This is the most common csv bug: multiplying two of those strings, such as <code>"9.99" * "50"</code>, stops with a <code>TypeError</code> instead of giving a number.</p>
 <pre><code>import csv
 
 with open("sales.csv", "r") as f:
@@ -381,7 +381,7 @@ print(f"Wrote {len(high_value)} / {len(orders)} orders to cleaned.csv")</code></
 <h2>Common Errors</h2>
 
 <h3>TypeError when computing from CSV values</h3>
-<p>Every value from <code>csv.reader</code> is a string. Multiplying strings does not do arithmetic — it repeats them. Convert before computing.</p>
+<p>Every value from <code>csv.reader</code> is a string, and Python cannot multiply two strings: it stops with <code>TypeError: can't multiply sequence by non-int of type 'str'</code>. Convert before computing.</p>
 <pre><code># WRONG — "9.99" * "50" raises TypeError
 revenue = row[1] * row[2]
 
