@@ -281,7 +281,8 @@ not_south = df[~(df["region"] == "South")]</code></pre>
 df.sort_values(["region", "revenue"], ascending=[True, False])</code></pre>
 
 <h2>Live Coding Walkthrough</h2>
-<p>This is the complete script we build together during class. Run it cell by cell in Jupyter or as a single Python file.</p>
+<p>This is the complete script we build together during class. Run it cell by cell in Jupyter or as a single Python file. It reads <code>data/retail_sales.csv</code>, the same file Lab 13 uses.</p>
+<div style="margin:10px 0 14px;"><a href="../assets/downloads/retail_sales.csv" download="retail_sales.csv" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:7px 14px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;text-decoration:none;">&#x2B07; Download retail_sales.csv</a></div>
 <pre><code>import pandas as pd
 
 # ── Step 1: Load ──────────────────────────────────────────────
@@ -335,8 +336,8 @@ df = pd.read_csv("data/retail_sales.csv")
 import os
 print(os.getcwd())  # see where Python thinks you are</code></pre>
 
-<h3>Error 3: AttributeError after sorting</h3>
-<pre><code># WRONG — sort_values returns a new DataFrame; you can't chain without assigning
+<h3>Error 3: Sorting without assigning (no error, wrong output)</h3>
+<pre><code># WRONG — sort_values returns a new DataFrame and leaves df unchanged
 df.sort_values("revenue", ascending=False)
 print(df.head())  # df is still unsorted!
 

@@ -313,7 +313,7 @@ footer {
 </div>
 
 <h2>Business Scenario</h2>
-<p>Your company's sales team exports monthly data from a legacy order management system. The export has 4,800 rows and the following problems: the <code>Price</code> column stores values as strings like <code>"$1,200.00"</code>; the <code>Order Date</code> column has entries in three different date formats (<code>2024-01-15</code>, <code>01/15/2024</code>, and <code>January 15 2024</code>); 7% of rows are missing a <code>Customer ID</code>; and column names have spaces and capital letters. Here is the cleaning script you would write:</p>
+<p>Your company's sales team exports monthly data from a legacy order management system. The export (<code>messy_sales.csv</code>, the file you clean in Lab 14) has 4,800 rows and the following problems: the <code>Unit Price</code> column stores values as strings like <code>"$1,200.00"</code>; most <code>Order Date</code> entries look like <code>2025-01-15</code>, but some were typed as <code>01/15/2025</code> or <code>January 15 2025</code>, and a few say <code>TBD</code>; some rows are missing an <code>Order ID</code> or an <code>Order Date</code>; 7% of rows are missing a <code>Customer ID</code>; some orders were exported twice; and column names have spaces and capital letters. Here is the cleaning script you would write:</p>
 
 <pre><code>import pandas as pd
 
@@ -327,17 +327,21 @@ df.columns = df.columns.str.lower().str.replace(" ", "_")
 print(df.isnull().sum())
 
 # Step 3: Drop rows missing essential identifiers
-df = df.dropna(subset=["customer_id"])  # drop if customer_id is null
+df = df.dropna(subset=["order_id", "order_date"])  # no way to place these orders
+# customer_id is missing in 7% of rows, but those sales still happened: keep them
 
-# Step 4: Fill numeric columns with column mean
-df["quantity"] = df["quantity"].fillna(df["quantity"].mean())
+# Step 4: Fill numeric columns with column mean, then make them whole numbers
+df["quantity_sold"] = df["quantity_sold"].fillna(df["quantity_sold"].mean())
+df["quantity_sold"] = df["quantity_sold"].astype(int)
 
 # Step 5: Fix price — strip "$" and "," then convert to float
-df["price"] = df["price"].str.replace("$", "", regex=False)
-df["price"] = df["price"].str.replace(",", "", regex=False)
-df["price"] = df["price"].astype(float)
+df["unit_price"] = df["unit_price"].str.replace("$", "", regex=False)
+df["unit_price"] = df["unit_price"].str.replace(",", "", regex=False)
+df["unit_price"] = df["unit_price"].astype(float)
 
-# Step 6: Parse dates — pandas handles mixed formats with errors='coerce'
+# Step 6: Parse dates — errors="coerce" turns any date it can't read into NaT.
+# pandas guesses ONE format from the first row, so 01/15/2025-style entries
+# become NaT too, along with junk like "TBD". Always count them.
 df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
 print(f"Bad dates: {df['order_date'].isnull().sum()}")  # how many failed?
 
@@ -345,10 +349,13 @@ print(f"Bad dates: {df['order_date'].isnull().sum()}")  # how many failed?
 print(f"Duplicate rows: {df.duplicated().sum()}")
 df = df.drop_duplicates()
 
-# Step 8: Descriptive stats on the clean data
+# Step 8: Add revenue, the column Module 15 groups and charts
+df["revenue"] = (df["unit_price"] * df["quantity_sold"]).round(2)
+
+# Step 9: Descriptive stats on the clean data
 print(df.describe())
 
-# Step 9: Save clean data
+# Step 10: Save clean data
 df.to_csv("data/clean_sales.csv", index=False)
 print("Saved clean_sales.csv")</code></pre>
 

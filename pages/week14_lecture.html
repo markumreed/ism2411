@@ -154,10 +154,10 @@ df["price"] = df["price"].fillna(df["price"].mean())   # fill with the column me
 # "Customer ID" → "customer_id"</code></pre>
 
 <h3>Fixing data types</h3>
-<p>pandas infers data types when loading a CSV. If a numeric column has even one non-numeric value ("$1,200", "N/A", an empty cell), pandas loads the entire column as <code>object</code> (string). You must strip the non-numeric characters and then cast the type. For dates, use <code>pd.to_datetime()</code> with <code>errors="coerce"</code> to convert bad date strings to NaN rather than crashing.</p>
+<p>pandas infers data types when loading a CSV. If a numeric column has even one value that isn't a number ("$1,200", "unknown"), pandas loads the entire column as text (<code>object</code>, or <code>str</code> in pandas 3). An empty cell or "N/A" is different: pandas reads it as NaN, so the column stays numeric (as <code>float64</code>, because NaN is a float). You must strip the non-numeric characters and then cast the type. For dates, use <code>pd.to_datetime()</code> with <code>errors="coerce"</code> to turn bad date strings into NaT (missing) rather than crashing.</p>
 <pre><code>df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
-df["price"] = df["price"].str.replace("$", "", regex=False).astype(float)
-df["quantity"] = df["quantity"].astype(int)</code></pre>
+df["unit_price"] = df["unit_price"].str.replace("$", "", regex=False).str.replace(",", "", regex=False).astype(float)
+df["quantity_sold"] = df["quantity_sold"].astype(int)   # after filling its NaNs</code></pre>
 
 <h3>Descriptive stats</h3>
 <p><code>df.describe()</code> is your data quality X-ray. Run it after cleaning and look for: a min value that should not be negative; a max value that is 10× the 75th percentile (outlier); a count less than the total rows (still missing data); a mean and median far apart (skewed distribution). Each of these is a flag to investigate before proceeding to analysis.</p>
@@ -175,6 +175,8 @@ df["region"].value_counts()</code></pre>
 <p>In a real workflow — and especially in the capstone — you keep a short log of every cleaning decision. This can be a markdown cell in Jupyter or a series of comments in a Python script. The goal is that someone reading your code can understand not just what you did but why. "Dropped 47 rows with missing order_date — these appear to be system-generated test orders" is far more informative than just <code>df = df.dropna(subset=["order_date"])</code>.</p>
 
 <h2>Live Coding Walkthrough</h2>
+<p>This script reads <code>data/messy_sales.csv</code>, the same file Lab 14 uses.</p>
+<div style="margin:10px 0 14px;"><a href="../assets/downloads/messy_sales.csv" download="messy_sales.csv" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:7px 14px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;text-decoration:none;">&#x2B07; Download messy_sales.csv</a></div>
 <pre><code>import pandas as pd
 
 # ── Load ──────────────────────────────────────────────────────
@@ -182,7 +184,7 @@ df = pd.read_csv("data/messy_sales.csv")
 print("Raw shape:", df.shape)
 
 # ── Inspect ───────────────────────────────────────────────────
-print(df.info())
+df.info()
 print("\nMissing values:\n", df.isnull().sum())
 
 # ── Fix column names ──────────────────────────────────────────
@@ -190,16 +192,18 @@ df.columns = df.columns.str.lower().str.replace(" ", "_")
 print("\nCleaned columns:", df.columns.tolist())
 
 # ── Handle missing values ─────────────────────────────────────
-# Drop rows with no customer_id (can't attribute revenue)
+# Drop rows with no order_id or order_date (no way to place the order)
 before = len(df)
-df = df.dropna(subset=["customer_id"])
-print(f"Dropped {before - len(df)} rows missing customer_id")
+df = df.dropna(subset=["order_id", "order_date"])
+print(f"Dropped {before - len(df)} rows missing order_id or order_date")
 
-# Fill missing quantity with mean (low % missing, aggregate analysis)
-df["quantity"] = df["quantity"].fillna(df["quantity"].mean())
+# Fill missing quantity_sold with mean (low % missing, aggregate analysis)
+df["quantity_sold"] = df["quantity_sold"].fillna(df["quantity_sold"].mean())
 
 # ── Fix types ─────────────────────────────────────────────────
-df["price"] = df["price"].str.replace("$", "", regex=False).astype(float)
+df["unit_price"] = df["unit_price"].str.replace("$", "", regex=False)
+df["unit_price"] = df["unit_price"].str.replace(",", "", regex=False).astype(float)
+df["quantity_sold"] = df["quantity_sold"].astype(int)
 df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
 bad_dates = df["order_date"].isnull().sum()
 print(f"Unparseable dates: {bad_dates}")
@@ -207,6 +211,9 @@ print(f"Unparseable dates: {bad_dates}")
 # ── Check duplicates ──────────────────────────────────────────
 print(f"Duplicate rows: {df.duplicated().sum()}")
 df = df.drop_duplicates()
+
+# ── Add revenue (Module 15 groups and charts it) ──────────────
+df["revenue"] = (df["unit_price"] * df["quantity_sold"]).round(2)
 
 # ── Describe ──────────────────────────────────────────────────
 print("\nDescriptive stats after cleaning:")
@@ -218,8 +225,9 @@ print("\nSaved clean_sales.csv")</code></pre>
 
 <h2>Common Errors</h2>
 <h3>Error 1: TypeError when computing stats on a string column</h3>
-<pre><code># Error: TypeError: unsupported operand type(s) for +: 'float' and 'str'
-df["revenue"].mean()  # fails if revenue was loaded as object
+<pre><code># pandas 3: TypeError: Cannot perform reduction 'mean' with string dtype
+# pandas 2: TypeError: Could not convert string '...' to numeric
+df["revenue"].mean()  # fails if revenue was loaded as text
 
 # Fix: convert the column first
 df["revenue"] = df["revenue"].astype(float)
