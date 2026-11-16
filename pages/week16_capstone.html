@@ -72,8 +72,23 @@ td em { color: var(--accent); font-style: normal; font-family: var(--mono); font
 .pn .title { font-weight: 600; font-size: 14px; }
 .pn .next { text-align: right; }
 footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+/* capstone dataset chooser */
+.ds-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 18px 0 8px; }
+.ds-card { background: var(--bg2); border: 1px solid var(--border); border-top: 3px solid var(--ds); border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ds-fit { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.ds-card h3 { margin: 0; font-size: 17px; }
+.ds-hook { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.45; }
+.ds-desc { margin: 0; font-size: 14px; color: var(--muted); }
+.ds-card details { border-top: 1px solid var(--border); padding-top: 4px; }
+.ds-card summary { cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 0; }
+.ds-card details ul { margin: 4px 0 6px; padding-left: 18px; }
+.ds-card details li { margin: 4px 0; font-size: 13.5px; color: var(--muted); overflow-wrap: anywhere; }
+.ds-dl { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12px; padding: 7px 14px; border-radius: 999px; background: rgba(96,165,250,.1); border: 1px solid rgba(96,165,250,.3); color: #60a5fa; text-decoration: none; overflow-wrap: anywhere; }
+.ds-dl:hover { color: #93c5fd; background: rgba(96,165,250,.18); }
+[data-theme="light"] .ds-dl, [data-theme="light"] .ds-dl:hover { color: #1d4ed8; }
 /* ism-mobile */
 @media(max-width:600px){
+  .ds-grid{grid-template-columns:1fr}
   .pn{grid-template-columns:1fr}
   .two-col{grid-template-columns:1fr}
   .vpl-tile{min-width:unset;flex:1 1 100%}
@@ -88,8 +103,8 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 
 <main id="content"><div class="wrap">
 <div class="page-eyebrow">MODULE 16 · CAPSTONE PROJECT</div>
-<h1>Capstone — Retail Sales Analysis</h1>
-<p class="lede">A single sustained project using a real-shaped retail sales dataset of about 5,000 rows. You will clean it, ask three to five business questions, answer them with code and visualizations, and present your findings in class. This is the deliverable you will add to your portfolio.</p>
+<h1>Capstone — Business Data Analysis</h1>
+<p class="lede">A single sustained project on a messy, real-shaped business dataset of about 5,000 rows. You pick the dataset that fits your major or the field you want to work in, clean it, ask three to five business questions, answer them with code and visualizations, and present your findings in class. This is the deliverable you will add to your portfolio.</p>
 
 <div class="meta">
 <span class="chip accent">Module 16</span>
@@ -115,26 +130,232 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
     </iframe>
   </div>
 </div>
-<h2>The dataset</h2>
-<p>You receive a file called <code>retail_sales.csv</code> at the start of Module 13. It contains roughly 5,000 rows of fictional retail transactions with these columns:</p>
-<ul>
-<li><code>order_date</code> — date of the sale (mostly clean, with some bad values that need <code>errors="coerce"</code>)</li>
-<li><code>product_category</code> — one of about 8 categories (with some typos: "Electronix", "furnitu re")</li>
-<li><code>region</code> — one of North, South, East, West (some nulls)</li>
-<li><code>unit_price</code> — dollar amount per item stored as a string with "$" prefix (some negatives = returns)</li>
-<li><code>quantity_sold</code> — units in the order (some zeros, some missing)</li>
-<li><code>customer_segment</code> — Consumer, Corporate, or Home Office</li>
+<h2 id="datasets">Choose your dataset</h2>
+<p>Pick the dataset that fits your major, or the field you want to work in. All eight are fictional, have 5,000 rows each, and are messy in the same ways, so every choice is graded on the same rubric. Choose one by the Module 13 milestone, download it into your repo&rsquo;s <code>data</code> folder, and stay with it to the end. The walkthrough video above uses the Retail dataset; every step works the same on the others.</p>
+
+<div class="callout purple">
+<div class="callout-title">Every dataset is messy in the same ways</div>
+<ul style="margin:0 0 10px;padding-left:18px;">
+<li>Column names with spaces and capitals (<code>Order Date</code>)</li>
+<li>Dates that won&rsquo;t parse: a few typed another way (<code>03/14/2025</code>) or junk like <code>TBD</code>, plus some blanks</li>
+<li>Money stored as text (<code>"$1,299.00"</code>), with negatives written <code>"-$45.00"</code></li>
+<li>Negative amounts that mean something: your card says what</li>
+<li>Typos in one category column: wrong capitals, extra spaces, and two misspellings that <code>.str.strip().str.title()</code> alone won&rsquo;t fix</li>
+<li>Blank cells in one text column and one number column</li>
+<li>Exact duplicate rows</li>
+<li>A few impossible values that only <code>describe()</code> reveals</li>
 </ul>
-<p>The data is intentionally messy. Cleaning it well — and documenting your decisions — is half the assignment. A messy dataset that produces wrong statistics is worse than no dataset at all.</p>
+<p style="margin:0 0 6px;">For the typos, clean the case and spaces first, then look at what&rsquo;s left and map each misspelling to the right name:</p>
+<pre style="margin:0;background:var(--code-bg2);border:none;">df["product_category"] = df["product_category"].str.strip().str.title()
+print(df["product_category"].value_counts())    # spot the misspellings
+df["product_category"] = df["product_category"].replace({"Electronix": "Electronics"})</pre>
+</div>
+<p>Cleaning it well — and documenting your decisions — is half the assignment. A messy dataset that produces wrong statistics is worse than no dataset at all. Column names below are shown after you standardize them.</p>
+
+<div class="ds-grid">
+
+<div class="ds-card" style="--ds:#fbbf24;">
+<div class="ds-fit">General Business · Entrepreneurship · Undecided</div>
+<h3>Retail Store Sales</h3>
+<p class="ds-hook">Which products make the money, and which ones keep coming back?</p>
+<p class="ds-desc">One row per order line at a home-and-office retailer, 6 columns. The video and the code skeleton below use this one.</p>
+<details><summary>Columns</summary><ul>
+<li><code>order_date</code> — date of the sale</li>
+<li><code>product_category</code> — one of 8 categories</li>
+<li><code>region</code> — North, South, East, or West</li>
+<li><code>unit_price</code> — price per item; negative = a return</li>
+<li><code>quantity_sold</code> — units in the order</li>
+<li><code>customer_segment</code> — Consumer, Corporate, or Home Office</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which category drives the most revenue, and is it the same in every region?</li>
+<li>Which categories get returned most, and what do returns cost?</li>
+<li>Do Corporate customers place bigger orders than Consumers?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_retail.csv" download="capstone_retail.csv">&#x2B07; capstone_retail.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#34d399;">
+<div class="ds-fit">Accounting</div>
+<h3>Accounts Payable Ledger</h3>
+<p class="ds-hook">Where is the money going, and who gets paid late, or twice?</p>
+<p class="ds-desc">One row per vendor invoice at a mid-size company, 8 columns. Here a duplicate row is an invoice entered twice.</p>
+<details><summary>Columns</summary><ul>
+<li><code>invoice_number</code> — the vendor&rsquo;s invoice number</li>
+<li><code>invoice_date</code> — date of the invoice</li>
+<li><code>vendor</code> — who sent it (16 vendors)</li>
+<li><code>expense_category</code> — Travel, Software, Office Supplies, Utilities, Consulting, Marketing, Equipment, or Meals</li>
+<li><code>department</code> — the department the expense belongs to</li>
+<li><code>amount</code> — invoice total; negative = a credit memo (the vendor owes us)</li>
+<li><code>payment_terms</code> — Net 15, Net 30, or Net 60 (days allowed to pay)</li>
+<li><code>days_to_pay</code> — days from invoice to payment</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which vendors and terms get paid late most often? (Late means <code>days_to_pay</code> is more than the terms allow.)</li>
+<li>Which departments spend the most, and on what?</li>
+<li>Does spending jump at the start or end of the year?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_accounting.csv" download="capstone_accounting.csv">&#x2B07; capstone_accounting.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#60a5fa;">
+<div class="ds-fit">Finance · Economics</div>
+<h3>Small-Business Loan Portfolio</h3>
+<p class="ds-hook">Which loans pay off, and which ones blow up?</p>
+<p class="ds-desc">One row per small-business loan at a Florida community bank, 11 columns.</p>
+<details><summary>Columns</summary><ul>
+<li><code>loan_id</code> — the loan&rsquo;s ID</li>
+<li><code>application_date</code> — when the business applied</li>
+<li><code>industry</code> — one of 8 industries</li>
+<li><code>region</code> — Tampa Bay, Central Florida, South Florida, or North Florida</li>
+<li><code>loan_amount</code> — amount borrowed</li>
+<li><code>interest_rate</code> — yearly rate in percent (8.25 means 8.25%)</li>
+<li><code>term_months</code> — length of the loan</li>
+<li><code>credit_score</code> — the owner&rsquo;s credit score</li>
+<li><code>employees</code> — size of the business</li>
+<li><code>loan_status</code> — Current, Paid Off, Late, or Default</li>
+<li><code>profit</code> — what the bank has earned so far; negative = money lost on a default</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>How does the default rate change as credit scores fall?</li>
+<li>Which industries make the bank money, and which lose it?</li>
+<li>Do riskier borrowers pay enough extra interest to cover the losses?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_finance.csv" download="capstone_finance.csv">&#x2B07; capstone_finance.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#f472b6;">
+<div class="ds-fit">Management · Human Resources</div>
+<h3>Employee Retention</h3>
+<p class="ds-hook">Who is leaving, and what would make them stay?</p>
+<p class="ds-desc">One row per employee, current and former, at a Florida company of 5,000 people, 10 columns.</p>
+<details><summary>Columns</summary><ul>
+<li><code>employee_id</code> — the employee&rsquo;s ID</li>
+<li><code>hire_date</code> — 2016 to 2025</li>
+<li><code>department</code> — one of 7 departments</li>
+<li><code>job_level</code> — Entry, Associate, Senior, Manager, or Director</li>
+<li><code>location</code> — Tampa, Orlando, Miami, or Remote</li>
+<li><code>annual_salary</code> — yearly pay</li>
+<li><code>last_raise</code> — pay change at the last review; negative = a pay cut</li>
+<li><code>performance_rating</code> — 1 (low) to 5 (high); blank for many recent hires not yet rated</li>
+<li><code>training_hours</code> — training completed in the last year</li>
+<li><code>left_company</code> — Yes or No</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which departments and job levels lose the most people?</li>
+<li>Do people who get more training stay?</li>
+<li>Does working remotely change who leaves?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_hr.csv" download="capstone_hr.csv">&#x2B07; capstone_hr.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#c084fc;">
+<div class="ds-fit">Information Systems · Business Analytics</div>
+<h3>IT Help Desk Tickets</h3>
+<p class="ds-hook">What breaks most, how fast do we fix it, and what does slow service cost?</p>
+<p class="ds-desc">One row per support ticket at an IT services company that bills its business clients per ticket, 9 columns.</p>
+<details><summary>Columns</summary><ul>
+<li><code>ticket_id</code> — the ticket&rsquo;s ID</li>
+<li><code>opened_date</code> — when the ticket came in</li>
+<li><code>category</code> — one of 8 ticket types (Password Reset, Network, Security, and more)</li>
+<li><code>priority</code> — Low, Medium, High, or Critical</li>
+<li><code>channel</code> — Phone, Email, Chat, or Portal</li>
+<li><code>client_size</code> — Small, Medium, or Enterprise</li>
+<li><code>resolution_hours</code> — hours from opened to fixed</li>
+<li><code>billed_amount</code> — what the client was billed; negative = a credit for missing the deadline (High: 8 hours, Critical: 4)</li>
+<li><code>satisfaction</code> — client survey score, 1 to 5; blank = the client skipped the survey</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which ticket types take longest, and which miss their deadline most?</li>
+<li>Which support channel has the happiest clients?</li>
+<li>Which day of the week is busiest, and did anything unusual happen in the fall?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_it_helpdesk.csv" download="capstone_it_helpdesk.csv">&#x2B07; capstone_it_helpdesk.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#fb923c;">
+<div class="ds-fit">Marketing</div>
+<h3>Marketing Campaign Results</h3>
+<p class="ds-hook">Which channel turns ad dollars into customers, and which one burns cash?</p>
+<p class="ds-desc">One row per campaign per day across six ad channels, 9 columns.</p>
+<details><summary>Columns</summary><ul>
+<li><code>date</code> — the day of the results</li>
+<li><code>channel</code> — Email, Paid Search, Social Media, Display, Influencer, or Television</li>
+<li><code>campaign_type</code> — Awareness, Promotion, Retargeting, or Product Launch</li>
+<li><code>region</code> — Southeast, Northeast, Midwest, Southwest, or West</li>
+<li><code>spend</code> — ad dollars spent that day</li>
+<li><code>impressions</code> — times the ad was shown</li>
+<li><code>clicks</code> — clicks on the ad</li>
+<li><code>conversions</code> — purchases that came from the ad</li>
+<li><code>revenue</code> — sales from those purchases minus refunds; negative = refunds beat new sales that day</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which channels return more than they cost (revenue ÷ spend)?</li>
+<li>Which campaign type turns clicks into purchases best?</li>
+<li>How much do November and December change spending and results?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_marketing.csv" download="capstone_marketing.csv">&#x2B07; capstone_marketing.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#22d3ee;">
+<div class="ds-fit">Supply Chain · Global Business · Operations</div>
+<h3>Shipping &amp; Delivery</h3>
+<p class="ds-hook">Which carrier keeps its promises, and what do late deliveries cost?</p>
+<p class="ds-desc">One row per outbound shipment from four distribution centers, 10 columns.</p>
+<details><summary>Columns</summary><ul>
+<li><code>shipment_id</code> — the shipment&rsquo;s ID</li>
+<li><code>ship_date</code> — when it left the warehouse</li>
+<li><code>warehouse</code> — Tampa, Atlanta, Dallas, or Charlotte</li>
+<li><code>carrier</code> — one of 4 freight carriers</li>
+<li><code>product_category</code> — one of 6 product types</li>
+<li><code>units</code> — units in the shipment</li>
+<li><code>order_value</code> — value of the goods</li>
+<li><code>freight_cost</code> — what shipping cost; negative = refunded under the carrier&rsquo;s on-time guarantee</li>
+<li><code>promised_days</code> — delivery days the carrier promised</li>
+<li><code>actual_days</code> — delivery days it really took; blank = not recorded</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which carrier is late most often, and is the cheapest carrier worth it?</li>
+<li>Which warehouse ships late most, and in which months?</li>
+<li>How much freight did on-time guarantees refund?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_shipments.csv" download="capstone_shipments.csv">&#x2B07; capstone_shipments.csv</a>
+</div>
+
+<div class="ds-card" style="--ds:#a3e635;">
+<div class="ds-fit">Sport &amp; Entertainment · Hospitality</div>
+<h3>Arena Ticket Sales</h3>
+<p class="ds-hook">What sells, who buys at the last minute, and what do they pay?</p>
+<p class="ds-desc">One row per ticket order at an arena that hosts hockey, basketball, concerts, comedy, and family shows, 9 columns.</p>
+<details><summary>Columns</summary><ul>
+<li><code>order_id</code> — the order&rsquo;s ID</li>
+<li><code>purchase_date</code> — when the tickets were bought</li>
+<li><code>event_type</code> — Hockey, Basketball, Concert, Comedy, or Family Show</li>
+<li><code>seat_section</code> — Floor, Lower Bowl, Upper Bowl, Club, or Suite</li>
+<li><code>sales_channel</code> — Website, Mobile App, Box Office, or Reseller</li>
+<li><code>fan_type</code> — Season Member, Single Game, or Group</li>
+<li><code>ticket_price</code> — price per ticket; negative = a refund</li>
+<li><code>tickets</code> — tickets in the order</li>
+<li><code>days_before_event</code> — how far ahead the order was placed</li>
+</ul></details>
+<details><summary>Starter questions</summary><ul>
+<li>Which events bring in the most revenue, and in which months?</li>
+<li>Do last-minute buyers pay more, and how do they buy?</li>
+<li>What happened in August?</li>
+</ul></details>
+<a class="ds-dl" href="../assets/downloads/capstone/capstone_ticket_sales.csv" download="capstone_ticket_sales.csv">&#x2B07; capstone_ticket_sales.csv</a>
+</div>
+
+</div>
 
 <div class="callout blue">
 <div class="callout-title">Quick-start: first 15 minutes</div>
 <pre style="margin:0;background:var(--code-bg2);border:none;">import pandas as pd
 
-df = pd.read_csv("data/retail_sales.csv")
+df = pd.read_csv("data/capstone_retail.csv")   # your dataset's file name
 print(df.shape)
 print(df.head())
-print(df.info())
+df.info()
 print(df.isnull().sum())
 print(df.describe())</pre>
 <p style="margin-top:10px;">Run this immediately. Before you clean anything, spend five minutes writing down what you observe: which columns are dirty, what the shapes are, which categories you see in text columns. This is your cleaning plan.</p>
@@ -148,13 +369,13 @@ print(df.describe())</pre>
 <tbody>
 <tr>
 <td>M13</td>
-<td>Dataset received &amp; inspected</td>
-<td>Load it, run <code>.head()</code>, <code>.info()</code>, <code>.describe()</code>. In a comment block, list every data quality issue you observe. Get a feel for what's there before you clean anything.</td>
+<td>Dataset chosen &amp; inspected</td>
+<td>Pick your dataset above and put it in <code>data/</code>. Load it, run <code>.head()</code>, <code>.info()</code>, <code>.describe()</code>. In a comment block, list every data quality issue you observe. Get a feel for what's there before you clean anything.</td>
 </tr>
 <tr>
 <td>M14</td>
 <td>Cleaning complete</td>
-<td>Submit a notebook or script showing how you handled missing values, bad dates, string prices with "$", negative unit_prices, and category typos. <em>10% checkpoint — submit by end of Module 14 lab.</em></td>
+<td>Submit a notebook or script showing how you handled missing values, bad dates, money stored as text with "$", negative amounts, category typos, duplicates, and impossible values. <em>10% checkpoint — submit by end of Module 14 lab.</em></td>
 </tr>
 <tr>
 <td>M15</td>
@@ -174,7 +395,7 @@ print(df.describe())</pre>
 <li>
   <strong>A single Python script or Jupyter notebook</strong> (<code>capstone_yourname.py</code> or <code>.ipynb</code>) that:
   <ul>
-    <li>Loads the raw CSV from <code>data/retail_sales.csv</code></li>
+    <li>Loads your raw dataset from <code>data/</code> (for example <code>data/capstone_retail.csv</code>)</li>
     <li>Cleans it (with every step documented in comments)</li>
     <li>Computes your analysis and answers each business question</li>
     <li>Produces all charts (saved as PNGs in a <code>charts/</code> folder)</li>
@@ -206,8 +427,9 @@ print(df.describe())</pre>
 
 <h2>Complete code skeleton</h2>
 <p>This is the structural template for your capstone script. Fill in the analysis sections with your own business questions and chart code. Do not change the section structure — the grader follows it.</p>
+<p>The CLEAN section is a worked example on the Retail dataset. If you chose another dataset, keep every step and swap in your own columns: your card&rsquo;s column list tells you which ones hold the date, the money, the negatives, and the category with typos.</p>
 <pre><code>"""
-ISM2411 Capstone — Retail Sales Analysis
+ISM2411 Capstone — [Your Dataset] Analysis
 Author: [Your Name]
 Date:   [Submission Date]
 
@@ -224,10 +446,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # ── 1. LOAD ───────────────────────────────────────────────────
-df = pd.read_csv("data/retail_sales.csv")
+DATA_FILE = "data/capstone_retail.csv"   # ← your dataset's file
+df = pd.read_csv(DATA_FILE)
 print("Raw shape:", df.shape)
 print(df.head())
-print(df.info())
+df.info()
 print(df.isnull().sum())
 
 # ── 2. CLEAN ──────────────────────────────────────────────────
@@ -243,18 +466,27 @@ df = df.dropna(subset=["order_date"])
 # Parse order_date — coerce bad dates to NaT
 df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
 
-# Fix unit_price: strip "$", convert to float
-df["unit_price"] = df["unit_price"].str.replace("$","",regex=False).astype(float)
+# Fix unit_price: strip "$" and ",", convert to float
+df["unit_price"] = df["unit_price"].str.replace("$", "", regex=False)
+df["unit_price"] = df["unit_price"].str.replace(",", "", regex=False).astype(float)
 
 # Exclude returns (negative unit_price)
 # Reason: question focuses on forward sales; returns analyzed separately
 df = df[df["unit_price"] >= 0]
 
+# Remove impossible values that describe() reveals
+# Reason: a quantity of 9999 is a placeholder someone typed, not a real order
+df = df[df["quantity_sold"] != 9999]
+
 # Fill missing quantity_sold with median (low %, aggregate impact minimal)
 df["quantity_sold"] = df["quantity_sold"].fillna(df["quantity_sold"].median())
 
-# Fix category typos
+# Fix category typos: case and spaces first, then the misspellings
+# that value_counts() shows
 df["product_category"] = df["product_category"].str.strip().str.title()
+df["product_category"] = df["product_category"].replace(
+    {"Electronix": "Electronics", "Furnitu Re": "Furniture"}
+)
 
 # Remove duplicates
 df = df.drop_duplicates()
@@ -286,11 +518,11 @@ print(df.groupby("region")["revenue"].sum().sort_values(ascending=False))
 # [Analysis + chart]
 
 # ── 8. SAVE CLEAN DATA ────────────────────────────────────────
-df.to_csv("data/clean_sales.csv", index=False)
-print("\nCapstone complete. Clean data saved to data/clean_sales.csv")</code></pre>
+df.to_csv("data/clean_data.csv", index=False)
+print("\nCapstone complete. Clean data saved to data/clean_data.csv")</code></pre>
 
 <h2>Example business questions</h2>
-<p>You choose 3–5. Here are examples — pick from these or invent your own (better questions earn higher scores):</p>
+<p>You choose 3–5. Your dataset&rsquo;s card has starter questions; pick from those or invent your own (better questions earn higher scores). The examples below use the Retail columns, but the same kinds of question work on every dataset: which group leads and is it the same everywhere, what the seasonal pattern is, how two segments differ, where the negatives cluster, and how concentrated the top tier is.</p>
 <ul>
 <li>Which product category drove the most revenue, and was that consistent across all four regions?</li>
 <li>Is there a seasonal pattern in sales? Which months are strongest, and by how much above the annual average?</li>
@@ -339,7 +571,7 @@ print("\nCapstone complete. Clean data saved to data/clean_sales.csv")</code></p
 <h2>Presentation guide</h2>
 <p>Your presentation is 5–7 minutes. You do not need slides. You will share your screen and walk through your notebook or script. Structure it as follows:</p>
 <ol>
-<li><strong>One sentence context (30 seconds):</strong> "I analyzed a retail sales dataset of about 5,000 transactions. After cleaning, I had X rows across Y product categories and four regions."</li>
+<li><strong>One sentence context (30 seconds):</strong> "I analyzed about 5,000 [orders, invoices, loans, tickets…] from the [your dataset] data. After cleaning, I had X rows across Y [categories, departments, carriers…]."</li>
 <li><strong>Your most interesting finding (3–4 minutes):</strong> State the question. Show the chart. Read the key number. Explain what it means for the business. What should leadership do differently as a result?</li>
 <li><strong>One other finding (1–2 minutes):</strong> Brief version of the same structure.</li>
 <li><strong>One thing you would do next (30 seconds):</strong> If you had more time or more data, what analysis would you run?</li>
