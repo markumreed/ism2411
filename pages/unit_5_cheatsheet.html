@@ -170,7 +170,7 @@ footer {
 <main id="content"><div class="wrap">
 <div class="page-eyebrow">UNIT 5 CHEATSHEET · CAPSTONE REFERENCE</div>
 <h1>Unit 5 — Capstone</h1>
-<p class="lede">End-to-end data analysis workflow, on the dataset you choose for your major. The full pipeline from raw CSV to GitHub-published notebook and presentation.</p>
+<p class="lede">End-to-end data analysis workflow, on the dataset you choose for your major. The full pipeline from raw CSV to GitHub-published notebook and a 5-minute recorded video.</p>
 
 <div class="callout">
 <strong>How to use this:</strong> This cheatsheet covers the full capstone pipeline. Work through each day's tasks in order. Come back here when you forget exact syntax — everything you need for a complete submission is on this page.
@@ -313,26 +313,27 @@ the business context you analyzed.
 3. Run All Cells</code></pre>
 <div class="cs-note">Write the README last — after your analysis is done, the findings section almost writes itself.</div></div>
 
-<!-- Card 7: Presentation structure -->
-<div class="cs-card"><h3>Presentation structure (5–7 min)</h3>
-<pre><code>Minute 0–1: Context
-  "I analyzed [dataset]. The business
-   question I focused on was..."
+<!-- Card 7: Video structure -->
+<div class="cs-card"><h3>Your 5-minute video</h3>
+<pre><code>Record at home: face + screen visible.
+About 5 min; grader stops at 7:00.
 
-Minute 1–3: Show the data
-  - Open notebook in Jupyter
-  - Show df.head() and df.describe()
-  - "The data has X rows and Y columns"
+0:00–0:30  Context
+  "I analyzed about 5,000 [rows] from
+   the [dataset] data. After cleaning..."
 
-Minute 3–5: Walk through one insight
-  - Show the groupby and chart
-  - "This tells us that..."
-  - Explain why it matters to the business
+0:30–3:30  Your best finding
+  - State the question, show the chart
+  - Read the key number
+  - What should the business do?
 
-Minute 5–7: Second insight + conclusion
-  - Show second chart
-  - "If I had more time I would also..."
-  - "The most surprising finding was..."</code></pre></div>
+3:30–4:30  One other finding (short)
+
+4:30–5:00  What you'd analyze next
+
+Upload to YouTube as Public (not Private).
+Link it on line 2 of your README.</code></pre>
+<div class="cs-note">Before you submit, open your README in a private (incognito) window and click the video link. If it won&rsquo;t play there, the grader can&rsquo;t watch it. Full steps: <a href="week16_capstone.html#video">Video guide</a>.</div></div>
 
 <!-- Card 8: Notebook hygiene -->
 <div class="cs-card"><h3>Notebook hygiene</h3>
@@ -427,9 +428,9 @@ df["month"] = df["date"].dt.to_period("M")</code></pre></div>
       <td>3+ charts, each with a title, x-label, and y-label. Chart type matches the data (bar for categories, line for time, scatter for correlation).</td>
     </tr>
     <tr>
-      <td>Presentation</td>
+      <td>Video</td>
       <td>15 pts</td>
-      <td>5–7 minutes, walks through the notebook live, explains at least one finding and its business implication clearly.</td>
+      <td>About 5 minutes, recorded with face and screen, Public on YouTube and linked in the README; walks through at least one finding and its chart and explains the business implication clearly.</td>
     </tr>
   </tbody>
 </table>

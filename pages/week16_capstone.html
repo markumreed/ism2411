@@ -104,7 +104,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <main id="content"><div class="wrap">
 <div class="page-eyebrow">MODULE 16 · CAPSTONE PROJECT</div>
 <h1>Capstone — Business Data Analysis</h1>
-<p class="lede">A single sustained project on a messy, real-shaped business dataset of about 5,000 rows. You pick the dataset that fits your major or the field you want to work in, clean it, ask three to five business questions, answer them with code and visualizations, and present your findings in class. This is the deliverable you will add to your portfolio.</p>
+<p class="lede">A single sustained project on a messy, real-shaped business dataset of about 5,000 rows. You pick the dataset that fits your major or the field you want to work in, clean it, ask three to five business questions, answer them with code and visualizations, and explain your findings in a 5-minute recorded video. This is the deliverable you will add to your portfolio.</p>
 
 <div class="meta">
 <span class="chip accent">Module 16</span>
@@ -114,6 +114,11 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 
 <div class="callout">
 <strong>What this is:</strong> A practical demonstration that you can take a CSV file no one has explained to you, figure out what it contains, decide what is interesting, and tell that story clearly with code and charts. This is the exact skill employers are paying for when they hire an analyst straight out of a business program.
+</div>
+
+<div class="callout pink">
+<div class="callout-title">Don&rsquo;t forget: you also record a 5-minute video</div>
+<p>There is no in-class presentation. Instead, you record a video of about 5 minutes at home, with your face and your screen both showing, and walk through your most interesting finding and its chart. Upload it to YouTube as <strong>Public</strong> and put the link at the top of your README. Your capstone is not complete without it: a missing video, or one the grader can&rsquo;t open, scores the lowest level on Communication. See the <a href="#video">Video guide</a> below.</p>
 </div>
 
 
@@ -384,8 +389,8 @@ print(df.describe())</pre>
 </tr>
 <tr>
 <td>M16</td>
-<td>Final deliverables + presentation</td>
-<td>Repo URL + PDF report + in-class talk. <em>10% checkpoint — final grade component.</em></td>
+<td>Final deliverables + video</td>
+<td>Repo URL in Canvas. The repo holds your script, charts, and PDF report, and its README links your 5-minute video. <em>10% checkpoint — final grade component.</em></td>
 </tr>
 </tbody>
 </table>
@@ -412,16 +417,17 @@ print(df.describe())</pre>
   </ul>
 </li>
 <li>
-  <strong>A 5–7 minute presentation</strong> in class during Module 16:
+  <strong>A 5-minute video</strong>, recorded at home (see the <a href="#video">Video guide</a>):
   <ul>
-    <li>Walk us through one finding — not all of them, just the most interesting one</li>
-    <li>Show the relevant chart on screen</li>
+    <li>Your face and your screen both visible the whole time</li>
+    <li>Walk through one finding (not all of them, just the most interesting one) with its chart on screen</li>
     <li>Explain the business implication: what should the company do differently as a result?</li>
-    <li>Be ready for one follow-up question from the instructor</li>
+    <li>About 5 minutes; the grader stops watching at 7:00</li>
+    <li>Uploaded to YouTube as <strong>Public</strong> and linked at the top of your README</li>
   </ul>
 </li>
 <li>
-  <strong>A GitHub repository</strong> containing all of the above plus a <code>README.md</code> with 3–5 lines explaining how to run your code (required packages, command to run).
+  <strong>A GitHub repository</strong> containing all of the above plus a <code>README.md</code> that starts with your video link, then gives 3–5 lines explaining how to run your code (required packages, command to run).
 </li>
 </ol>
 
@@ -541,7 +547,7 @@ print("\nCapstone complete. Clean data saved to data/clean_data.csv")</code></pr
 <li>Findings are stated as numbers with context: "Region X drove $Y, which is Z% of total" — never "X seemed to do well"</li>
 <li>The code runs clean from top to bottom on a freshly cloned repo — no hardcoded paths, no missing imports</li>
 <li>The README tells a reader how to run your code in 3–5 lines, including which packages to install</li>
-<li>The presentation is specific and confident: one finding, one chart, one business recommendation</li>
+<li>The video is specific and confident: one finding, one chart, one business recommendation, in about 5 minutes</li>
 </ul>
 </div>
 
@@ -554,6 +560,7 @@ print("\nCapstone complete. Clean data saved to data/clean_data.csv")</code></pr
 <li>A README that just says "run the file" with no context about requirements or execution</li>
 <li>Three "questions" that are the same question rephrased three ways</li>
 <li>plt.savefig() called after plt.show(), producing blank PNG files</li>
+<li>No video link in the README, or a Private video the grader can&rsquo;t open</li>
 </ul>
 </div>
 
@@ -568,14 +575,29 @@ print("\nCapstone complete. Clean data saved to data/clean_data.csv")</code></pr
 <li>A one-sentence written interpretation below the chart code (as a comment or markdown cell)</li>
 </ul>
 
-<h2>Presentation guide</h2>
-<p>Your presentation is 5–7 minutes. You do not need slides. You will share your screen and walk through your notebook or script. Structure it as follows:</p>
+<h2 id="video">Video guide</h2>
+<p>Your video replaces an in-class presentation. Record it at home, with your face and your screen both visible the whole time. Aim for 5 minutes; anywhere from 4 to 6 is fine, and the grader stops watching at 7:00. You do not need slides: share your screen and walk through your script or notebook and your charts. Structure it as follows:</p>
 <ol>
-<li><strong>One sentence context (30 seconds):</strong> "I analyzed about 5,000 [orders, invoices, loans, tickets…] from the [your dataset] data. After cleaning, I had X rows across Y [categories, departments, carriers…]."</li>
-<li><strong>Your most interesting finding (3–4 minutes):</strong> State the question. Show the chart. Read the key number. Explain what it means for the business. What should leadership do differently as a result?</li>
-<li><strong>One other finding (1–2 minutes):</strong> Brief version of the same structure.</li>
+<li><strong>One sentence of context (30 seconds):</strong> "I analyzed about 5,000 [orders, invoices, loans, tickets…] from the [your dataset] data. After cleaning, I had X rows across Y [categories, departments, carriers…]."</li>
+<li><strong>Your most interesting finding (about 3 minutes):</strong> State the question. Show the chart. Read the key number. Explain what it means for the business. What should leadership do differently as a result?</li>
+<li><strong>One other finding (about 1 minute):</strong> A short version of the same structure.</li>
 <li><strong>One thing you would do next (30 seconds):</strong> If you had more time or more data, what analysis would you run?</li>
 </ol>
+<ul>
+<li><strong>Recording:</strong> any tool that records your camera and your screen together works. Two free ones: Zoom (in its Recording settings, turn on recording video during screen sharing; then start a meeting by yourself, share your screen, and record to this computer) and OBS Studio. Do a 20-second test first and play it back to check your sound.</li>
+<li><strong>Uploading:</strong> upload to YouTube and set the visibility to <strong>Public</strong>, never Private (a Private video plays only for accounts you invite, so the grader can&rsquo;t watch it). Public means anyone can find it, so keep passwords and personal details off the screen. For the audience question, choose &ldquo;No, it&rsquo;s not made for kids&rdquo;. If your school account can&rsquo;t upload, use a personal Google account.</li>
+<li><strong>Linking it:</strong> put the link on the second line of your README, right under the title. GitHub doesn&rsquo;t play videos inside a README, so use a picture that links to the video. Replace both <code>VIDEO_ID</code>s with your video&rsquo;s ID, the text after <code>v=</code> in the watch link (or after <code>youtu.be/</code> in a share link), stopping before any <code>?</code> or <code>&amp;</code>.</li>
+</ul>
+<pre><code># ISM2411 Capstone — [Your Dataset] Analysis
+
+[![Capstone video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+
+## How to run it
+...</code></pre>
+<div class="callout pink">
+<div class="callout-title">Check it like a stranger would</div>
+<p>Open your README on GitHub in a private (incognito) window and click the picture. If the video doesn&rsquo;t play there, the grader can&rsquo;t watch it either, and a video nobody can watch counts as no video.</p>
+</div>
 
 <h2>AI use rules for the capstone</h2>
 <p>See the full <a href="ai_policy.html">AI Policy</a>. Specific to the capstone:</p>
@@ -591,7 +613,7 @@ print("\nCapstone complete. Clean data saved to data/clean_data.csv")</code></pr
 <li><strong>Code clarity</strong> — structure, comments, runs without errors, cleaning documented</li>
 <li><strong>Visualizations</strong> — labeled, appropriate chart types, saved as PNGs, professional appearance</li>
 <li><strong>Insight quality</strong> — questions are genuinely interesting, findings are stated as numbers, interpretations are correct</li>
-<li><strong>Communication</strong> — written report is clear, presentation is specific and confident, README enables reproduction</li>
+<li><strong>Communication</strong> — written report is clear, the 5-minute video is specific and confident, README enables reproduction</li>
 </ul>
 
 
