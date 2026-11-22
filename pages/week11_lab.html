@@ -264,49 +264,29 @@ footer {
 
 <h2 id="repo-setup">Before You Start: Set Up This Lab&rsquo;s Repo</h2>
 
-<p>From this lab on, <strong>every lab gets its own GitHub repo</strong>: <code>ism2411-lab11</code> for this one, <code>ism2411-lab12</code> for the next, and so on. This section reviews the setup you did in <a href="week08_lab.html">Lab 8</a>. The first time takes about ten minutes. After that it takes two.</p>
+<p>From this lab on, <strong>every lab gets its own GitHub repo</strong>: <code>ism2411-lab11</code> for this one, <code>ism2411-lab12</code> for the next, and so on. You write and run your code in a folder on your laptop, then upload it on the GitHub website, the same way you did in <a href="week08_lab.html">Lab 8</a>. The first time takes about ten minutes. After that it takes two.</p>
 
 <div class="callout blue">
 <div class="callout-title">Why a new repo for each lab</div>
-<p>Each lab is its own small project. Its repo holds only that lab&rsquo;s files and that lab&rsquo;s commits, so the URL you submit shows exactly one piece of work, and your instructor clones exactly one lab to grade it. Real projects work the same way: one repo per project.</p>
+<p>Each lab is its own small project. Its repo holds only that lab&rsquo;s files and that lab&rsquo;s commits, so the URL you submit shows exactly one piece of work, and your instructor downloads exactly one lab to grade it. Real projects work the same way: one repo per project.</p>
 <p>Your <code>ism2411</code> repo from Lab 8 stays as it is, with your earlier labs in it. Don&rsquo;t add new labs to it.</p>
 </div>
 
-<p><strong>Watch first (3 minutes):</strong> the whole loop on a practice repo named <code>simple_lab_11</code>: make it on GitHub, clone it, add a file, commit, and push. The demo clones into <code>Documents</code>. You clone from your home folder (Step 2), and the five steps add what this lab needs: your Lab 8 <code>.gitignore</code> and a README title.</p>
-<div class="video-embed" style="margin:16px 0 24px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/Ptl6vLN2PrY"
-      title="Quick: Git and GitHub Example — New Repo, Clone, Commit, Push"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
-</div>
-
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP · REVIEW OF LAB 8</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP · ON THE GITHUB WEBSITE</div>
 <div style="font-weight:700;margin-bottom:6px;">Set up <code>ism2411-lab11</code></div>
-<div style="color:var(--muted);font-size:15px;">Five steps, in order. Run the commands in VS Code&rsquo;s terminal (<strong>View &rarr; Terminal</strong>), one line at a time. Lines that start with <code>#</code> are notes, so don&rsquo;t type them.</div>
+<div style="color:var(--muted);font-size:15px;">Five steps, in order. Bold words are buttons and menus on github.com.</div>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 1 · MAKE THE REPO ON GITHUB.COM</p>
-<p style="color:var(--muted);font-size:15px;margin:0;">Click <strong>New repository</strong>. Name it <code>ism2411-lab11</code>, make it <strong>Public</strong>, and check <strong>Add a README file</strong>. Leave .gitignore and License at <em>None</em>.</p>
-<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 2 · CLONE IT FROM YOUR HOME FOLDER</p>
-<pre><code># Start in your home folder, not inside another repo
-cd ~
-git clone https://github.com/YOURUSERNAME/ism2411-lab11.git
+<p style="color:var(--muted);font-size:15px;margin:0;">Click the <strong>+</strong> at the top right, then <strong>New repository</strong>. Name it <code>ism2411-lab11</code> and make it <strong>Public</strong>. Turn on <strong>Add README</strong>, and set <strong>.gitignore</strong> to <strong>Python</strong>. Leave License at none. Click <strong>Create repository</strong>.</p>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 2 · MAKE A WORK FOLDER ON YOUR LAPTOP</p>
+<p style="color:var(--muted);font-size:15px;margin:0;">In VS Code&rsquo;s terminal (<strong>View &rarr; Terminal</strong>), one line at a time:</p>
+<pre><code>cd ~
+mkdir ism2411-lab11
 cd ism2411-lab11
-git status       # should say: On branch main ... nothing to commit, working tree clean
 code .</code></pre>
-<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 3 · ADD YOUR .gitignore AND PUSH IT FIRST</p>
-<pre><code># Reuse the .gitignore you wrote in Lab 8
-cp ~/ism2411/.gitignore .
-git add .gitignore
-git commit -m "add .gitignore for Python and OS files"
-git push</code></pre>
-<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 4 · GIVE THE README A TITLE</p>
-<p style="color:var(--muted);font-size:15px;margin:0;">Open <code>README.md</code> in VS Code. GitHub put one line in it. Replace it with this, put in your name, and save:</p>
+<p style="color:var(--muted);font-size:15px;margin:0;">VS Code opens the folder. Create the lab&rsquo;s file here with <code>code customers.py</code>. Every file in this lab goes in this folder, and every command runs from here.</p>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 3 · GIVE THE README A TITLE</p>
+<p style="color:var(--muted);font-size:15px;margin:0;">On your repo page, click <code>README.md</code>, then the <strong>pencil icon</strong> (Edit this file). Replace the one line GitHub put there with this, and put in your name:</p>
 <pre><code># ISM2411 Lab 11 — Customer Dictionary &amp; Lookup
 
 **Name:** Your Name Here
@@ -318,60 +298,80 @@ From this folder:
 ```
 python3 customers.py
 ```</code></pre>
-<pre><code>git add README.md
-git commit -m "add README with lab title and run instructions"
-git push</code></pre>
-<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 5 · CHECK YOU ARE IN THE RIGHT REPO</p>
-<pre><code>pwd              # should end in /ism2411-lab11
-git remote -v     # both lines should show github.com/YOURUSERNAME/ism2411-lab11.git
-git log --oneline   # your two commits, then GitHub's Initial commit</code></pre>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">Now create the lab&rsquo;s file in this folder with <code>code customers.py</code>. Every file in this lab goes here, at the top level next to <code>README.md</code>, and every command runs from here.</p>
-<details class="hint"><summary>Hint: which boxes do I check on the New repository page?</summary>
+<p style="color:var(--muted);font-size:15px;margin:0;">Click <strong>Commit changes...</strong>, replace the message with <code>add README with lab title and run instructions</code>, and click <strong>Commit changes</strong>.</p>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 4 · UPLOAD YOUR WORK (AFTER EACH EXERCISE OR TWO)</p>
+<ol style="margin:4px 0 4px;padding-left:20px;color:var(--muted);font-size:15px;">
+<li>Save the file in VS Code.</li>
+<li>On your repo page, click <strong>Add file &rarr; Upload files</strong>.</li>
+<li>Drag your whole <code>ism2411-lab11</code> folder onto the upload area. GitHub keeps the folder, so your file lands at <code>ism2411-lab11/customers.py</code>.</li>
+<li>Under <strong>Commit changes</strong>, replace <code>Add files via upload</code> with a message that says what changed, such as <code>add exercise 3: safe lookup with get</code>.</li>
+<li>Click <strong>Commit changes</strong>.</li>
+</ol>
+<p style="color:var(--muted);font-size:15px;margin:0;">Uploading a file that is already in the repo replaces it. GitHub keeps every earlier version in the commit history, so each upload also backs up your work.</p>
+<p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 5 · CHECK WHAT YOUR INSTRUCTOR WILL SEE</p>
+<p style="color:var(--muted);font-size:15px;margin:0;">Your repo page lists <code>.gitignore</code>, <code>README.md</code>, and your <code>ism2411-lab11</code> folder. Click the folder to make sure <code>customers.py</code> is inside it. Click the commit count (the clock icon above the file list) to see your commits, newest first, with GitHub&rsquo;s <code>Initial commit</code> at the bottom. Then open the repo in a private or incognito window. A 404 page means the repo is Private: open <strong>Settings &rarr; General &rarr; Danger Zone &rarr; Change visibility</strong>.</p>
+<details class="hint"><summary>Hint: which settings do I pick on the New repository page?</summary>
 <ul>
 <li><strong>Repository name:</strong> <code>ism2411-lab11</code>, all lowercase, with the two-digit lab number.</li>
 <li><strong>Public</strong>. Your instructor can&rsquo;t grade a private repo.</li>
-<li><strong>Add a README file:</strong> check it. It gives the repo its first commit, so you can clone it.</li>
-<li><strong>Add .gitignore:</strong> <em>None</em>. You copy yours in Step 3.</li>
-<li><strong>License:</strong> <em>None</em>.</li>
+<li><strong>Add README:</strong> on. It gives the repo its first commit and the README you edit in Step 3.</li>
+<li><strong>.gitignore:</strong> <strong>Python</strong>. GitHub writes the file for you.</li>
+<li><strong>License:</strong> none.</li>
 </ul>
 </details>
-<details class="hint"><summary>Hint: where do I get the URL for git clone?</summary>
-<p>On the new repo&rsquo;s page, click the green <strong>Code</strong> button, make sure the <strong>HTTPS</strong> tab is selected, and click the copy icon. The URL ends in <code>.git</code>.</p>
+<details class="hint"><summary>Hint: how do I find my folder to drag it?</summary>
+<p>Your work folder is in your home folder. In VS Code&rsquo;s terminal, run <code>cd ~</code>, then <code>open .</code> on a Mac or <code>explorer.exe .</code> on Windows. A Finder or File Explorer window opens on your home folder, and <code>ism2411-lab11</code> is one of the folders in it. Drag that folder onto the GitHub upload page.</p>
 </details>
-<details class="hint"><summary>Hint: pwd shows /ism2411/ism2411-lab11</summary>
-<p>You cloned inside your Lab 8 repo. A repo inside a repo confuses Git: <code>git status</code> in <code>~/ism2411</code> lists <code>ism2411-lab11/</code> under Untracked files. Don&rsquo;t commit it there. Move it out to your home folder and go back in:</p>
-<pre><code>cd ~
-mv ~/ism2411/ism2411-lab11 ~/
-cd ism2411-lab11</code></pre>
+<details class="hint"><summary>Hint: what do I drag when a lab has folders?</summary>
+<p>The same thing: your whole work folder. From Lab 12 on, labs have folders such as <code>data</code> and <code>charts</code>, and they come along inside it, so <code>sales.csv</code> lands at <code>ism2411-lab12/data/sales.csv</code>. Dragging the files and folders <em>inside</em> your work folder works too. Pick one way and use it every time for that lab.</p>
 </details>
-<details class="hint"><summary>Hint: cp says No such file or directory</summary>
-<p>Your Lab 8 repo isn&rsquo;t at <code>~/ism2411</code> in this terminal. Make the file instead: in VS Code&rsquo;s Explorer, click the New File icon, type <code>.gitignore</code> (a dot first, no extension), paste this, and save. Then run the <code>git add</code>, <code>git commit</code> and <code>git push</code> lines.</p>
-<pre><code># Python
-__pycache__/
-*.pyc
-*.pyo
-.env
-*.egg-info/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editors
-.vscode/
-.idea/</code></pre>
+<details class="hint"><summary>Hint: my files show up twice</summary>
+<p>You uploaded both ways: once as the whole folder and once as the files inside it. Delete the older copy: open each of its files, click the <strong>&middot;&middot;&middot;</strong> menu at the top right, and choose <strong>Delete file</strong>. If you leave both, your instructor grades the copy you uploaded most recently.</p>
 </details>
-<details class="hint"><summary>Hint: git push asks for a password, or says Authentication failed</summary>
-<p>Paste your personal access token from Lab 8 as the password. If it has expired, make a new one (<a href="week08_lab.html">Lab 8</a>, Exercise 3) and clear the saved login (Lab 8&rsquo;s Troubleshooting table), then push again.</p>
+<details class="hint"><summary>Hint: a file landed in the wrong place, has the wrong name, or shouldn&rsquo;t be there</summary>
+<p>Open the file on GitHub, click the <strong>pencil icon</strong>, and fix the name box. Type <code>data/</code> in front of a name to move the file into a <code>data</code> folder. Commit the change. To remove a file, open it, click the <strong>&middot;&middot;&middot;</strong> menu at the top right, and choose <strong>Delete file</strong>. Dragging a whole folder can bring along hidden files such as <code>.DS_Store</code> or <code>.ipynb_checkpoints</code>. They don&rsquo;t affect your grade, so delete them or leave them.</p>
 </details>
-<details class="hint"><summary>Hint: fatal: destination path 'ism2411-lab11' already exists</summary>
-<p>You cloned it already. Run <code>cd ism2411-lab11</code> and carry on from Step 3.</p>
+<details class="hint"><summary>Hint: I forgot to set .gitignore to Python</summary>
+<p>Click <strong>Add file &rarr; Create new file</strong> and type <code>.gitignore</code> in the name box. Click <strong>Choose .gitignore template</strong>, pick <strong>Python</strong>, and commit. If you don&rsquo;t see that button, paste the starter list from <a href="week08_lab.html">Lab 8</a>, Exercise 3 instead.</p>
+</details>
+<details class="hint"><summary>Hint: mkdir says the folder already exists</summary>
+<p>You made it already, or you cloned the repo with Git earlier. Run <code>cd ism2411-lab11</code> and carry on. A cloned folder works fine as your work folder, but it holds a hidden <code>.git</code> folder, so don&rsquo;t drag the whole thing. Drag the files inside it, or upload with the <a href="#terminal">Git commands</a>.</p>
+</details>
+<details class="hint"><summary>Hint: there&rsquo;s no Add file button</summary>
+<p>You aren&rsquo;t signed in, or you are on someone else&rsquo;s repo. Sign in and open <code>https://github.com/YOURUSERNAME/ism2411-lab11</code>.</p>
 </details>
 </div>
 
+<details class="hint" id="terminal"><summary>Prefer the terminal? Use Git commands instead</summary>
+<p>If <code>git push</code> already works for you, keep using it. Both ways put the same files and commits on GitHub, and both are graded the same way. This 3-minute demo shows the whole loop on a practice repo named <code>simple_lab_11</code>:</p>
+<div class="video-embed" style="margin:12px 0 16px;">
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+    <iframe
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      src="https://www.youtube.com/embed/Ptl6vLN2PrY"
+      title="Quick: Git and GitHub Example — New Repo, Clone, Commit, Push"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+<p>Make the repo on github.com as in Step 1, with the Python <code>.gitignore</code>. Then clone it from your home folder, not from inside another repo, and commit after each exercise or two:</p>
+<pre><code>cd ~
+git clone https://github.com/YOURUSERNAME/ism2411-lab11.git
+cd ism2411-lab11
+code .
+
+# After each exercise or two:
+git add customers.py
+git commit -m "add exercise 3: safe lookup with get"
+git push</code></pre>
+<p>Edit the README in VS Code and commit it the same way. If you also upload or edit on the website, run <code>git pull</code> before your next <code>git push</code>, or the push is rejected with <code>(fetch first)</code>. For sign-in and token problems, see <a href="week08_lab.html#terminal">Lab 8&rsquo;s terminal section</a>.</p>
+</details>
+
 <div class="callout">
 <div class="callout-title">The loop for the rest of the lab</div>
-<p>After each exercise or two: save, then <code>git add customers.py</code>, <code>git commit -m "add exercise 3: safe lookup with get"</code> (a message that says what changed), and <code>git push</code>. Small commits with clear messages are part of the work. If something goes wrong, <code>git status</code> tells you where you are and changes nothing.</p>
+<p>After each exercise or two: save in VS Code, then drag your <code>ism2411-lab11</code> folder in with <strong>Add file &rarr; Upload files</strong> and a commit message that says what changed, such as <code>add exercise 3: safe lookup with get</code>. Small commits with clear messages are part of the work, and each upload backs up your file.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -445,7 +445,7 @@ Thumbs.db
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Push <code>customers.py</code> to your <code>ism2411-lab11</code> repo, at the top level next to <code>README.md</code> and <code>.gitignore</code>, with commit messages describing each change. The URL looks like <code>https://github.com/YOURUSERNAME/ism2411-lab11</code>. The file must include Exercises 1–8 and the top-of-file comment block answering both Reflection questions. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>customers.py</code> to your <code>ism2411-lab11</code> repo, inside your <code>ism2411-lab11</code> folder (at the top level is fine too, if you dragged just the file or used Git), with commit messages describing each change. The URL looks like <code>https://github.com/YOURUSERNAME/ism2411-lab11</code>. The file must include Exercises 1–8 and the top-of-file comment block answering both Reflection questions. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
 </div>
 
 <div class="pn">

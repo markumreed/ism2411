@@ -121,21 +121,17 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p>This lab gets its own GitHub repo, <code>ism2411-lab14</code>. The steps are the same for every lab from Lab 11 on. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup review</a> explains each one and has hints for the usual errors.</p>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP · ON THE GITHUB WEBSITE</div>
 <div style="font-weight:700;margin-bottom:6px;">Set up <code>ism2411-lab14</code></div>
-<div style="color:var(--muted);font-size:15px;">On github.com, make a new <strong>Public</strong> repo named <code>ism2411-lab14</code> and check <strong>Add a README file</strong>. Then, in VS Code&rsquo;s terminal:</div>
+<div style="color:var(--muted);font-size:15px;">On github.com, make a new <strong>Public</strong> repo named <code>ism2411-lab14</code>. Turn on <strong>Add README</strong> and set <strong>.gitignore</strong> to <strong>Python</strong>. Then make your work folder in VS Code&rsquo;s terminal:</div>
 <pre><code>cd ~
-git clone https://github.com/YOURUSERNAME/ism2411-lab14.git
+mkdir ism2411-lab14
 cd ism2411-lab14
-cp ~/ism2411/.gitignore .
-git add .gitignore
-git commit -m "add .gitignore for Python and OS files"
-git push
 mkdir data
 code .</code></pre>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">Replace the line in <code>README.md</code> with a title, <code># ISM2411 Lab 14 — Clean a Messy Sales CSV</code>, your name, and the command that runs your work. Commit and push it. Download <code>messy_sales.csv</code> (4,800 rows, 7 columns) with the button below, put it in the <code>data</code> folder, and make <code>clean.py</code> or <code>clean.ipynb</code> at the top level. Your output goes to <code>data/clean_sales.csv</code>, which Lab 15 starts from.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 14 — Clean a Messy Sales CSV</code>, your name, and the command that runs your work, then commit the change. Download <code>messy_sales.csv</code> (4,800 rows, 7 columns) with the button below, put it in the <code>data</code> folder, and make <code>clean.py</code> or <code>clean.ipynb</code> in your work folder, next to <code>data</code>. Your output goes to <code>data/clean_sales.csv</code>, which Lab 15 starts from.</p>
 <div style="margin:10px 0 4px;"><a href="../assets/downloads/messy_sales.csv" download="messy_sales.csv" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:7px 14px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;text-decoration:none;">&#x2B07; Download messy_sales.csv</a></div>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><code>pwd</code> should end in <code>/ism2411-lab14</code>, and <code>git remote -v</code> should show <code>ism2411-lab14.git</code>. Commit and push after each exercise or two.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab14</code> folder in, replace <code>Add files via upload</code> with a message that says what changed, and click <strong>Commit changes</strong>. Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -220,7 +216,7 @@ code .</code></pre>
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Push <code>clean.py</code> (or <code>clean.ipynb</code>) and the resulting <code>data/clean_sales.csv</code> to your <code>ism2411-lab14</code> repo, with the script or notebook at the top level and the CSV files in <code>data/</code>, and commit messages describing each change. The file must answer all 3 Self-Assessment questions in a comment block at the top. The script must run from top to bottom without errors and produce the clean CSV as output. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>clean.py</code> (or <code>clean.ipynb</code>) and the resulting <code>data/clean_sales.csv</code> to your <code>ism2411-lab14</code> repo, with the CSV files in a <code>data</code> folder next to the script or notebook, and commit messages describing each change. The file must answer all 3 Self-Assessment questions in a comment block at the top. The script must run from top to bottom without errors and produce the clean CSV as output. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
 </div>
 
 <div class="pn">

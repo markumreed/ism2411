@@ -114,21 +114,18 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p>This lab gets its own GitHub repo, <code>ism2411-lab15</code>. The steps are the same for every lab from Lab 11 on. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup review</a> explains each one and has hints for the usual errors.</p>
 
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
-<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP</div>
+<div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px;">SETUP · ON THE GITHUB WEBSITE</div>
 <div style="font-weight:700;margin-bottom:6px;">Set up <code>ism2411-lab15</code></div>
-<div style="color:var(--muted);font-size:15px;">On github.com, make a new <strong>Public</strong> repo named <code>ism2411-lab15</code> and check <strong>Add a README file</strong>. Then, in VS Code&rsquo;s terminal:</div>
+<div style="color:var(--muted);font-size:15px;">On github.com, make a new <strong>Public</strong> repo named <code>ism2411-lab15</code>. Turn on <strong>Add README</strong> and set <strong>.gitignore</strong> to <strong>Python</strong>. Then make your work folder in VS Code&rsquo;s terminal:</div>
 <pre><code>cd ~
-git clone https://github.com/YOURUSERNAME/ism2411-lab15.git
+mkdir ism2411-lab15
 cd ism2411-lab15
-cp ~/ism2411/.gitignore .
-git add .gitignore
-git commit -m "add .gitignore for Python and OS files"
-git push
-mkdir data charts
+mkdir data
+mkdir charts
 cp ~/ism2411-lab14/data/clean_sales.csv data/
 code .</code></pre>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">Replace the line in <code>README.md</code> with a title, <code># ISM2411 Lab 15 — Aggregate &amp; Chart — Capstone Warm-up</code>, your name, and the command that runs your work. Commit and push it. This lab starts from the <code>clean_sales.csv</code> you made in Lab 14, which the <code>cp</code> line copies into <code>data/</code>. Make <code>aggregate.ipynb</code> or <code>aggregate.py</code> at the top level. The <code>charts</code> folder has to exist before <code>savefig</code> can save into it.</p>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><code>pwd</code> should end in <code>/ism2411-lab15</code>, and <code>git remote -v</code> should show <code>ism2411-lab15.git</code>. Commit and push after each exercise or two.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 15 — Aggregate &amp; Chart — Capstone Warm-up</code>, your name, and the command that runs your work, then commit the change. This lab starts from the <code>clean_sales.csv</code> you made in Lab 14, which the <code>cp</code> line copies into <code>data/</code>. Make <code>aggregate.ipynb</code> or <code>aggregate.py</code> in your work folder, next to <code>data</code> and <code>charts</code>. The <code>charts</code> folder has to exist before <code>savefig</code> can save into it.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab15</code> folder in, replace <code>Add files via upload</code> with a message that says what changed, and click <strong>Commit changes</strong>. Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -210,7 +207,7 @@ code .</code></pre>
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Push <code>aggregate.ipynb</code> (or <code>aggregate.py</code>) and all 4 PNG chart files (including your custom Exercise 4 chart) to your <code>ism2411-lab15</code> repo, with the notebook or script at the top level, <code>clean_sales.csv</code> in <code>data/</code>, and the charts in <code>charts/</code>, and commit messages describing each change. Answer all 3 Self-Assessment questions in a comment or markdown cell. This is the capstone dress rehearsal — the standards are the same as the final deliverable. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>aggregate.ipynb</code> (or <code>aggregate.py</code>) and all 4 PNG chart files (including your custom Exercise 4 chart) to your <code>ism2411-lab15</code> repo, with <code>clean_sales.csv</code> in a <code>data</code> folder and the charts in a <code>charts</code> folder, both next to the notebook or script, and commit messages describing each change. Answer all 3 Self-Assessment questions in a comment or markdown cell. This is the capstone dress rehearsal — the standards are the same as the final deliverable. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
 </div>
 
 <div class="pn">
