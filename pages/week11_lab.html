@@ -298,13 +298,13 @@ From this folder:
 ```
 python3 customers.py
 ```</code></pre>
-<p style="color:var(--muted);font-size:15px;margin:0;">Click <strong>Commit changes...</strong>, replace the message with <code>add README with lab title and run instructions</code>, and click <strong>Commit changes</strong>.</p>
+<p style="color:var(--muted);font-size:15px;margin:0;">Click <strong>Commit changes...</strong>, then <strong>Commit changes</strong> again. GitHub&rsquo;s default message is fine.</p>
 <p style="margin:10px 0 4px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em;">STEP 4 · UPLOAD YOUR WORK (AFTER EACH EXERCISE OR TWO)</p>
 <ol style="margin:4px 0 4px;padding-left:20px;color:var(--muted);font-size:15px;">
 <li>Save the file in VS Code.</li>
 <li>On your repo page, click <strong>Add file &rarr; Upload files</strong>.</li>
 <li>Drag your whole <code>ism2411-lab11</code> folder onto the upload area. GitHub keeps the folder, so your file lands at <code>ism2411-lab11/customers.py</code>.</li>
-<li>Under <strong>Commit changes</strong>, replace <code>Add files via upload</code> with a message that says what changed, such as <code>add exercise 3: safe lookup with get</code>.</li>
+<li>Optional: under <strong>Commit changes</strong>, replace <code>Add files via upload</code> with a short note on what changed, such as <code>add exercise 3: safe lookup with get</code>. It isn&rsquo;t graded, but it makes an older version easy to find.</li>
 <li>Click <strong>Commit changes</strong>.</li>
 </ol>
 <p style="color:var(--muted);font-size:15px;margin:0;">Uploading a file that is already in the repo replaces it. GitHub keeps every earlier version in the commit history, so each upload also backs up your work.</p>
@@ -324,6 +324,9 @@ python3 customers.py
 </details>
 <details class="hint"><summary>Hint: what do I drag when a lab has folders?</summary>
 <p>The same thing: your whole work folder. From Lab 12 on, labs have folders such as <code>data</code> and <code>charts</code>, and they come along inside it, so <code>sales.csv</code> lands at <code>ism2411-lab12/data/sales.csv</code>. Dragging the files and folders <em>inside</em> your work folder works too. Pick one way and use it every time for that lab.</p>
+</details>
+<details class="hint" id="download-to-data"><summary>Hint: how do I get a downloaded file into my data folder?</summary>
+<p>From Lab 12 on, you download CSV files from the lab page, and your browser saves them in your <strong>Downloads</strong> folder. Open Downloads in Finder (Mac) or File Explorer (Windows) and drag the file onto the <code>data</code> folder in VS Code&rsquo;s Explorer panel. VS Code copies it in. On Windows this also moves the file from Windows into Ubuntu, where your work folder lives. If the name ends in <code>(1)</code>, such as <code>sales (1).csv</code>, you downloaded it twice: right-click it in VS Code, choose <strong>Rename</strong>, and delete the <code> (1)</code>.</p>
 </details>
 <details class="hint"><summary>Hint: my files show up twice</summary>
 <p>You uploaded both ways: once as the whole folder and once as the files inside it. Delete the older copy: open each of its files, click the <strong>&middot;&middot;&middot;</strong> menu at the top right, and choose <strong>Delete file</strong>. If you leave both, your instructor grades the copy you uploaded most recently.</p>
@@ -371,7 +374,7 @@ git push</code></pre>
 
 <div class="callout">
 <div class="callout-title">The loop for the rest of the lab</div>
-<p>After each exercise or two: save in VS Code, then drag your <code>ism2411-lab11</code> folder in with <strong>Add file &rarr; Upload files</strong> and a commit message that says what changed, such as <code>add exercise 3: safe lookup with get</code>. Small commits with clear messages are part of the work, and each upload backs up your file.</p>
+<p>After each exercise or two: save in VS Code, then drag your <code>ism2411-lab11</code> folder in with <strong>Add file &rarr; Upload files</strong> and click <strong>Commit changes</strong>. Each upload backs up your file. GitHub&rsquo;s default message is fine; a short note on what changed, such as <code>add exercise 3: safe lookup with get</code>, is optional.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -445,7 +448,14 @@ git push</code></pre>
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>customers.py</code> to your <code>ism2411-lab11</code> repo, inside your <code>ism2411-lab11</code> folder (at the top level is fine too, if you dragged just the file or used Git), with commit messages describing each change. The URL looks like <code>https://github.com/YOURUSERNAME/ism2411-lab11</code>. The file must include Exercises 1–8 and the top-of-file comment block answering both Reflection questions. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>customers.py</code> to your <code>ism2411-lab11</code> repo, inside your <code>ism2411-lab11</code> folder. The URL looks like <code>https://github.com/YOURUSERNAME/ism2411-lab11</code>. The file must include Exercises 1–8 and the top-of-file comment block answering both Reflection questions. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
+<p style="margin:12px 0 4px;">Your repo page should look like this:</p>
+<pre><code>ism2411-lab11            ← your repo
+├── ism2411-lab11/       ← the folder you dragged
+│   └── customers.py
+├── .gitignore
+└── README.md</code></pre>
+<p>Dragged the files inside your folder instead, or used Git? Then they sit at the top level, next to <code>README.md</code>. That&rsquo;s fine too.</p>
 </div>
 
 <div class="pn">

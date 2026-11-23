@@ -136,7 +136,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
   </div>
 </div>
 <h2 id="datasets">Choose your dataset</h2>
-<p>Pick the dataset that fits your major, or the field you want to work in. All eight are fictional, have 5,000 rows each, and are messy in the same ways, so every choice is graded on the same rubric. Choose one by the Module 13 milestone, download it into your repo&rsquo;s <code>data</code> folder, and stay with it to the end. The walkthrough video above uses the Retail dataset; every step works the same on the others.</p>
+<p>Pick the dataset that fits your major, or the field you want to work in. All eight are fictional, have 5,000 rows each, and are messy in the same ways, so every choice is graded on the same rubric. Choose one by the Module 13 milestone, download it, drag it from your Downloads folder onto your project&rsquo;s <code>data</code> folder in VS Code&rsquo;s Explorer panel (<a href="week11_lab.html#download-to-data">how</a>), and stay with it to the end. The walkthrough video above uses the Retail dataset; every step works the same on the others.</p>
 
 <div class="callout purple">
 <div class="callout-title">Every dataset is messy in the same ways</div>
@@ -430,10 +430,22 @@ print(df.describe())</pre>
   <strong>A GitHub repository</strong> containing all of the above plus a <code>README.md</code> that starts with your video link, then gives 3–5 lines explaining how to run your code (required packages, command to run).
   <ul>
     <li>Set it up the same way as Labs 11–15: a new <strong>Public</strong> repo with <strong>Add README</strong> turned on and <strong>.gitignore</strong> set to <strong>Python</strong>.</li>
-    <li>Upload your work on the GitHub website with <strong>Add file &rarr; Upload files</strong>: drag your whole project folder in, the one that holds your script or notebook, the <code>data</code> and <code>charts</code> folders, and your PDF report. Replace <code>Add files via upload</code> with a message that says what changed.</li>
+    <li>Upload your work on the GitHub website with <strong>Add file &rarr; Upload files</strong>: drag your whole project folder in, the one that holds your script or notebook, the <code>data</code> and <code>charts</code> folders, and your PDF report. GitHub&rsquo;s default commit message is fine.</li>
     <li>Edit the README at the top of your repo (the one GitHub shows below your file list) with the <strong>pencil icon</strong>. That is the README your video link goes in. Each upload and edit is a commit, so upload as you go, not just once at the end.</li>
     <li>Prefer the terminal? <code>git push</code> works too. See <a href="week11_lab.html#terminal">Lab 11</a>.</li>
   </ul>
+<p style="margin:12px 0 4px;">Your repo page should look like this:</p>
+<pre><code>your capstone repo
+├── your project folder/     ← the folder you dragged
+│   ├── charts/              ← one PNG per chart
+│   ├── data/
+│   │   ├── capstone_retail.csv   ← your dataset
+│   │   └── clean_data.csv
+│   ├── capstone_yourname.py      (or .ipynb)
+│   └── your PDF report
+├── .gitignore
+└── README.md                ← video link first, then how to run</code></pre>
+<p>Dragged the files inside your folder instead, or used Git? Then they sit at the top level, next to <code>README.md</code>. That&rsquo;s fine too.</p>
 </li>
 </ol>
 

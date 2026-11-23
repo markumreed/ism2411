@@ -222,9 +222,9 @@ mkdir ism2411-lab13
 cd ism2411-lab13
 mkdir data
 code .</code></pre>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 13 — First DataFrame — Retail Sales Explorer</code>, your name, and the command that runs your work, then commit the change. Download <code>retail_sales.csv</code> (5,000 orders, 6 columns) with the button below, put it in the <code>data</code> folder, and make <code>explore.py</code> or <code>explore.ipynb</code> in your work folder, next to <code>data</code>, so <code>data/retail_sales.csv</code> is found.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 13 — First DataFrame — Retail Sales Explorer</code>, your name, and the command that runs your work, then commit the change. Download <code>retail_sales.csv</code> (5,000 orders, 6 columns) with the button below, drag it from your Downloads folder onto the <code>data</code> folder in VS Code&rsquo;s Explorer panel (<a href="week11_lab.html#download-to-data">how</a>), and make <code>explore.py</code> or <code>explore.ipynb</code> in your work folder, next to <code>data</code>, so <code>data/retail_sales.csv</code> is found.</p>
 <div style="margin:10px 0 4px;"><a href="../assets/downloads/retail_sales.csv" download="retail_sales.csv" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:7px 14px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;text-decoration:none;">&#x2B07; Download retail_sales.csv</a></div>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab13</code> folder in, replace <code>Add files via upload</code> with a message that says what changed, and click <strong>Commit changes</strong>. Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab13</code> folder in, and click <strong>Commit changes</strong> (GitHub&rsquo;s default message is fine). Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -318,7 +318,17 @@ code .</code></pre>
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>explore.py</code> (or <code>explore.ipynb</code>) and the <code>data/explored.csv</code> it produces to your <code>ism2411-lab13</code> repo, with the CSV files in a <code>data</code> folder next to the script or notebook, and commit messages describing each change. The file must include Exercises 1–8 and answer all 3 Self-Assessment questions in a comment block at the top. Your script must run from top to bottom without errors. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>explore.py</code> (or <code>explore.ipynb</code>) and the <code>data/explored.csv</code> it produces to your <code>ism2411-lab13</code> repo, with the CSV files in a <code>data</code> folder next to the script or notebook. The file must include Exercises 1–8 and answer all 3 Self-Assessment questions in a comment block at the top. Your script must run from top to bottom without errors. Do not upload the file to Canvas directly — the URL is the only required submission.</p>
+<p style="margin:12px 0 4px;">Your repo page should look like this:</p>
+<pre><code>ism2411-lab13            ← your repo
+├── ism2411-lab13/       ← the folder you dragged
+│   ├── data/
+│   │   ├── explored.csv
+│   │   └── retail_sales.csv
+│   └── explore.py       (or explore.ipynb)
+├── .gitignore
+└── README.md</code></pre>
+<p>Dragged the files inside your folder instead, or used Git? Then they sit at the top level, next to <code>README.md</code>. That&rsquo;s fine too.</p>
 </div>
 
 <div class="pn">

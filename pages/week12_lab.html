@@ -288,8 +288,8 @@ mkdir ism2411-lab12
 cd ism2411-lab12
 mkdir data
 code .</code></pre>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 12 — Read a Sales CSV, Write a Cleaned Report</code>, your name, and the command that runs your work, then commit the change. Put <code>sales.csv</code> in the <code>data</code> folder. Make <code>csv_practice.py</code> in your work folder, next to <code>data</code>, and run it from this folder, so <code>data/sales.csv</code> is found.</p>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab12</code> folder in, replace <code>Add files via upload</code> with a message that says what changed, and click <strong>Commit changes</strong>. Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 12 — Read a Sales CSV, Write a Cleaned Report</code>, your name, and the command that runs your work, then commit the change. Download <code>sales.csv</code> (Exercise 1) and drag it from your Downloads folder onto the <code>data</code> folder in VS Code&rsquo;s Explorer panel (<a href="week11_lab.html#download-to-data">how</a>). Make <code>csv_practice.py</code> in your work folder, next to <code>data</code>, and run it from this folder, so <code>data/sales.csv</code> is found.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab12</code> folder in, and click <strong>Commit changes</strong> (GitHub&rsquo;s default message is fine). Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -297,7 +297,7 @@ code .</code></pre>
 <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0;">
 <div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#c084fc;margin-bottom:4px;">EXERCISE 1 · Setup</div>
 <div style="font-weight:700;margin-bottom:6px;">Get the file</div>
-<div style="color:var(--muted);font-size:15px;">Download <code>sales.csv</code> with the button below. Place it in <code>data/sales.csv</code> in your <code>ism2411-lab12</code> work folder. Confirm the file structure: it should have a header row with columns <code>product</code>, <code>price</code>, <code>quantity</code> and 12 data rows.</div>
+<div style="color:var(--muted);font-size:15px;">Download <code>sales.csv</code> with the button below. Drag it from your Downloads folder onto the <code>data</code> folder in VS Code&rsquo;s Explorer panel, so it sits at <code>data/sales.csv</code>. Confirm the file structure: it should have a header row with columns <code>product</code>, <code>price</code>, <code>quantity</code> and 12 data rows.</div>
 <div style="margin:10px 0 4px;"><a href="../assets/downloads/sales.csv" download="sales.csv" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:7px 14px;border-radius:999px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa;text-decoration:none;">&#x2B07; Download sales.csv</a></div>
 <div style="margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--dim);">Expected: file exists at the relative path; opening it with Python produces no error</div>
 </div>
@@ -364,7 +364,18 @@ code .</code></pre>
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>csv_practice.py</code> and its output files (<code>data/cleaned.csv</code> and <code>data/run_log.txt</code>) to your <code>ism2411-lab12</code> repo, with the CSV files in a <code>data</code> folder next to <code>csv_practice.py</code>, and commit messages describing each change. The script must include Exercises 1–8, the top-of-file comment block answering both Reflection questions, and must run top to bottom without errors, regenerating those output files. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>csv_practice.py</code> and its output files (<code>data/cleaned.csv</code> and <code>data/run_log.txt</code>) to your <code>ism2411-lab12</code> repo, with the CSV files in a <code>data</code> folder next to <code>csv_practice.py</code>. The script must include Exercises 1–8, the top-of-file comment block answering both Reflection questions, and must run top to bottom without errors, regenerating those output files. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
+<p style="margin:12px 0 4px;">Your repo page should look like this:</p>
+<pre><code>ism2411-lab12            ← your repo
+├── ism2411-lab12/       ← the folder you dragged
+│   ├── data/
+│   │   ├── cleaned.csv
+│   │   ├── run_log.txt
+│   │   └── sales.csv
+│   └── csv_practice.py
+├── .gitignore
+└── README.md</code></pre>
+<p>Dragged the files inside your folder instead, or used Git? Then they sit at the top level, next to <code>README.md</code>. That&rsquo;s fine too.</p>
 </div>
 
 <div class="pn">

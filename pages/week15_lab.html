@@ -125,7 +125,7 @@ mkdir charts
 cp ~/ism2411-lab14/data/clean_sales.csv data/
 code .</code></pre>
 <p style="color:var(--muted);font-size:15px;margin:10px 0 0;">On github.com, open <code>README.md</code> and click the <strong>pencil icon</strong>. Replace its line with a title, <code># ISM2411 Lab 15 — Aggregate &amp; Chart — Capstone Warm-up</code>, your name, and the command that runs your work, then commit the change. This lab starts from the <code>clean_sales.csv</code> you made in Lab 14, which the <code>cp</code> line copies into <code>data/</code>. Make <code>aggregate.ipynb</code> or <code>aggregate.py</code> in your work folder, next to <code>data</code> and <code>charts</code>. The <code>charts</code> folder has to exist before <code>savefig</code> can save into it.</p>
-<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab15</code> folder in, replace <code>Add files via upload</code> with a message that says what changed, and click <strong>Commit changes</strong>. Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
+<p style="color:var(--muted);font-size:15px;margin:10px 0 0;"><strong>Upload after each exercise or two:</strong> click <strong>Add file &rarr; Upload files</strong>, drag your whole <code>ism2411-lab15</code> folder in, and click <strong>Commit changes</strong> (GitHub&rsquo;s default message is fine). Files with the same name are replaced. <a href="week11_lab.html#repo-setup">Lab 11&rsquo;s setup</a> has hints for the usual problems, and the <a href="week11_lab.html#terminal">Git commands</a> if you prefer the terminal.</p>
 </div>
 
 <h2>Exercises</h2>
@@ -207,7 +207,21 @@ code .</code></pre>
 <h2>What to Submit to Canvas</h2>
 <div class="callout">
 <div class="callout-title">Canvas Deliverable</div>
-<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>aggregate.ipynb</code> (or <code>aggregate.py</code>) and all 4 PNG chart files (including your custom Exercise 4 chart) to your <code>ism2411-lab15</code> repo, with <code>clean_sales.csv</code> in a <code>data</code> folder and the charts in a <code>charts</code> folder, both next to the notebook or script, and commit messages describing each change. Answer all 3 Self-Assessment questions in a comment or markdown cell. This is the capstone dress rehearsal — the standards are the same as the final deliverable. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
+<p><strong>Submit to Canvas:</strong> your GitHub repository URL only. Upload <code>aggregate.ipynb</code> (or <code>aggregate.py</code>) and all 4 PNG chart files (including your custom Exercise 4 chart) to your <code>ism2411-lab15</code> repo, with <code>clean_sales.csv</code> in a <code>data</code> folder and the charts in a <code>charts</code> folder, both next to the notebook or script. Answer all 3 Self-Assessment questions in a comment or markdown cell. This is the capstone dress rehearsal — the standards are the same as the final deliverable. Do not upload the files to Canvas directly — the URL is the only required submission.</p>
+<p style="margin:12px 0 4px;">Your repo page should look like this:</p>
+<pre><code>ism2411-lab15            ← your repo
+├── ism2411-lab15/       ← the folder you dragged
+│   ├── charts/
+│   │   ├── q1_revenue_by_region.png
+│   │   ├── q2_monthly_trend.png
+│   │   ├── q3_order_distribution.png
+│   │   └── q4_custom.png
+│   ├── data/
+│   │   └── clean_sales.csv
+│   └── aggregate.ipynb  (or aggregate.py)
+├── .gitignore
+└── README.md</code></pre>
+<p>Dragged the files inside your folder instead, or used Git? Then they sit at the top level, next to <code>README.md</code>. That&rsquo;s fine too.</p>
 </div>
 
 <div class="pn">
